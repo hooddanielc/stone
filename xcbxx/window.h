@@ -1,9 +1,12 @@
 #pragma once
 
 #include <xcb/xcb.h>
+#include <xcbxx/graphic-ctx.h>
 #include <xcbxx/connection.h>
 
 namespace xcbxx {
+
+class graphic_ctx_t;
 
 class window_t {
 
@@ -12,6 +15,12 @@ public:
   friend class connection_t;
 
   void show();
+
+  std::shared_ptr<graphic_ctx_t> make_graphic_ctx(
+    uint32_t value_mask,
+    const uint32_t *value_list
+  );
+
 
 private:
 

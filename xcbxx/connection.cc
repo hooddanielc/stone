@@ -26,6 +26,10 @@ std::shared_ptr<connection_t> connection_t::make(const char *display, int *scree
   return result;
 }
 
+xcb_generic_event_t *connection_t::wait_for_event() {
+  return xcb_wait_for_event(connection);
+}
+
 int connection_t::get_screen_count() {
   return xcb_setup_roots_length(xcb_get_setup(connection));
 }

@@ -9,6 +9,7 @@
 #include <xcb/xcb.h>
 #include <xcbxx/screen.h>
 #include <xcbxx/window.h>
+#include <xcbxx/graphic-ctx.h>
 
 namespace xcbxx {
 
@@ -21,6 +22,8 @@ public:
   friend class screen_t;
 
   friend class window_t;
+
+  friend class graphic_ctx_t;
 
   static std::shared_ptr<connection_t> make(const char *display = nullptr, int *screen_num = new int());
 
@@ -35,6 +38,8 @@ public:
   void pause();
 
   void flush();
+
+  xcb_generic_event_t *wait_for_event();
 
   std::shared_ptr<screen_t> get_screen(int *num = nullptr);
 
