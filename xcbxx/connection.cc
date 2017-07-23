@@ -50,4 +50,39 @@ std::shared_ptr<screen_t> connection_t::get_screen(int *num) {
   return std::shared_ptr<screen_t>(new screen_t(weak_ref.lock(), num));
 }
 
+void connection_t::flush() {
+  xcb_flush(connection);
+}
+
+std::shared_ptr<window_t> connection_t::create_window(
+  int16_t x,
+  int16_t y,
+  uint16_t width,
+  uint16_t height,
+  uint16_t border_width,
+  xcb_window_t parent,
+  xcb_visualid_t visual,
+  uint8_t depth,
+  uint16_t _class,
+  uint32_t value_mask,
+  const uint32_t *value_list
+) {
+  auto ptr = new window_t(
+    weak_ref.lock(),
+    x,
+    y,
+    width,
+    height,
+    border_width,
+    parent,
+    visual,
+    depth,
+    _class,
+    value_mask,
+    value_list
+  );
+
+  return std::shared_ptr<window_t>(ptr);
+}
+
 };  // xcbxx
