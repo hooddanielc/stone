@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <inttypes.h>
 #include <xcb/xcb.h>
+#include <xcb/xcb_aux.h>
 #include <xcbxx/screen.h>
 #include <xcbxx/window.h>
 #include <xcbxx/graphic-ctx.h>
@@ -37,9 +38,23 @@ public:
 
   void pause();
 
-  void flush();
+  int flush();
+
+  void aux_sync();
+
+  void throw_bad_cookie(const std::string &name, xcb_void_cookie_t cookie) {
+    auto err = xcb_request_check(connection, cookie);
+
+    if (err) {
+      std::stringstream ss;
+      ss << name << " threw error code " << err->error_code;
+      throw std::runtime_error(ss.str());
+    }
+  }
 
   xcb_generic_event_t *wait_for_event();
+
+  xcb_generic_event_t *poll_for_event();
 
   std::shared_ptr<screen_t> get_screen(int *num = nullptr);
 

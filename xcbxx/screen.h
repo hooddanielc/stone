@@ -1,16 +1,21 @@
 #pragma once
 
+#include <xcbxx/window.h>
 #include <xcbxx/connection.h>
 
 namespace xcbxx {
 
 class connection_t;
 
+class window_t;
+
 class screen_t {
 
 public:
 
   friend connection_t;
+
+  std::shared_ptr<window_t> get_root_window();
 
   uint32_t get_root();
 

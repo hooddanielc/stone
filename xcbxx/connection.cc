@@ -30,6 +30,10 @@ xcb_generic_event_t *connection_t::wait_for_event() {
   return xcb_wait_for_event(connection);
 }
 
+xcb_generic_event_t *connection_t::poll_for_event() {
+  return xcb_poll_for_event(connection);
+}
+
 int connection_t::get_screen_count() {
   return xcb_setup_roots_length(xcb_get_setup(connection));
 }
@@ -54,8 +58,12 @@ std::shared_ptr<screen_t> connection_t::get_screen(int *num) {
   return std::shared_ptr<screen_t>(new screen_t(weak_ref.lock(), num));
 }
 
-void connection_t::flush() {
-  xcb_flush(connection);
+int connection_t::flush() {
+  return xcb_flush(connection);
+}
+
+void connection_t::aux_sync() {
+  xcb_aux_sync(connection);
 }
 
 std::shared_ptr<window_t> connection_t::create_window(
@@ -86,6 +94,7 @@ std::shared_ptr<window_t> connection_t::create_window(
     value_list
   );
 
+  throw_bad_cookie("xcb_create_window", ptr->cookie);
   return std::shared_ptr<window_t>(ptr);
 }
 

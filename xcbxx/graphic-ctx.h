@@ -5,9 +5,12 @@
 
 namespace xcbxx {
 
+class connection_t;
+
 class graphic_ctx_t {
 
 public:
+
   friend class window_t;
 
   void poly_point(uint8_t coordinate_mode, uint32_t length, const xcb_point_t *points);

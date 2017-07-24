@@ -16,7 +16,13 @@ std::shared_ptr<graphic_ctx_t> window_t::make_graphic_ctx(uint32_t value_mask, c
 }
 
 void window_t::show()  {
-  xcb_map_window(connection->connection, window);
+  auto cookie = xcb_map_window(get_connection(), window);
+  connection->throw_bad_cookie("xcb_map_window", cookie);
+}
+
+void window_t::change_attributes(uint32_t value_mask, const uint32_t *value_list) {
+  auto cookie = xcb_change_window_attributes(get_connection(), window, value_mask, value_list);
+  connection->throw_bad_cookie("xcb_change_window_attributes", cookie);
 }
 
 }
