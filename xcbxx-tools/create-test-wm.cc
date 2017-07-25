@@ -17,15 +17,16 @@ void event_loop() {
   xcb_generic_event_t *ev;
 
   do {
-    if ((ev = connection->poll_for_event())) {
+    if ((ev = connection->wait_for_event())) {
+      std::cout << event_t::get_event_name(ev->response_type & ~0x80) << std::endl;
       switch(ev->response_type & ~0x80) {
         case XCB_MAP_REQUEST: {
-          std::cout << "xcb map request" << std::endl;
+          connection->flush();
           // map_request((xcb_map_request_event_t*)ev);
           // xcb_flush(connection);
         } break;
         case XCB_DESTROY_NOTIFY: {
-          std::cout << "destroy notify" << std::endl;
+          connection->flush();
           // destroy_notify((xcb_destroy_notify_event_t*)ev);
           // xcb_flush(connection);
         } break;

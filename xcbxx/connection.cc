@@ -2,6 +2,24 @@
 
 namespace xcbxx {
 
+void connection_t::throw_bad_cookie(const std::string &name, xcb_void_cookie_t cookie) {
+  auto err = xcb_request_check(connection, cookie);
+
+  if (err) {
+    std::stringstream ss;
+    ss << name << " threw error code " << err->error_code;
+    throw std::runtime_error(ss.str());
+  }
+}
+
+void connection_t::on(const connection_t::cb_event_t &fn) {
+  cb_events.push_back(fn);
+}
+
+void connection_t::on(const connection_t::cb_map_request_event_t &fn) {
+  cb_map_request_events.push_back(fn);
+}
+
 std::shared_ptr<connection_t> connection_t::make(const char *display, int *screen_num) {
   auto connection = xcb_connect(display, screen_num);
   auto err = xcb_connection_has_error(connection);

@@ -2,7 +2,6 @@
 
 namespace xcbxx {
 
-
 void graphic_ctx_t::poly_point(uint8_t coordinate_mode, uint32_t length, const xcb_point_t *points) {
   xcb_poly_point(
     connection->connection,

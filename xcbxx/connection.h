@@ -3,6 +3,8 @@
 #include <map>
 #include <iostream>
 #include <memory>
+#include <vector>
+#include <functional>
 #include <stdio.h>
 #include <unistd.h>
 #include <inttypes.h>
@@ -11,6 +13,7 @@
 #include <xcbxx/screen.h>
 #include <xcbxx/window.h>
 #include <xcbxx/graphic-ctx.h>
+#include <xcbxx/events.h>
 
 namespace xcbxx {
 
@@ -25,6 +28,18 @@ public:
   friend class window_t;
 
   friend class graphic_ctx_t;
+
+  using cb_event_t = std::function<void(std::shared_ptr<event_t>)>;
+
+  using cb_map_request_event_t = std::function<void(std::shared_ptr<map_request_event_t>)>;
+
+  std::vector<cb_event_t> cb_events;
+
+  std::vector<cb_map_request_event_t> cb_map_request_events;
+
+  void on(const cb_event_t &fn);
+
+  void on(const cb_map_request_event_t &fn);
 
   static std::shared_ptr<connection_t> make(const char *display = nullptr, int *screen_num = new int());
 
@@ -42,15 +57,7 @@ public:
 
   void aux_sync();
 
-  void throw_bad_cookie(const std::string &name, xcb_void_cookie_t cookie) {
-    auto err = xcb_request_check(connection, cookie);
-
-    if (err) {
-      std::stringstream ss;
-      ss << name << " threw error code " << err->error_code;
-      throw std::runtime_error(ss.str());
-    }
-  }
+  void throw_bad_cookie(const std::string &name, xcb_void_cookie_t cookie);
 
   xcb_generic_event_t *wait_for_event();
 
