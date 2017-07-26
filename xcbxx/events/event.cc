@@ -2,45 +2,49 @@
 
 namespace xcbxx {
 
-std::string event_t::get_event_name(unsigned macro) {
-  switch (macro) {
-    case XCB_KEY_PRESS: return "XCB_KEY_PRESS"; break;
-    case XCB_KEY_RELEASE: return "XCB_KEY_RELEASE"; break;
-    case XCB_BUTTON_PRESS: return "XCB_BUTTON_PRESS"; break;
-    case XCB_BUTTON_RELEASE: return "XCB_BUTTON_RELEASE"; break;
-    case XCB_MOTION_NOTIFY: return "XCB_MOTION_NOTIFY"; break;
-    case XCB_ENTER_NOTIFY: return "XCB_ENTER_NOTIFY"; break;
-    case XCB_LEAVE_NOTIFY: return "XCB_LEAVE_NOTIFY"; break;
-    case XCB_FOCUS_IN: return "XCB_FOCUS_IN"; break;
-    case XCB_FOCUS_OUT: return "XCB_FOCUS_OUT"; break;
-    case XCB_KEYMAP_NOTIFY: return "XCB_KEYMAP_NOTIFY"; break;
-    case XCB_EXPOSE: return "XCB_EXPOSE"; break;
-    case XCB_GRAPHICS_EXPOSURE: return "XCB_GRAPHICS_EXPOSURE"; break;
-    case XCB_NO_EXPOSURE: return "XCB_NO_EXPOSURE"; break;
-    case XCB_VISIBILITY_NOTIFY: return "XCB_VISIBILITY_NOTIFY"; break;
-    case XCB_CREATE_NOTIFY: return "XCB_CREATE_NOTIFY"; break;
-    case XCB_DESTROY_NOTIFY: return "XCB_DESTROY_NOTIFY"; break;
-    case XCB_UNMAP_NOTIFY: return "XCB_UNMAP_NOTIFY"; break;
-    case XCB_MAP_NOTIFY: return "XCB_MAP_NOTIFY"; break;
-    case XCB_MAP_REQUEST: return "XCB_MAP_REQUEST"; break;
-    case XCB_REPARENT_NOTIFY: return "XCB_REPARENT_NOTIFY"; break;
-    case XCB_CONFIGURE_NOTIFY: return "XCB_CONFIGURE_NOTIFY"; break;
-    case XCB_CONFIGURE_REQUEST: return "XCB_CONFIGURE_REQUEST"; break;
-    case XCB_GRAVITY_NOTIFY: return "XCB_GRAVITY_NOTIFY"; break;
-    case XCB_RESIZE_REQUEST: return "XCB_RESIZE_REQUEST"; break;
-    case XCB_CIRCULATE_REQUEST: return "XCB_CIRCULATE_REQUEST"; break;
-    case XCB_PROPERTY_NOTIFY: return "XCB_PROPERTY_NOTIFY"; break;
-    case XCB_SELECTION_CLEAR: return "XCB_SELECTION_CLEAR"; break;
-    case XCB_SELECTION_REQUEST: return "XCB_SELECTION_REQUEST"; break;
-    case XCB_SELECTION_NOTIFY: return "XCB_SELECTION_NOTIFY"; break;
-    case XCB_COLORMAP_NOTIFY: return "XCB_COLORMAP_NOTIFY"; break;
-    case XCB_CLIENT_MESSAGE: return "XCB_CLIENT_MESSAGE"; break;
-    case XCB_MAPPING_NOTIFY: return "XCB_MAPPING_NOTIFY"; break;
-    default:
-      std::stringstream ss;
-      ss << "unknown " << macro;
-      return ss.str();
+const std::map<unsigned, std::string> event_t::event_types = {
+  { XCB_KEY_PRESS, "XCB_KEY_PRESS" },
+  { XCB_KEY_RELEASE, "XCB_KEY_RELEASE" },
+  { XCB_BUTTON_PRESS, "XCB_BUTTON_PRESS" },
+  { XCB_BUTTON_RELEASE, "XCB_BUTTON_RELEASE" },
+  { XCB_MOTION_NOTIFY, "XCB_MOTION_NOTIFY" },
+  { XCB_ENTER_NOTIFY, "XCB_ENTER_NOTIFY" },
+  { XCB_LEAVE_NOTIFY, "XCB_LEAVE_NOTIFY" },
+  { XCB_FOCUS_IN, "XCB_FOCUS_IN" },
+  { XCB_FOCUS_OUT, "XCB_FOCUS_OUT" },
+  { XCB_KEYMAP_NOTIFY, "XCB_KEYMAP_NOTIFY" },
+  { XCB_EXPOSE, "XCB_EXPOSE" },
+  { XCB_GRAPHICS_EXPOSURE, "XCB_GRAPHICS_EXPOSURE" },
+  { XCB_NO_EXPOSURE, "XCB_NO_EXPOSURE" },
+  { XCB_VISIBILITY_NOTIFY, "XCB_VISIBILITY_NOTIFY" },
+  { XCB_CREATE_NOTIFY, "XCB_CREATE_NOTIFY" },
+  { XCB_DESTROY_NOTIFY, "XCB_DESTROY_NOTIFY" },
+  { XCB_UNMAP_NOTIFY, "XCB_UNMAP_NOTIFY" },
+  { XCB_MAP_NOTIFY, "XCB_MAP_NOTIFY" },
+  { XCB_MAP_REQUEST, "XCB_MAP_REQUEST" },
+  { XCB_REPARENT_NOTIFY, "XCB_REPARENT_NOTIFY" },
+  { XCB_CONFIGURE_NOTIFY, "XCB_CONFIGURE_NOTIFY" },
+  { XCB_CONFIGURE_REQUEST, "XCB_CONFIGURE_REQUEST" },
+  { XCB_GRAVITY_NOTIFY, "XCB_GRAVITY_NOTIFY" },
+  { XCB_RESIZE_REQUEST, "XCB_RESIZE_REQUEST" },
+  { XCB_CIRCULATE_REQUEST, "XCB_CIRCULATE_REQUEST" },
+  { XCB_PROPERTY_NOTIFY, "XCB_PROPERTY_NOTIFY" },
+  { XCB_SELECTION_CLEAR, "XCB_SELECTION_CLEAR" },
+  { XCB_SELECTION_REQUEST, "XCB_SELECTION_REQUEST" },
+  { XCB_SELECTION_NOTIFY, "XCB_SELECTION_NOTIFY" },
+  { XCB_COLORMAP_NOTIFY, "XCB_COLORMAP_NOTIFY" },
+  { XCB_CLIENT_MESSAGE, "XCB_CLIENT_MESSAGE" },
+  { XCB_MAPPING_NOTIFY, "XCB_MAPPING_NOTIFY" }
+};
+
+std::string event_t::get_event_name(unsigned int macro) {
+  if (event_types.count(macro)) {
+    return event_types.at(macro);
   }
+
+  std::stringstream ss;
+  ss << "UNKNOWN " << macro;
+  return ss.str();
 }
 
 }

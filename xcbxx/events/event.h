@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <sstream>
+#include <string>
+#include <map>
 #include <xcb/xcb.h>
 
 namespace xcbxx {
@@ -20,7 +22,9 @@ protected:
 
 public:
 
-  static std::string get_event_name(unsigned macro);
+  static const std::map<unsigned, std::string> event_types;
+
+  static std::string get_event_name(unsigned int macro);
 
   template <typename event_type_t>
   static std::shared_ptr<event_type_t>
@@ -35,6 +39,7 @@ public:
     auto ref = new event_type_t(e);
     return std::shared_ptr<event_type_t>(ref);
   }
+
 
 };  // event_t
 

@@ -31,15 +31,21 @@ public:
 
   using cb_event_t = std::function<void(std::shared_ptr<event_t>)>;
 
-  using cb_map_request_event_t = std::function<void(std::shared_ptr<map_request_event_t>)>;
+  master_event_register_t events;
 
-  std::vector<cb_event_t> cb_events;
+  template <unsigned int xcb_event_enum, typename cb_t>
+  void on(const cb_t &cb) {
+    events.on<xcb_event_enum>(cb);
+  }
 
-  std::vector<cb_map_request_event_t> cb_map_request_events;
+  template <unsigned int xcb_event_enum, typename ev_t>
+  void emit(const ev_t &ev) {
+    events.emit<xcb_event_enum>(ev);
+  }
 
-  void on(const cb_event_t &fn);
-
-  void on(const cb_map_request_event_t &fn);
+  void emit_raw(xcb_generic_event_t *e) {
+    events.emit_raw(e);
+  }
 
   static std::shared_ptr<connection_t> make(const char *display = nullptr, int *screen_num = new int());
 

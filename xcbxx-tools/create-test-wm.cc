@@ -14,31 +14,24 @@ void quit(int) {
 }
 
 void event_loop() {
-  xcb_generic_event_t *ev;
+  xcb_generic_event_t *e;
 
   do {
-    if ((ev = connection->wait_for_event())) {
-      std::cout << event_t::get_event_name(ev->response_type & ~0x80) << std::endl;
-      switch(ev->response_type & ~0x80) {
-        case XCB_MAP_REQUEST: {
-          connection->flush();
-          // map_request((xcb_map_request_event_t*)ev);
-          // xcb_flush(connection);
-        } break;
-        case XCB_DESTROY_NOTIFY: {
-          connection->flush();
-          // destroy_notify((xcb_destroy_notify_event_t*)ev);
-          // xcb_flush(connection);
-        } break;
-      }
+    if ((e = connection->wait_for_event())) {
+      std::cout << event_t::get_event_name(e->response_type & ~0x80) << std::endl;
+      connection->emit_raw(e);
     }
-
-    free(ev);
   } while (run);
 }
 
 int main(int, char*[]) {
+
   connection = xcbxx::connection_t::make();
+
+  connection->on<XCB_MAP_REQUEST>([](std::shared_ptr<map_request_event_t> e) {
+    std::cout << "we got an XCB_MAP_REQUEST yay" << std::endl;
+  });
+
   auto screen = connection->get_screen();
   auto root_window = screen->get_root_window();
 
