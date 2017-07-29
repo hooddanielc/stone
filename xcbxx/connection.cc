@@ -72,10 +72,6 @@ int connection_t::flush() {
   return xcb_flush(connection);
 }
 
-void connection_t::aux_sync() {
-  xcb_aux_sync(connection);
-}
-
 std::shared_ptr<window_t> connection_t::create_window(
   int16_t x,
   int16_t y,

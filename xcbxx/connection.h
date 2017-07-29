@@ -9,7 +9,6 @@
 #include <unistd.h>
 #include <inttypes.h>
 #include <xcb/xcb.h>
-#include <xcb/xcb_aux.h>
 #include <xcbxx/screen.h>
 #include <xcbxx/window.h>
 #include <xcbxx/graphic-ctx.h>
@@ -60,8 +59,6 @@ public:
   void pause();
 
   int flush();
-
-  void aux_sync();
 
   void throw_bad_cookie(const std::string &name, xcb_void_cookie_t cookie);
 
