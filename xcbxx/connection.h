@@ -43,7 +43,7 @@ public:
   }
 
   void emit_raw(xcb_generic_event_t *e) {
-    events.emit_raw(e);
+    events.emit_raw(weak_ref.lock(), e);
   }
 
   static std::shared_ptr<connection_t> make(const char *display = nullptr, int *screen_num = new int());

@@ -140,40 +140,40 @@ class master_event_register_t {
     get<xcb_enum_type>().emit(ev);
   }
 
-  void emit_raw(xcb_generic_event_t *e) {
+  void emit_raw(std::shared_ptr<connection_t> connection, xcb_generic_event_t *e) {
     switch(e->response_type & ~0x80) {
-      case XCB_KEY_PRESS: return emit<XCB_KEY_PRESS>(event_t::make<key_press_event_t>(e, XCB_KEY_PRESS)); break;
-      case XCB_KEY_RELEASE: return emit<XCB_KEY_RELEASE>(event_t::make<key_release_event_t>(e, XCB_KEY_RELEASE)); break;
-      case XCB_BUTTON_PRESS: return emit<XCB_BUTTON_PRESS>(event_t::make<button_press_event_t>(e, XCB_BUTTON_PRESS)); break;
-      case XCB_BUTTON_RELEASE: return emit<XCB_BUTTON_RELEASE>(event_t::make<button_release_event_t>(e, XCB_BUTTON_RELEASE)); break;
-      case XCB_MOTION_NOTIFY: return emit<XCB_MOTION_NOTIFY>(event_t::make<motion_notify_event_t>(e, XCB_MOTION_NOTIFY)); break;
-      case XCB_ENTER_NOTIFY: return emit<XCB_ENTER_NOTIFY>(event_t::make<enter_notify_event_t>(e, XCB_ENTER_NOTIFY)); break;
-      case XCB_LEAVE_NOTIFY: return emit<XCB_LEAVE_NOTIFY>(event_t::make<leave_notify_event_t>(e, XCB_LEAVE_NOTIFY)); break;
-      case XCB_FOCUS_IN: return emit<XCB_FOCUS_IN>(event_t::make<focus_in_event_t>(e, XCB_FOCUS_IN)); break;
-      case XCB_FOCUS_OUT: return emit<XCB_FOCUS_OUT>(event_t::make<focus_out_event_t>(e, XCB_FOCUS_OUT)); break;
-      case XCB_KEYMAP_NOTIFY: return emit<XCB_KEYMAP_NOTIFY>(event_t::make<keymap_notify_event_t>(e, XCB_KEYMAP_NOTIFY)); break;
-      case XCB_EXPOSE: return emit<XCB_EXPOSE>(event_t::make<expose_event_t>(e, XCB_EXPOSE)); break;
-      case XCB_GRAPHICS_EXPOSURE: return emit<XCB_GRAPHICS_EXPOSURE>(event_t::make<graphics_exposure_event_t>(e, XCB_GRAPHICS_EXPOSURE)); break;
-      case XCB_NO_EXPOSURE: return emit<XCB_NO_EXPOSURE>(event_t::make<no_exposure_event_t>(e, XCB_NO_EXPOSURE)); break;
-      case XCB_VISIBILITY_NOTIFY: return emit<XCB_VISIBILITY_NOTIFY>(event_t::make<visibility_notify_event_t>(e, XCB_VISIBILITY_NOTIFY)); break;
-      case XCB_CREATE_NOTIFY: return emit<XCB_CREATE_NOTIFY>(event_t::make<create_notify_event_t>(e, XCB_CREATE_NOTIFY)); break;
-      case XCB_DESTROY_NOTIFY: return emit<XCB_DESTROY_NOTIFY>(event_t::make<destroy_notify_event_t>(e, XCB_DESTROY_NOTIFY)); break;
-      case XCB_UNMAP_NOTIFY: return emit<XCB_UNMAP_NOTIFY>(event_t::make<unmap_notify_event_t>(e, XCB_UNMAP_NOTIFY)); break;
-      case XCB_MAP_NOTIFY: return emit<XCB_MAP_NOTIFY>(event_t::make<map_notify_event_t>(e, XCB_MAP_NOTIFY)); break;
-      case XCB_MAP_REQUEST: return emit<XCB_MAP_REQUEST>(event_t::make<map_request_event_t>(e, XCB_MAP_REQUEST)); break;
-      case XCB_REPARENT_NOTIFY: return emit<XCB_REPARENT_NOTIFY>(event_t::make<reparent_notify_event_t>(e, XCB_REPARENT_NOTIFY)); break;
-      case XCB_CONFIGURE_NOTIFY: return emit<XCB_CONFIGURE_NOTIFY>(event_t::make<configure_notify_event_t>(e, XCB_CONFIGURE_NOTIFY)); break;
-      case XCB_CONFIGURE_REQUEST: return emit<XCB_CONFIGURE_REQUEST>(event_t::make<configure_request_event_t>(e, XCB_CONFIGURE_REQUEST)); break;
-      case XCB_GRAVITY_NOTIFY: return emit<XCB_GRAVITY_NOTIFY>(event_t::make<gravity_notify_event_t>(e, XCB_GRAVITY_NOTIFY)); break;
-      case XCB_RESIZE_REQUEST: return emit<XCB_RESIZE_REQUEST>(event_t::make<resize_request_event_t>(e, XCB_RESIZE_REQUEST)); break;
-      case XCB_CIRCULATE_REQUEST: return emit<XCB_CIRCULATE_REQUEST>(event_t::make<circulate_request_event_t>(e, XCB_CIRCULATE_REQUEST)); break;
-      case XCB_PROPERTY_NOTIFY: return emit<XCB_PROPERTY_NOTIFY>(event_t::make<property_notify_event_t>(e, XCB_PROPERTY_NOTIFY)); break;
-      case XCB_SELECTION_CLEAR: return emit<XCB_SELECTION_CLEAR>(event_t::make<selection_clear_event_t>(e, XCB_SELECTION_CLEAR)); break;
-      case XCB_SELECTION_REQUEST: return emit<XCB_SELECTION_REQUEST>(event_t::make<selection_request_event_t>(e, XCB_SELECTION_REQUEST)); break;
-      case XCB_SELECTION_NOTIFY: return emit<XCB_SELECTION_NOTIFY>(event_t::make<selection_notify_event_t>(e, XCB_SELECTION_NOTIFY)); break;
-      case XCB_COLORMAP_NOTIFY: return emit<XCB_COLORMAP_NOTIFY>(event_t::make<colormap_notify_event_t>(e, XCB_COLORMAP_NOTIFY)); break;
-      case XCB_CLIENT_MESSAGE: return emit<XCB_CLIENT_MESSAGE>(event_t::make<client_message_event_t>(e, XCB_CLIENT_MESSAGE)); break;
-      case XCB_MAPPING_NOTIFY: return emit<XCB_MAPPING_NOTIFY>(event_t::make<mapping_notify_event_t>(e, XCB_MAPPING_NOTIFY)); break;
+      case XCB_KEY_PRESS: return emit<XCB_KEY_PRESS>(event_t::make<key_press_event_t>(connection, e, XCB_KEY_PRESS)); break;
+      case XCB_KEY_RELEASE: return emit<XCB_KEY_RELEASE>(event_t::make<key_release_event_t>(connection, e, XCB_KEY_RELEASE)); break;
+      case XCB_BUTTON_PRESS: return emit<XCB_BUTTON_PRESS>(event_t::make<button_press_event_t>(connection, e, XCB_BUTTON_PRESS)); break;
+      case XCB_BUTTON_RELEASE: return emit<XCB_BUTTON_RELEASE>(event_t::make<button_release_event_t>(connection, e, XCB_BUTTON_RELEASE)); break;
+      case XCB_MOTION_NOTIFY: return emit<XCB_MOTION_NOTIFY>(event_t::make<motion_notify_event_t>(connection, e, XCB_MOTION_NOTIFY)); break;
+      case XCB_ENTER_NOTIFY: return emit<XCB_ENTER_NOTIFY>(event_t::make<enter_notify_event_t>(connection, e, XCB_ENTER_NOTIFY)); break;
+      case XCB_LEAVE_NOTIFY: return emit<XCB_LEAVE_NOTIFY>(event_t::make<leave_notify_event_t>(connection, e, XCB_LEAVE_NOTIFY)); break;
+      case XCB_FOCUS_IN: return emit<XCB_FOCUS_IN>(event_t::make<focus_in_event_t>(connection, e, XCB_FOCUS_IN)); break;
+      case XCB_FOCUS_OUT: return emit<XCB_FOCUS_OUT>(event_t::make<focus_out_event_t>(connection, e, XCB_FOCUS_OUT)); break;
+      case XCB_KEYMAP_NOTIFY: return emit<XCB_KEYMAP_NOTIFY>(event_t::make<keymap_notify_event_t>(connection, e, XCB_KEYMAP_NOTIFY)); break;
+      case XCB_EXPOSE: return emit<XCB_EXPOSE>(event_t::make<expose_event_t>(connection, e, XCB_EXPOSE)); break;
+      case XCB_GRAPHICS_EXPOSURE: return emit<XCB_GRAPHICS_EXPOSURE>(event_t::make<graphics_exposure_event_t>(connection, e, XCB_GRAPHICS_EXPOSURE)); break;
+      case XCB_NO_EXPOSURE: return emit<XCB_NO_EXPOSURE>(event_t::make<no_exposure_event_t>(connection, e, XCB_NO_EXPOSURE)); break;
+      case XCB_VISIBILITY_NOTIFY: return emit<XCB_VISIBILITY_NOTIFY>(event_t::make<visibility_notify_event_t>(connection, e, XCB_VISIBILITY_NOTIFY)); break;
+      case XCB_CREATE_NOTIFY: return emit<XCB_CREATE_NOTIFY>(event_t::make<create_notify_event_t>(connection, e, XCB_CREATE_NOTIFY)); break;
+      case XCB_DESTROY_NOTIFY: return emit<XCB_DESTROY_NOTIFY>(event_t::make<destroy_notify_event_t>(connection, e, XCB_DESTROY_NOTIFY)); break;
+      case XCB_UNMAP_NOTIFY: return emit<XCB_UNMAP_NOTIFY>(event_t::make<unmap_notify_event_t>(connection, e, XCB_UNMAP_NOTIFY)); break;
+      case XCB_MAP_NOTIFY: return emit<XCB_MAP_NOTIFY>(event_t::make<map_notify_event_t>(connection, e, XCB_MAP_NOTIFY)); break;
+      case XCB_MAP_REQUEST: return emit<XCB_MAP_REQUEST>(event_t::make<map_request_event_t>(connection, e, XCB_MAP_REQUEST)); break;
+      case XCB_REPARENT_NOTIFY: return emit<XCB_REPARENT_NOTIFY>(event_t::make<reparent_notify_event_t>(connection, e, XCB_REPARENT_NOTIFY)); break;
+      case XCB_CONFIGURE_NOTIFY: return emit<XCB_CONFIGURE_NOTIFY>(event_t::make<configure_notify_event_t>(connection, e, XCB_CONFIGURE_NOTIFY)); break;
+      case XCB_CONFIGURE_REQUEST: return emit<XCB_CONFIGURE_REQUEST>(event_t::make<configure_request_event_t>(connection, e, XCB_CONFIGURE_REQUEST)); break;
+      case XCB_GRAVITY_NOTIFY: return emit<XCB_GRAVITY_NOTIFY>(event_t::make<gravity_notify_event_t>(connection, e, XCB_GRAVITY_NOTIFY)); break;
+      case XCB_RESIZE_REQUEST: return emit<XCB_RESIZE_REQUEST>(event_t::make<resize_request_event_t>(connection, e, XCB_RESIZE_REQUEST)); break;
+      case XCB_CIRCULATE_REQUEST: return emit<XCB_CIRCULATE_REQUEST>(event_t::make<circulate_request_event_t>(connection, e, XCB_CIRCULATE_REQUEST)); break;
+      case XCB_PROPERTY_NOTIFY: return emit<XCB_PROPERTY_NOTIFY>(event_t::make<property_notify_event_t>(connection, e, XCB_PROPERTY_NOTIFY)); break;
+      case XCB_SELECTION_CLEAR: return emit<XCB_SELECTION_CLEAR>(event_t::make<selection_clear_event_t>(connection, e, XCB_SELECTION_CLEAR)); break;
+      case XCB_SELECTION_REQUEST: return emit<XCB_SELECTION_REQUEST>(event_t::make<selection_request_event_t>(connection, e, XCB_SELECTION_REQUEST)); break;
+      case XCB_SELECTION_NOTIFY: return emit<XCB_SELECTION_NOTIFY>(event_t::make<selection_notify_event_t>(connection, e, XCB_SELECTION_NOTIFY)); break;
+      case XCB_COLORMAP_NOTIFY: return emit<XCB_COLORMAP_NOTIFY>(event_t::make<colormap_notify_event_t>(connection, e, XCB_COLORMAP_NOTIFY)); break;
+      case XCB_CLIENT_MESSAGE: return emit<XCB_CLIENT_MESSAGE>(event_t::make<client_message_event_t>(connection, e, XCB_CLIENT_MESSAGE)); break;
+      case XCB_MAPPING_NOTIFY: return emit<XCB_MAPPING_NOTIFY>(event_t::make<mapping_notify_event_t>(connection, e, XCB_MAPPING_NOTIFY)); break;
       default:
         std::stringstream ss;
         ss << "Cannot Automake Event #" << e->response_type << " Event Unknown" << std::endl;

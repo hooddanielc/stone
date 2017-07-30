@@ -8,6 +8,8 @@
 
 namespace xcbxx {
 
+class connection_t;
+
 class event_t {
 
 protected:
@@ -28,7 +30,11 @@ public:
 
   template <typename event_type_t>
   static std::shared_ptr<event_type_t>
-  make(xcb_generic_event_t *e, uint8_t assert_response_type) {
+  make(
+    std::shared_ptr<connection_t> connection,
+    xcb_generic_event_t *e,
+    uint8_t assert_response_type
+  ) {
     if (e->response_type != assert_response_type) {
       std::stringstream ss;
       ss << "can't create event " << event_type_t::name << " "
@@ -36,7 +42,7 @@ public:
       throw std::runtime_error(ss.str());
     }
 
-    auto ref = new event_type_t(e);
+    auto ref = new event_type_t(connection, e);
     return std::shared_ptr<event_type_t>(ref);
   }
 

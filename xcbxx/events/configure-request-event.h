@@ -12,13 +12,14 @@ protected:
 
   static constexpr const char* name = "configure_request_event_t";
 
+  std::shared_ptr<connection_t> connection;
+
   xcb_configure_request_event_t *event;
 
-  configure_request_event_t(xcb_generic_event_t *event_):
+  configure_request_event_t(std::shared_ptr<connection_t> connection_, xcb_generic_event_t *event_):
     event_t(event_),
+    connection(connection_),
     event((xcb_configure_request_event_t *) event_) {}
-
-  static std::shared_ptr<configure_request_event_t> make(xcb_generic_event_t *);
 
 };  // event_t
 

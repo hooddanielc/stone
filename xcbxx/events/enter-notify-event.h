@@ -12,13 +12,14 @@ protected:
 
   static constexpr const char* name = "enter_notify_event_t";
 
+  std::shared_ptr<connection_t> connection;
+
   xcb_enter_notify_event_t *event;
 
-  enter_notify_event_t(xcb_generic_event_t *event_):
+  enter_notify_event_t(std::shared_ptr<connection_t> connection_, xcb_generic_event_t *event_):
     event_t(event_),
+    connection(connection_),
     event((xcb_enter_notify_event_t *) event_) {}
-
-  static std::shared_ptr<enter_notify_event_t> make(xcb_generic_event_t *);
 
 };  // event_t
 
