@@ -73,6 +73,13 @@ int connection_t::flush() {
 }
 
 std::shared_ptr<window_t> connection_t::create_window(
+  xcb_window_t window
+) {
+  auto ptr = new window_t(weak_ref.lock(), window);
+  return std::shared_ptr<window_t>(ptr);
+}
+
+std::shared_ptr<window_t> connection_t::create_window(
   int16_t x,
   int16_t y,
   uint16_t width,

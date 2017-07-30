@@ -68,6 +68,8 @@ public:
 
   std::shared_ptr<screen_t> get_screen(int *num = nullptr);
 
+  std::shared_ptr<window_t> create_window(xcb_window_t window);
+
   std::shared_ptr<window_t> create_window(
     int16_t x,
     int16_t y,

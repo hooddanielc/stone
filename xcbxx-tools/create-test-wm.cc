@@ -9,10 +9,6 @@ bool run = true;
 
 std::shared_ptr<connection_t> connection;
 
-void quit(int) {
-  run = false;
-}
-
 void event_loop() {
   xcb_generic_event_t *e;
 
@@ -29,7 +25,9 @@ int main(int, char*[]) {
   connection = xcbxx::connection_t::make();
 
   connection->on<XCB_MAP_REQUEST>([](std::shared_ptr<map_request_event_t> e) {
-    std::cout << "we got an XCB_MAP_REQUEST yay" << std::endl;
+    std::cout << "show window as is" << std::endl;
+    auto win = e->get_window();
+    win->show();
   });
 
   auto screen = connection->get_screen();
@@ -46,7 +44,6 @@ int main(int, char*[]) {
   root_window->change_attributes(XCB_CW_EVENT_MASK, select_input_val);
   connection->flush();
 
-  signal(SIGINT, quit);
   event_loop();
   return 0;
 }

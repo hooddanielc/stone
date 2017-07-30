@@ -4,6 +4,8 @@
 
 namespace xcbxx {
 
+class window_t;
+
 class map_request_event_t: public event_t {
 
 protected:
@@ -20,6 +22,10 @@ protected:
     event_t(event_),
     connection(connection_),
     event((xcb_map_request_event_t *) event_) {}
+
+public:
+
+  std::shared_ptr<window_t> get_window();
 
 };  // event_t
 
