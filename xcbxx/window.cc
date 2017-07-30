@@ -25,4 +25,9 @@ void window_t::change_attributes(uint32_t value_mask, const uint32_t *value_list
   connection->throw_bad_cookie("xcb_change_window_attributes", cookie);
 }
 
+void window_t::configure_window(uint16_t value_mask, const uint32_t *value_list) {
+  auto cookie = xcb_configure_window(get_connection(), window, value_mask, value_list);
+  connection->throw_bad_cookie("xcb_change_window_attributes", cookie);
+}
+
 }

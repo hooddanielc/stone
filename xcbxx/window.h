@@ -24,6 +24,8 @@ public:
 
   void change_attributes(uint32_t value_mask, const uint32_t *value_list);
 
+  void configure_window(uint16_t value_mask, const uint32_t *value_list);
+
   std::shared_ptr<graphic_ctx_t> make_graphic_ctx(
     uint32_t value_mask,
     const uint32_t *value_list
