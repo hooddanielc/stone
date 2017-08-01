@@ -1,7 +1,7 @@
 #pragma once
 
+#include <memory>
 #include <xcb/xcb.h>
-#include <xcbxx/connection.h>
 
 namespace xcbxx {
 

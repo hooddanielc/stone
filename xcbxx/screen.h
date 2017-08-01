@@ -1,8 +1,5 @@
 #pragma once
 
-#include <xcbxx/window.h>
-#include <xcbxx/connection.h>
-
 namespace xcbxx {
 
 class connection_t;

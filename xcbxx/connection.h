@@ -15,6 +15,7 @@
 #include <xcbxx/window.h>
 #include <xcbxx/graphic-ctx.h>
 #include <xcbxx/events.h>
+#include <xcbxx/glx-window.h>
 
 namespace xcbxx {
 
@@ -23,6 +24,8 @@ class window_t;
 class connection_t {
 
 public:
+
+  friend class glx_window_t;
 
   friend class screen_t;
 
@@ -84,6 +87,19 @@ public:
     uint16_t _class = XCB_WINDOW_CLASS_INPUT_OUTPUT,
     uint32_t value_mask = 0,
     const uint32_t *value_list = nullptr
+  );
+
+  std::shared_ptr<glx_window_t> create_glx_window(
+    int16_t x,
+    int16_t y,
+    uint16_t width,
+    uint16_t height,
+    uint16_t border_width,
+    xcb_window_t parent,
+    int visual,
+    uint8_t depth = XCB_COPY_FROM_PARENT,
+    uint16_t _class = XCB_WINDOW_CLASS_INPUT_OUTPUT,
+    uint32_t eventmask = XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_KEY_PRESS
   );
 
 private:

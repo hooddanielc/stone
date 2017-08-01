@@ -1,4 +1,5 @@
 #include <xcbxx/window.h>
+#include <xcbxx/connection.h>
 
 namespace xcbxx {
 
