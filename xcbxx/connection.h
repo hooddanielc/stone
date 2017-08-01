@@ -9,6 +9,8 @@
 #include <unistd.h>
 #include <inttypes.h>
 #include <xcb/xcb.h>
+#include <X11/Xlib.h>
+#include <X11/Xlib-xcb.h>
 #include <xcbxx/screen.h>
 #include <xcbxx/window.h>
 #include <xcbxx/graphic-ctx.h>
@@ -46,7 +48,7 @@ public:
     events.emit_raw(weak_ref.lock(), e);
   }
 
-  static std::shared_ptr<connection_t> make(const char *display = nullptr, int *screen_num = new int());
+  static std::shared_ptr<connection_t> make(const char *display_name = nullptr, int *screen_num = nullptr);
 
   ~connection_t();
 
@@ -90,17 +92,21 @@ private:
 
   xcb_connection_t *connection;
 
-  const char *display;
+  Display *display;
+
+  const char *display_name;
 
   int *screen_num;
 
   connection_t(
     xcb_connection_t *connection_,
-    const char *display_,
+    Display *display_,
+    const char *display_name_,
     int *screen_num_
   ) :
     connection(connection_),
     display(display_),
+    display_name(display_name_),
     screen_num(screen_num_) {};
 
 };  // connection_t

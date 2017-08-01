@@ -12,8 +12,25 @@ void connection_t::throw_bad_cookie(const std::string &name, xcb_void_cookie_t c
   }
 }
 
-std::shared_ptr<connection_t> connection_t::make(const char *display, int *screen_num) {
-  auto connection = xcb_connect(display, screen_num);
+std::shared_ptr<connection_t> connection_t::make(const char *display_name, int *screen_num) {
+  Display *display = XOpenDisplay(display_name);
+  XSetEventQueueOwner(display, XCBOwnsEventQueue);
+
+  if (!display) {
+    throw std::runtime_error("Can't open display");
+  }
+
+  if (!screen_num) {
+    screen_num = new int();
+    *screen_num = DefaultScreen(display);
+  }
+
+  auto connection = XGetXCBConnection(display);
+
+  if (!connection) {
+    throw std::runtime_error("Can't get xcb connection from display");
+  }
+
   auto err = xcb_connection_has_error(connection);
 
   switch(err) {
@@ -31,7 +48,7 @@ std::shared_ptr<connection_t> connection_t::make(const char *display, int *scree
       throw std::runtime_error("XCB_CONN_CLOSED_INVALID_SCREEN");
   }
 
-  auto result = std::shared_ptr<connection_t>(new connection_t(connection, display, screen_num));
+  auto result = std::shared_ptr<connection_t>(new connection_t(connection, display, display_name, screen_num));
   result->weak_ref = result;
   return result;
 }
@@ -53,7 +70,7 @@ connection_t::~connection_t() {
 }
 
 const char *connection_t::get_display() {
-  return display ? display : std::getenv("DISPLAY");
+  return display_name ? display_name : std::getenv("DISPLAY");
 }
 
 int *connection_t::get_screen_num() {

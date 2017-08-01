@@ -31,6 +31,7 @@ public:
     const uint32_t *value_list
   );
 
+  ~window_t();
 
 private:
 

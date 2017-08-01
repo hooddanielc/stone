@@ -2,6 +2,10 @@
 
 namespace xcbxx {
 
+window_t::~window_t()  {
+  xcb_destroy_window(get_connection(), window);
+}
+
 xcb_connection_t *window_t::get_connection() {
   return connection->connection;
 }
