@@ -24,7 +24,7 @@ FIXTURE(comments_and_names) {
     bool /* well not that i would comment like
             this, but i've seen it */
     varcolor
-    cool
+    cool123
   )");
 
   EXPECT_EQ(tokens[0].get_kind(), token_t::vec4);
@@ -33,14 +33,30 @@ FIXTURE(comments_and_names) {
   EXPECT_EQ(tokens[3].get_kind(), token_t::identifier);
 }
 
-// FIXTURE(test) {
+FIXTURE(equality_operator) {
+  auto tokens = lexer_t::lex(R"(
+    vec4
+    ab==cd123
+    varcolor == varcolor
+  )");
 
-//   auto lexer = gliss::lexer_t::lex(R"(
-//     #version 330 core
-//     layout (location = 0) in vec3 aPos;
+  EXPECT_EQ(tokens[0].get_kind(), token_t::vec4);
+  EXPECT_EQ(tokens[1].get_kind(), token_t::identifier);
+  EXPECT_EQ(tokens[2].get_kind(), token_t::eq_op);
+  EXPECT_EQ(tokens[3].get_kind(), token_t::identifier);
+  EXPECT_EQ(tokens[4].get_kind(), token_t::identifier);
+  EXPECT_EQ(tokens[5].get_kind(), token_t::eq_op);
+  EXPECT_EQ(tokens[6].get_kind(), token_t::identifier);
+}
 
-//     void main() {
-//       gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-//     }
-//   )");
-// }
+FIXTURE(assignment) {
+  auto tokens = lexer_t::lex(R"(
+    vec4 something = varcolor;
+  )");
+
+  EXPECT_EQ(tokens[0].get_kind(), token_t::vec4);
+  EXPECT_EQ(tokens[1].get_kind(), token_t::identifier);
+  EXPECT_EQ(tokens[2].get_kind(), token_t::equal);
+  EXPECT_EQ(tokens[3].get_kind(), token_t::identifier);
+  EXPECT_EQ(tokens[4].get_kind(), token_t::semicolon);
+}

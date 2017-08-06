@@ -33,6 +33,13 @@ public:
     return lexer_t(next_cursor).lex();
   }
 
+  /* Heper method to print tokens returned from lex */
+  static void print_tokens(const std::vector<token_t> &tokens) {
+    for (const auto &token: tokens) {
+      std::cout << token << std::endl;
+    }
+  }
+
 private:
 
   /* Used by our public lex function. */
@@ -43,11 +50,22 @@ private:
 
   /* Used by our public lex function. */
   std::vector<token_t> lex() {
-    std::vector<token_t> tokens;
     enum {
       start,
       start_slash,
+      start_star,
       start_equal,
+      start_plus,
+      start_minus,
+      start_bang,
+      start_mod,
+      start_ampersand,
+      start_vertical_bar,
+      start_caret,
+      start_left_angle,
+      start_right_angle,
+      right_op_start,
+      left_op_start,
       multiline_comment,
       multiline_comment_end_star,
       oneline_comment,
@@ -63,15 +81,86 @@ private:
               go = false;
               break;
             }
+            case ';': add_single_token(token_t::semicolon); break;
+            case '.': add_single_token(token_t::dot); break;
+            case '(': add_single_token(token_t::left_paren); break;
+            case ')': add_single_token(token_t::right_paren); break;
+            case '[': add_single_token(token_t::left_bracket); break;
+            case ']': add_single_token(token_t::right_bracket); break;
+            case '{': add_single_token(token_t::left_brace); break;
+            case '}': add_single_token(token_t::right_brace); break;
+            case '~': add_single_token(token_t::tilde); break;
+            case ',': add_single_token(token_t::comma); break;
+            case '+': {
+              set_anchor();
+              pop();
+              state = start_plus;
+              break;
+            }
+            case '-': {
+              set_anchor();
+              pop();
+              state = start_minus;
+              break;
+            }
             case '/': {
+              set_anchor();
               pop();
               state = start_slash;
+              break;
+            }
+            case '*': {
+              set_anchor();
+              pop();
+              state = start_star;
+              break;
+            }
+            case '%': {
+              set_anchor();
+              pop();
+              state = start_mod;
               break;
             }
             case '=': {
               set_anchor();
               pop();
               state = start_equal;
+              break;
+            }
+            case '!': {
+              set_anchor();
+              pop();
+              state = start_bang;
+              break;
+            }
+            case '&': {
+              set_anchor();
+              pop();
+              state = start_ampersand;
+              break;
+            }
+            case '|': {
+              set_anchor();
+              pop();
+              state = start_vertical_bar;
+              break;
+            }
+            case '^': {
+              set_anchor();
+              pop();
+              state = start_caret;
+              break;
+            }
+            case '<': {
+              set_anchor();
+              pop();
+              state = start_left_angle;
+              break;
+            }
+            case '>': {
+              set_anchor();
+              pop();
+              state = start_right_angle;
               break;
             }
             default: {
@@ -90,6 +179,279 @@ private:
           }
           break;
         }
+        case start_plus: {
+          switch (c) {
+            case '+': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::inc_op);
+              break;
+            }
+            case '=': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::add_assign);
+              break;
+            }
+            default: {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::plus);
+              break;
+            }
+          }
+          break;
+        }
+        case start_minus: {
+          switch (c) {
+            case '-': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::dec_op);
+              break;
+            }
+            case '=': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::sub_assign);
+              break;
+            }
+            default: {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::dash);
+              break;
+            }
+          }
+          break;
+        }
+        case start_star: {
+          switch (c) {
+            case '=': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::mul_assign);
+              break;
+            }
+            default: {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::star);
+              break;
+            }
+          }
+          break;
+        }
+        case start_bang: {
+          switch (c) {
+            case '=': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::ne_op);
+              break;
+            }
+            default: {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::bang);
+              break;
+            }
+          }
+          break;
+        }
+        case start_ampersand: {
+          switch (c) {
+            case '=': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::and_assign);
+              break;
+            }
+            case '&': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::and_op);
+              break;
+            }
+            default: {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::ampersand);
+              break;
+            }
+          }
+          break;
+        }
+        case start_vertical_bar: {
+          switch (c) {
+            case '=': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::or_assign);
+              break;
+            }
+            case '|': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::or_op);
+              break;
+            }
+            default: {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::ampersand);
+              break;
+            }
+          }
+          break;
+        }
+        case start_mod: {
+          switch (c) {
+            case '=': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::mod_assign);
+              break;
+            }
+            default: {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::percent);
+              break;
+            }
+          }
+          break;
+        }
+        case start_caret: {
+          switch (c) {
+            case '=': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::xor_assign);
+              break;
+            }
+            case '^': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::xor_op);
+              break;
+            }
+            default: {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::caret);
+              break;
+            }
+          }
+          break;
+        }
+        case start_left_angle: {
+          switch (c) {
+            case '=': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::le_op);
+              break;
+            }
+            case '<': {
+              pop();
+              state = left_op_start;
+              break;
+            }
+            default: {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::left_angle);
+              break;
+            }
+          }
+          break;
+        }
+        case left_op_start: {
+          switch (c) {
+            case '=': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::left_assign);
+              break;
+            }
+            default: {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::left_op);
+              break;
+            }
+          }
+          break;
+        }
+        case start_right_angle: {
+          switch (c) {
+            case '=': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::ge_op);
+              break;
+            }
+            case '>': {
+              pop();
+              state = right_op_start;
+              break;
+            }
+            default: {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::right_angle);
+              break;
+            }
+          }
+          break;
+        }
+        case right_op_start: {
+          switch (c) {
+            case '=': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::right_assign);
+              break;
+            }
+            default: {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::right_op);
+              break;
+            }
+          }
+          break;
+        }
         case start_slash: {
           switch (c) {
             case '*': {
@@ -102,8 +464,19 @@ private:
               state = oneline_comment;
               break;
             }
+            case '=': {
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::div_assign);
+              break;
+            }
             default: {
-              throw error_t(this, "bad character");
+              pop_anchor();
+              pop();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::slash);
+              break;
             }
           }
           break;
@@ -116,17 +489,20 @@ private:
               break;
             }
             case '=': {
+              pop_anchor();
               pop();
               tokens.emplace_back(anchor_pos, token_t::eq_op);
               state = start;
               break;
             }
             default: {
+              pop_anchor();
               tokens.emplace_back(anchor_pos, token_t::equal);
               state = start;
               break;
             }
           }
+          break;
         }
         case multiline_comment: {
           pop();
@@ -136,17 +512,19 @@ private:
           break;
         }
         case multiline_comment_end_star: {
-          pop();
           if (c == '/') {
+            pop_anchor();
             state = start;
           } else {
             state = multiline_comment;
           }
+          pop();
           break;
         }
         case oneline_comment: {
           pop();
           if (!c || c == '\n') {
+            pop_anchor();
             state = start;
           }
           break;
@@ -167,9 +545,10 @@ private:
           }
           break;
         }
+        break;
       }  // switch
     } while (go);
-    return tokens;
+    return std::move(tokens);
   }
 
   /* Return the current character from the source text but don't advance to
@@ -228,6 +607,20 @@ private:
     anchor = nullptr;
     return text;
   }
+
+  /* Add a token at the current position, set anchor, advance 1 character
+     and reset anchor. Used for tokens using only one character that can
+     not be included in multi character tokens. ex. left_paren, right_paren
+     etc.*/
+  void add_single_token(token_t::kind_t kind) {
+    set_anchor();
+    pop();
+    pop_anchor();
+    tokens.emplace_back(anchor_pos, kind);
+  }
+
+  /* Temporarily holds tokens while lexing */
+  std::vector<token_t> tokens;
 
   /* Our next position within the source text. */
   mutable const char *next_cursor;
