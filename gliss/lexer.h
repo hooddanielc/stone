@@ -75,9 +75,15 @@ private:
       int_constant,
       octal_constant,
       int_suffix,
-      hexadecimal_constant,
+      start_hexadecimal_digits,
+      hexadecimal_digits,
       float_constant,
-      float_exponent_part
+      start_float_exponent_part,
+      start_exponent_sign,
+      exponent_digits,
+      start_float_suffix_l,
+      start_float_suffix_f,
+      start_float_suffix_fl
     } state = start;
     bool go = true;
     do {
@@ -208,11 +214,12 @@ private:
           if (isdigit(c)) {
             pop();
             state = float_constant;
-          } else {
-            pop_anchor();
-            state = start;
-            tokens.emplace_back(anchor_pos, token_t::dot);
+            break;
           }
+          pop_anchor();
+          state = start;
+          tokens.emplace_back(anchor_pos, token_t::dot);
+          break;
         }
         case start_plus: {
           switch (c) {
@@ -581,9 +588,14 @@ private:
           break;
         }
         case start_zero: {
+          if (c == '.') {
+            pop();
+            state = float_constant;
+            break;
+          }
           if (c == 'x' || c == 'X') {
             pop();
-            state = hexadecimal_constant;
+            state = start_hexadecimal_digits;
             break;
           }
           if (c == 'u' || c == 'U') {
@@ -591,21 +603,27 @@ private:
             state = int_suffix;
             break;
           }
-          if (isspace(c)) {
-            auto text = pop_anchor();
-            pop();
-            tokens.emplace_back(anchor_pos, token_t::intconstant, std::move(text));
-            state = start;
-            break;
-          }
-          if (isdigit(c)) {
+          if (
+            c == '0' || c == '1' || c == '2' || c == '3' ||
+            c == '4' || c == '5' || c == '6' || c == '7'
+          ) {
             pop();
             state = octal_constant;
             break;
           }
-          throw error_t(this, "bad character after leading zero");
+          if (isdigit(c) || isalpha(c) || c == '_') {
+            throw error_t(this, "bad character after leading zero");
+          }
+          auto text = pop_anchor();
+          tokens.emplace_back(anchor_pos, token_t::intconstant, std::move(text));
+          state = start;
+          break;
         }
         case int_constant: {
+          if (isdigit(c)) {
+            pop();
+            break;
+          }
           if (c == '.') {
             pop();
             state = float_constant;
@@ -616,66 +634,203 @@ private:
             state = int_suffix;
             break;
           }
-          if (isdigit(c)) {
-            pop();
-            break;
-          }
           if (c == 'e' || c == 'E') {
             pop();
-            state = float_exponent_part;
+            state = start_float_exponent_part;
             break;
           }
-          if (isspace(c)) {
-            auto text = pop_anchor();
-            pop();
-            tokens.emplace_back(anchor_pos, token_t::intconstant);
-            break;
-          }
-          throw error_t(this, "bad character in integer-constant");
-        }
-        case int_suffix: {
-          if (!isspace(c)) {
-            throw error_t(this, "bad character after integer-suffix");
+          if (isalpha(c) || c == '_') {
+            throw error_t(this, "bad character in integer-constant");
           }
           auto text = pop_anchor();
-          pop();
           tokens.emplace_back(anchor_pos, token_t::intconstant, std::move(text));
           state = start;
           break;
         }
-        case hexadecimal_constant: {
+        case int_suffix: {
+          if (isalpha(c) || c == '_' || c == '.') {
+            throw error_t(this, "bad character after integer-suffix");
+          }
+          auto text = pop_anchor();
+          tokens.emplace_back(anchor_pos, token_t::intconstant, std::move(text));
+          state = start;
+          break;
+        }
+        case start_hexadecimal_digits: {
+          switch (c) {
+            case 'a': case 'A':
+            case 'b': case 'B':
+            case 'c': case 'C':
+            case 'd': case 'D':
+            case 'e': case 'E':
+            case 'f': case 'F': {
+              pop();
+              state = hexadecimal_digits;
+              break;
+            }
+            default: {
+              if (isdigit(c)) {
+                pop();
+                state = hexadecimal_digits;
+                break;
+              }
+              throw error_t(this, "bad character near beginning of hexadecimal constant");
+            }
+          }
+        }
+        case hexadecimal_digits: {
+          switch (c) {
+            case 'a': case 'A':
+            case 'b': case 'B':
+            case 'c': case 'C':
+            case 'd': case 'D':
+            case 'e': case 'E':
+            case 'f': case 'F': {
+              pop();
+              break;
+            }
+            case 'u': case 'U': {
+              pop();
+              state = int_suffix;
+              break;
+            }
+            default: {
+              if (isdigit(c)) {
+                pop();
+                break;
+              }
+              if (isalpha(c) || c == '_' || c == '.') {
+                throw error_t(this, "bad character in hexadecimal constant");
+              }
+              auto text = pop_anchor();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::intconstant, std::move(text));
+              break;
+            }
+          }
           break;
         }
         case octal_constant: {
+          switch (c) {
+            case '0': case '1': case '2': case '3':
+            case '4': case '5': case '6': case '7': {
+              pop();
+              break;
+            }
+            default: {
+              if (isdigit(c) || isalpha(c) || c == '_' || c == '.') {
+                throw error_t(this, "bad character in octal constant");
+              }
+              auto text = pop_anchor();
+              state = start;
+              tokens.emplace_back(anchor_pos, token_t::intconstant, std::move(text));
+              break;
+            }
+          }
           break;
         }
         case float_constant: {
           if (c == 'l' || c == 'L') {
+            pop();
+            state = start_float_suffix_l;
             break;
           }
           if (c == 'f' || c == 'F') {
+            pop();
+            state = start_float_suffix_f;
             break;
           }
           if (c == 'e' || c == 'E') {
             pop();
-            state = float_exponent_part;
+            state = start_float_exponent_part;
             break;
           }
           if (isdigit(c)) {
             pop();
             break;
           }
-          if (isspace(c)) {
-            auto text = pop_anchor();
+          if (isalpha(c) || c == '_' || c == '.') {
+            throw error_t(this, "bad character in floating-point constant");
+          }
+          auto text = pop_anchor();
+          tokens.emplace_back(anchor_pos, token_t::floatconstant, std::move(text));
+          state = start;
+          break;
+        }
+        case start_float_suffix_l: {
+          if (c == 'f' || c == 'F') {
             pop();
-            tokens.emplace_back(anchor_pos, token_t::floatconstant, std::move(text));
-            state = start;
+            state = start_float_suffix_fl;
             break;
           }
-
-          throw error_t(this, "bad character in floating-point constant");
+          if (isalpha(c) || c == '_' || c == '.') {
+            throw error_t(this, "bad character in floating-point constant");
+          }
+          auto text = pop_anchor();
+          tokens.emplace_back(anchor_pos, token_t::floatconstant, std::move(text));
+          state = start;
+          break;
         }
-        case float_exponent_part: {
+        case start_float_suffix_f: {
+          if (isalpha(c) || c == '_' || c == '.') {
+            throw error_t(this, "bad character in floating-point constant");
+          }
+          auto text = pop_anchor();
+          tokens.emplace_back(anchor_pos, token_t::floatconstant, std::move(text));
+          state = start;
+          break;
+        }
+        case start_float_suffix_fl: {
+          if (isalpha(c) || c == '_' || c == '.') {
+            throw error_t(this, "bad character in floating-point constant");
+          }
+          auto text = pop_anchor();
+          tokens.emplace_back(anchor_pos, token_t::doubleconstant, std::move(text));
+          state = start;
+          break;
+        }
+        case start_float_exponent_part: {
+          if (c == '-' || c == '+') {
+            pop();
+            state = start_exponent_sign;
+            break;
+          }
+          if (isdigit(c)) {
+            pop();
+            state = exponent_digits;
+            break;
+          }
+          throw error_t(this, "exponent has no digits");
+        }
+        case start_exponent_sign: {
+          if (isdigit(c)) {
+            pop();
+            state = exponent_digits;
+            break;
+          }
+          throw error_t(this, "exponent has no digits");
+        }
+        case exponent_digits: {
+          if (c == 'l' || c == 'L') {
+            pop();
+            state = start_float_suffix_l;
+            break;
+          }
+          if (c == 'f' || c == 'F') {
+            pop();
+            state = start_float_suffix_f;
+            break;
+          }
+          if (isdigit(c)) {
+            pop();
+            break;
+          }
+          if (isalpha(c) || c == '_' || c == '.') {
+            throw error_t(this, "bad character in floating point constant");
+          }
+          auto text = pop_anchor();
+          tokens.emplace_back(anchor_pos, token_t::floatconstant, std::move(text));
+          state = start;
           break;
         }
       }  // switch
