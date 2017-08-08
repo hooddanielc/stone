@@ -92,6 +92,8 @@ private:
         case start: {
           switch (c) {
             case '\0': {
+              set_anchor();
+              tokens.emplace_back(anchor_pos, token_t::end);
               go = false;
               break;
             }
@@ -525,11 +527,6 @@ private:
         }
         case start_equal: {
           switch (c) {
-            case '\0': {
-              go = false;
-              throw error_t(this, "end-of-program after equals");
-              break;
-            }
             case '=': {
               pop_anchor();
               pop();

@@ -16,6 +16,7 @@ class token_t final {
 
   /* Tokens come in various kinds. */
   enum kind_t {
+    end,
     varying,
     attribute,
     const_,
@@ -261,6 +262,7 @@ class token_t final {
   static const char *get_desc(kind_t kind) {
     const char *desc;
     switch (kind) {
+      case end: desc = "END"; break;
       case attribute: desc = "ATTRIBUTE"; break;
       case varying: desc = "VARYING"; break;
       case const_: desc = "CONST"; break;
