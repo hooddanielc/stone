@@ -18,7 +18,7 @@ Object.keys(grammar).forEach((node) => {
         line.push('_' + item + '_');
       }
     });
-    lines.push('* ' + line.join(' '));
+    lines.push('*  ' + line.join(' '));
   });
 });
 

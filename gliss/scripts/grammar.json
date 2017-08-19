@@ -745,7 +745,8 @@
     ],
     [
       "array_specifier",
-      "LEFT_BRACKETconditional_expression",
+      "LEFT_BRACKET",
+      "conditional_expression",
       "RIGHT_BRACKET"
     ]
   ],

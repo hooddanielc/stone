@@ -270,7 +270,7 @@
 *  _LEFT_BRACKET_ _RIGHT_BRACKET_
 *  _LEFT_BRACKET_ [conditional_expression](#conditional_expression) _RIGHT_BRACKET_
 *  [array_specifier](#array_specifier) _LEFT_BRACKET_ _RIGHT_BRACKET_
-*  [array_specifier](#array_specifier) _LEFT_BRACKETconditional_expression_ _RIGHT_BRACKET_
+*  [array_specifier](#array_specifier) _LEFT_BRACKET_ [conditional_expression](#conditional_expression) _RIGHT_BRACKET_
 
 #### type_specifier_nonarray:
 *  _VOID_
