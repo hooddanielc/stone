@@ -8,6 +8,7 @@ var lines = [];
 Object.keys(grammar).forEach((node) => {
   lines.push('');
   lines.push('#### ' + node + ':');
+  const block_lines = [];
 
   grammar[node].forEach((list) => {
     var line = [];
@@ -18,8 +19,9 @@ Object.keys(grammar).forEach((node) => {
         line.push('_' + item + '_');
       }
     });
-    lines.push('*  ' + line.join(' '));
+    block_lines.push('*  ' + line.join(' '));
   });
+  lines = lines.concat(block_lines.sort());
 });
 
 console.log(lines.join('\n'));
