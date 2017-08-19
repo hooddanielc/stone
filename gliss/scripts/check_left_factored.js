@@ -48,4 +48,6 @@ Object.keys(todo_errors_map).forEach((key) => {
   });
 });
 
-throw new Error('not left factored');
+if (Object.keys(todo_errors_map).length) {
+  throw new Error('not left factored');
+}
