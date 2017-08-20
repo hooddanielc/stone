@@ -24,4 +24,14 @@ Object.keys(grammar).forEach((node) => {
   lines = lines.concat(block_lines.sort());
 });
 
-console.log(lines.join('\n'));
+console.log([
+  '# Grammar',
+  '',
+  '### The following describes the grammar for the OpenGL Shading Language in terms of [these tokens](tokens.md).',
+  '',
+  `The starting rule is [translation_unit](#translation_unit). An empty shader
+  (one having no tokens to parse, after preprocessing) is valid, resulting in
+  no compile-time errors, even though the grammar below does not have a rule to accept an
+  empty token stream. Taken from [OpenGL 4.60 Specification Ch. 9](https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf)
+  `.split('\n  ').join(' ').split('\n ').join(' '),
+].concat(lines).join('\n'));
