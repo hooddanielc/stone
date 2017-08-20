@@ -1491,14 +1491,13 @@
   ],
   "switch_statement_list": [
     [
-      "\/*",
-      "nothing",
-      "*\/"
+      "nothing"
     ],
     [
       "statement_list"
     ]
   ],
+  "nothing": [],
   "case_label": [
     [
       "CASE",
@@ -1583,7 +1582,7 @@
       "jump_statement_break"
     ],
     [
-      "jump_statement_return_semicolon"
+      "jump_statement_return"
     ],
     [
       "RETURN",
@@ -1592,11 +1591,7 @@
     ],
     [
       "DISCARD",
-      "SEMICOLON",
-      "\/\/",
-      "Fragment",
-      "shader",
-      "only."
+      "SEMICOLON"
     ]
   ],
   "jump_statement_return": [

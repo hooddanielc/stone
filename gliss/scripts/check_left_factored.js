@@ -18,6 +18,8 @@ function find_todo(todo, taboo = []) {
     list.forEach((item) => {
       if (grammar[item]) {
         find_todo(item, taboo);
+      } else if (item !== item.toUpperCase()) {
+        throw new Error('non terminal symbol does not exist in grammar map: ' + item);
       }
     });
   });
