@@ -16,11 +16,23 @@
 
 #### postfix_expression:
 *  [function_call](#function_call)
-*  [postfix_expression](#postfix_expression) _DEC_OP_
-*  [postfix_expression](#postfix_expression) _DOT_ _FIELD_SELECTION_
-*  [postfix_expression](#postfix_expression) _INC_OP_
-*  [postfix_expression](#postfix_expression) _LEFT_BRACKET_ [integer_expression](#integer_expression) _RIGHT_BRACKET_
+*  [postfix_expression_decrement](#postfix_expression_decrement)
+*  [postfix_expression_field_selection](#postfix_expression_field_selection)
+*  [postfix_expression_increment](#postfix_expression_increment)
+*  [postfix_expression_integer_array](#postfix_expression_integer_array)
 *  [primary_expression](#primary_expression)
+
+#### postfix_expression_integer_array:
+*  [postfix_expression](#postfix_expression) _LEFT_BRACKET_ [integer_expression](#integer_expression) _RIGHT_BRACKET_
+
+#### postfix_expression_field_selection:
+*  [postfix_expression](#postfix_expression) _DOT_ _FIELD_SELECTION_
+
+#### postfix_expression_increment:
+*  [postfix_expression](#postfix_expression) _INC_OP_
+
+#### postfix_expression_decrement:
+*  [postfix_expression](#postfix_expression) _DEC_OP_
 
 #### integer_expression:
 *  [expression](#expression)
@@ -37,6 +49,9 @@
 
 #### function_call_header_no_parameters:
 *  [function_call_header](#function_call_header)
+*  [function_call_header_void_parameter](#function_call_header_void_parameter)
+
+#### function_call_header_void_parameter:
 *  [function_call_header](#function_call_header) _VOID_
 
 #### function_call_header_with_parameters:
@@ -115,7 +130,10 @@
 *  [logical_xor_expression](#logical_xor_expression)
 
 #### conditional_expression:
+*  [conditional_ternary_expression](#conditional_ternary_expression)
 *  [logical_or_expression](#logical_or_expression)
+
+#### conditional_ternary_expression:
 *  [logical_or_expression](#logical_or_expression) _QUESTION_ [expression](#expression) _COLON_ [assignment_expression](#assignment_expression)
 
 #### assignment_expression:
@@ -146,14 +164,27 @@
 *  [function_prototype](#function_prototype) _SEMICOLON_
 *  [init_declarator_list](#init_declarator_list) _SEMICOLON_
 *  [type_qualifier](#type_qualifier) _IDENTIFIER_ [identifier_list](#identifier_list) _SEMICOLON_
-*  [type_qualifier](#type_qualifier) _IDENTIFIER_ _LEFT_BRACE_ [struct_declaration_list](#struct_declaration_list) _RIGHT_BRACE_
-*  [type_qualifier](#type_qualifier) _IDENTIFIER_ _LEFT_BRACE_ [struct_declaration_list](#struct_declaration_list) _RIGHT_BRACE_
-*  [type_qualifier](#type_qualifier) _IDENTIFIER_ _LEFT_BRACE_ [struct_declaration_list](#struct_declaration_list) _RIGHT_BRACE_ _SEMICOLON_
-*  [type_qualifier](#type_qualifier) _IDENTIFIER_ _SEMICOLON_
-*  [type_qualifier](#type_qualifier) _SEMICOLON_
-*  _IDENTIFIER_ [array_specifier](#array_specifier) _SEMICOLON_
-*  _IDENTIFIER_ _SEMICOLON_
+*  [type_qualifier_identifier](#type_qualifier_identifier)
+*  [type_qualifier_struct_declaration_list](#type_qualifier_struct_declaration_list)
+*  [type_qualifier_struct_declaration_list_identifier](#type_qualifier_struct_declaration_list_identifier)
+*  [type_qualifier_struct_declaration_list_identifier_array](#type_qualifier_struct_declaration_list_identifier_array)
+*  [type_qualifier_terminated](#type_qualifier_terminated)
 *  _PRECISION_ [precision_qualifier](#precision_qualifier) [type_specifier](#type_specifier) _SEMICOLON_
+
+#### type_qualifier_identifier:
+*  [type_qualifier](#type_qualifier) _IDENTIFIER_ _SEMICOLON_
+
+#### type_qualifier_terminated:
+*  [type_qualifier](#type_qualifier) _SEMICOLON_
+
+#### type_qualifier_struct_declaration_list_identifier_array:
+*  [type_qualifier](#type_qualifier) _IDENTIFIER_ _LEFT_BRACE_ [struct_declaration_list](#struct_declaration_list) _RIGHT_BRACE_ _IDENTIFIER_ [array_specifier](#array_specifier) _SEMICOLON_
+
+#### type_qualifier_struct_declaration_list_identifier:
+*  [type_qualifier](#type_qualifier) _IDENTIFIER_ _LEFT_BRACE_ [struct_declaration_list](#struct_declaration_list) _RIGHT_BRACE_ _IDENTIFIER_ _SEMICOLON_
+
+#### type_qualifier_struct_declaration_list:
+*  [type_qualifier](#type_qualifier) _IDENTIFIER_ _LEFT_BRACE_ [struct_declaration_list](#struct_declaration_list) _RIGHT_BRACE_ _SEMICOLON_
 
 #### identifier_list:
 *  [identifier_list](#identifier_list) _COMMA_ _IDENTIFIER_
@@ -174,7 +205,10 @@
 *  [fully_specified_type](#fully_specified_type) _IDENTIFIER_ _LEFT_PAREN_
 
 #### parameter_declarator:
+*  [parameter_declarator_array](#parameter_declarator_array)
 *  [type_specifier](#type_specifier) _IDENTIFIER_
+
+#### parameter_declarator_array:
 *  [type_specifier](#type_specifier) _IDENTIFIER_ [array_specifier](#array_specifier)
 
 #### parameter_declaration:
@@ -188,17 +222,38 @@
 
 #### init_declarator_list:
 *  [init_declarator_list](#init_declarator_list) _COMMA_ _IDENTIFIER_
-*  [init_declarator_list](#init_declarator_list) _COMMA_ _IDENTIFIER_ [array_specifier](#array_specifier)
-*  [init_declarator_list](#init_declarator_list) _COMMA_ _IDENTIFIER_ [array_specifier](#array_specifier) _EQUAL_ [initializer](#initializer)
-*  [init_declarator_list](#init_declarator_list) _COMMA_ _IDENTIFIER_ _EQUAL_ [initializer](#initializer)
+*  [init_declarator_list_array](#init_declarator_list_array)
+*  [init_declarator_list_array_initializer](#init_declarator_list_array_initializer)
+*  [init_declarator_list_initializer](#init_declarator_list_initializer)
 *  [single_declaration](#single_declaration)
+
+#### init_declarator_list_initializer:
+*  [init_declarator_list](#init_declarator_list) _COMMA_ _IDENTIFIER_ _EQUAL_ [initializer](#initializer)
+
+#### init_declarator_list_array_initializer:
+*  [init_declarator_list](#init_declarator_list) _COMMA_ _IDENTIFIER_ [array_specifier](#array_specifier) _EQUAL_ [initializer](#initializer)
+
+#### init_declarator_list_array:
+*  [init_declarator_list](#init_declarator_list) _COMMA_ _IDENTIFIER_ [array_specifier](#array_specifier)
 
 #### single_declaration:
 *  [fully_specified_type](#fully_specified_type)
-*  [fully_specified_type](#fully_specified_type) _IDENTIFIER_
-*  [fully_specified_type](#fully_specified_type) _IDENTIFIER_ [array_specifier](#array_specifier)
-*  [fully_specified_type](#fully_specified_type) _IDENTIFIER_ [array_specifier](#array_specifier) _EQUAL_ [initializer](#initializer)
+*  [fully_specified_type_identifier](#fully_specified_type_identifier)
+*  [fully_specified_type_identifier_array](#fully_specified_type_identifier_array)
+*  [fully_specified_type_identifier_array_initializer](#fully_specified_type_identifier_array_initializer)
+*  [fully_specified_type_initializer](#fully_specified_type_initializer)
+
+#### fully_specified_type_initializer:
 *  [fully_specified_type](#fully_specified_type) _IDENTIFIER_ _EQUAL_ [initializer](#initializer)
+
+#### fully_specified_type_identifier_array_initializer:
+*  [fully_specified_type](#fully_specified_type) _IDENTIFIER_ [array_specifier](#array_specifier) _EQUAL_ [initializer](#initializer)
+
+#### fully_specified_type_identifier_array:
+*  [fully_specified_type](#fully_specified_type) _IDENTIFIER_ [array_specifier](#array_specifier)
+
+#### fully_specified_type_identifier:
+*  [fully_specified_type](#fully_specified_type) _IDENTIFIER_
 
 #### fully_specified_type:
 *  [type_qualifier](#type_qualifier) [type_specifier](#type_specifier)
@@ -220,9 +275,12 @@
 *  [layout_qualifier_id_list](#layout_qualifier_id_list) _COMMA_ [layout_qualifier_id](#layout_qualifier_id)
 
 #### layout_qualifier_id:
+*  [layout_qualifier_id_equal_constant_expression](#layout_qualifier_id_equal_constant_expression)
 *  _IDENTIFIER_
-*  _IDENTIFIER_ _EQUAL_ [constant_expression](#constant_expression)
 *  _SHARED_
+
+#### layout_qualifier_id_equal_constant_expression:
+*  _IDENTIFIER_ _EQUAL_ [constant_expression](#constant_expression)
 
 #### precise_qualifier:
 *  _PRECISE_
@@ -240,6 +298,7 @@
 *  [storage_qualifier](#storage_qualifier)
 
 #### storage_qualifier:
+*  [storage_qualifier_subroutine_list](#storage_qualifier_subroutine_list)
 *  _BUFFER_
 *  _CENTROID_
 *  _COHERENT_
@@ -253,24 +312,35 @@
 *  _SAMPLE_
 *  _SHARED_
 *  _SUBROUTINE_
-*  _SUBROUTINE_ _LEFT_PAREN_ [type_name_list](#type_name_list) _RIGHT_PAREN_
 *  _UNIFORM_
 *  _VOLATILE_
 *  _WRITEONLY_
+
+#### storage_qualifier_subroutine_list:
+*  _SUBROUTINE_ _LEFT_PAREN_ [type_name_list](#type_name_list) _RIGHT_PAREN_
 
 #### type_name_list:
 *  [type_name_list](#type_name_list) _COMMA_ _TYPE_NAME_
 *  _TYPE_NAME_
 
 #### type_specifier:
+*  [type_specifier_array](#type_specifier_array)
 *  [type_specifier_nonarray](#type_specifier_nonarray)
+
+#### type_specifier_array:
 *  [type_specifier_nonarray](#type_specifier_nonarray) [array_specifier](#array_specifier)
 
 #### array_specifier:
-*  [array_specifier](#array_specifier) _LEFT_BRACKET_ [conditional_expression](#conditional_expression) _RIGHT_BRACKET_
 *  [array_specifier](#array_specifier) _LEFT_BRACKET_ _RIGHT_BRACKET_
-*  _LEFT_BRACKET_ [conditional_expression](#conditional_expression) _RIGHT_BRACKET_
+*  [array_specifier_conditional](#array_specifier_conditional)
+*  [array_specifier_conditional_nested](#array_specifier_conditional_nested)
 *  _LEFT_BRACKET_ _RIGHT_BRACKET_
+
+#### array_specifier_conditional:
+*  _LEFT_BRACKET_ [conditional_expression](#conditional_expression) _RIGHT_BRACKET_
+
+#### array_specifier_conditional_nested:
+*  [array_specifier](#array_specifier) _LEFT_BRACKET_ [conditional_expression](#conditional_expression) _RIGHT_BRACKET_
 
 #### type_specifier_nonarray:
 *  [struct_specifier](#struct_specifier)
@@ -401,8 +471,14 @@
 *  _MEDIUM_PRECISION_
 
 #### struct_specifier:
-*  _STRUCT_ _IDENTIFIER_ _LEFT_BRACE_ [struct_declaration_list](#struct_declaration_list) _RIGHT_BRACE_
-*  _STRUCT_ _LEFT_BRACE_ [struct_declaration_list](#struct_declaration_list) _RIGHT_BRACE_
+*  _STRUCT_ [struct_specifier_body](#struct_specifier_body)
+*  _STRUCT_ [struct_specifier_identifier_body](#struct_specifier_identifier_body)
+
+#### struct_specifier_identifier_body:
+*  _IDENTIFIER_ _LEFT_BRACE_ [struct_declaration_list](#struct_declaration_list) _RIGHT_BRACE_
+
+#### struct_specifier_body:
+*  _LEFT_BRACE_ [struct_declaration_list](#struct_declaration_list) _RIGHT_BRACE_
 
 #### struct_declaration_list:
 *  [struct_declaration](#struct_declaration)
@@ -417,13 +493,22 @@
 *  [struct_declarator_list](#struct_declarator_list) _COMMA_ [struct_declarator](#struct_declarator)
 
 #### struct_declarator:
+*  [struct_declarator_array](#struct_declarator_array)
 *  _IDENTIFIER_
+
+#### struct_declarator_array:
 *  _IDENTIFIER_ [array_specifier](#array_specifier)
 
 #### initializer:
 *  [assignment_expression](#assignment_expression)
-*  _LEFT_BRACE_ [initializer_list](#initializer_list) _COMMA_ _RIGHT_BRACE_
+*  [initializer_list_body](#initializer_list_body)
+*  [initializer_list_body_trailing_comma](#initializer_list_body_trailing_comma)
+
+#### initializer_list_body:
 *  _LEFT_BRACE_ [initializer_list](#initializer_list) _RIGHT_BRACE_
+
+#### initializer_list_body_trailing_comma:
+*  _LEFT_BRACE_ [initializer_list](#initializer_list) _COMMA_ _RIGHT_BRACE_
 
 #### initializer_list:
 *  [initializer](#initializer)
@@ -446,16 +531,22 @@
 *  [switch_statement](#switch_statement)
 
 #### compound_statement:
-*  _LEFT_BRACE_ [statement_list](#statement_list) _RIGHT_BRACE_
+*  [compound_statement_list](#compound_statement_list)
 *  _LEFT_BRACE_ _RIGHT_BRACE_
+
+#### compound_statement_list:
+*  _LEFT_BRACE_ [statement_list](#statement_list) _RIGHT_BRACE_
 
 #### statement_no_new_scope:
 *  [compound_statement_no_new_scope](#compound_statement_no_new_scope)
 *  [simple_statement](#simple_statement)
 
 #### compound_statement_no_new_scope:
-*  _LEFT_BRACE_ [statement_list](#statement_list) _RIGHT_BRACE_
+*  [compound_statement_no_new_scope_list](#compound_statement_no_new_scope_list)
 *  _LEFT_BRACE_ _RIGHT_BRACE_
+
+#### compound_statement_no_new_scope_list:
+*  _LEFT_BRACE_ [statement_list](#statement_list) _RIGHT_BRACE_
 
 #### statement_list:
 *  [statement](#statement)
@@ -469,7 +560,10 @@
 *  _IF_ _LEFT_PAREN_ [expression](#expression) _RIGHT_PAREN_ [selection_rest_statement](#selection_rest_statement)
 
 #### selection_rest_statement:
+*  [selection_rest_statement_else](#selection_rest_statement_else)
 *  [statement](#statement)
+
+#### selection_rest_statement_else:
 *  [statement](#statement) _ELSE_ [statement](#statement)
 
 #### condition:
@@ -477,8 +571,7 @@
 *  [fully_specified_type](#fully_specified_type) _IDENTIFIER_ _EQUAL_ [initializer](#initializer)
 
 #### switch_statement:
-*  _RIGHT_BRACE_
-*  _SWITCH_ _LEFT_PAREN_ [expression](#expression) _RIGHT_PAREN_ _LEFT_BRACE_ [switch_statement_list](#switch_statement_list)
+*  _SWITCH_ _LEFT_PAREN_ [expression](#expression) _RIGHT_PAREN_ _LEFT_BRACE_ [switch_statement_list](#switch_statement_list) _RIGHT_BRACE_
 
 #### switch_statement_list:
 *  [statement_list](#statement_list)
@@ -489,10 +582,15 @@
 *  _DEFAULT_ _COLON_
 
 #### iteration_statement:
-*  [statement_no_new_scope](#statement_no_new_scope)
+*  [iteration_statement_for_header](#iteration_statement_for_header) [for_init_statement](#for_init_statement) [for_rest_statement](#for_rest_statement) _RIGHT_PAREN_ [statement_no_new_scope](#statement_no_new_scope)
+*  [iteration_statement_while_header](#iteration_statement_while_header) [condition](#condition) _RIGHT_PAREN_ [statement_no_new_scope](#statement_no_new_scope)
 *  _DO_ [statement](#statement) _WHILE_ _LEFT_PAREN_ [expression](#expression) _RIGHT_PAREN_ _SEMICOLON_
-*  _FOR_ _LEFT_PAREN_ [for_init_statement](#for_init_statement) [for_rest_statement](#for_rest_statement) _RIGHT_PAREN_
-*  _WHILE_ _LEFT_PAREN_ [condition](#condition) _RIGHT_PAREN_ [statement_no_new_scope](#statement_no_new_scope)
+
+#### iteration_statement_while_header:
+*  _WHILE_ _LEFT_PAREN_
+
+#### iteration_statement_for_header:
+*  _FOR_ _LEFT_PAREN_
 
 #### for_init_statement:
 *  [declaration_statement](#declaration_statement)
@@ -503,14 +601,26 @@
 
 #### for_rest_statement:
 *  [conditionopt](#conditionopt) _SEMICOLON_
+*  [for_rest_statement_expression](#for_rest_statement_expression)
+
+#### for_rest_statement_expression:
 *  [conditionopt](#conditionopt) _SEMICOLON_ [expression](#expression)
 
 #### jump_statement:
-*  _BREAK_ _SEMICOLON_
-*  _CONTINUE_ _SEMICOLON_
+*  [jump_statement_break](#jump_statement_break)
+*  [jump_statement_continue](#jump_statement_continue)
 *  _DISCARD_ _SEMICOLON_ _//_ _Fragment_ _shader_ _only._
 *  _RETURN_ [expression](#expression) _SEMICOLON_
+*  _jump_statement_return_semicolon_
+
+#### jump_statement_return:
 *  _RETURN_ _SEMICOLON_
+
+#### jump_statement_break:
+*  _BREAK_ _SEMICOLON_
+
+#### jump_statement_continue:
+*  _CONTINUE_ _SEMICOLON_
 
 #### translation_unit:
 *  [external_declaration](#external_declaration)

@@ -34,23 +34,43 @@
       "primary_expression"
     ],
     [
-      "postfix_expression",
-      "LEFT_BRACKET",
-      "integer_expression",
-      "RIGHT_BRACKET"
+      "postfix_expression_integer_array"
     ],
     [
       "function_call"
     ],
     [
+      "postfix_expression_field_selection"
+    ],
+    [
+      "postfix_expression_increment"
+    ],
+    [
+      "postfix_expression_decrement"
+    ]
+  ],
+  "postfix_expression_integer_array": [
+    [
+      "postfix_expression",
+      "LEFT_BRACKET",
+      "integer_expression",
+      "RIGHT_BRACKET"
+    ]
+  ],
+  "postfix_expression_field_selection": [
+    [
       "postfix_expression",
       "DOT",
       "FIELD_SELECTION"
-    ],
+    ]
+  ],
+  "postfix_expression_increment": [
     [
       "postfix_expression",
       "INC_OP"
-    ],
+    ]
+  ],
+  "postfix_expression_decrement": [
     [
       "postfix_expression",
       "DEC_OP"
@@ -83,11 +103,16 @@
   ],
   "function_call_header_no_parameters": [
     [
-      "function_call_header",
-      "VOID"
+      "function_call_header_void_parameter"
     ],
     [
       "function_call_header"
+    ]
+  ],
+  "function_call_header_void_parameter": [
+    [
+      "function_call_header",
+      "VOID"
     ]
   ],
   "function_call_header_with_parameters": [
@@ -301,6 +326,11 @@
       "logical_or_expression"
     ],
     [
+      "conditional_ternary_expression"
+    ]
+  ],
+  "conditional_ternary_expression": [
+    [
       "logical_or_expression",
       "QUESTION",
       "expression",
@@ -384,49 +414,70 @@
       "SEMICOLON"
     ],
     [
-      "type_qualifier",
-      "IDENTIFIER",
-      "LEFT_BRACE",
-      "struct_declaration_list",
-      "RIGHT_BRACE",
-      "SEMICOLON"
+      "type_qualifier_struct_declaration_list"
     ],
     [
-      "type_qualifier",
-      "IDENTIFIER",
-      "LEFT_BRACE",
-      "struct_declaration_list",
-      "RIGHT_BRACE"
+      "type_qualifier_struct_declaration_list_identifier"
     ],
     [
-      "IDENTIFIER",
-      "SEMICOLON"
+      "type_qualifier_struct_declaration_list_identifier_array"
     ],
     [
-      "type_qualifier",
-      "IDENTIFIER",
-      "LEFT_BRACE",
-      "struct_declaration_list",
-      "RIGHT_BRACE"
+      "type_qualifier_terminated"
     ],
     [
-      "IDENTIFIER",
-      "array_specifier",
-      "SEMICOLON"
-    ],
-    [
-      "type_qualifier",
-      "SEMICOLON"
-    ],
-    [
-      "type_qualifier",
-      "IDENTIFIER",
-      "SEMICOLON"
+      "type_qualifier_identifier"
     ],
     [
       "type_qualifier",
       "IDENTIFIER",
       "identifier_list",
+      "SEMICOLON"
+    ]
+  ],
+  "type_qualifier_identifier": [
+    [
+      "type_qualifier",
+      "IDENTIFIER",
+      "SEMICOLON"
+    ]
+  ],
+  "type_qualifier_terminated": [
+    [
+      "type_qualifier",
+      "SEMICOLON"
+    ]
+  ],
+  "type_qualifier_struct_declaration_list_identifier_array": [
+    [
+      "type_qualifier",
+      "IDENTIFIER",
+      "LEFT_BRACE",
+      "struct_declaration_list",
+      "RIGHT_BRACE",
+      "IDENTIFIER",
+      "array_specifier",
+      "SEMICOLON"
+    ]
+  ],
+  "type_qualifier_struct_declaration_list_identifier": [
+    [
+      "type_qualifier",
+      "IDENTIFIER",
+      "LEFT_BRACE",
+      "struct_declaration_list",
+      "RIGHT_BRACE",
+      "IDENTIFIER",
+      "SEMICOLON"
+    ]
+  ],
+  "type_qualifier_struct_declaration_list": [
+    [
+      "type_qualifier",
+      "IDENTIFIER",
+      "LEFT_BRACE",
+      "struct_declaration_list",
+      "RIGHT_BRACE",
       "SEMICOLON"
     ]
   ],
@@ -479,6 +530,11 @@
       "IDENTIFIER"
     ],
     [
+      "parameter_declarator_array"
+    ]
+  ],
+  "parameter_declarator_array": [
+    [
       "type_specifier",
       "IDENTIFIER",
       "array_specifier"
@@ -515,19 +571,16 @@
       "IDENTIFIER"
     ],
     [
-      "init_declarator_list",
-      "COMMA",
-      "IDENTIFIER",
-      "array_specifier"
+      "init_declarator_list_array"
     ],
     [
-      "init_declarator_list",
-      "COMMA",
-      "IDENTIFIER",
-      "array_specifier",
-      "EQUAL",
-      "initializer"
+      "init_declarator_list_array_initializer"
     ],
+    [
+      "init_declarator_list_initializer"
+    ]
+  ],
+  "init_declarator_list_initializer": [
     [
       "init_declarator_list",
       "COMMA",
@@ -536,31 +589,69 @@
       "initializer"
     ]
   ],
+  "init_declarator_list_array_initializer": [
+    [
+      "init_declarator_list",
+      "COMMA",
+      "IDENTIFIER",
+      "array_specifier",
+      "EQUAL",
+      "initializer"
+    ]
+  ],
+  "init_declarator_list_array": [
+    [
+      "init_declarator_list",
+      "COMMA",
+      "IDENTIFIER",
+      "array_specifier"
+    ]
+  ],
   "single_declaration": [
     [
       "fully_specified_type"
     ],
     [
-      "fully_specified_type",
-      "IDENTIFIER"
+      "fully_specified_type_identifier"
     ],
+    [
+      "fully_specified_type_identifier_array"
+    ],
+    [
+      "fully_specified_type_identifier_array_initializer"
+    ],
+    [
+      "fully_specified_type_initializer"
+    ]
+  ],
+  "fully_specified_type_initializer": [
     [
       "fully_specified_type",
       "IDENTIFIER",
-      "array_specifier"
-    ],
+      "EQUAL",
+      "initializer"
+    ]
+  ],
+  "fully_specified_type_identifier_array_initializer": [
     [
       "fully_specified_type",
       "IDENTIFIER",
       "array_specifier",
       "EQUAL",
       "initializer"
-    ],
+    ]
+  ],
+  "fully_specified_type_identifier_array": [
     [
       "fully_specified_type",
       "IDENTIFIER",
-      "EQUAL",
-      "initializer"
+      "array_specifier"
+    ]
+  ],
+  "fully_specified_type_identifier": [
+    [
+      "fully_specified_type",
+      "IDENTIFIER"
     ]
   ],
   "fully_specified_type": [
@@ -611,12 +702,17 @@
       "IDENTIFIER"
     ],
     [
-      "IDENTIFIER",
-      "EQUAL",
-      "constant_expression"
+      "layout_qualifier_id_equal_constant_expression"
     ],
     [
       "SHARED"
+    ]
+  ],
+  "layout_qualifier_id_equal_constant_expression": [
+    [
+      "IDENTIFIER",
+      "EQUAL",
+      "constant_expression"
     ]
   ],
   "precise_qualifier": [
@@ -703,6 +799,11 @@
       "SUBROUTINE"
     ],
     [
+      "storage_qualifier_subroutine_list"
+    ]
+  ],
+  "storage_qualifier_subroutine_list": [
+    [
       "SUBROUTINE",
       "LEFT_PAREN",
       "type_name_list",
@@ -724,6 +825,11 @@
       "type_specifier_nonarray"
     ],
     [
+      "type_specifier_array"
+    ]
+  ],
+  "type_specifier_array": [
+    [
       "type_specifier_nonarray",
       "array_specifier"
     ]
@@ -734,15 +840,25 @@
       "RIGHT_BRACKET"
     ],
     [
-      "LEFT_BRACKET",
-      "conditional_expression",
-      "RIGHT_BRACKET"
+      "array_specifier_conditional"
     ],
     [
       "array_specifier",
       "LEFT_BRACKET",
       "RIGHT_BRACKET"
     ],
+    [
+      "array_specifier_conditional_nested"
+    ]
+  ],
+  "array_specifier_conditional": [
+    [
+      "LEFT_BRACKET",
+      "conditional_expression",
+      "RIGHT_BRACKET"
+    ]
+  ],
+  "array_specifier_conditional_nested": [
     [
       "array_specifier",
       "LEFT_BRACKET",
@@ -1129,13 +1245,23 @@
   "struct_specifier": [
     [
       "STRUCT",
+      "struct_specifier_identifier_body"
+    ],
+    [
+      "STRUCT",
+      "struct_specifier_body"
+    ]
+  ],
+  "struct_specifier_identifier_body": [
+    [
       "IDENTIFIER",
       "LEFT_BRACE",
       "struct_declaration_list",
       "RIGHT_BRACE"
-    ],
+    ]
+  ],
+  "struct_specifier_body": [
     [
-      "STRUCT",
       "LEFT_BRACE",
       "struct_declaration_list",
       "RIGHT_BRACE"
@@ -1178,6 +1304,11 @@
       "IDENTIFIER"
     ],
     [
+      "struct_declarator_array"
+    ]
+  ],
+  "struct_declarator_array": [
+    [
       "IDENTIFIER",
       "array_specifier"
     ]
@@ -1187,10 +1318,20 @@
       "assignment_expression"
     ],
     [
+      "initializer_list_body"
+    ],
+    [
+      "initializer_list_body_trailing_comma"
+    ]
+  ],
+  "initializer_list_body": [
+    [
       "LEFT_BRACE",
       "initializer_list",
       "RIGHT_BRACE"
-    ],
+    ]
+  ],
+  "initializer_list_body_trailing_comma": [
     [
       "LEFT_BRACE",
       "initializer_list",
@@ -1250,6 +1391,11 @@
       "RIGHT_BRACE"
     ],
     [
+      "compound_statement_list"
+    ]
+  ],
+  "compound_statement_list": [
+    [
       "LEFT_BRACE",
       "statement_list",
       "RIGHT_BRACE"
@@ -1268,6 +1414,11 @@
       "LEFT_BRACE",
       "RIGHT_BRACE"
     ],
+    [
+      "compound_statement_no_new_scope_list"
+    ]
+  ],
+  "compound_statement_no_new_scope_list": [
     [
       "LEFT_BRACE",
       "statement_list",
@@ -1303,11 +1454,16 @@
   ],
   "selection_rest_statement": [
     [
-      "statement",
-      "ELSE",
-      "statement"
+      "selection_rest_statement_else"
     ],
     [
+      "statement"
+    ]
+  ],
+  "selection_rest_statement_else": [
+    [
+      "statement",
+      "ELSE",
       "statement"
     ]
   ],
@@ -1329,9 +1485,7 @@
       "expression",
       "RIGHT_PAREN",
       "LEFT_BRACE",
-      "switch_statement_list"
-    ],
-    [
+      "switch_statement_list",
       "RIGHT_BRACE"
     ]
   ],
@@ -1358,8 +1512,7 @@
   ],
   "iteration_statement": [
     [
-      "WHILE",
-      "LEFT_PAREN",
+      "iteration_statement_while_header",
       "condition",
       "RIGHT_PAREN",
       "statement_no_new_scope"
@@ -1374,14 +1527,23 @@
       "SEMICOLON"
     ],
     [
-      "FOR",
-      "LEFT_PAREN",
+      "iteration_statement_for_header",
       "for_init_statement",
       "for_rest_statement",
-      "RIGHT_PAREN"
-    ],
-    [
+      "RIGHT_PAREN",
       "statement_no_new_scope"
+    ]
+  ],
+  "iteration_statement_while_header": [
+    [
+      "WHILE",
+      "LEFT_PAREN"
+    ]
+  ],
+  "iteration_statement_for_header": [
+    [
+      "FOR",
+      "LEFT_PAREN"
     ]
   ],
   "for_init_statement": [
@@ -1403,6 +1565,11 @@
       "SEMICOLON"
     ],
     [
+      "for_rest_statement_expression"
+    ]
+  ],
+  "for_rest_statement_expression": [
+    [
       "conditionopt",
       "SEMICOLON",
       "expression"
@@ -1410,16 +1577,13 @@
   ],
   "jump_statement": [
     [
-      "CONTINUE",
-      "SEMICOLON"
+      "jump_statement_continue"
     ],
     [
-      "BREAK",
-      "SEMICOLON"
+      "jump_statement_break"
     ],
     [
-      "RETURN",
-      "SEMICOLON"
+      "jump_statement_return_semicolon"
     ],
     [
       "RETURN",
@@ -1433,6 +1597,24 @@
       "Fragment",
       "shader",
       "only."
+    ]
+  ],
+  "jump_statement_return": [
+    [
+      "RETURN",
+      "SEMICOLON"
+    ]
+  ],
+  "jump_statement_break": [
+    [
+      "BREAK",
+      "SEMICOLON"
+    ]
+  ],
+  "jump_statement_continue": [
+    [
+      "CONTINUE",
+      "SEMICOLON"
     ]
   ],
   "translation_unit": [

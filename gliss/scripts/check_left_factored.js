@@ -5,19 +5,19 @@ const grammar = JSON.parse(grammar_text);
 
 var todo_list = [];
 const todo_errors_map = {};
+let greatestDepth = 0;
 
-function find_todo(todo, spaces = 0) {
-  const more_spaces = spaces + 2;
-  if (todo_list.indexOf(todo) !== -1) return;
-  todo_list.push(todo);
-  const joined_list = [];
+function find_todo(todo, taboo = []) {
+  if (taboo.indexOf(todo) !== -1) {
+    return;
+  }
+
+  taboo.push(todo);
+
   grammar[todo].forEach((list) => {
-    const joined_item = list.join(' ');
-    joined_list.push(joined_item);
-    console.log(new Array(spaces).join(' ') + joined_item);
     list.forEach((item) => {
       if (grammar[item]) {
-        find_todo(item, more_spaces);
+        find_todo(item, taboo);
       }
     });
   });
@@ -29,7 +29,6 @@ function find_todo(todo, spaces = 0) {
         list.forEach((item, idx) => {
           if (item === check[idx]) {
             console.log(`### ${list.join(' ')} conflicts with ${check.join(' ')} ###`);
-            //throw new Error('must be left factored');
             todo_errors_map[todo] = todo_errors_map[todo] || [];
             todo_errors_map[todo].push(`  '${list.join(' ')}' conflicts with '${check.join(' ')}'`);
           }
@@ -51,3 +50,5 @@ Object.keys(todo_errors_map).forEach((key) => {
 if (Object.keys(todo_errors_map).length) {
   throw new Error('not left factored');
 }
+
+console.log('success, grammar is left factored');
