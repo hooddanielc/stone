@@ -1,6 +1,8 @@
 # Grammar
 
-### The following describes the grammar for the OpenGL Shading Language in terms of [these tokens](tokens.md). The starting rule is [translation_unit](#translation_unit). An empty shader (one having no tokens to parse, after preprocessing) is valid, resulting in no compile-time errors, even though the grammar below does not have a rule to accept an empty token stream. Taken from [OpenGL 4.60 Specification Ch. 9](https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf)
+### The following describes the grammar for the OpenGL Shading Language in terms of [these tokens](tokens.md).
+
+The starting rule is [translation_unit](#translation_unit). An empty shader (one having no tokens to parse, after preprocessing) is valid, resulting in no compile-time errors, even though the grammar below does not have a rule to accept an empty token stream. Taken from [OpenGL 4.60 Specification Ch. 9](https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf) 
 
 #### variable_identifier:
 *  _IDENTIFIER_
@@ -574,8 +576,10 @@
 *  _SWITCH_ _LEFT_PAREN_ [expression](#expression) _RIGHT_PAREN_ _LEFT_BRACE_ [switch_statement_list](#switch_statement_list) _RIGHT_BRACE_
 
 #### switch_statement_list:
+*  [nothing](#nothing)
 *  [statement_list](#statement_list)
-*  _/*_ _nothing_ _*/_
+
+#### nothing:
 
 #### case_label:
 *  _CASE_ [expression](#expression) _COLON_
@@ -609,9 +613,9 @@
 #### jump_statement:
 *  [jump_statement_break](#jump_statement_break)
 *  [jump_statement_continue](#jump_statement_continue)
-*  _DISCARD_ _SEMICOLON_ _//_ _Fragment_ _shader_ _only._
+*  [jump_statement_return](#jump_statement_return)
+*  _DISCARD_ _SEMICOLON_
 *  _RETURN_ [expression](#expression) _SEMICOLON_
-*  _jump_statement_return_semicolon_
 
 #### jump_statement_return:
 *  _RETURN_ _SEMICOLON_
