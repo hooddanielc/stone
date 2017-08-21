@@ -1,5 +1,6 @@
 #include <iostream>
 #include <lick/lick.h>
+#include <gliss/ast.h>
 #include <gliss/ast-nodes/all.h>
 
 using namespace gliss;
@@ -26,7 +27,7 @@ class fixture_node_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  static const std::vector<std::vector<std::shared_ptr<any_pattern_item_t>>> patterns;
 
   fixture_node_t(
     const token_t &,
@@ -41,7 +42,7 @@ public:
 
 };  // fixture_node_t
 
-const std::vector<std::vector<any_pattern_item_t>> fixture_node_t::patterns = {
+const std::vector<std::vector<std::shared_ptr<any_pattern_item_t>>> fixture_node_t::patterns = {
   {
     pattern_item_t<token_t>::get(token_t::left_bracket),
     pattern_item_t<token_t>::get(token_t::right_bracket)

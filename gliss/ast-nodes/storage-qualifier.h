@@ -8,7 +8,7 @@
 
 #include <vector>
 #include "../ast.h"
-#include "storage-qualifier-subroutine-list.h"
+#include "type-name-list.h"
 
 namespace gliss {
 
@@ -18,14 +18,21 @@ class storage_qualifier_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   storage_qualifier_t(
     const token_t &
   );
 
   storage_qualifier_t(
-    const storage_qualifier_subroutine_list_t &
+    const token_t &,
+    const token_t &,
+    const type_name_list_t &,
+    const token_t &
   );
 
   virtual void accept(const visitor_t &visitor) const override {
@@ -34,7 +41,7 @@ public:
 
 };  // storage_qualifier_t
 
-const std::vector<std::vector<any_pattern_item_t>> storage_qualifier_t::patterns = {
+const std::vector<storage_qualifier_t::pattern_t> storage_qualifier_t::patterns = {
   {
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("CONST"))
   }, {
@@ -68,7 +75,10 @@ const std::vector<std::vector<any_pattern_item_t>> storage_qualifier_t::patterns
   }, {
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SUBROUTINE"))
   }, {
-    pattern_item_t<storage_qualifier_subroutine_list_t>::get()
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SUBROUTINE")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
+    pattern_item_t<type_name_list_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
   }
 };
 

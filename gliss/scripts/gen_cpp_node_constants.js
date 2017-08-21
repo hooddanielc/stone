@@ -1,9 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const grammar_text = fs.readFileSync(path.join(__dirname, 'grammar.json')).toString();
-const grammar = JSON.parse(grammar_text);
-const tokens_text = fs.readFileSync(path.join(__dirname, 'tokens.json')).toString();
-const tokens = JSON.parse(tokens_text);
+const grammar = require('./grammar');
+const tokens = require('./tokens');
 
 const get_auto_gen_comment = () => {
   const filename = path.basename(__filename);
@@ -185,7 +183,7 @@ const get_pattern_initializer_lists = (group_name) => {
 const get_pattern_initializer = (group_name) => {
   const class_name = get_class_name(group_name);
   const initializer_lists = get_pattern_initializer_lists(group_name);
-  return `const std::vector<std::vector<any_pattern_item_t>> ${class_name}::patterns = {
+  return `const std::vector<${class_name}::pattern_t> ${class_name}::patterns = {
       ${initializer_lists}
     };`;
 }
@@ -214,7 +212,11 @@ const get_class_declaration = (group_name) => {
 
     public:
 
-      static const std::vector<std::vector<any_pattern_item_t>> patterns;
+      using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+      using pattern_t = std::vector<unique_pattern_t>;
+
+      static const std::vector<pattern_t> patterns;
 
       ${constructors}
 
@@ -287,10 +289,7 @@ const get_combined_ast_nodes_h = () => {
 Object.keys(grammar).forEach((group_name) => {
   const head_src = get_class_declaration(group_name);
   const head_path = get_node_header_file_path(group_name);
-  //const cc_src = get_class_definition(group_name);
-  //const cc_path = get_node_cc_file_path(group_name);
   fs.writeFileSync(head_path, head_src);
-  //fs.writeFileSync(cc_path, cc_src);
 });
 
 const all_src = get_ast_nodes_h();

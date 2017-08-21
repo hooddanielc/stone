@@ -9,7 +9,7 @@
 #include <vector>
 #include "../ast.h"
 #include "type-specifier-nonarray.h"
-#include "type-specifier-array.h"
+#include "array-specifier.h"
 
 namespace gliss {
 
@@ -19,14 +19,19 @@ class type_specifier_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   type_specifier_t(
     const type_specifier_nonarray_t &
   );
 
   type_specifier_t(
-    const type_specifier_array_t &
+    const type_specifier_nonarray_t &,
+    const array_specifier_t &
   );
 
   virtual void accept(const visitor_t &visitor) const override {
@@ -35,11 +40,12 @@ public:
 
 };  // type_specifier_t
 
-const std::vector<std::vector<any_pattern_item_t>> type_specifier_t::patterns = {
+const std::vector<type_specifier_t::pattern_t> type_specifier_t::patterns = {
   {
     pattern_item_t<type_specifier_nonarray_t>::get()
   }, {
-    pattern_item_t<type_specifier_array_t>::get()
+    pattern_item_t<type_specifier_nonarray_t>::get(),
+    pattern_item_t<array_specifier_t>::get()
   }
 };
 

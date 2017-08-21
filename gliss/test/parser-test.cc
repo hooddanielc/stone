@@ -4,13 +4,14 @@
 #include <gliss/parser.h>
 
 using namespace gliss;
+using namespace gliss::ast;
 
-FIXTURE(constructs) {
+FIXTURE(auto_match) {
   auto tokens = lexer_t::lex(R"(
-    in vec3 vertex_position;
-
-    void main() {
-      gl_Position = vec4(vertex_position, 1.0);
-    }
+    =
   )");
+
+  lexer_t::print_tokens(tokens);
+  auto ast = parser_t::make(tokens);
+  ast.auto_match<nothing_t>();
 }

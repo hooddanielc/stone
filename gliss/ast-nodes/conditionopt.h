@@ -9,6 +9,7 @@
 #include <vector>
 #include "../ast.h"
 #include "condition.h"
+#include "nothing.h"
 
 namespace gliss {
 
@@ -18,10 +19,18 @@ class conditionopt_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   conditionopt_t(
     const condition_t &
+  );
+
+  conditionopt_t(
+    const nothing_t &
   );
 
   virtual void accept(const visitor_t &visitor) const override {
@@ -30,9 +39,11 @@ public:
 
 };  // conditionopt_t
 
-const std::vector<std::vector<any_pattern_item_t>> conditionopt_t::patterns = {
+const std::vector<conditionopt_t::pattern_t> conditionopt_t::patterns = {
   {
     pattern_item_t<condition_t>::get()
+  }, {
+    pattern_item_t<nothing_t>::get()
   }
 };
 

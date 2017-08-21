@@ -88,3 +88,14 @@ FIXTURE(matching) {
   EXPECT_TRUE(cursor.match(token_t::end));
   EXPECT_FALSE(cursor.try_match(token_t::identifier));
 }
+
+FIXTURE(copy) {
+  auto tokens = lexer_t::lex(R"(
+    layout(location = 2) in vec3 values[4];
+  )");
+  cursor_t cursor(&tokens[0], &tokens[tokens.size() - 1]);
+  cursor.match(token_t::layout);
+  auto another_cursor = cursor;
+  another_cursor.match(token_t::left_paren);
+  cursor.match(token_t::left_paren);
+}

@@ -23,7 +23,11 @@ class single_type_qualifier_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   single_type_qualifier_t(
     const storage_qualifier_t &
@@ -55,7 +59,7 @@ public:
 
 };  // single_type_qualifier_t
 
-const std::vector<std::vector<any_pattern_item_t>> single_type_qualifier_t::patterns = {
+const std::vector<single_type_qualifier_t::pattern_t> single_type_qualifier_t::patterns = {
   {
     pattern_item_t<storage_qualifier_t>::get()
   }, {

@@ -10,9 +10,8 @@
 #include "../ast.h"
 #include "single-declaration.h"
 
-#include "init-declarator-list-array.h"
-#include "init-declarator-list-array-initializer.h"
-#include "init-declarator-list-initializer.h"
+#include "array-specifier.h"
+#include "initializer.h"
 
 namespace gliss {
 
@@ -22,7 +21,11 @@ class init_declarator_list_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   init_declarator_list_t(
     const single_declaration_t &
@@ -35,15 +38,27 @@ public:
   );
 
   init_declarator_list_t(
-    const init_declarator_list_array_t &
+    const init_declarator_list_t &,
+    const token_t &,
+    const token_t &,
+    const array_specifier_t &
   );
 
   init_declarator_list_t(
-    const init_declarator_list_array_initializer_t &
+    const init_declarator_list_t &,
+    const token_t &,
+    const token_t &,
+    const array_specifier_t &,
+    const token_t &,
+    const initializer_t &
   );
 
   init_declarator_list_t(
-    const init_declarator_list_initializer_t &
+    const init_declarator_list_t &,
+    const token_t &,
+    const token_t &,
+    const token_t &,
+    const initializer_t &
   );
 
   virtual void accept(const visitor_t &visitor) const override {
@@ -52,7 +67,7 @@ public:
 
 };  // init_declarator_list_t
 
-const std::vector<std::vector<any_pattern_item_t>> init_declarator_list_t::patterns = {
+const std::vector<init_declarator_list_t::pattern_t> init_declarator_list_t::patterns = {
   {
     pattern_item_t<single_declaration_t>::get()
   }, {
@@ -60,11 +75,23 @@ const std::vector<std::vector<any_pattern_item_t>> init_declarator_list_t::patte
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
   }, {
-    pattern_item_t<init_declarator_list_array_t>::get()
+    pattern_item_t<init_declarator_list_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<array_specifier_t>::get()
   }, {
-    pattern_item_t<init_declarator_list_array_initializer_t>::get()
+    pattern_item_t<init_declarator_list_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<array_specifier_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
+    pattern_item_t<initializer_t>::get()
   }, {
-    pattern_item_t<init_declarator_list_initializer_t>::get()
+    pattern_item_t<init_declarator_list_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
+    pattern_item_t<initializer_t>::get()
   }
 };
 

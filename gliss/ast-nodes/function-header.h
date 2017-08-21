@@ -18,7 +18,11 @@ class function_header_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   function_header_t(
     const fully_specified_type_t &,
@@ -32,7 +36,7 @@ public:
 
 };  // function_header_t
 
-const std::vector<std::vector<any_pattern_item_t>> function_header_t::patterns = {
+const std::vector<function_header_t::pattern_t> function_header_t::patterns = {
   {
     pattern_item_t<fully_specified_type_t>::get(),
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),

@@ -1,4 +1,4 @@
-[
+module.exports = [
   "STRUCT",
   "VOID",
   "WHILE",
@@ -210,4 +210,4 @@
   "IMAGE2DMSARRAY",
   "IIMAGE2DMSARRAY",
   "UIMAGE2DMSARRAY"
-]
+];

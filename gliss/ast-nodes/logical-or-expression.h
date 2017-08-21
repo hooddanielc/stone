@@ -19,7 +19,11 @@ class logical_or_expression_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   logical_or_expression_t(
     const logical_xor_expression_t &
@@ -37,7 +41,7 @@ public:
 
 };  // logical_or_expression_t
 
-const std::vector<std::vector<any_pattern_item_t>> logical_or_expression_t::patterns = {
+const std::vector<logical_or_expression_t::pattern_t> logical_or_expression_t::patterns = {
   {
     pattern_item_t<logical_xor_expression_t>::get()
   }, {

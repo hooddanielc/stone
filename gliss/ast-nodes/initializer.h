@@ -9,8 +9,7 @@
 #include <vector>
 #include "../ast.h"
 #include "assignment-expression.h"
-#include "initializer-list-body.h"
-#include "initializer-list-body-trailing-comma.h"
+#include "initializer-list.h"
 
 namespace gliss {
 
@@ -20,18 +19,27 @@ class initializer_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   initializer_t(
     const assignment_expression_t &
   );
 
   initializer_t(
-    const initializer_list_body_t &
+    const token_t &,
+    const initializer_list_t &,
+    const token_t &
   );
 
   initializer_t(
-    const initializer_list_body_trailing_comma_t &
+    const token_t &,
+    const initializer_list_t &,
+    const token_t &,
+    const token_t &
   );
 
   virtual void accept(const visitor_t &visitor) const override {
@@ -40,13 +48,18 @@ public:
 
 };  // initializer_t
 
-const std::vector<std::vector<any_pattern_item_t>> initializer_t::patterns = {
+const std::vector<initializer_t::pattern_t> initializer_t::patterns = {
   {
     pattern_item_t<assignment_expression_t>::get()
   }, {
-    pattern_item_t<initializer_list_body_t>::get()
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+    pattern_item_t<initializer_list_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
   }, {
-    pattern_item_t<initializer_list_body_trailing_comma_t>::get()
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+    pattern_item_t<initializer_list_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
   }
 };
 

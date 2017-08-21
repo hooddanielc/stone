@@ -8,7 +8,6 @@
 
 #include <vector>
 #include "../ast.h"
-#include "function-call-header-void-parameter.h"
 #include "function-call-header.h"
 
 namespace gliss {
@@ -19,10 +18,15 @@ class function_call_header_no_parameters_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   function_call_header_no_parameters_t(
-    const function_call_header_void_parameter_t &
+    const function_call_header_t &,
+    const token_t &
   );
 
   function_call_header_no_parameters_t(
@@ -35,9 +39,10 @@ public:
 
 };  // function_call_header_no_parameters_t
 
-const std::vector<std::vector<any_pattern_item_t>> function_call_header_no_parameters_t::patterns = {
+const std::vector<function_call_header_no_parameters_t::pattern_t> function_call_header_no_parameters_t::patterns = {
   {
-    pattern_item_t<function_call_header_void_parameter_t>::get()
+    pattern_item_t<function_call_header_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("VOID"))
   }, {
     pattern_item_t<function_call_header_t>::get()
   }

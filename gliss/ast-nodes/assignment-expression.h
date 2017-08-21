@@ -21,7 +21,11 @@ class assignment_expression_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   assignment_expression_t(
     const conditional_expression_t &
@@ -39,7 +43,7 @@ public:
 
 };  // assignment_expression_t
 
-const std::vector<std::vector<any_pattern_item_t>> assignment_expression_t::patterns = {
+const std::vector<assignment_expression_t::pattern_t> assignment_expression_t::patterns = {
   {
     pattern_item_t<conditional_expression_t>::get()
   }, {

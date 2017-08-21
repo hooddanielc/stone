@@ -9,7 +9,7 @@
 #include <vector>
 #include "../ast.h"
 #include "conditionopt.h"
-#include "for-rest-statement-expression.h"
+#include "expression.h"
 
 namespace gliss {
 
@@ -19,7 +19,11 @@ class for_rest_statement_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   for_rest_statement_t(
     const conditionopt_t &,
@@ -27,7 +31,9 @@ public:
   );
 
   for_rest_statement_t(
-    const for_rest_statement_expression_t &
+    const conditionopt_t &,
+    const token_t &,
+    const expression_t &
   );
 
   virtual void accept(const visitor_t &visitor) const override {
@@ -36,12 +42,14 @@ public:
 
 };  // for_rest_statement_t
 
-const std::vector<std::vector<any_pattern_item_t>> for_rest_statement_t::patterns = {
+const std::vector<for_rest_statement_t::pattern_t> for_rest_statement_t::patterns = {
   {
     pattern_item_t<conditionopt_t>::get(),
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
   }, {
-    pattern_item_t<for_rest_statement_expression_t>::get()
+    pattern_item_t<conditionopt_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON")),
+    pattern_item_t<expression_t>::get()
   }
 };
 

@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const grammar_text = fs.readFileSync(path.join(__dirname, 'grammar.json')).toString();
-const grammar = JSON.parse(grammar_text);
+const grammar = require('./grammar');
 
 var lines = [];
 
@@ -24,7 +23,7 @@ Object.keys(grammar).forEach((node) => {
   lines = lines.concat(block_lines.sort());
 });
 
-console.log([
+const markdown = [
   '# Grammar',
   '',
   '### The following describes the grammar for the OpenGL Shading Language in terms of [these tokens](tokens.md).',
@@ -34,4 +33,6 @@ console.log([
   no compile-time errors, even though the grammar below does not have a rule to accept an
   empty token stream. Taken from [OpenGL 4.60 Specification Ch. 9](https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.pdf)
   `.split('\n  ').join(' ').split('\n ').join(' '),
-].concat(lines).join('\n'));
+].concat(lines).join('\n');
+
+fs.writeFileSync(path.resolve(__dirname, '..', 'docs', 'grammar.md'), markdown);

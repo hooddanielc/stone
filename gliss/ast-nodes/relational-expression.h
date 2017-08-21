@@ -19,7 +19,11 @@ class relational_expression_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   relational_expression_t(
     const shift_expression_t &
@@ -37,7 +41,7 @@ public:
 
 };  // relational_expression_t
 
-const std::vector<std::vector<any_pattern_item_t>> relational_expression_t::patterns = {
+const std::vector<relational_expression_t::pattern_t> relational_expression_t::patterns = {
   {
     pattern_item_t<shift_expression_t>::get()
   }, {

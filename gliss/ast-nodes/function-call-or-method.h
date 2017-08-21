@@ -18,7 +18,11 @@ class function_call_or_method_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   function_call_or_method_t(
     const function_call_generic_t &
@@ -30,7 +34,7 @@ public:
 
 };  // function_call_or_method_t
 
-const std::vector<std::vector<any_pattern_item_t>> function_call_or_method_t::patterns = {
+const std::vector<function_call_or_method_t::pattern_t> function_call_or_method_t::patterns = {
   {
     pattern_item_t<function_call_generic_t>::get()
   }

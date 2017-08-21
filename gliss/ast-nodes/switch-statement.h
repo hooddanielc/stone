@@ -19,7 +19,11 @@ class switch_statement_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   switch_statement_t(
     const token_t &,
@@ -37,7 +41,7 @@ public:
 
 };  // switch_statement_t
 
-const std::vector<std::vector<any_pattern_item_t>> switch_statement_t::patterns = {
+const std::vector<switch_statement_t::pattern_t> switch_statement_t::patterns = {
   {
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SWITCH")),
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),

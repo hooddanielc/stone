@@ -8,9 +8,6 @@
 
 #include <vector>
 #include "../ast.h"
-#include "jump-statement-continue.h"
-#include "jump-statement-break.h"
-#include "jump-statement-return.h"
 #include "expression.h"
 
 namespace gliss {
@@ -21,28 +18,20 @@ class jump_statement_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
 
-  jump_statement_t(
-    const jump_statement_continue_t &
-  );
+  using pattern_t = std::vector<unique_pattern_t>;
 
-  jump_statement_t(
-    const jump_statement_break_t &
-  );
-
-  jump_statement_t(
-    const jump_statement_return_t &
-  );
+  static const std::vector<pattern_t> patterns;
 
   jump_statement_t(
     const token_t &,
-    const expression_t &,
     const token_t &
   );
 
   jump_statement_t(
     const token_t &,
+    const expression_t &,
     const token_t &
   );
 
@@ -52,13 +41,16 @@ public:
 
 };  // jump_statement_t
 
-const std::vector<std::vector<any_pattern_item_t>> jump_statement_t::patterns = {
+const std::vector<jump_statement_t::pattern_t> jump_statement_t::patterns = {
   {
-    pattern_item_t<jump_statement_continue_t>::get()
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("CONTINUE")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
   }, {
-    pattern_item_t<jump_statement_break_t>::get()
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BREAK")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
   }, {
-    pattern_item_t<jump_statement_return_t>::get()
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RETURN")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
   }, {
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RETURN")),
     pattern_item_t<expression_t>::get(),

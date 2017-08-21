@@ -20,7 +20,11 @@ class parameter_declaration_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   parameter_declaration_t(
     const type_qualifier_t &,
@@ -46,7 +50,7 @@ public:
 
 };  // parameter_declaration_t
 
-const std::vector<std::vector<any_pattern_item_t>> parameter_declaration_t::patterns = {
+const std::vector<parameter_declaration_t::pattern_t> parameter_declaration_t::patterns = {
   {
     pattern_item_t<type_qualifier_t>::get(),
     pattern_item_t<parameter_declarator_t>::get()

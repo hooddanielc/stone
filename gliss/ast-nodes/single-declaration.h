@@ -9,10 +9,8 @@
 #include <vector>
 #include "../ast.h"
 #include "fully-specified-type.h"
-#include "fully-specified-type-identifier.h"
-#include "fully-specified-type-identifier-array.h"
-#include "fully-specified-type-identifier-array-initializer.h"
-#include "fully-specified-type-initializer.h"
+#include "array-specifier.h"
+#include "initializer.h"
 
 namespace gliss {
 
@@ -22,26 +20,40 @@ class single_declaration_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   single_declaration_t(
     const fully_specified_type_t &
   );
 
   single_declaration_t(
-    const fully_specified_type_identifier_t &
+    const fully_specified_type_t &,
+    const token_t &
   );
 
   single_declaration_t(
-    const fully_specified_type_identifier_array_t &
+    const fully_specified_type_t &,
+    const token_t &,
+    const array_specifier_t &
   );
 
   single_declaration_t(
-    const fully_specified_type_identifier_array_initializer_t &
+    const fully_specified_type_t &,
+    const token_t &,
+    const array_specifier_t &,
+    const token_t &,
+    const initializer_t &
   );
 
   single_declaration_t(
-    const fully_specified_type_initializer_t &
+    const fully_specified_type_t &,
+    const token_t &,
+    const token_t &,
+    const initializer_t &
   );
 
   virtual void accept(const visitor_t &visitor) const override {
@@ -50,17 +62,27 @@ public:
 
 };  // single_declaration_t
 
-const std::vector<std::vector<any_pattern_item_t>> single_declaration_t::patterns = {
+const std::vector<single_declaration_t::pattern_t> single_declaration_t::patterns = {
   {
     pattern_item_t<fully_specified_type_t>::get()
   }, {
-    pattern_item_t<fully_specified_type_identifier_t>::get()
+    pattern_item_t<fully_specified_type_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
   }, {
-    pattern_item_t<fully_specified_type_identifier_array_t>::get()
+    pattern_item_t<fully_specified_type_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<array_specifier_t>::get()
   }, {
-    pattern_item_t<fully_specified_type_identifier_array_initializer_t>::get()
+    pattern_item_t<fully_specified_type_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<array_specifier_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
+    pattern_item_t<initializer_t>::get()
   }, {
-    pattern_item_t<fully_specified_type_initializer_t>::get()
+    pattern_item_t<fully_specified_type_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
+    pattern_item_t<initializer_t>::get()
   }
 };
 

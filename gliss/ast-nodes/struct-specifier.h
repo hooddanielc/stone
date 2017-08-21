@@ -8,8 +8,7 @@
 
 #include <vector>
 #include "../ast.h"
-#include "struct-specifier-identifier-body.h"
-#include "struct-specifier-body.h"
+#include "struct-declaration-list.h"
 
 namespace gliss {
 
@@ -19,16 +18,25 @@ class struct_specifier_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   struct_specifier_t(
     const token_t &,
-    const struct_specifier_identifier_body_t &
+    const token_t &,
+    const token_t &,
+    const struct_declaration_list_t &,
+    const token_t &
   );
 
   struct_specifier_t(
     const token_t &,
-    const struct_specifier_body_t &
+    const token_t &,
+    const struct_declaration_list_t &,
+    const token_t &
   );
 
   virtual void accept(const visitor_t &visitor) const override {
@@ -37,13 +45,18 @@ public:
 
 };  // struct_specifier_t
 
-const std::vector<std::vector<any_pattern_item_t>> struct_specifier_t::patterns = {
+const std::vector<struct_specifier_t::pattern_t> struct_specifier_t::patterns = {
   {
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("STRUCT")),
-    pattern_item_t<struct_specifier_identifier_body_t>::get()
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+    pattern_item_t<struct_declaration_list_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
   }, {
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("STRUCT")),
-    pattern_item_t<struct_specifier_body_t>::get()
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+    pattern_item_t<struct_declaration_list_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
   }
 };
 

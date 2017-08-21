@@ -19,7 +19,11 @@ class primary_expression_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   primary_expression_t(
     const variable_identifier_t &
@@ -41,7 +45,7 @@ public:
 
 };  // primary_expression_t
 
-const std::vector<std::vector<any_pattern_item_t>> primary_expression_t::patterns = {
+const std::vector<primary_expression_t::pattern_t> primary_expression_t::patterns = {
   {
     pattern_item_t<variable_identifier_t>::get()
   }, {

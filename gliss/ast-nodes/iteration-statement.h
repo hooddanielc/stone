@@ -8,12 +8,10 @@
 
 #include <vector>
 #include "../ast.h"
-#include "iteration-statement-while-header.h"
 #include "condition.h"
 #include "statement-no-new-scope.h"
 #include "statement.h"
 #include "expression.h"
-#include "iteration-statement-for-header.h"
 #include "for-init-statement.h"
 #include "for-rest-statement.h"
 
@@ -25,10 +23,15 @@ class iteration_statement_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   iteration_statement_t(
-    const iteration_statement_while_header_t &,
+    const token_t &,
+    const token_t &,
     const condition_t &,
     const token_t &,
     const statement_no_new_scope_t &
@@ -45,7 +48,8 @@ public:
   );
 
   iteration_statement_t(
-    const iteration_statement_for_header_t &,
+    const token_t &,
+    const token_t &,
     const for_init_statement_t &,
     const for_rest_statement_t &,
     const token_t &,
@@ -58,9 +62,10 @@ public:
 
 };  // iteration_statement_t
 
-const std::vector<std::vector<any_pattern_item_t>> iteration_statement_t::patterns = {
+const std::vector<iteration_statement_t::pattern_t> iteration_statement_t::patterns = {
   {
-    pattern_item_t<iteration_statement_while_header_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("WHILE")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
     pattern_item_t<condition_t>::get(),
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN")),
     pattern_item_t<statement_no_new_scope_t>::get()
@@ -73,7 +78,8 @@ const std::vector<std::vector<any_pattern_item_t>> iteration_statement_t::patter
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN")),
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
   }, {
-    pattern_item_t<iteration_statement_for_header_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("FOR")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
     pattern_item_t<for_init_statement_t>::get(),
     pattern_item_t<for_rest_statement_t>::get(),
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN")),

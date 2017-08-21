@@ -9,7 +9,7 @@
 #include <vector>
 #include "../ast.h"
 #include "type-specifier.h"
-#include "parameter-declarator-array.h"
+#include "array-specifier.h"
 
 namespace gliss {
 
@@ -19,7 +19,11 @@ class parameter_declarator_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   parameter_declarator_t(
     const type_specifier_t &,
@@ -27,7 +31,9 @@ public:
   );
 
   parameter_declarator_t(
-    const parameter_declarator_array_t &
+    const type_specifier_t &,
+    const token_t &,
+    const array_specifier_t &
   );
 
   virtual void accept(const visitor_t &visitor) const override {
@@ -36,12 +42,14 @@ public:
 
 };  // parameter_declarator_t
 
-const std::vector<std::vector<any_pattern_item_t>> parameter_declarator_t::patterns = {
+const std::vector<parameter_declarator_t::pattern_t> parameter_declarator_t::patterns = {
   {
     pattern_item_t<type_specifier_t>::get(),
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
   }, {
-    pattern_item_t<parameter_declarator_array_t>::get()
+    pattern_item_t<type_specifier_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<array_specifier_t>::get()
   }
 };
 

@@ -8,7 +8,7 @@
 
 #include <vector>
 #include "../ast.h"
-#include "struct-declarator-array.h"
+#include "array-specifier.h"
 
 namespace gliss {
 
@@ -18,14 +18,19 @@ class struct_declarator_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   struct_declarator_t(
     const token_t &
   );
 
   struct_declarator_t(
-    const struct_declarator_array_t &
+    const token_t &,
+    const array_specifier_t &
   );
 
   virtual void accept(const visitor_t &visitor) const override {
@@ -34,11 +39,12 @@ public:
 
 };  // struct_declarator_t
 
-const std::vector<std::vector<any_pattern_item_t>> struct_declarator_t::patterns = {
+const std::vector<struct_declarator_t::pattern_t> struct_declarator_t::patterns = {
   {
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
   }, {
-    pattern_item_t<struct_declarator_array_t>::get()
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<array_specifier_t>::get()
   }
 };
 

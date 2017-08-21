@@ -18,7 +18,11 @@ class case_label_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   case_label_t(
     const token_t &,
@@ -37,7 +41,7 @@ public:
 
 };  // case_label_t
 
-const std::vector<std::vector<any_pattern_item_t>> case_label_t::patterns = {
+const std::vector<case_label_t::pattern_t> case_label_t::patterns = {
   {
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("CASE")),
     pattern_item_t<expression_t>::get(),

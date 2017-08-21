@@ -12,12 +12,9 @@
 #include "init-declarator-list.h"
 #include "precision-qualifier.h"
 #include "type-specifier.h"
-#include "type-qualifier-struct-declaration-list.h"
-#include "type-qualifier-struct-declaration-list-identifier.h"
-#include "type-qualifier-struct-declaration-list-identifier-array.h"
-#include "type-qualifier-terminated.h"
-#include "type-qualifier-identifier.h"
 #include "type-qualifier.h"
+#include "struct-declaration-list.h"
+#include "array-specifier.h"
 #include "identifier-list.h"
 
 namespace gliss {
@@ -28,7 +25,11 @@ class declaration_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   declaration_t(
     const function_prototype_t &,
@@ -48,23 +49,44 @@ public:
   );
 
   declaration_t(
-    const type_qualifier_struct_declaration_list_t &
+    const type_qualifier_t &,
+    const token_t &,
+    const token_t &,
+    const struct_declaration_list_t &,
+    const token_t &,
+    const token_t &
   );
 
   declaration_t(
-    const type_qualifier_struct_declaration_list_identifier_t &
+    const type_qualifier_t &,
+    const token_t &,
+    const token_t &,
+    const struct_declaration_list_t &,
+    const token_t &,
+    const token_t &,
+    const token_t &
   );
 
   declaration_t(
-    const type_qualifier_struct_declaration_list_identifier_array_t &
+    const type_qualifier_t &,
+    const token_t &,
+    const token_t &,
+    const struct_declaration_list_t &,
+    const token_t &,
+    const token_t &,
+    const array_specifier_t &,
+    const token_t &
   );
 
   declaration_t(
-    const type_qualifier_terminated_t &
+    const type_qualifier_t &,
+    const token_t &
   );
 
   declaration_t(
-    const type_qualifier_identifier_t &
+    const type_qualifier_t &,
+    const token_t &,
+    const token_t &
   );
 
   declaration_t(
@@ -80,7 +102,7 @@ public:
 
 };  // declaration_t
 
-const std::vector<std::vector<any_pattern_item_t>> declaration_t::patterns = {
+const std::vector<declaration_t::pattern_t> declaration_t::patterns = {
   {
     pattern_item_t<function_prototype_t>::get(),
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
@@ -93,15 +115,36 @@ const std::vector<std::vector<any_pattern_item_t>> declaration_t::patterns = {
     pattern_item_t<type_specifier_t>::get(),
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
   }, {
-    pattern_item_t<type_qualifier_struct_declaration_list_t>::get()
+    pattern_item_t<type_qualifier_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+    pattern_item_t<struct_declaration_list_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
   }, {
-    pattern_item_t<type_qualifier_struct_declaration_list_identifier_t>::get()
+    pattern_item_t<type_qualifier_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+    pattern_item_t<struct_declaration_list_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
   }, {
-    pattern_item_t<type_qualifier_struct_declaration_list_identifier_array_t>::get()
+    pattern_item_t<type_qualifier_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+    pattern_item_t<struct_declaration_list_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<array_specifier_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
   }, {
-    pattern_item_t<type_qualifier_terminated_t>::get()
+    pattern_item_t<type_qualifier_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
   }, {
-    pattern_item_t<type_qualifier_identifier_t>::get()
+    pattern_item_t<type_qualifier_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
   }, {
     pattern_item_t<type_qualifier_t>::get(),
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),

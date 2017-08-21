@@ -9,11 +9,9 @@
 #include <vector>
 #include "../ast.h"
 #include "primary-expression.h"
-#include "postfix-expression-integer-array.h"
+
+#include "integer-expression.h"
 #include "function-call.h"
-#include "postfix-expression-field-selection.h"
-#include "postfix-expression-increment.h"
-#include "postfix-expression-decrement.h"
 
 namespace gliss {
 
@@ -23,14 +21,21 @@ class postfix_expression_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   postfix_expression_t(
     const primary_expression_t &
   );
 
   postfix_expression_t(
-    const postfix_expression_integer_array_t &
+    const postfix_expression_t &,
+    const token_t &,
+    const integer_expression_t &,
+    const token_t &
   );
 
   postfix_expression_t(
@@ -38,15 +43,14 @@ public:
   );
 
   postfix_expression_t(
-    const postfix_expression_field_selection_t &
+    const postfix_expression_t &,
+    const token_t &,
+    const token_t &
   );
 
   postfix_expression_t(
-    const postfix_expression_increment_t &
-  );
-
-  postfix_expression_t(
-    const postfix_expression_decrement_t &
+    const postfix_expression_t &,
+    const token_t &
   );
 
   virtual void accept(const visitor_t &visitor) const override {
@@ -55,19 +59,26 @@ public:
 
 };  // postfix_expression_t
 
-const std::vector<std::vector<any_pattern_item_t>> postfix_expression_t::patterns = {
+const std::vector<postfix_expression_t::pattern_t> postfix_expression_t::patterns = {
   {
     pattern_item_t<primary_expression_t>::get()
   }, {
-    pattern_item_t<postfix_expression_integer_array_t>::get()
+    pattern_item_t<postfix_expression_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACKET")),
+    pattern_item_t<integer_expression_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACKET"))
   }, {
     pattern_item_t<function_call_t>::get()
   }, {
-    pattern_item_t<postfix_expression_field_selection_t>::get()
+    pattern_item_t<postfix_expression_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DOT")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("FIELD_SELECTION"))
   }, {
-    pattern_item_t<postfix_expression_increment_t>::get()
+    pattern_item_t<postfix_expression_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("INC_OP"))
   }, {
-    pattern_item_t<postfix_expression_decrement_t>::get()
+    pattern_item_t<postfix_expression_t>::get(),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DEC_OP"))
   }
 };
 

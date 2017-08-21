@@ -8,7 +8,7 @@
 
 #include <vector>
 #include "../ast.h"
-#include "layout-qualifier-id-equal-constant-expression.h"
+#include "constant-expression.h"
 
 namespace gliss {
 
@@ -18,14 +18,20 @@ class layout_qualifier_id_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   layout_qualifier_id_t(
     const token_t &
   );
 
   layout_qualifier_id_t(
-    const layout_qualifier_id_equal_constant_expression_t &
+    const token_t &,
+    const token_t &,
+    const constant_expression_t &
   );
 
   virtual void accept(const visitor_t &visitor) const override {
@@ -34,11 +40,13 @@ public:
 
 };  // layout_qualifier_id_t
 
-const std::vector<std::vector<any_pattern_item_t>> layout_qualifier_id_t::patterns = {
+const std::vector<layout_qualifier_id_t::pattern_t> layout_qualifier_id_t::patterns = {
   {
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
   }, {
-    pattern_item_t<layout_qualifier_id_equal_constant_expression_t>::get()
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
+    pattern_item_t<constant_expression_t>::get()
   }, {
     pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SHARED"))
   }

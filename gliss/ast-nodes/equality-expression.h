@@ -19,7 +19,11 @@ class equality_expression_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<any_pattern_item_t>> patterns;
+  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+
+  using pattern_t = std::vector<unique_pattern_t>;
+
+  static const std::vector<pattern_t> patterns;
 
   equality_expression_t(
     const relational_expression_t &
@@ -37,7 +41,7 @@ public:
 
 };  // equality_expression_t
 
-const std::vector<std::vector<any_pattern_item_t>> equality_expression_t::patterns = {
+const std::vector<equality_expression_t::pattern_t> equality_expression_t::patterns = {
   {
     pattern_item_t<relational_expression_t>::get()
   }, {
