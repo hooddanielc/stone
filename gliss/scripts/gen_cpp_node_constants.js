@@ -78,7 +78,9 @@ const format_code = (spaces, code) => {
   return code.split('\n' + new Array(spaces + 1)
     .join(' '))
     .join('\n')
-    .trim() + '\n';
+    .trim()
+    .split(/\s+\n/g)
+    .join('\n\n') + '\n';
 }
 
 const has_terminals = (group_name) => {
@@ -249,6 +251,15 @@ const get_pattern_structs = (group_name) => {
   ).join('\n\n  ');
 }
 
+const get_empty_visitor = (group_name) => {
+  if (!grammar[group_name].length) {
+    const name = get_base_class_name(group_name);
+    return `virtual void accept(const visitor_t &) const override {}`
+  }
+
+  return '';
+}
+
 const get_base_class_declaration = (group_name) => {
   const class_name = get_base_class_name(group_name);
 
@@ -263,7 +274,7 @@ const get_base_class_declaration = (group_name) => {
       struct pattern;
 
       ${get_pattern_structs(group_name)}
-
+      ${get_empty_visitor(group_name)}
       virtual ~${class_name}() = default;
 
     };  // ${class_name}

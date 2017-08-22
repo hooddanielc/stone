@@ -25,23 +25,9 @@ public:
 
   /* Auto matcher */
   template <typename node_t>
-  std::unique_ptr<ast::ast_t> auto_match() {
-    for (const auto &pattern: node_t::patterns) {
-      auto cursor_copy = cursor;
-
-      for (const auto &pattern_item: pattern) {
-        if (pattern_item.is_leaf()) {
-          std::cout << "it is a leaf" << std::endl;
-          auto match = cursor_copy.try_match();
-          std::cout << "got one" << std::endl;
-        } else {
-          throw runtime_error("cannot auto match yet");
-        }
-      }
-
-    }
-
-    return std::make_unique<node_t>();
+  std::unique_ptr<ast::ast_t> match_assignment_operator() {
+    // it's time
+    return std::make_unique<ast::nothing_t>();
   }
 
 private:
