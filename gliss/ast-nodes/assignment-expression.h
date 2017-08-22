@@ -17,40 +17,89 @@ namespace gliss {
 
 namespace ast {
 
+class conditional_expression_t;
+class unary_expression_t;
+class assignment_operator_t;
+
+
 class assignment_expression_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = assignment_expression_conditional_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  assignment_expression_t(
-    const conditional_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = assignment_expression_unary_expression_assignment_operator_assignment_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  assignment_expression_t(
-    const unary_expression_t &,
-    const assignment_operator_t &,
-    const assignment_expression_t &
-  );
+  virtual ~assignment_expression_t() = default;
+
+};  // assignment_expression_t
+
+
+class assignment_expression_conditional_expression_t: public assignment_expression_t {
+
+public:
+
+  std::unique_ptr<conditional_expression_t> conditional_expression_0;
+
+  assignment_expression_conditional_expression_t(
+    std::unique_ptr<conditional_expression_t> &&conditional_expression_0_
+  ): conditional_expression_0(std::move(conditional_expression_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // assignment_expression_t
+};  // assignment_expression_conditional_expression_t
+  
 
-const std::vector<assignment_expression_t::pattern_t> assignment_expression_t::patterns = {
-  {
-    pattern_item_t<conditional_expression_t>::get()
-  }, {
-    pattern_item_t<unary_expression_t>::get(),
-    pattern_item_t<assignment_operator_t>::get(),
-    pattern_item_t<assignment_expression_t>::get()
+class assignment_expression_unary_expression_assignment_operator_assignment_expression_t: public assignment_expression_t {
+
+public:
+
+  std::unique_ptr<unary_expression_t> unary_expression_0;
+
+  std::unique_ptr<assignment_operator_t> assignment_operator_1;
+
+  std::unique_ptr<assignment_expression_t> assignment_expression_2;
+
+  assignment_expression_unary_expression_assignment_operator_assignment_expression_t(
+    std::unique_ptr<unary_expression_t> &&unary_expression_0_,
+    std::unique_ptr<assignment_operator_t> &&assignment_operator_1_,
+    std::unique_ptr<assignment_expression_t> &&assignment_expression_2_
+  ): unary_expression_0(std::move(unary_expression_0_)),
+     assignment_operator_1(std::move(assignment_operator_1_)),
+     assignment_expression_2(std::move(assignment_expression_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // assignment_expression_unary_expression_assignment_operator_assignment_expression_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> assignment_expression_t::pattern<0>::list = {
+  pattern_item_t<conditional_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> assignment_expression_t::pattern<1>::list = {
+  pattern_item_t<unary_expression_t>::get(),
+  pattern_item_t<assignment_operator_t>::get(),
+  pattern_item_t<assignment_expression_t>::get()
 };
 
 }   // ast

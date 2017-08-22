@@ -15,40 +15,87 @@ namespace gliss {
 
 namespace ast {
 
+class struct_declarator_t;
+
+
 class struct_declarator_list_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = struct_declarator_list_struct_declarator_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  struct_declarator_list_t(
-    const struct_declarator_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = struct_declarator_list_struct_declarator_list_comma_struct_declarator_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  struct_declarator_list_t(
-    const struct_declarator_list_t &,
-    const token_t &,
-    const struct_declarator_t &
-  );
+  virtual ~struct_declarator_list_t() = default;
+
+};  // struct_declarator_list_t
+
+
+class struct_declarator_list_struct_declarator_t: public struct_declarator_list_t {
+
+public:
+
+  std::unique_ptr<struct_declarator_t> struct_declarator_0;
+
+  struct_declarator_list_struct_declarator_t(
+    std::unique_ptr<struct_declarator_t> &&struct_declarator_0_
+  ): struct_declarator_0(std::move(struct_declarator_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // struct_declarator_list_t
+};  // struct_declarator_list_struct_declarator_t
+  
 
-const std::vector<struct_declarator_list_t::pattern_t> struct_declarator_list_t::patterns = {
-  {
-    pattern_item_t<struct_declarator_t>::get()
-  }, {
-    pattern_item_t<struct_declarator_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-    pattern_item_t<struct_declarator_t>::get()
+class struct_declarator_list_struct_declarator_list_comma_struct_declarator_t: public struct_declarator_list_t {
+
+public:
+
+  std::unique_ptr<struct_declarator_list_t> struct_declarator_list_0;
+
+  std::unique_ptr<token_t> comma_1;
+
+  std::unique_ptr<struct_declarator_t> struct_declarator_2;
+
+  struct_declarator_list_struct_declarator_list_comma_struct_declarator_t(
+    std::unique_ptr<struct_declarator_list_t> &&struct_declarator_list_0_,
+    std::unique_ptr<token_t> &&comma_1_,
+    std::unique_ptr<struct_declarator_t> &&struct_declarator_2_
+  ): struct_declarator_list_0(std::move(struct_declarator_list_0_)),
+     comma_1(std::move(comma_1_)),
+     struct_declarator_2(std::move(struct_declarator_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // struct_declarator_list_struct_declarator_list_comma_struct_declarator_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> struct_declarator_list_t::pattern<0>::list = {
+  pattern_item_t<struct_declarator_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> struct_declarator_list_t::pattern<1>::list = {
+  pattern_item_t<struct_declarator_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
+  pattern_item_t<struct_declarator_t>::get()
 };
 
 }   // ast

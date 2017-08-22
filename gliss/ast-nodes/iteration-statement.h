@@ -19,72 +19,184 @@ namespace gliss {
 
 namespace ast {
 
+class condition_t;
+class statement_no_new_scope_t;
+class statement_t;
+class expression_t;
+class for_init_statement_t;
+class for_rest_statement_t;
+
 class iteration_statement_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 3;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = iteration_statement_while_left_paren_condition_right_paren_statement_no_new_scope_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  iteration_statement_t(
-    const token_t &,
-    const token_t &,
-    const condition_t &,
-    const token_t &,
-    const statement_no_new_scope_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = iteration_statement_do_statement_while_left_paren_expression_right_paren_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  iteration_statement_t(
-    const token_t &,
-    const statement_t &,
-    const token_t &,
-    const token_t &,
-    const expression_t &,
-    const token_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = iteration_statement_for_left_paren_for_init_statement_for_rest_statement_right_paren_statement_no_new_scope_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  iteration_statement_t(
-    const token_t &,
-    const token_t &,
-    const for_init_statement_t &,
-    const for_rest_statement_t &,
-    const token_t &,
-    const statement_no_new_scope_t &
-  );
+  virtual ~iteration_statement_t() = default;
+
+};  // iteration_statement_t
+
+
+class iteration_statement_while_left_paren_condition_right_paren_statement_no_new_scope_t: public iteration_statement_t {
+
+public:
+
+  std::unique_ptr<token_t> while_0;
+
+  std::unique_ptr<token_t> left_paren_1;
+
+  std::unique_ptr<condition_t> condition_2;
+
+  std::unique_ptr<token_t> right_paren_3;
+
+  std::unique_ptr<statement_no_new_scope_t> statement_no_new_scope_4;
+
+  iteration_statement_while_left_paren_condition_right_paren_statement_no_new_scope_t(
+    std::unique_ptr<token_t> &&while_0_,
+    std::unique_ptr<token_t> &&left_paren_1_,
+    std::unique_ptr<condition_t> &&condition_2_,
+    std::unique_ptr<token_t> &&right_paren_3_,
+    std::unique_ptr<statement_no_new_scope_t> &&statement_no_new_scope_4_
+  ): while_0(std::move(while_0_)),
+     left_paren_1(std::move(left_paren_1_)),
+     condition_2(std::move(condition_2_)),
+     right_paren_3(std::move(right_paren_3_)),
+     statement_no_new_scope_4(std::move(statement_no_new_scope_4_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // iteration_statement_t
+};  // iteration_statement_while_left_paren_condition_right_paren_statement_no_new_scope_t
+  
 
-const std::vector<iteration_statement_t::pattern_t> iteration_statement_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("WHILE")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
-    pattern_item_t<condition_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN")),
-    pattern_item_t<statement_no_new_scope_t>::get()
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DO")),
-    pattern_item_t<statement_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("WHILE")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
-    pattern_item_t<expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("FOR")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
-    pattern_item_t<for_init_statement_t>::get(),
-    pattern_item_t<for_rest_statement_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN")),
-    pattern_item_t<statement_no_new_scope_t>::get()
+class iteration_statement_do_statement_while_left_paren_expression_right_paren_semicolon_t: public iteration_statement_t {
+
+public:
+
+  std::unique_ptr<token_t> do_0;
+
+  std::unique_ptr<statement_t> statement_1;
+
+  std::unique_ptr<token_t> while_2;
+
+  std::unique_ptr<token_t> left_paren_3;
+
+  std::unique_ptr<expression_t> expression_4;
+
+  std::unique_ptr<token_t> right_paren_5;
+
+  std::unique_ptr<token_t> semicolon_6;
+
+  iteration_statement_do_statement_while_left_paren_expression_right_paren_semicolon_t(
+    std::unique_ptr<token_t> &&do_0_,
+    std::unique_ptr<statement_t> &&statement_1_,
+    std::unique_ptr<token_t> &&while_2_,
+    std::unique_ptr<token_t> &&left_paren_3_,
+    std::unique_ptr<expression_t> &&expression_4_,
+    std::unique_ptr<token_t> &&right_paren_5_,
+    std::unique_ptr<token_t> &&semicolon_6_
+  ): do_0(std::move(do_0_)),
+     statement_1(std::move(statement_1_)),
+     while_2(std::move(while_2_)),
+     left_paren_3(std::move(left_paren_3_)),
+     expression_4(std::move(expression_4_)),
+     right_paren_5(std::move(right_paren_5_)),
+     semicolon_6(std::move(semicolon_6_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // iteration_statement_do_statement_while_left_paren_expression_right_paren_semicolon_t
+  
+
+class iteration_statement_for_left_paren_for_init_statement_for_rest_statement_right_paren_statement_no_new_scope_t: public iteration_statement_t {
+
+public:
+
+  std::unique_ptr<token_t> for_0;
+
+  std::unique_ptr<token_t> left_paren_1;
+
+  std::unique_ptr<for_init_statement_t> for_init_statement_2;
+
+  std::unique_ptr<for_rest_statement_t> for_rest_statement_3;
+
+  std::unique_ptr<token_t> right_paren_4;
+
+  std::unique_ptr<statement_no_new_scope_t> statement_no_new_scope_5;
+
+  iteration_statement_for_left_paren_for_init_statement_for_rest_statement_right_paren_statement_no_new_scope_t(
+    std::unique_ptr<token_t> &&for_0_,
+    std::unique_ptr<token_t> &&left_paren_1_,
+    std::unique_ptr<for_init_statement_t> &&for_init_statement_2_,
+    std::unique_ptr<for_rest_statement_t> &&for_rest_statement_3_,
+    std::unique_ptr<token_t> &&right_paren_4_,
+    std::unique_ptr<statement_no_new_scope_t> &&statement_no_new_scope_5_
+  ): for_0(std::move(for_0_)),
+     left_paren_1(std::move(left_paren_1_)),
+     for_init_statement_2(std::move(for_init_statement_2_)),
+     for_rest_statement_3(std::move(for_rest_statement_3_)),
+     right_paren_4(std::move(right_paren_4_)),
+     statement_no_new_scope_5(std::move(statement_no_new_scope_5_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // iteration_statement_for_left_paren_for_init_statement_for_rest_statement_right_paren_statement_no_new_scope_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> iteration_statement_t::pattern<0>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("WHILE")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
+  pattern_item_t<condition_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN")),
+  pattern_item_t<statement_no_new_scope_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> iteration_statement_t::pattern<1>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DO")),
+  pattern_item_t<statement_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("WHILE")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
+  pattern_item_t<expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> iteration_statement_t::pattern<2>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("FOR")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
+  pattern_item_t<for_init_statement_t>::get(),
+  pattern_item_t<for_rest_statement_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN")),
+  pattern_item_t<statement_no_new_scope_t>::get()
 };
 
 }   // ast

@@ -14,40 +14,86 @@ namespace gliss {
 
 namespace ast {
 
+
+
 class type_name_list_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = type_name_list_type_name_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  type_name_list_t(
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = type_name_list_type_name_list_comma_type_name_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  type_name_list_t(
-    const type_name_list_t &,
-    const token_t &,
-    const token_t &
-  );
+  virtual ~type_name_list_t() = default;
+
+};  // type_name_list_t
+
+
+class type_name_list_type_name_t: public type_name_list_t {
+
+public:
+
+  std::unique_ptr<token_t> type_name_0;
+
+  type_name_list_type_name_t(
+    std::unique_ptr<token_t> &&type_name_0_
+  ): type_name_0(std::move(type_name_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // type_name_list_t
+};  // type_name_list_type_name_t
+  
 
-const std::vector<type_name_list_t::pattern_t> type_name_list_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("TYPE_NAME"))
-  }, {
-    pattern_item_t<type_name_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("TYPE_NAME"))
+class type_name_list_type_name_list_comma_type_name_t: public type_name_list_t {
+
+public:
+
+  std::unique_ptr<type_name_list_t> type_name_list_0;
+
+  std::unique_ptr<token_t> comma_1;
+
+  std::unique_ptr<token_t> type_name_2;
+
+  type_name_list_type_name_list_comma_type_name_t(
+    std::unique_ptr<type_name_list_t> &&type_name_list_0_,
+    std::unique_ptr<token_t> &&comma_1_,
+    std::unique_ptr<token_t> &&type_name_2_
+  ): type_name_list_0(std::move(type_name_list_0_)),
+     comma_1(std::move(comma_1_)),
+     type_name_2(std::move(type_name_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // type_name_list_type_name_list_comma_type_name_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> type_name_list_t::pattern<0>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("TYPE_NAME"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> type_name_list_t::pattern<1>::list = {
+  pattern_item_t<type_name_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("TYPE_NAME"))
 };
 
 }   // ast

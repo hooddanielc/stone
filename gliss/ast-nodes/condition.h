@@ -16,42 +16,93 @@ namespace gliss {
 
 namespace ast {
 
+class expression_t;
+class fully_specified_type_t;
+class initializer_t;
+
 class condition_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = condition_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  condition_t(
-    const expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = condition_fully_specified_type_identifier_equal_initializer_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  condition_t(
-    const fully_specified_type_t &,
-    const token_t &,
-    const token_t &,
-    const initializer_t &
-  );
+  virtual ~condition_t() = default;
+
+};  // condition_t
+
+
+class condition_expression_t: public condition_t {
+
+public:
+
+  std::unique_ptr<expression_t> expression_0;
+
+  condition_expression_t(
+    std::unique_ptr<expression_t> &&expression_0_
+  ): expression_0(std::move(expression_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // condition_t
+};  // condition_expression_t
+  
 
-const std::vector<condition_t::pattern_t> condition_t::patterns = {
-  {
-    pattern_item_t<expression_t>::get()
-  }, {
-    pattern_item_t<fully_specified_type_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
-    pattern_item_t<initializer_t>::get()
+class condition_fully_specified_type_identifier_equal_initializer_t: public condition_t {
+
+public:
+
+  std::unique_ptr<fully_specified_type_t> fully_specified_type_0;
+
+  std::unique_ptr<token_t> identifier_1;
+
+  std::unique_ptr<token_t> equal_2;
+
+  std::unique_ptr<initializer_t> initializer_3;
+
+  condition_fully_specified_type_identifier_equal_initializer_t(
+    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
+    std::unique_ptr<token_t> &&identifier_1_,
+    std::unique_ptr<token_t> &&equal_2_,
+    std::unique_ptr<initializer_t> &&initializer_3_
+  ): fully_specified_type_0(std::move(fully_specified_type_0_)),
+     identifier_1(std::move(identifier_1_)),
+     equal_2(std::move(equal_2_)),
+     initializer_3(std::move(initializer_3_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // condition_fully_specified_type_identifier_equal_initializer_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> condition_t::pattern<0>::list = {
+  pattern_item_t<expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> condition_t::pattern<1>::list = {
+  pattern_item_t<fully_specified_type_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
+  pattern_item_t<initializer_t>::get()
 };
 
 }   // ast

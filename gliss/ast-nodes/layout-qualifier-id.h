@@ -14,42 +14,114 @@ namespace gliss {
 
 namespace ast {
 
+class constant_expression_t;
+
 class layout_qualifier_id_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 3;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = layout_qualifier_id_identifier_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  layout_qualifier_id_t(
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = layout_qualifier_id_identifier_equal_constant_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  layout_qualifier_id_t(
-    const token_t &,
-    const token_t &,
-    const constant_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = layout_qualifier_id_shared_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  virtual ~layout_qualifier_id_t() = default;
+
+};  // layout_qualifier_id_t
+
+
+class layout_qualifier_id_identifier_t: public layout_qualifier_id_t {
+
+public:
+
+  std::unique_ptr<token_t> identifier_0;
+
+  layout_qualifier_id_identifier_t(
+    std::unique_ptr<token_t> &&identifier_0_
+  ): identifier_0(std::move(identifier_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // layout_qualifier_id_t
+};  // layout_qualifier_id_identifier_t
+  
 
-const std::vector<layout_qualifier_id_t::pattern_t> layout_qualifier_id_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
-    pattern_item_t<constant_expression_t>::get()
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SHARED"))
+class layout_qualifier_id_identifier_equal_constant_expression_t: public layout_qualifier_id_t {
+
+public:
+
+  std::unique_ptr<token_t> identifier_0;
+
+  std::unique_ptr<token_t> equal_1;
+
+  std::unique_ptr<constant_expression_t> constant_expression_2;
+
+  layout_qualifier_id_identifier_equal_constant_expression_t(
+    std::unique_ptr<token_t> &&identifier_0_,
+    std::unique_ptr<token_t> &&equal_1_,
+    std::unique_ptr<constant_expression_t> &&constant_expression_2_
+  ): identifier_0(std::move(identifier_0_)),
+     equal_1(std::move(equal_1_)),
+     constant_expression_2(std::move(constant_expression_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // layout_qualifier_id_identifier_equal_constant_expression_t
+  
+
+class layout_qualifier_id_shared_t: public layout_qualifier_id_t {
+
+public:
+
+  std::unique_ptr<token_t> shared_0;
+
+  layout_qualifier_id_shared_t(
+    std::unique_ptr<token_t> &&shared_0_
+  ): shared_0(std::move(shared_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // layout_qualifier_id_shared_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> layout_qualifier_id_t::pattern<0>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> layout_qualifier_id_t::pattern<1>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
+  pattern_item_t<constant_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> layout_qualifier_id_t::pattern<2>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SHARED"))
 };
 
 }   // ast

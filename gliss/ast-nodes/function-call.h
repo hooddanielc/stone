@@ -14,30 +14,48 @@ namespace gliss {
 
 namespace ast {
 
+class function_call_or_method_t;
+
 class function_call_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 1;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = function_call_function_call_or_method_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  function_call_t(
-    const function_call_or_method_t &
-  );
+  virtual ~function_call_t() = default;
+
+};  // function_call_t
+
+
+class function_call_function_call_or_method_t: public function_call_t {
+
+public:
+
+  std::unique_ptr<function_call_or_method_t> function_call_or_method_0;
+
+  function_call_function_call_or_method_t(
+    std::unique_ptr<function_call_or_method_t> &&function_call_or_method_0_
+  ): function_call_or_method_0(std::move(function_call_or_method_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // function_call_t
+};  // function_call_function_call_or_method_t
+  
 
-const std::vector<function_call_t::pattern_t> function_call_t::patterns = {
-  {
-    pattern_item_t<function_call_or_method_t>::get()
-  }
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> function_call_t::pattern<0>::list = {
+  pattern_item_t<function_call_or_method_t>::get()
 };
 
 }   // ast

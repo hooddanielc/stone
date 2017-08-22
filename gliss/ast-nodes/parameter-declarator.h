@@ -15,42 +15,92 @@ namespace gliss {
 
 namespace ast {
 
+class type_specifier_t;
+class array_specifier_t;
+
 class parameter_declarator_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = parameter_declarator_type_specifier_identifier_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  parameter_declarator_t(
-    const type_specifier_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = parameter_declarator_type_specifier_identifier_array_specifier_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  parameter_declarator_t(
-    const type_specifier_t &,
-    const token_t &,
-    const array_specifier_t &
-  );
+  virtual ~parameter_declarator_t() = default;
+
+};  // parameter_declarator_t
+
+
+class parameter_declarator_type_specifier_identifier_t: public parameter_declarator_t {
+
+public:
+
+  std::unique_ptr<type_specifier_t> type_specifier_0;
+
+  std::unique_ptr<token_t> identifier_1;
+
+  parameter_declarator_type_specifier_identifier_t(
+    std::unique_ptr<type_specifier_t> &&type_specifier_0_,
+    std::unique_ptr<token_t> &&identifier_1_
+  ): type_specifier_0(std::move(type_specifier_0_)),
+     identifier_1(std::move(identifier_1_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // parameter_declarator_t
+};  // parameter_declarator_type_specifier_identifier_t
+  
 
-const std::vector<parameter_declarator_t::pattern_t> parameter_declarator_t::patterns = {
-  {
-    pattern_item_t<type_specifier_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
-  }, {
-    pattern_item_t<type_specifier_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-    pattern_item_t<array_specifier_t>::get()
+class parameter_declarator_type_specifier_identifier_array_specifier_t: public parameter_declarator_t {
+
+public:
+
+  std::unique_ptr<type_specifier_t> type_specifier_0;
+
+  std::unique_ptr<token_t> identifier_1;
+
+  std::unique_ptr<array_specifier_t> array_specifier_2;
+
+  parameter_declarator_type_specifier_identifier_array_specifier_t(
+    std::unique_ptr<type_specifier_t> &&type_specifier_0_,
+    std::unique_ptr<token_t> &&identifier_1_,
+    std::unique_ptr<array_specifier_t> &&array_specifier_2_
+  ): type_specifier_0(std::move(type_specifier_0_)),
+     identifier_1(std::move(identifier_1_)),
+     array_specifier_2(std::move(array_specifier_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // parameter_declarator_type_specifier_identifier_array_specifier_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> parameter_declarator_t::pattern<0>::list = {
+  pattern_item_t<type_specifier_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> parameter_declarator_t::pattern<1>::list = {
+  pattern_item_t<type_specifier_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+  pattern_item_t<array_specifier_t>::get()
 };
 
 }   // ast

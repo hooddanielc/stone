@@ -14,42 +14,91 @@ namespace gliss {
 
 namespace ast {
 
+class expression_t;
+
 class case_label_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = case_label_case_expression_colon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  case_label_t(
-    const token_t &,
-    const expression_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = case_label_default_colon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  case_label_t(
-    const token_t &,
-    const token_t &
-  );
+  virtual ~case_label_t() = default;
+
+};  // case_label_t
+
+
+class case_label_case_expression_colon_t: public case_label_t {
+
+public:
+
+  std::unique_ptr<token_t> case_0;
+
+  std::unique_ptr<expression_t> expression_1;
+
+  std::unique_ptr<token_t> colon_2;
+
+  case_label_case_expression_colon_t(
+    std::unique_ptr<token_t> &&case_0_,
+    std::unique_ptr<expression_t> &&expression_1_,
+    std::unique_ptr<token_t> &&colon_2_
+  ): case_0(std::move(case_0_)),
+     expression_1(std::move(expression_1_)),
+     colon_2(std::move(colon_2_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // case_label_t
+};  // case_label_case_expression_colon_t
+  
 
-const std::vector<case_label_t::pattern_t> case_label_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("CASE")),
-    pattern_item_t<expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COLON"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DEFAULT")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COLON"))
+class case_label_default_colon_t: public case_label_t {
+
+public:
+
+  std::unique_ptr<token_t> default_0;
+
+  std::unique_ptr<token_t> colon_1;
+
+  case_label_default_colon_t(
+    std::unique_ptr<token_t> &&default_0_,
+    std::unique_ptr<token_t> &&colon_1_
+  ): default_0(std::move(default_0_)),
+     colon_1(std::move(colon_1_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // case_label_default_colon_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> case_label_t::pattern<0>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("CASE")),
+  pattern_item_t<expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> case_label_t::pattern<1>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DEFAULT")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COLON"))
 };
 
 }   // ast

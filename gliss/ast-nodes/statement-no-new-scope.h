@@ -15,36 +15,77 @@ namespace gliss {
 
 namespace ast {
 
+class compound_statement_no_new_scope_t;
+class simple_statement_t;
+
 class statement_no_new_scope_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = statement_no_new_scope_compound_statement_no_new_scope_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  statement_no_new_scope_t(
-    const compound_statement_no_new_scope_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = statement_no_new_scope_simple_statement_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  statement_no_new_scope_t(
-    const simple_statement_t &
-  );
+  virtual ~statement_no_new_scope_t() = default;
+
+};  // statement_no_new_scope_t
+
+
+class statement_no_new_scope_compound_statement_no_new_scope_t: public statement_no_new_scope_t {
+
+public:
+
+  std::unique_ptr<compound_statement_no_new_scope_t> compound_statement_no_new_scope_0;
+
+  statement_no_new_scope_compound_statement_no_new_scope_t(
+    std::unique_ptr<compound_statement_no_new_scope_t> &&compound_statement_no_new_scope_0_
+  ): compound_statement_no_new_scope_0(std::move(compound_statement_no_new_scope_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // statement_no_new_scope_t
+};  // statement_no_new_scope_compound_statement_no_new_scope_t
+  
 
-const std::vector<statement_no_new_scope_t::pattern_t> statement_no_new_scope_t::patterns = {
-  {
-    pattern_item_t<compound_statement_no_new_scope_t>::get()
-  }, {
-    pattern_item_t<simple_statement_t>::get()
+class statement_no_new_scope_simple_statement_t: public statement_no_new_scope_t {
+
+public:
+
+  std::unique_ptr<simple_statement_t> simple_statement_0;
+
+  statement_no_new_scope_simple_statement_t(
+    std::unique_ptr<simple_statement_t> &&simple_statement_0_
+  ): simple_statement_0(std::move(simple_statement_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // statement_no_new_scope_simple_statement_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> statement_no_new_scope_t::pattern<0>::list = {
+  pattern_item_t<compound_statement_no_new_scope_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> statement_no_new_scope_t::pattern<1>::list = {
+  pattern_item_t<simple_statement_t>::get()
 };
 
 }   // ast

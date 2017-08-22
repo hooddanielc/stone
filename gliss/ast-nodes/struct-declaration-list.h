@@ -15,38 +15,82 @@ namespace gliss {
 
 namespace ast {
 
+class struct_declaration_t;
+
+
 class struct_declaration_list_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = struct_declaration_list_struct_declaration_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  struct_declaration_list_t(
-    const struct_declaration_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = struct_declaration_list_struct_declaration_list_struct_declaration_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  struct_declaration_list_t(
-    const struct_declaration_list_t &,
-    const struct_declaration_t &
-  );
+  virtual ~struct_declaration_list_t() = default;
+
+};  // struct_declaration_list_t
+
+
+class struct_declaration_list_struct_declaration_t: public struct_declaration_list_t {
+
+public:
+
+  std::unique_ptr<struct_declaration_t> struct_declaration_0;
+
+  struct_declaration_list_struct_declaration_t(
+    std::unique_ptr<struct_declaration_t> &&struct_declaration_0_
+  ): struct_declaration_0(std::move(struct_declaration_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // struct_declaration_list_t
+};  // struct_declaration_list_struct_declaration_t
+  
 
-const std::vector<struct_declaration_list_t::pattern_t> struct_declaration_list_t::patterns = {
-  {
-    pattern_item_t<struct_declaration_t>::get()
-  }, {
-    pattern_item_t<struct_declaration_list_t>::get(),
-    pattern_item_t<struct_declaration_t>::get()
+class struct_declaration_list_struct_declaration_list_struct_declaration_t: public struct_declaration_list_t {
+
+public:
+
+  std::unique_ptr<struct_declaration_list_t> struct_declaration_list_0;
+
+  std::unique_ptr<struct_declaration_t> struct_declaration_1;
+
+  struct_declaration_list_struct_declaration_list_struct_declaration_t(
+    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_0_,
+    std::unique_ptr<struct_declaration_t> &&struct_declaration_1_
+  ): struct_declaration_list_0(std::move(struct_declaration_list_0_)),
+     struct_declaration_1(std::move(struct_declaration_1_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // struct_declaration_list_struct_declaration_list_struct_declaration_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> struct_declaration_list_t::pattern<0>::list = {
+  pattern_item_t<struct_declaration_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> struct_declaration_list_t::pattern<1>::list = {
+  pattern_item_t<struct_declaration_list_t>::get(),
+  pattern_item_t<struct_declaration_t>::get()
 };
 
 }   // ast

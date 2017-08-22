@@ -15,42 +15,79 @@ namespace gliss {
 
 namespace ast {
 
+class expression_t;
+class switch_statement_list_t;
+
 class switch_statement_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 1;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  switch_statement_t(
-    const token_t &,
-    const token_t &,
-    const expression_t &,
-    const token_t &,
-    const token_t &,
-    const switch_statement_list_t &,
-    const token_t &
-  );
+  virtual ~switch_statement_t() = default;
+
+};  // switch_statement_t
+
+
+class switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t: public switch_statement_t {
+
+public:
+
+  std::unique_ptr<token_t> switch_0;
+
+  std::unique_ptr<token_t> left_paren_1;
+
+  std::unique_ptr<expression_t> expression_2;
+
+  std::unique_ptr<token_t> right_paren_3;
+
+  std::unique_ptr<token_t> left_brace_4;
+
+  std::unique_ptr<switch_statement_list_t> switch_statement_list_5;
+
+  std::unique_ptr<token_t> right_brace_6;
+
+  switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t(
+    std::unique_ptr<token_t> &&switch_0_,
+    std::unique_ptr<token_t> &&left_paren_1_,
+    std::unique_ptr<expression_t> &&expression_2_,
+    std::unique_ptr<token_t> &&right_paren_3_,
+    std::unique_ptr<token_t> &&left_brace_4_,
+    std::unique_ptr<switch_statement_list_t> &&switch_statement_list_5_,
+    std::unique_ptr<token_t> &&right_brace_6_
+  ): switch_0(std::move(switch_0_)),
+     left_paren_1(std::move(left_paren_1_)),
+     expression_2(std::move(expression_2_)),
+     right_paren_3(std::move(right_paren_3_)),
+     left_brace_4(std::move(left_brace_4_)),
+     switch_statement_list_5(std::move(switch_statement_list_5_)),
+     right_brace_6(std::move(right_brace_6_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // switch_statement_t
+};  // switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t
+  
 
-const std::vector<switch_statement_t::pattern_t> switch_statement_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SWITCH")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
-    pattern_item_t<expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
-    pattern_item_t<switch_statement_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
-  }
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> switch_statement_t::pattern<0>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SWITCH")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
+  pattern_item_t<expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+  pattern_item_t<switch_statement_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
 };
 
 }   // ast

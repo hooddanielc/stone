@@ -16,49 +16,149 @@ namespace gliss {
 
 namespace ast {
 
+class postfix_expression_t;
+
+class unary_operator_t;
+
 class unary_expression_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 4;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = unary_expression_postfix_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  unary_expression_t(
-    const postfix_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = unary_expression_inc_op_unary_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  unary_expression_t(
-    const token_t &,
-    const unary_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = unary_expression_dec_op_unary_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  unary_expression_t(
-    const unary_operator_t &,
-    const unary_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 3>::type> {
+    using type = unary_expression_unary_operator_unary_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  virtual ~unary_expression_t() = default;
+
+};  // unary_expression_t
+
+
+class unary_expression_postfix_expression_t: public unary_expression_t {
+
+public:
+
+  std::unique_ptr<postfix_expression_t> postfix_expression_0;
+
+  unary_expression_postfix_expression_t(
+    std::unique_ptr<postfix_expression_t> &&postfix_expression_0_
+  ): postfix_expression_0(std::move(postfix_expression_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // unary_expression_t
+};  // unary_expression_postfix_expression_t
+  
 
-const std::vector<unary_expression_t::pattern_t> unary_expression_t::patterns = {
-  {
-    pattern_item_t<postfix_expression_t>::get()
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("INC_OP")),
-    pattern_item_t<unary_expression_t>::get()
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DEC_OP")),
-    pattern_item_t<unary_expression_t>::get()
-  }, {
-    pattern_item_t<unary_operator_t>::get(),
-    pattern_item_t<unary_expression_t>::get()
+class unary_expression_inc_op_unary_expression_t: public unary_expression_t {
+
+public:
+
+  std::unique_ptr<token_t> inc_op_0;
+
+  std::unique_ptr<unary_expression_t> unary_expression_1;
+
+  unary_expression_inc_op_unary_expression_t(
+    std::unique_ptr<token_t> &&inc_op_0_,
+    std::unique_ptr<unary_expression_t> &&unary_expression_1_
+  ): inc_op_0(std::move(inc_op_0_)),
+     unary_expression_1(std::move(unary_expression_1_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // unary_expression_inc_op_unary_expression_t
+  
+
+class unary_expression_dec_op_unary_expression_t: public unary_expression_t {
+
+public:
+
+  std::unique_ptr<token_t> dec_op_0;
+
+  std::unique_ptr<unary_expression_t> unary_expression_1;
+
+  unary_expression_dec_op_unary_expression_t(
+    std::unique_ptr<token_t> &&dec_op_0_,
+    std::unique_ptr<unary_expression_t> &&unary_expression_1_
+  ): dec_op_0(std::move(dec_op_0_)),
+     unary_expression_1(std::move(unary_expression_1_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // unary_expression_dec_op_unary_expression_t
+  
+
+class unary_expression_unary_operator_unary_expression_t: public unary_expression_t {
+
+public:
+
+  std::unique_ptr<unary_operator_t> unary_operator_0;
+
+  std::unique_ptr<unary_expression_t> unary_expression_1;
+
+  unary_expression_unary_operator_unary_expression_t(
+    std::unique_ptr<unary_operator_t> &&unary_operator_0_,
+    std::unique_ptr<unary_expression_t> &&unary_expression_1_
+  ): unary_operator_0(std::move(unary_operator_0_)),
+     unary_expression_1(std::move(unary_expression_1_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // unary_expression_unary_operator_unary_expression_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> unary_expression_t::pattern<0>::list = {
+  pattern_item_t<postfix_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> unary_expression_t::pattern<1>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("INC_OP")),
+  pattern_item_t<unary_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> unary_expression_t::pattern<2>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DEC_OP")),
+  pattern_item_t<unary_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> unary_expression_t::pattern<3>::list = {
+  pattern_item_t<unary_operator_t>::get(),
+  pattern_item_t<unary_expression_t>::get()
 };
 
 }   // ast

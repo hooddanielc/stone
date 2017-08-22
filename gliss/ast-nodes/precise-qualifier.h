@@ -14,30 +14,48 @@ namespace gliss {
 
 namespace ast {
 
+
+
 class precise_qualifier_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 1;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = precise_qualifier_precise_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  precise_qualifier_t(
-    const token_t &
-  );
+  virtual ~precise_qualifier_t() = default;
+
+};  // precise_qualifier_t
+
+
+class precise_qualifier_precise_t: public precise_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> precise_0;
+
+  precise_qualifier_precise_t(
+    std::unique_ptr<token_t> &&precise_0_
+  ): precise_0(std::move(precise_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // precise_qualifier_t
+};  // precise_qualifier_precise_t
+  
 
-const std::vector<precise_qualifier_t::pattern_t> precise_qualifier_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PRECISE"))
-  }
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> precise_qualifier_t::pattern<0>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PRECISE"))
 };
 
 }   // ast

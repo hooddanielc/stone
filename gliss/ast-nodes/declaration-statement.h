@@ -14,30 +14,48 @@ namespace gliss {
 
 namespace ast {
 
+class declaration_t;
+
 class declaration_statement_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 1;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = declaration_statement_declaration_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  declaration_statement_t(
-    const declaration_t &
-  );
+  virtual ~declaration_statement_t() = default;
+
+};  // declaration_statement_t
+
+
+class declaration_statement_declaration_t: public declaration_statement_t {
+
+public:
+
+  std::unique_ptr<declaration_t> declaration_0;
+
+  declaration_statement_declaration_t(
+    std::unique_ptr<declaration_t> &&declaration_0_
+  ): declaration_0(std::move(declaration_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // declaration_statement_t
+};  // declaration_statement_declaration_t
+  
 
-const std::vector<declaration_statement_t::pattern_t> declaration_statement_t::patterns = {
-  {
-    pattern_item_t<declaration_t>::get()
-  }
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> declaration_statement_t::pattern<0>::list = {
+  pattern_item_t<declaration_t>::get()
 };
 
 }   // ast

@@ -15,54 +15,227 @@ namespace gliss {
 
 namespace ast {
 
+class variable_identifier_t;
+class expression_t;
+
 class primary_expression_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 7;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = primary_expression_variable_identifier_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  primary_expression_t(
-    const variable_identifier_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = primary_expression_intconstant_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  primary_expression_t(
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = primary_expression_uintconstant_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  primary_expression_t(
-    const token_t &,
-    const expression_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 3>::type> {
+    using type = primary_expression_floatconstant_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 4>::type> {
+    using type = primary_expression_boolconstant_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 5>::type> {
+    using type = primary_expression_doubleconstant_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 6>::type> {
+    using type = primary_expression_left_paren_expression_right_paren_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  virtual ~primary_expression_t() = default;
+
+};  // primary_expression_t
+
+
+class primary_expression_variable_identifier_t: public primary_expression_t {
+
+public:
+
+  std::unique_ptr<variable_identifier_t> variable_identifier_0;
+
+  primary_expression_variable_identifier_t(
+    std::unique_ptr<variable_identifier_t> &&variable_identifier_0_
+  ): variable_identifier_0(std::move(variable_identifier_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // primary_expression_t
+};  // primary_expression_variable_identifier_t
+  
 
-const std::vector<primary_expression_t::pattern_t> primary_expression_t::patterns = {
-  {
-    pattern_item_t<variable_identifier_t>::get()
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("INTCONSTANT"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UINTCONSTANT"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("FLOATCONSTANT"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BOOLCONSTANT"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DOUBLECONSTANT"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
-    pattern_item_t<expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
+class primary_expression_intconstant_t: public primary_expression_t {
+
+public:
+
+  std::unique_ptr<token_t> intconstant_0;
+
+  primary_expression_intconstant_t(
+    std::unique_ptr<token_t> &&intconstant_0_
+  ): intconstant_0(std::move(intconstant_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // primary_expression_intconstant_t
+  
+
+class primary_expression_uintconstant_t: public primary_expression_t {
+
+public:
+
+  std::unique_ptr<token_t> uintconstant_0;
+
+  primary_expression_uintconstant_t(
+    std::unique_ptr<token_t> &&uintconstant_0_
+  ): uintconstant_0(std::move(uintconstant_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // primary_expression_uintconstant_t
+  
+
+class primary_expression_floatconstant_t: public primary_expression_t {
+
+public:
+
+  std::unique_ptr<token_t> floatconstant_0;
+
+  primary_expression_floatconstant_t(
+    std::unique_ptr<token_t> &&floatconstant_0_
+  ): floatconstant_0(std::move(floatconstant_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // primary_expression_floatconstant_t
+  
+
+class primary_expression_boolconstant_t: public primary_expression_t {
+
+public:
+
+  std::unique_ptr<token_t> boolconstant_0;
+
+  primary_expression_boolconstant_t(
+    std::unique_ptr<token_t> &&boolconstant_0_
+  ): boolconstant_0(std::move(boolconstant_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // primary_expression_boolconstant_t
+  
+
+class primary_expression_doubleconstant_t: public primary_expression_t {
+
+public:
+
+  std::unique_ptr<token_t> doubleconstant_0;
+
+  primary_expression_doubleconstant_t(
+    std::unique_ptr<token_t> &&doubleconstant_0_
+  ): doubleconstant_0(std::move(doubleconstant_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // primary_expression_doubleconstant_t
+  
+
+class primary_expression_left_paren_expression_right_paren_t: public primary_expression_t {
+
+public:
+
+  std::unique_ptr<token_t> left_paren_0;
+
+  std::unique_ptr<expression_t> expression_1;
+
+  std::unique_ptr<token_t> right_paren_2;
+
+  primary_expression_left_paren_expression_right_paren_t(
+    std::unique_ptr<token_t> &&left_paren_0_,
+    std::unique_ptr<expression_t> &&expression_1_,
+    std::unique_ptr<token_t> &&right_paren_2_
+  ): left_paren_0(std::move(left_paren_0_)),
+     expression_1(std::move(expression_1_)),
+     right_paren_2(std::move(right_paren_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // primary_expression_left_paren_expression_right_paren_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<0>::list = {
+  pattern_item_t<variable_identifier_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<1>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("INTCONSTANT"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<2>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UINTCONSTANT"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<3>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("FLOATCONSTANT"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<4>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BOOLCONSTANT"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<5>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DOUBLECONSTANT"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<6>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
+  pattern_item_t<expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
 };
 
 }   // ast

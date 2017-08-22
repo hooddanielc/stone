@@ -15,44 +15,125 @@ namespace gliss {
 
 namespace ast {
 
+class multiplicative_expression_t;
+
+
 class additive_expression_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 3;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = additive_expression_multiplicative_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  additive_expression_t(
-    const multiplicative_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = additive_expression_additive_expression_plus_multiplicative_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  additive_expression_t(
-    const additive_expression_t &,
-    const token_t &,
-    const multiplicative_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = additive_expression_additive_expression_dash_multiplicative_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  virtual ~additive_expression_t() = default;
+
+};  // additive_expression_t
+
+
+class additive_expression_multiplicative_expression_t: public additive_expression_t {
+
+public:
+
+  std::unique_ptr<multiplicative_expression_t> multiplicative_expression_0;
+
+  additive_expression_multiplicative_expression_t(
+    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_0_
+  ): multiplicative_expression_0(std::move(multiplicative_expression_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // additive_expression_t
+};  // additive_expression_multiplicative_expression_t
+  
 
-const std::vector<additive_expression_t::pattern_t> additive_expression_t::patterns = {
-  {
-    pattern_item_t<multiplicative_expression_t>::get()
-  }, {
-    pattern_item_t<additive_expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PLUS")),
-    pattern_item_t<multiplicative_expression_t>::get()
-  }, {
-    pattern_item_t<additive_expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DASH")),
-    pattern_item_t<multiplicative_expression_t>::get()
+class additive_expression_additive_expression_plus_multiplicative_expression_t: public additive_expression_t {
+
+public:
+
+  std::unique_ptr<additive_expression_t> additive_expression_0;
+
+  std::unique_ptr<token_t> plus_1;
+
+  std::unique_ptr<multiplicative_expression_t> multiplicative_expression_2;
+
+  additive_expression_additive_expression_plus_multiplicative_expression_t(
+    std::unique_ptr<additive_expression_t> &&additive_expression_0_,
+    std::unique_ptr<token_t> &&plus_1_,
+    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_2_
+  ): additive_expression_0(std::move(additive_expression_0_)),
+     plus_1(std::move(plus_1_)),
+     multiplicative_expression_2(std::move(multiplicative_expression_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // additive_expression_additive_expression_plus_multiplicative_expression_t
+  
+
+class additive_expression_additive_expression_dash_multiplicative_expression_t: public additive_expression_t {
+
+public:
+
+  std::unique_ptr<additive_expression_t> additive_expression_0;
+
+  std::unique_ptr<token_t> dash_1;
+
+  std::unique_ptr<multiplicative_expression_t> multiplicative_expression_2;
+
+  additive_expression_additive_expression_dash_multiplicative_expression_t(
+    std::unique_ptr<additive_expression_t> &&additive_expression_0_,
+    std::unique_ptr<token_t> &&dash_1_,
+    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_2_
+  ): additive_expression_0(std::move(additive_expression_0_)),
+     dash_1(std::move(dash_1_)),
+     multiplicative_expression_2(std::move(multiplicative_expression_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // additive_expression_additive_expression_dash_multiplicative_expression_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> additive_expression_t::pattern<0>::list = {
+  pattern_item_t<multiplicative_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> additive_expression_t::pattern<1>::list = {
+  pattern_item_t<additive_expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PLUS")),
+  pattern_item_t<multiplicative_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> additive_expression_t::pattern<2>::list = {
+  pattern_item_t<additive_expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DASH")),
+  pattern_item_t<multiplicative_expression_t>::get()
 };
 
 }   // ast

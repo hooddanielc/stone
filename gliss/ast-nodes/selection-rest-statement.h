@@ -14,40 +14,86 @@ namespace gliss {
 
 namespace ast {
 
+class statement_t;
+
 class selection_rest_statement_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = selection_rest_statement_statement_else_statement_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  selection_rest_statement_t(
-    const statement_t &,
-    const token_t &,
-    const statement_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = selection_rest_statement_statement_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  selection_rest_statement_t(
-    const statement_t &
-  );
+  virtual ~selection_rest_statement_t() = default;
+
+};  // selection_rest_statement_t
+
+
+class selection_rest_statement_statement_else_statement_t: public selection_rest_statement_t {
+
+public:
+
+  std::unique_ptr<statement_t> statement_0;
+
+  std::unique_ptr<token_t> else_1;
+
+  std::unique_ptr<statement_t> statement_2;
+
+  selection_rest_statement_statement_else_statement_t(
+    std::unique_ptr<statement_t> &&statement_0_,
+    std::unique_ptr<token_t> &&else_1_,
+    std::unique_ptr<statement_t> &&statement_2_
+  ): statement_0(std::move(statement_0_)),
+     else_1(std::move(else_1_)),
+     statement_2(std::move(statement_2_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // selection_rest_statement_t
+};  // selection_rest_statement_statement_else_statement_t
+  
 
-const std::vector<selection_rest_statement_t::pattern_t> selection_rest_statement_t::patterns = {
-  {
-    pattern_item_t<statement_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ELSE")),
-    pattern_item_t<statement_t>::get()
-  }, {
-    pattern_item_t<statement_t>::get()
+class selection_rest_statement_statement_t: public selection_rest_statement_t {
+
+public:
+
+  std::unique_ptr<statement_t> statement_0;
+
+  selection_rest_statement_statement_t(
+    std::unique_ptr<statement_t> &&statement_0_
+  ): statement_0(std::move(statement_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // selection_rest_statement_statement_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> selection_rest_statement_t::pattern<0>::list = {
+  pattern_item_t<statement_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ELSE")),
+  pattern_item_t<statement_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> selection_rest_statement_t::pattern<1>::list = {
+  pattern_item_t<statement_t>::get()
 };
 
 }   // ast

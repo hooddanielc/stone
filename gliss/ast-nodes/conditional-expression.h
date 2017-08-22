@@ -16,44 +16,98 @@ namespace gliss {
 
 namespace ast {
 
+class logical_or_expression_t;
+class expression_t;
+class assignment_expression_t;
+
 class conditional_expression_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = conditional_expression_logical_or_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  conditional_expression_t(
-    const logical_or_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = conditional_expression_logical_or_expression_question_expression_colon_assignment_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  conditional_expression_t(
-    const logical_or_expression_t &,
-    const token_t &,
-    const expression_t &,
-    const token_t &,
-    const assignment_expression_t &
-  );
+  virtual ~conditional_expression_t() = default;
+
+};  // conditional_expression_t
+
+
+class conditional_expression_logical_or_expression_t: public conditional_expression_t {
+
+public:
+
+  std::unique_ptr<logical_or_expression_t> logical_or_expression_0;
+
+  conditional_expression_logical_or_expression_t(
+    std::unique_ptr<logical_or_expression_t> &&logical_or_expression_0_
+  ): logical_or_expression_0(std::move(logical_or_expression_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // conditional_expression_t
+};  // conditional_expression_logical_or_expression_t
+  
 
-const std::vector<conditional_expression_t::pattern_t> conditional_expression_t::patterns = {
-  {
-    pattern_item_t<logical_or_expression_t>::get()
-  }, {
-    pattern_item_t<logical_or_expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("QUESTION")),
-    pattern_item_t<expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COLON")),
-    pattern_item_t<assignment_expression_t>::get()
+class conditional_expression_logical_or_expression_question_expression_colon_assignment_expression_t: public conditional_expression_t {
+
+public:
+
+  std::unique_ptr<logical_or_expression_t> logical_or_expression_0;
+
+  std::unique_ptr<token_t> question_1;
+
+  std::unique_ptr<expression_t> expression_2;
+
+  std::unique_ptr<token_t> colon_3;
+
+  std::unique_ptr<assignment_expression_t> assignment_expression_4;
+
+  conditional_expression_logical_or_expression_question_expression_colon_assignment_expression_t(
+    std::unique_ptr<logical_or_expression_t> &&logical_or_expression_0_,
+    std::unique_ptr<token_t> &&question_1_,
+    std::unique_ptr<expression_t> &&expression_2_,
+    std::unique_ptr<token_t> &&colon_3_,
+    std::unique_ptr<assignment_expression_t> &&assignment_expression_4_
+  ): logical_or_expression_0(std::move(logical_or_expression_0_)),
+     question_1(std::move(question_1_)),
+     expression_2(std::move(expression_2_)),
+     colon_3(std::move(colon_3_)),
+     assignment_expression_4(std::move(assignment_expression_4_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // conditional_expression_logical_or_expression_question_expression_colon_assignment_expression_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> conditional_expression_t::pattern<0>::list = {
+  pattern_item_t<logical_or_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> conditional_expression_t::pattern<1>::list = {
+  pattern_item_t<logical_or_expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("QUESTION")),
+  pattern_item_t<expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COLON")),
+  pattern_item_t<assignment_expression_t>::get()
 };
 
 }   // ast

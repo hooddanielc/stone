@@ -15,36 +15,77 @@ namespace gliss {
 
 namespace ast {
 
+class expression_statement_t;
+class declaration_statement_t;
+
 class for_init_statement_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = for_init_statement_expression_statement_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  for_init_statement_t(
-    const expression_statement_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = for_init_statement_declaration_statement_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  for_init_statement_t(
-    const declaration_statement_t &
-  );
+  virtual ~for_init_statement_t() = default;
+
+};  // for_init_statement_t
+
+
+class for_init_statement_expression_statement_t: public for_init_statement_t {
+
+public:
+
+  std::unique_ptr<expression_statement_t> expression_statement_0;
+
+  for_init_statement_expression_statement_t(
+    std::unique_ptr<expression_statement_t> &&expression_statement_0_
+  ): expression_statement_0(std::move(expression_statement_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // for_init_statement_t
+};  // for_init_statement_expression_statement_t
+  
 
-const std::vector<for_init_statement_t::pattern_t> for_init_statement_t::patterns = {
-  {
-    pattern_item_t<expression_statement_t>::get()
-  }, {
-    pattern_item_t<declaration_statement_t>::get()
+class for_init_statement_declaration_statement_t: public for_init_statement_t {
+
+public:
+
+  std::unique_ptr<declaration_statement_t> declaration_statement_0;
+
+  for_init_statement_declaration_statement_t(
+    std::unique_ptr<declaration_statement_t> &&declaration_statement_0_
+  ): declaration_statement_0(std::move(declaration_statement_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // for_init_statement_declaration_statement_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> for_init_statement_t::pattern<0>::list = {
+  pattern_item_t<expression_statement_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> for_init_statement_t::pattern<1>::list = {
+  pattern_item_t<declaration_statement_t>::get()
 };
 
 }   // ast

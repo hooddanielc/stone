@@ -15,36 +15,77 @@ namespace gliss {
 
 namespace ast {
 
+class nothing_t;
+class statement_list_t;
+
 class switch_statement_list_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = switch_statement_list_nothing_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  switch_statement_list_t(
-    const nothing_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = switch_statement_list_statement_list_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  switch_statement_list_t(
-    const statement_list_t &
-  );
+  virtual ~switch_statement_list_t() = default;
+
+};  // switch_statement_list_t
+
+
+class switch_statement_list_nothing_t: public switch_statement_list_t {
+
+public:
+
+  std::unique_ptr<nothing_t> nothing_0;
+
+  switch_statement_list_nothing_t(
+    std::unique_ptr<nothing_t> &&nothing_0_
+  ): nothing_0(std::move(nothing_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // switch_statement_list_t
+};  // switch_statement_list_nothing_t
+  
 
-const std::vector<switch_statement_list_t::pattern_t> switch_statement_list_t::patterns = {
-  {
-    pattern_item_t<nothing_t>::get()
-  }, {
-    pattern_item_t<statement_list_t>::get()
+class switch_statement_list_statement_list_t: public switch_statement_list_t {
+
+public:
+
+  std::unique_ptr<statement_list_t> statement_list_0;
+
+  switch_statement_list_statement_list_t(
+    std::unique_ptr<statement_list_t> &&statement_list_0_
+  ): statement_list_0(std::move(statement_list_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // switch_statement_list_statement_list_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> switch_statement_list_t::pattern<0>::list = {
+  pattern_item_t<nothing_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> switch_statement_list_t::pattern<1>::list = {
+  pattern_item_t<statement_list_t>::get()
 };
 
 }   // ast

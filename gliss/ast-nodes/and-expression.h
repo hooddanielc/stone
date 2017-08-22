@@ -15,40 +15,87 @@ namespace gliss {
 
 namespace ast {
 
+class equality_expression_t;
+
+
 class and_expression_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = and_expression_equality_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  and_expression_t(
-    const equality_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = and_expression_and_expression_ampersand_equality_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  and_expression_t(
-    const and_expression_t &,
-    const token_t &,
-    const equality_expression_t &
-  );
+  virtual ~and_expression_t() = default;
+
+};  // and_expression_t
+
+
+class and_expression_equality_expression_t: public and_expression_t {
+
+public:
+
+  std::unique_ptr<equality_expression_t> equality_expression_0;
+
+  and_expression_equality_expression_t(
+    std::unique_ptr<equality_expression_t> &&equality_expression_0_
+  ): equality_expression_0(std::move(equality_expression_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // and_expression_t
+};  // and_expression_equality_expression_t
+  
 
-const std::vector<and_expression_t::pattern_t> and_expression_t::patterns = {
-  {
-    pattern_item_t<equality_expression_t>::get()
-  }, {
-    pattern_item_t<and_expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("AMPERSAND")),
-    pattern_item_t<equality_expression_t>::get()
+class and_expression_and_expression_ampersand_equality_expression_t: public and_expression_t {
+
+public:
+
+  std::unique_ptr<and_expression_t> and_expression_0;
+
+  std::unique_ptr<token_t> ampersand_1;
+
+  std::unique_ptr<equality_expression_t> equality_expression_2;
+
+  and_expression_and_expression_ampersand_equality_expression_t(
+    std::unique_ptr<and_expression_t> &&and_expression_0_,
+    std::unique_ptr<token_t> &&ampersand_1_,
+    std::unique_ptr<equality_expression_t> &&equality_expression_2_
+  ): and_expression_0(std::move(and_expression_0_)),
+     ampersand_1(std::move(ampersand_1_)),
+     equality_expression_2(std::move(equality_expression_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // and_expression_and_expression_ampersand_equality_expression_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> and_expression_t::pattern<0>::list = {
+  pattern_item_t<equality_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> and_expression_t::pattern<1>::list = {
+  pattern_item_t<and_expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("AMPERSAND")),
+  pattern_item_t<equality_expression_t>::get()
 };
 
 }   // ast

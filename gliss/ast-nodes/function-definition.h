@@ -15,32 +15,54 @@ namespace gliss {
 
 namespace ast {
 
+class function_prototype_t;
+class compound_statement_no_new_scope_t;
+
 class function_definition_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 1;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = function_definition_function_prototype_compound_statement_no_new_scope_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  function_definition_t(
-    const function_prototype_t &,
-    const compound_statement_no_new_scope_t &
-  );
+  virtual ~function_definition_t() = default;
+
+};  // function_definition_t
+
+
+class function_definition_function_prototype_compound_statement_no_new_scope_t: public function_definition_t {
+
+public:
+
+  std::unique_ptr<function_prototype_t> function_prototype_0;
+
+  std::unique_ptr<compound_statement_no_new_scope_t> compound_statement_no_new_scope_1;
+
+  function_definition_function_prototype_compound_statement_no_new_scope_t(
+    std::unique_ptr<function_prototype_t> &&function_prototype_0_,
+    std::unique_ptr<compound_statement_no_new_scope_t> &&compound_statement_no_new_scope_1_
+  ): function_prototype_0(std::move(function_prototype_0_)),
+     compound_statement_no_new_scope_1(std::move(compound_statement_no_new_scope_1_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // function_definition_t
+};  // function_definition_function_prototype_compound_statement_no_new_scope_t
+  
 
-const std::vector<function_definition_t::pattern_t> function_definition_t::patterns = {
-  {
-    pattern_item_t<function_prototype_t>::get(),
-    pattern_item_t<compound_statement_no_new_scope_t>::get()
-  }
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> function_definition_t::pattern<0>::list = {
+  pattern_item_t<function_prototype_t>::get(),
+  pattern_item_t<compound_statement_no_new_scope_t>::get()
 };
 
 }   // ast

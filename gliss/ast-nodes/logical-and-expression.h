@@ -15,40 +15,87 @@ namespace gliss {
 
 namespace ast {
 
+class inclusive_or_expression_t;
+
+
 class logical_and_expression_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = logical_and_expression_inclusive_or_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  logical_and_expression_t(
-    const inclusive_or_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = logical_and_expression_logical_and_expression_and_op_inclusive_or_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  logical_and_expression_t(
-    const logical_and_expression_t &,
-    const token_t &,
-    const inclusive_or_expression_t &
-  );
+  virtual ~logical_and_expression_t() = default;
+
+};  // logical_and_expression_t
+
+
+class logical_and_expression_inclusive_or_expression_t: public logical_and_expression_t {
+
+public:
+
+  std::unique_ptr<inclusive_or_expression_t> inclusive_or_expression_0;
+
+  logical_and_expression_inclusive_or_expression_t(
+    std::unique_ptr<inclusive_or_expression_t> &&inclusive_or_expression_0_
+  ): inclusive_or_expression_0(std::move(inclusive_or_expression_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // logical_and_expression_t
+};  // logical_and_expression_inclusive_or_expression_t
+  
 
-const std::vector<logical_and_expression_t::pattern_t> logical_and_expression_t::patterns = {
-  {
-    pattern_item_t<inclusive_or_expression_t>::get()
-  }, {
-    pattern_item_t<logical_and_expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("AND_OP")),
-    pattern_item_t<inclusive_or_expression_t>::get()
+class logical_and_expression_logical_and_expression_and_op_inclusive_or_expression_t: public logical_and_expression_t {
+
+public:
+
+  std::unique_ptr<logical_and_expression_t> logical_and_expression_0;
+
+  std::unique_ptr<token_t> and_op_1;
+
+  std::unique_ptr<inclusive_or_expression_t> inclusive_or_expression_2;
+
+  logical_and_expression_logical_and_expression_and_op_inclusive_or_expression_t(
+    std::unique_ptr<logical_and_expression_t> &&logical_and_expression_0_,
+    std::unique_ptr<token_t> &&and_op_1_,
+    std::unique_ptr<inclusive_or_expression_t> &&inclusive_or_expression_2_
+  ): logical_and_expression_0(std::move(logical_and_expression_0_)),
+     and_op_1(std::move(and_op_1_)),
+     inclusive_or_expression_2(std::move(inclusive_or_expression_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // logical_and_expression_logical_and_expression_and_op_inclusive_or_expression_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> logical_and_expression_t::pattern<0>::list = {
+  pattern_item_t<inclusive_or_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> logical_and_expression_t::pattern<1>::list = {
+  pattern_item_t<logical_and_expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("AND_OP")),
+  pattern_item_t<inclusive_or_expression_t>::get()
 };
 
 }   // ast

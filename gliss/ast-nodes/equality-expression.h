@@ -15,44 +15,125 @@ namespace gliss {
 
 namespace ast {
 
+class relational_expression_t;
+
+
 class equality_expression_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 3;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = equality_expression_relational_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  equality_expression_t(
-    const relational_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = equality_expression_equality_expression_eq_op_relational_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  equality_expression_t(
-    const equality_expression_t &,
-    const token_t &,
-    const relational_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = equality_expression_equality_expression_ne_op_relational_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  virtual ~equality_expression_t() = default;
+
+};  // equality_expression_t
+
+
+class equality_expression_relational_expression_t: public equality_expression_t {
+
+public:
+
+  std::unique_ptr<relational_expression_t> relational_expression_0;
+
+  equality_expression_relational_expression_t(
+    std::unique_ptr<relational_expression_t> &&relational_expression_0_
+  ): relational_expression_0(std::move(relational_expression_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // equality_expression_t
+};  // equality_expression_relational_expression_t
+  
 
-const std::vector<equality_expression_t::pattern_t> equality_expression_t::patterns = {
-  {
-    pattern_item_t<relational_expression_t>::get()
-  }, {
-    pattern_item_t<equality_expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQ_OP")),
-    pattern_item_t<relational_expression_t>::get()
-  }, {
-    pattern_item_t<equality_expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("NE_OP")),
-    pattern_item_t<relational_expression_t>::get()
+class equality_expression_equality_expression_eq_op_relational_expression_t: public equality_expression_t {
+
+public:
+
+  std::unique_ptr<equality_expression_t> equality_expression_0;
+
+  std::unique_ptr<token_t> eq_op_1;
+
+  std::unique_ptr<relational_expression_t> relational_expression_2;
+
+  equality_expression_equality_expression_eq_op_relational_expression_t(
+    std::unique_ptr<equality_expression_t> &&equality_expression_0_,
+    std::unique_ptr<token_t> &&eq_op_1_,
+    std::unique_ptr<relational_expression_t> &&relational_expression_2_
+  ): equality_expression_0(std::move(equality_expression_0_)),
+     eq_op_1(std::move(eq_op_1_)),
+     relational_expression_2(std::move(relational_expression_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // equality_expression_equality_expression_eq_op_relational_expression_t
+  
+
+class equality_expression_equality_expression_ne_op_relational_expression_t: public equality_expression_t {
+
+public:
+
+  std::unique_ptr<equality_expression_t> equality_expression_0;
+
+  std::unique_ptr<token_t> ne_op_1;
+
+  std::unique_ptr<relational_expression_t> relational_expression_2;
+
+  equality_expression_equality_expression_ne_op_relational_expression_t(
+    std::unique_ptr<equality_expression_t> &&equality_expression_0_,
+    std::unique_ptr<token_t> &&ne_op_1_,
+    std::unique_ptr<relational_expression_t> &&relational_expression_2_
+  ): equality_expression_0(std::move(equality_expression_0_)),
+     ne_op_1(std::move(ne_op_1_)),
+     relational_expression_2(std::move(relational_expression_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // equality_expression_equality_expression_ne_op_relational_expression_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> equality_expression_t::pattern<0>::list = {
+  pattern_item_t<relational_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> equality_expression_t::pattern<1>::list = {
+  pattern_item_t<equality_expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQ_OP")),
+  pattern_item_t<relational_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> equality_expression_t::pattern<2>::list = {
+  pattern_item_t<equality_expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("NE_OP")),
+  pattern_item_t<relational_expression_t>::get()
 };
 
 }   // ast

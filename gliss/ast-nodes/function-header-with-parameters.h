@@ -16,42 +16,93 @@ namespace gliss {
 
 namespace ast {
 
+class function_header_t;
+class parameter_declaration_t;
+
+
 class function_header_with_parameters_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = function_header_with_parameters_function_header_parameter_declaration_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  function_header_with_parameters_t(
-    const function_header_t &,
-    const parameter_declaration_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = function_header_with_parameters_function_header_with_parameters_comma_parameter_declaration_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  function_header_with_parameters_t(
-    const function_header_with_parameters_t &,
-    const token_t &,
-    const parameter_declaration_t &
-  );
+  virtual ~function_header_with_parameters_t() = default;
+
+};  // function_header_with_parameters_t
+
+
+class function_header_with_parameters_function_header_parameter_declaration_t: public function_header_with_parameters_t {
+
+public:
+
+  std::unique_ptr<function_header_t> function_header_0;
+
+  std::unique_ptr<parameter_declaration_t> parameter_declaration_1;
+
+  function_header_with_parameters_function_header_parameter_declaration_t(
+    std::unique_ptr<function_header_t> &&function_header_0_,
+    std::unique_ptr<parameter_declaration_t> &&parameter_declaration_1_
+  ): function_header_0(std::move(function_header_0_)),
+     parameter_declaration_1(std::move(parameter_declaration_1_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // function_header_with_parameters_t
+};  // function_header_with_parameters_function_header_parameter_declaration_t
+  
 
-const std::vector<function_header_with_parameters_t::pattern_t> function_header_with_parameters_t::patterns = {
-  {
-    pattern_item_t<function_header_t>::get(),
-    pattern_item_t<parameter_declaration_t>::get()
-  }, {
-    pattern_item_t<function_header_with_parameters_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-    pattern_item_t<parameter_declaration_t>::get()
+class function_header_with_parameters_function_header_with_parameters_comma_parameter_declaration_t: public function_header_with_parameters_t {
+
+public:
+
+  std::unique_ptr<function_header_with_parameters_t> function_header_with_parameters_0;
+
+  std::unique_ptr<token_t> comma_1;
+
+  std::unique_ptr<parameter_declaration_t> parameter_declaration_2;
+
+  function_header_with_parameters_function_header_with_parameters_comma_parameter_declaration_t(
+    std::unique_ptr<function_header_with_parameters_t> &&function_header_with_parameters_0_,
+    std::unique_ptr<token_t> &&comma_1_,
+    std::unique_ptr<parameter_declaration_t> &&parameter_declaration_2_
+  ): function_header_with_parameters_0(std::move(function_header_with_parameters_0_)),
+     comma_1(std::move(comma_1_)),
+     parameter_declaration_2(std::move(parameter_declaration_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // function_header_with_parameters_function_header_with_parameters_comma_parameter_declaration_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> function_header_with_parameters_t::pattern<0>::list = {
+  pattern_item_t<function_header_t>::get(),
+  pattern_item_t<parameter_declaration_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> function_header_with_parameters_t::pattern<1>::list = {
+  pattern_item_t<function_header_with_parameters_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
+  pattern_item_t<parameter_declaration_t>::get()
 };
 
 }   // ast

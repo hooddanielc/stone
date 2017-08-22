@@ -15,36 +15,77 @@ namespace gliss {
 
 namespace ast {
 
+class type_specifier_t;
+class postfix_expression_t;
+
 class function_identifier_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = function_identifier_type_specifier_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  function_identifier_t(
-    const type_specifier_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = function_identifier_postfix_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  function_identifier_t(
-    const postfix_expression_t &
-  );
+  virtual ~function_identifier_t() = default;
+
+};  // function_identifier_t
+
+
+class function_identifier_type_specifier_t: public function_identifier_t {
+
+public:
+
+  std::unique_ptr<type_specifier_t> type_specifier_0;
+
+  function_identifier_type_specifier_t(
+    std::unique_ptr<type_specifier_t> &&type_specifier_0_
+  ): type_specifier_0(std::move(type_specifier_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // function_identifier_t
+};  // function_identifier_type_specifier_t
+  
 
-const std::vector<function_identifier_t::pattern_t> function_identifier_t::patterns = {
-  {
-    pattern_item_t<type_specifier_t>::get()
-  }, {
-    pattern_item_t<postfix_expression_t>::get()
+class function_identifier_postfix_expression_t: public function_identifier_t {
+
+public:
+
+  std::unique_ptr<postfix_expression_t> postfix_expression_0;
+
+  function_identifier_postfix_expression_t(
+    std::unique_ptr<postfix_expression_t> &&postfix_expression_0_
+  ): postfix_expression_0(std::move(postfix_expression_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // function_identifier_postfix_expression_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> function_identifier_t::pattern<0>::list = {
+  pattern_item_t<type_specifier_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> function_identifier_t::pattern<1>::list = {
+  pattern_item_t<postfix_expression_t>::get()
 };
 
 }   // ast

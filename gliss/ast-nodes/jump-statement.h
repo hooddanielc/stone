@@ -14,51 +14,190 @@ namespace gliss {
 
 namespace ast {
 
+class expression_t;
+
 class jump_statement_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 5;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = jump_statement_continue_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  jump_statement_t(
-    const token_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = jump_statement_break_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  jump_statement_t(
-    const token_t &,
-    const expression_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = jump_statement_return_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 3>::type> {
+    using type = jump_statement_return_expression_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 4>::type> {
+    using type = jump_statement_discard_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  virtual ~jump_statement_t() = default;
+
+};  // jump_statement_t
+
+
+class jump_statement_continue_semicolon_t: public jump_statement_t {
+
+public:
+
+  std::unique_ptr<token_t> continue_0;
+
+  std::unique_ptr<token_t> semicolon_1;
+
+  jump_statement_continue_semicolon_t(
+    std::unique_ptr<token_t> &&continue_0_,
+    std::unique_ptr<token_t> &&semicolon_1_
+  ): continue_0(std::move(continue_0_)),
+     semicolon_1(std::move(semicolon_1_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // jump_statement_t
+};  // jump_statement_continue_semicolon_t
+  
 
-const std::vector<jump_statement_t::pattern_t> jump_statement_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("CONTINUE")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BREAK")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RETURN")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RETURN")),
-    pattern_item_t<expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DISCARD")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+class jump_statement_break_semicolon_t: public jump_statement_t {
+
+public:
+
+  std::unique_ptr<token_t> break_0;
+
+  std::unique_ptr<token_t> semicolon_1;
+
+  jump_statement_break_semicolon_t(
+    std::unique_ptr<token_t> &&break_0_,
+    std::unique_ptr<token_t> &&semicolon_1_
+  ): break_0(std::move(break_0_)),
+     semicolon_1(std::move(semicolon_1_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // jump_statement_break_semicolon_t
+  
+
+class jump_statement_return_semicolon_t: public jump_statement_t {
+
+public:
+
+  std::unique_ptr<token_t> return_0;
+
+  std::unique_ptr<token_t> semicolon_1;
+
+  jump_statement_return_semicolon_t(
+    std::unique_ptr<token_t> &&return_0_,
+    std::unique_ptr<token_t> &&semicolon_1_
+  ): return_0(std::move(return_0_)),
+     semicolon_1(std::move(semicolon_1_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // jump_statement_return_semicolon_t
+  
+
+class jump_statement_return_expression_semicolon_t: public jump_statement_t {
+
+public:
+
+  std::unique_ptr<token_t> return_0;
+
+  std::unique_ptr<expression_t> expression_1;
+
+  std::unique_ptr<token_t> semicolon_2;
+
+  jump_statement_return_expression_semicolon_t(
+    std::unique_ptr<token_t> &&return_0_,
+    std::unique_ptr<expression_t> &&expression_1_,
+    std::unique_ptr<token_t> &&semicolon_2_
+  ): return_0(std::move(return_0_)),
+     expression_1(std::move(expression_1_)),
+     semicolon_2(std::move(semicolon_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // jump_statement_return_expression_semicolon_t
+  
+
+class jump_statement_discard_semicolon_t: public jump_statement_t {
+
+public:
+
+  std::unique_ptr<token_t> discard_0;
+
+  std::unique_ptr<token_t> semicolon_1;
+
+  jump_statement_discard_semicolon_t(
+    std::unique_ptr<token_t> &&discard_0_,
+    std::unique_ptr<token_t> &&semicolon_1_
+  ): discard_0(std::move(discard_0_)),
+     semicolon_1(std::move(semicolon_1_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // jump_statement_discard_semicolon_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> jump_statement_t::pattern<0>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("CONTINUE")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> jump_statement_t::pattern<1>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BREAK")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> jump_statement_t::pattern<2>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RETURN")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> jump_statement_t::pattern<3>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RETURN")),
+  pattern_item_t<expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> jump_statement_t::pattern<4>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DISCARD")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
 };
 
 }   // ast

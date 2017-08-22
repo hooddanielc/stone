@@ -21,136 +21,424 @@ namespace gliss {
 
 namespace ast {
 
+class function_prototype_t;
+class init_declarator_list_t;
+class precision_qualifier_t;
+class type_specifier_t;
+class type_qualifier_t;
+class struct_declaration_list_t;
+class array_specifier_t;
+class identifier_list_t;
+
 class declaration_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 9;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = declaration_function_prototype_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  declaration_t(
-    const function_prototype_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = declaration_init_declarator_list_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  declaration_t(
-    const init_declarator_list_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = declaration_precision_precision_qualifier_type_specifier_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  declaration_t(
-    const token_t &,
-    const precision_qualifier_t &,
-    const type_specifier_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 3>::type> {
+    using type = declaration_type_qualifier_identifier_left_brace_struct_declaration_list_right_brace_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  declaration_t(
-    const type_qualifier_t &,
-    const token_t &,
-    const token_t &,
-    const struct_declaration_list_t &,
-    const token_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 4>::type> {
+    using type = declaration_type_qualifier_identifier_left_brace_struct_declaration_list_right_brace_identifier_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  declaration_t(
-    const type_qualifier_t &,
-    const token_t &,
-    const token_t &,
-    const struct_declaration_list_t &,
-    const token_t &,
-    const token_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 5>::type> {
+    using type = declaration_type_qualifier_identifier_left_brace_struct_declaration_list_right_brace_identifier_array_specifier_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  declaration_t(
-    const type_qualifier_t &,
-    const token_t &,
-    const token_t &,
-    const struct_declaration_list_t &,
-    const token_t &,
-    const token_t &,
-    const array_specifier_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 6>::type> {
+    using type = declaration_type_qualifier_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  declaration_t(
-    const type_qualifier_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 7>::type> {
+    using type = declaration_type_qualifier_identifier_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  declaration_t(
-    const type_qualifier_t &,
-    const token_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 8>::type> {
+    using type = declaration_type_qualifier_identifier_identifier_list_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  declaration_t(
-    const type_qualifier_t &,
-    const token_t &,
-    const identifier_list_t &,
-    const token_t &
-  );
+  virtual ~declaration_t() = default;
+
+};  // declaration_t
+
+
+class declaration_function_prototype_semicolon_t: public declaration_t {
+
+public:
+
+  std::unique_ptr<function_prototype_t> function_prototype_0;
+
+  std::unique_ptr<token_t> semicolon_1;
+
+  declaration_function_prototype_semicolon_t(
+    std::unique_ptr<function_prototype_t> &&function_prototype_0_,
+    std::unique_ptr<token_t> &&semicolon_1_
+  ): function_prototype_0(std::move(function_prototype_0_)),
+     semicolon_1(std::move(semicolon_1_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // declaration_t
+};  // declaration_function_prototype_semicolon_t
+  
 
-const std::vector<declaration_t::pattern_t> declaration_t::patterns = {
-  {
-    pattern_item_t<function_prototype_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<init_declarator_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PRECISION")),
-    pattern_item_t<precision_qualifier_t>::get(),
-    pattern_item_t<type_specifier_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<type_qualifier_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
-    pattern_item_t<struct_declaration_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<type_qualifier_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
-    pattern_item_t<struct_declaration_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<type_qualifier_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
-    pattern_item_t<struct_declaration_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-    pattern_item_t<array_specifier_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<type_qualifier_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<type_qualifier_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<type_qualifier_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-    pattern_item_t<identifier_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+class declaration_init_declarator_list_semicolon_t: public declaration_t {
+
+public:
+
+  std::unique_ptr<init_declarator_list_t> init_declarator_list_0;
+
+  std::unique_ptr<token_t> semicolon_1;
+
+  declaration_init_declarator_list_semicolon_t(
+    std::unique_ptr<init_declarator_list_t> &&init_declarator_list_0_,
+    std::unique_ptr<token_t> &&semicolon_1_
+  ): init_declarator_list_0(std::move(init_declarator_list_0_)),
+     semicolon_1(std::move(semicolon_1_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // declaration_init_declarator_list_semicolon_t
+  
+
+class declaration_precision_precision_qualifier_type_specifier_semicolon_t: public declaration_t {
+
+public:
+
+  std::unique_ptr<token_t> precision_0;
+
+  std::unique_ptr<precision_qualifier_t> precision_qualifier_1;
+
+  std::unique_ptr<type_specifier_t> type_specifier_2;
+
+  std::unique_ptr<token_t> semicolon_3;
+
+  declaration_precision_precision_qualifier_type_specifier_semicolon_t(
+    std::unique_ptr<token_t> &&precision_0_,
+    std::unique_ptr<precision_qualifier_t> &&precision_qualifier_1_,
+    std::unique_ptr<type_specifier_t> &&type_specifier_2_,
+    std::unique_ptr<token_t> &&semicolon_3_
+  ): precision_0(std::move(precision_0_)),
+     precision_qualifier_1(std::move(precision_qualifier_1_)),
+     type_specifier_2(std::move(type_specifier_2_)),
+     semicolon_3(std::move(semicolon_3_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // declaration_precision_precision_qualifier_type_specifier_semicolon_t
+  
+
+class declaration_type_qualifier_identifier_left_brace_struct_declaration_list_right_brace_semicolon_t: public declaration_t {
+
+public:
+
+  std::unique_ptr<type_qualifier_t> type_qualifier_0;
+
+  std::unique_ptr<token_t> identifier_1;
+
+  std::unique_ptr<token_t> left_brace_2;
+
+  std::unique_ptr<struct_declaration_list_t> struct_declaration_list_3;
+
+  std::unique_ptr<token_t> right_brace_4;
+
+  std::unique_ptr<token_t> semicolon_5;
+
+  declaration_type_qualifier_identifier_left_brace_struct_declaration_list_right_brace_semicolon_t(
+    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
+    std::unique_ptr<token_t> &&identifier_1_,
+    std::unique_ptr<token_t> &&left_brace_2_,
+    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_3_,
+    std::unique_ptr<token_t> &&right_brace_4_,
+    std::unique_ptr<token_t> &&semicolon_5_
+  ): type_qualifier_0(std::move(type_qualifier_0_)),
+     identifier_1(std::move(identifier_1_)),
+     left_brace_2(std::move(left_brace_2_)),
+     struct_declaration_list_3(std::move(struct_declaration_list_3_)),
+     right_brace_4(std::move(right_brace_4_)),
+     semicolon_5(std::move(semicolon_5_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // declaration_type_qualifier_identifier_left_brace_struct_declaration_list_right_brace_semicolon_t
+  
+
+class declaration_type_qualifier_identifier_left_brace_struct_declaration_list_right_brace_identifier_semicolon_t: public declaration_t {
+
+public:
+
+  std::unique_ptr<type_qualifier_t> type_qualifier_0;
+
+  std::unique_ptr<token_t> identifier_1;
+
+  std::unique_ptr<token_t> left_brace_2;
+
+  std::unique_ptr<struct_declaration_list_t> struct_declaration_list_3;
+
+  std::unique_ptr<token_t> right_brace_4;
+
+  std::unique_ptr<token_t> identifier_5;
+
+  std::unique_ptr<token_t> semicolon_6;
+
+  declaration_type_qualifier_identifier_left_brace_struct_declaration_list_right_brace_identifier_semicolon_t(
+    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
+    std::unique_ptr<token_t> &&identifier_1_,
+    std::unique_ptr<token_t> &&left_brace_2_,
+    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_3_,
+    std::unique_ptr<token_t> &&right_brace_4_,
+    std::unique_ptr<token_t> &&identifier_5_,
+    std::unique_ptr<token_t> &&semicolon_6_
+  ): type_qualifier_0(std::move(type_qualifier_0_)),
+     identifier_1(std::move(identifier_1_)),
+     left_brace_2(std::move(left_brace_2_)),
+     struct_declaration_list_3(std::move(struct_declaration_list_3_)),
+     right_brace_4(std::move(right_brace_4_)),
+     identifier_5(std::move(identifier_5_)),
+     semicolon_6(std::move(semicolon_6_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // declaration_type_qualifier_identifier_left_brace_struct_declaration_list_right_brace_identifier_semicolon_t
+  
+
+class declaration_type_qualifier_identifier_left_brace_struct_declaration_list_right_brace_identifier_array_specifier_semicolon_t: public declaration_t {
+
+public:
+
+  std::unique_ptr<type_qualifier_t> type_qualifier_0;
+
+  std::unique_ptr<token_t> identifier_1;
+
+  std::unique_ptr<token_t> left_brace_2;
+
+  std::unique_ptr<struct_declaration_list_t> struct_declaration_list_3;
+
+  std::unique_ptr<token_t> right_brace_4;
+
+  std::unique_ptr<token_t> identifier_5;
+
+  std::unique_ptr<array_specifier_t> array_specifier_6;
+
+  std::unique_ptr<token_t> semicolon_7;
+
+  declaration_type_qualifier_identifier_left_brace_struct_declaration_list_right_brace_identifier_array_specifier_semicolon_t(
+    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
+    std::unique_ptr<token_t> &&identifier_1_,
+    std::unique_ptr<token_t> &&left_brace_2_,
+    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_3_,
+    std::unique_ptr<token_t> &&right_brace_4_,
+    std::unique_ptr<token_t> &&identifier_5_,
+    std::unique_ptr<array_specifier_t> &&array_specifier_6_,
+    std::unique_ptr<token_t> &&semicolon_7_
+  ): type_qualifier_0(std::move(type_qualifier_0_)),
+     identifier_1(std::move(identifier_1_)),
+     left_brace_2(std::move(left_brace_2_)),
+     struct_declaration_list_3(std::move(struct_declaration_list_3_)),
+     right_brace_4(std::move(right_brace_4_)),
+     identifier_5(std::move(identifier_5_)),
+     array_specifier_6(std::move(array_specifier_6_)),
+     semicolon_7(std::move(semicolon_7_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // declaration_type_qualifier_identifier_left_brace_struct_declaration_list_right_brace_identifier_array_specifier_semicolon_t
+  
+
+class declaration_type_qualifier_semicolon_t: public declaration_t {
+
+public:
+
+  std::unique_ptr<type_qualifier_t> type_qualifier_0;
+
+  std::unique_ptr<token_t> semicolon_1;
+
+  declaration_type_qualifier_semicolon_t(
+    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
+    std::unique_ptr<token_t> &&semicolon_1_
+  ): type_qualifier_0(std::move(type_qualifier_0_)),
+     semicolon_1(std::move(semicolon_1_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // declaration_type_qualifier_semicolon_t
+  
+
+class declaration_type_qualifier_identifier_semicolon_t: public declaration_t {
+
+public:
+
+  std::unique_ptr<type_qualifier_t> type_qualifier_0;
+
+  std::unique_ptr<token_t> identifier_1;
+
+  std::unique_ptr<token_t> semicolon_2;
+
+  declaration_type_qualifier_identifier_semicolon_t(
+    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
+    std::unique_ptr<token_t> &&identifier_1_,
+    std::unique_ptr<token_t> &&semicolon_2_
+  ): type_qualifier_0(std::move(type_qualifier_0_)),
+     identifier_1(std::move(identifier_1_)),
+     semicolon_2(std::move(semicolon_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // declaration_type_qualifier_identifier_semicolon_t
+  
+
+class declaration_type_qualifier_identifier_identifier_list_semicolon_t: public declaration_t {
+
+public:
+
+  std::unique_ptr<type_qualifier_t> type_qualifier_0;
+
+  std::unique_ptr<token_t> identifier_1;
+
+  std::unique_ptr<identifier_list_t> identifier_list_2;
+
+  std::unique_ptr<token_t> semicolon_3;
+
+  declaration_type_qualifier_identifier_identifier_list_semicolon_t(
+    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
+    std::unique_ptr<token_t> &&identifier_1_,
+    std::unique_ptr<identifier_list_t> &&identifier_list_2_,
+    std::unique_ptr<token_t> &&semicolon_3_
+  ): type_qualifier_0(std::move(type_qualifier_0_)),
+     identifier_1(std::move(identifier_1_)),
+     identifier_list_2(std::move(identifier_list_2_)),
+     semicolon_3(std::move(semicolon_3_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // declaration_type_qualifier_identifier_identifier_list_semicolon_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> declaration_t::pattern<0>::list = {
+  pattern_item_t<function_prototype_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> declaration_t::pattern<1>::list = {
+  pattern_item_t<init_declarator_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> declaration_t::pattern<2>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PRECISION")),
+  pattern_item_t<precision_qualifier_t>::get(),
+  pattern_item_t<type_specifier_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> declaration_t::pattern<3>::list = {
+  pattern_item_t<type_qualifier_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+  pattern_item_t<struct_declaration_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> declaration_t::pattern<4>::list = {
+  pattern_item_t<type_qualifier_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+  pattern_item_t<struct_declaration_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> declaration_t::pattern<5>::list = {
+  pattern_item_t<type_qualifier_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+  pattern_item_t<struct_declaration_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+  pattern_item_t<array_specifier_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> declaration_t::pattern<6>::list = {
+  pattern_item_t<type_qualifier_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> declaration_t::pattern<7>::list = {
+  pattern_item_t<type_qualifier_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> declaration_t::pattern<8>::list = {
+  pattern_item_t<type_qualifier_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+  pattern_item_t<identifier_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
 };
 
 }   // ast

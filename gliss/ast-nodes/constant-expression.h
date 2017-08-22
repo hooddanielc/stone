@@ -14,30 +14,48 @@ namespace gliss {
 
 namespace ast {
 
+class conditional_expression_t;
+
 class constant_expression_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 1;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = constant_expression_conditional_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  constant_expression_t(
-    const conditional_expression_t &
-  );
+  virtual ~constant_expression_t() = default;
+
+};  // constant_expression_t
+
+
+class constant_expression_conditional_expression_t: public constant_expression_t {
+
+public:
+
+  std::unique_ptr<conditional_expression_t> conditional_expression_0;
+
+  constant_expression_conditional_expression_t(
+    std::unique_ptr<conditional_expression_t> &&conditional_expression_0_
+  ): conditional_expression_0(std::move(conditional_expression_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // constant_expression_t
+};  // constant_expression_conditional_expression_t
+  
 
-const std::vector<constant_expression_t::pattern_t> constant_expression_t::patterns = {
-  {
-    pattern_item_t<conditional_expression_t>::get()
-  }
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> constant_expression_t::pattern<0>::list = {
+  pattern_item_t<conditional_expression_t>::get()
 };
 
 }   // ast

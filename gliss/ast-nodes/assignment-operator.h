@@ -14,50 +14,328 @@ namespace gliss {
 
 namespace ast {
 
+
+
 class assignment_operator_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 11;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = assignment_operator_equal_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  assignment_operator_t(
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = assignment_operator_mul_assign_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = assignment_operator_div_assign_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 3>::type> {
+    using type = assignment_operator_mod_assign_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 4>::type> {
+    using type = assignment_operator_add_assign_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 5>::type> {
+    using type = assignment_operator_sub_assign_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 6>::type> {
+    using type = assignment_operator_left_assign_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 7>::type> {
+    using type = assignment_operator_right_assign_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 8>::type> {
+    using type = assignment_operator_and_assign_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 9>::type> {
+    using type = assignment_operator_xor_assign_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 10>::type> {
+    using type = assignment_operator_or_assign_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  virtual ~assignment_operator_t() = default;
+
+};  // assignment_operator_t
+
+
+class assignment_operator_equal_t: public assignment_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> equal_0;
+
+  assignment_operator_equal_t(
+    std::unique_ptr<token_t> &&equal_0_
+  ): equal_0(std::move(equal_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // assignment_operator_t
+};  // assignment_operator_equal_t
+  
 
-const std::vector<assignment_operator_t::pattern_t> assignment_operator_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MUL_ASSIGN"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DIV_ASSIGN"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MOD_ASSIGN"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ADD_ASSIGN"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SUB_ASSIGN"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_ASSIGN"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_ASSIGN"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("AND_ASSIGN"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("XOR_ASSIGN"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("OR_ASSIGN"))
+class assignment_operator_mul_assign_t: public assignment_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> mul_assign_0;
+
+  assignment_operator_mul_assign_t(
+    std::unique_ptr<token_t> &&mul_assign_0_
+  ): mul_assign_0(std::move(mul_assign_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // assignment_operator_mul_assign_t
+  
+
+class assignment_operator_div_assign_t: public assignment_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> div_assign_0;
+
+  assignment_operator_div_assign_t(
+    std::unique_ptr<token_t> &&div_assign_0_
+  ): div_assign_0(std::move(div_assign_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // assignment_operator_div_assign_t
+  
+
+class assignment_operator_mod_assign_t: public assignment_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> mod_assign_0;
+
+  assignment_operator_mod_assign_t(
+    std::unique_ptr<token_t> &&mod_assign_0_
+  ): mod_assign_0(std::move(mod_assign_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // assignment_operator_mod_assign_t
+  
+
+class assignment_operator_add_assign_t: public assignment_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> add_assign_0;
+
+  assignment_operator_add_assign_t(
+    std::unique_ptr<token_t> &&add_assign_0_
+  ): add_assign_0(std::move(add_assign_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // assignment_operator_add_assign_t
+  
+
+class assignment_operator_sub_assign_t: public assignment_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> sub_assign_0;
+
+  assignment_operator_sub_assign_t(
+    std::unique_ptr<token_t> &&sub_assign_0_
+  ): sub_assign_0(std::move(sub_assign_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // assignment_operator_sub_assign_t
+  
+
+class assignment_operator_left_assign_t: public assignment_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> left_assign_0;
+
+  assignment_operator_left_assign_t(
+    std::unique_ptr<token_t> &&left_assign_0_
+  ): left_assign_0(std::move(left_assign_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // assignment_operator_left_assign_t
+  
+
+class assignment_operator_right_assign_t: public assignment_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> right_assign_0;
+
+  assignment_operator_right_assign_t(
+    std::unique_ptr<token_t> &&right_assign_0_
+  ): right_assign_0(std::move(right_assign_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // assignment_operator_right_assign_t
+  
+
+class assignment_operator_and_assign_t: public assignment_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> and_assign_0;
+
+  assignment_operator_and_assign_t(
+    std::unique_ptr<token_t> &&and_assign_0_
+  ): and_assign_0(std::move(and_assign_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // assignment_operator_and_assign_t
+  
+
+class assignment_operator_xor_assign_t: public assignment_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> xor_assign_0;
+
+  assignment_operator_xor_assign_t(
+    std::unique_ptr<token_t> &&xor_assign_0_
+  ): xor_assign_0(std::move(xor_assign_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // assignment_operator_xor_assign_t
+  
+
+class assignment_operator_or_assign_t: public assignment_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> or_assign_0;
+
+  assignment_operator_or_assign_t(
+    std::unique_ptr<token_t> &&or_assign_0_
+  ): or_assign_0(std::move(or_assign_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // assignment_operator_or_assign_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<0>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<1>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MUL_ASSIGN"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<2>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DIV_ASSIGN"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<3>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MOD_ASSIGN"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<4>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ADD_ASSIGN"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<5>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SUB_ASSIGN"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<6>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_ASSIGN"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<7>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_ASSIGN"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<8>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("AND_ASSIGN"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<9>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("XOR_ASSIGN"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<10>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("OR_ASSIGN"))
 };
 
 }   // ast

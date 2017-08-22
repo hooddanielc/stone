@@ -15,52 +15,130 @@ namespace gliss {
 
 namespace ast {
 
+class assignment_expression_t;
+class initializer_list_t;
+
 class initializer_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 3;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = initializer_assignment_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  initializer_t(
-    const assignment_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = initializer_left_brace_initializer_list_right_brace_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  initializer_t(
-    const token_t &,
-    const initializer_list_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = initializer_left_brace_initializer_list_comma_right_brace_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  initializer_t(
-    const token_t &,
-    const initializer_list_t &,
-    const token_t &,
-    const token_t &
-  );
+  virtual ~initializer_t() = default;
+
+};  // initializer_t
+
+
+class initializer_assignment_expression_t: public initializer_t {
+
+public:
+
+  std::unique_ptr<assignment_expression_t> assignment_expression_0;
+
+  initializer_assignment_expression_t(
+    std::unique_ptr<assignment_expression_t> &&assignment_expression_0_
+  ): assignment_expression_0(std::move(assignment_expression_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // initializer_t
+};  // initializer_assignment_expression_t
+  
 
-const std::vector<initializer_t::pattern_t> initializer_t::patterns = {
-  {
-    pattern_item_t<assignment_expression_t>::get()
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
-    pattern_item_t<initializer_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
-    pattern_item_t<initializer_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
+class initializer_left_brace_initializer_list_right_brace_t: public initializer_t {
+
+public:
+
+  std::unique_ptr<token_t> left_brace_0;
+
+  std::unique_ptr<initializer_list_t> initializer_list_1;
+
+  std::unique_ptr<token_t> right_brace_2;
+
+  initializer_left_brace_initializer_list_right_brace_t(
+    std::unique_ptr<token_t> &&left_brace_0_,
+    std::unique_ptr<initializer_list_t> &&initializer_list_1_,
+    std::unique_ptr<token_t> &&right_brace_2_
+  ): left_brace_0(std::move(left_brace_0_)),
+     initializer_list_1(std::move(initializer_list_1_)),
+     right_brace_2(std::move(right_brace_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // initializer_left_brace_initializer_list_right_brace_t
+  
+
+class initializer_left_brace_initializer_list_comma_right_brace_t: public initializer_t {
+
+public:
+
+  std::unique_ptr<token_t> left_brace_0;
+
+  std::unique_ptr<initializer_list_t> initializer_list_1;
+
+  std::unique_ptr<token_t> comma_2;
+
+  std::unique_ptr<token_t> right_brace_3;
+
+  initializer_left_brace_initializer_list_comma_right_brace_t(
+    std::unique_ptr<token_t> &&left_brace_0_,
+    std::unique_ptr<initializer_list_t> &&initializer_list_1_,
+    std::unique_ptr<token_t> &&comma_2_,
+    std::unique_ptr<token_t> &&right_brace_3_
+  ): left_brace_0(std::move(left_brace_0_)),
+     initializer_list_1(std::move(initializer_list_1_)),
+     comma_2(std::move(comma_2_)),
+     right_brace_3(std::move(right_brace_3_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // initializer_left_brace_initializer_list_comma_right_brace_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> initializer_t::pattern<0>::list = {
+  pattern_item_t<assignment_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> initializer_t::pattern<1>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+  pattern_item_t<initializer_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> initializer_t::pattern<2>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+  pattern_item_t<initializer_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
 };
 
 }   // ast

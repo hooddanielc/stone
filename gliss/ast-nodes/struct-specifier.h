@@ -14,50 +14,111 @@ namespace gliss {
 
 namespace ast {
 
+class struct_declaration_list_t;
+
 class struct_specifier_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = struct_specifier_struct_identifier_left_brace_struct_declaration_list_right_brace_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  struct_specifier_t(
-    const token_t &,
-    const token_t &,
-    const token_t &,
-    const struct_declaration_list_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  struct_specifier_t(
-    const token_t &,
-    const token_t &,
-    const struct_declaration_list_t &,
-    const token_t &
-  );
+  virtual ~struct_specifier_t() = default;
+
+};  // struct_specifier_t
+
+
+class struct_specifier_struct_identifier_left_brace_struct_declaration_list_right_brace_t: public struct_specifier_t {
+
+public:
+
+  std::unique_ptr<token_t> struct_0;
+
+  std::unique_ptr<token_t> identifier_1;
+
+  std::unique_ptr<token_t> left_brace_2;
+
+  std::unique_ptr<struct_declaration_list_t> struct_declaration_list_3;
+
+  std::unique_ptr<token_t> right_brace_4;
+
+  struct_specifier_struct_identifier_left_brace_struct_declaration_list_right_brace_t(
+    std::unique_ptr<token_t> &&struct_0_,
+    std::unique_ptr<token_t> &&identifier_1_,
+    std::unique_ptr<token_t> &&left_brace_2_,
+    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_3_,
+    std::unique_ptr<token_t> &&right_brace_4_
+  ): struct_0(std::move(struct_0_)),
+     identifier_1(std::move(identifier_1_)),
+     left_brace_2(std::move(left_brace_2_)),
+     struct_declaration_list_3(std::move(struct_declaration_list_3_)),
+     right_brace_4(std::move(right_brace_4_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // struct_specifier_t
+};  // struct_specifier_struct_identifier_left_brace_struct_declaration_list_right_brace_t
+  
 
-const std::vector<struct_specifier_t::pattern_t> struct_specifier_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("STRUCT")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
-    pattern_item_t<struct_declaration_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("STRUCT")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
-    pattern_item_t<struct_declaration_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
+class struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t: public struct_specifier_t {
+
+public:
+
+  std::unique_ptr<token_t> struct_0;
+
+  std::unique_ptr<token_t> left_brace_1;
+
+  std::unique_ptr<struct_declaration_list_t> struct_declaration_list_2;
+
+  std::unique_ptr<token_t> right_brace_3;
+
+  struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t(
+    std::unique_ptr<token_t> &&struct_0_,
+    std::unique_ptr<token_t> &&left_brace_1_,
+    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_2_,
+    std::unique_ptr<token_t> &&right_brace_3_
+  ): struct_0(std::move(struct_0_)),
+     left_brace_1(std::move(left_brace_1_)),
+     struct_declaration_list_2(std::move(struct_declaration_list_2_)),
+     right_brace_3(std::move(right_brace_3_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> struct_specifier_t::pattern<0>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("STRUCT")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+  pattern_item_t<struct_declaration_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> struct_specifier_t::pattern<1>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("STRUCT")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
+  pattern_item_t<struct_declaration_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
 };
 
 }   // ast

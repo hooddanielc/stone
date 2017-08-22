@@ -15,36 +15,77 @@ namespace gliss {
 
 namespace ast {
 
+class function_header_t;
+class function_header_with_parameters_t;
+
 class function_declarator_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = function_declarator_function_header_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  function_declarator_t(
-    const function_header_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = function_declarator_function_header_with_parameters_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  function_declarator_t(
-    const function_header_with_parameters_t &
-  );
+  virtual ~function_declarator_t() = default;
+
+};  // function_declarator_t
+
+
+class function_declarator_function_header_t: public function_declarator_t {
+
+public:
+
+  std::unique_ptr<function_header_t> function_header_0;
+
+  function_declarator_function_header_t(
+    std::unique_ptr<function_header_t> &&function_header_0_
+  ): function_header_0(std::move(function_header_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // function_declarator_t
+};  // function_declarator_function_header_t
+  
 
-const std::vector<function_declarator_t::pattern_t> function_declarator_t::patterns = {
-  {
-    pattern_item_t<function_header_t>::get()
-  }, {
-    pattern_item_t<function_header_with_parameters_t>::get()
+class function_declarator_function_header_with_parameters_t: public function_declarator_t {
+
+public:
+
+  std::unique_ptr<function_header_with_parameters_t> function_header_with_parameters_0;
+
+  function_declarator_function_header_with_parameters_t(
+    std::unique_ptr<function_header_with_parameters_t> &&function_header_with_parameters_0_
+  ): function_header_with_parameters_0(std::move(function_header_with_parameters_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // function_declarator_function_header_with_parameters_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> function_declarator_t::pattern<0>::list = {
+  pattern_item_t<function_header_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> function_declarator_t::pattern<1>::list = {
+  pattern_item_t<function_header_with_parameters_t>::get()
 };
 
 }   // ast

@@ -15,40 +15,87 @@ namespace gliss {
 
 namespace ast {
 
+class assignment_expression_t;
+
+
 class expression_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = expression_assignment_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  expression_t(
-    const assignment_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = expression_expression_comma_assignment_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  expression_t(
-    const expression_t &,
-    const token_t &,
-    const assignment_expression_t &
-  );
+  virtual ~expression_t() = default;
+
+};  // expression_t
+
+
+class expression_assignment_expression_t: public expression_t {
+
+public:
+
+  std::unique_ptr<assignment_expression_t> assignment_expression_0;
+
+  expression_assignment_expression_t(
+    std::unique_ptr<assignment_expression_t> &&assignment_expression_0_
+  ): assignment_expression_0(std::move(assignment_expression_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // expression_t
+};  // expression_assignment_expression_t
+  
 
-const std::vector<expression_t::pattern_t> expression_t::patterns = {
-  {
-    pattern_item_t<assignment_expression_t>::get()
-  }, {
-    pattern_item_t<expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-    pattern_item_t<assignment_expression_t>::get()
+class expression_expression_comma_assignment_expression_t: public expression_t {
+
+public:
+
+  std::unique_ptr<expression_t> expression_0;
+
+  std::unique_ptr<token_t> comma_1;
+
+  std::unique_ptr<assignment_expression_t> assignment_expression_2;
+
+  expression_expression_comma_assignment_expression_t(
+    std::unique_ptr<expression_t> &&expression_0_,
+    std::unique_ptr<token_t> &&comma_1_,
+    std::unique_ptr<assignment_expression_t> &&assignment_expression_2_
+  ): expression_0(std::move(expression_0_)),
+     comma_1(std::move(comma_1_)),
+     assignment_expression_2(std::move(assignment_expression_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // expression_expression_comma_assignment_expression_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> expression_t::pattern<0>::list = {
+  pattern_item_t<assignment_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> expression_t::pattern<1>::list = {
+  pattern_item_t<expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
+  pattern_item_t<assignment_expression_t>::get()
 };
 
 }   // ast

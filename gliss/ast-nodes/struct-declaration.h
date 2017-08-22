@@ -16,46 +16,103 @@ namespace gliss {
 
 namespace ast {
 
+class type_specifier_t;
+class struct_declarator_list_t;
+class type_qualifier_t;
+
 class struct_declaration_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = struct_declaration_type_specifier_struct_declarator_list_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  struct_declaration_t(
-    const type_specifier_t &,
-    const struct_declarator_list_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = struct_declaration_type_qualifier_type_specifier_struct_declarator_list_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  struct_declaration_t(
-    const type_qualifier_t &,
-    const type_specifier_t &,
-    const struct_declarator_list_t &,
-    const token_t &
-  );
+  virtual ~struct_declaration_t() = default;
+
+};  // struct_declaration_t
+
+
+class struct_declaration_type_specifier_struct_declarator_list_semicolon_t: public struct_declaration_t {
+
+public:
+
+  std::unique_ptr<type_specifier_t> type_specifier_0;
+
+  std::unique_ptr<struct_declarator_list_t> struct_declarator_list_1;
+
+  std::unique_ptr<token_t> semicolon_2;
+
+  struct_declaration_type_specifier_struct_declarator_list_semicolon_t(
+    std::unique_ptr<type_specifier_t> &&type_specifier_0_,
+    std::unique_ptr<struct_declarator_list_t> &&struct_declarator_list_1_,
+    std::unique_ptr<token_t> &&semicolon_2_
+  ): type_specifier_0(std::move(type_specifier_0_)),
+     struct_declarator_list_1(std::move(struct_declarator_list_1_)),
+     semicolon_2(std::move(semicolon_2_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // struct_declaration_t
+};  // struct_declaration_type_specifier_struct_declarator_list_semicolon_t
+  
 
-const std::vector<struct_declaration_t::pattern_t> struct_declaration_t::patterns = {
-  {
-    pattern_item_t<type_specifier_t>::get(),
-    pattern_item_t<struct_declarator_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<type_qualifier_t>::get(),
-    pattern_item_t<type_specifier_t>::get(),
-    pattern_item_t<struct_declarator_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+class struct_declaration_type_qualifier_type_specifier_struct_declarator_list_semicolon_t: public struct_declaration_t {
+
+public:
+
+  std::unique_ptr<type_qualifier_t> type_qualifier_0;
+
+  std::unique_ptr<type_specifier_t> type_specifier_1;
+
+  std::unique_ptr<struct_declarator_list_t> struct_declarator_list_2;
+
+  std::unique_ptr<token_t> semicolon_3;
+
+  struct_declaration_type_qualifier_type_specifier_struct_declarator_list_semicolon_t(
+    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
+    std::unique_ptr<type_specifier_t> &&type_specifier_1_,
+    std::unique_ptr<struct_declarator_list_t> &&struct_declarator_list_2_,
+    std::unique_ptr<token_t> &&semicolon_3_
+  ): type_qualifier_0(std::move(type_qualifier_0_)),
+     type_specifier_1(std::move(type_specifier_1_)),
+     struct_declarator_list_2(std::move(struct_declarator_list_2_)),
+     semicolon_3(std::move(semicolon_3_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // struct_declaration_type_qualifier_type_specifier_struct_declarator_list_semicolon_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> struct_declaration_t::pattern<0>::list = {
+  pattern_item_t<type_specifier_t>::get(),
+  pattern_item_t<struct_declarator_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> struct_declaration_t::pattern<1>::list = {
+  pattern_item_t<type_qualifier_t>::get(),
+  pattern_item_t<type_specifier_t>::get(),
+  pattern_item_t<struct_declarator_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
 };
 
 }   // ast

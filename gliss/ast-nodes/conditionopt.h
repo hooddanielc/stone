@@ -15,36 +15,77 @@ namespace gliss {
 
 namespace ast {
 
+class condition_t;
+class nothing_t;
+
 class conditionopt_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = conditionopt_condition_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  conditionopt_t(
-    const condition_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = conditionopt_nothing_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  conditionopt_t(
-    const nothing_t &
-  );
+  virtual ~conditionopt_t() = default;
+
+};  // conditionopt_t
+
+
+class conditionopt_condition_t: public conditionopt_t {
+
+public:
+
+  std::unique_ptr<condition_t> condition_0;
+
+  conditionopt_condition_t(
+    std::unique_ptr<condition_t> &&condition_0_
+  ): condition_0(std::move(condition_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // conditionopt_t
+};  // conditionopt_condition_t
+  
 
-const std::vector<conditionopt_t::pattern_t> conditionopt_t::patterns = {
-  {
-    pattern_item_t<condition_t>::get()
-  }, {
-    pattern_item_t<nothing_t>::get()
+class conditionopt_nothing_t: public conditionopt_t {
+
+public:
+
+  std::unique_ptr<nothing_t> nothing_0;
+
+  conditionopt_nothing_t(
+    std::unique_ptr<nothing_t> &&nothing_0_
+  ): nothing_0(std::move(nothing_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // conditionopt_nothing_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> conditionopt_t::pattern<0>::list = {
+  pattern_item_t<condition_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> conditionopt_t::pattern<1>::list = {
+  pattern_item_t<nothing_t>::get()
 };
 
 }   // ast

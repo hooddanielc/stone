@@ -15,40 +15,87 @@ namespace gliss {
 
 namespace ast {
 
+class function_call_header_with_parameters_t;
+class function_call_header_no_parameters_t;
+
 class function_call_generic_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = function_call_generic_function_call_header_with_parameters_right_paren_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  function_call_generic_t(
-    const function_call_header_with_parameters_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = function_call_generic_function_call_header_no_parameters_right_paren_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  function_call_generic_t(
-    const function_call_header_no_parameters_t &,
-    const token_t &
-  );
+  virtual ~function_call_generic_t() = default;
+
+};  // function_call_generic_t
+
+
+class function_call_generic_function_call_header_with_parameters_right_paren_t: public function_call_generic_t {
+
+public:
+
+  std::unique_ptr<function_call_header_with_parameters_t> function_call_header_with_parameters_0;
+
+  std::unique_ptr<token_t> right_paren_1;
+
+  function_call_generic_function_call_header_with_parameters_right_paren_t(
+    std::unique_ptr<function_call_header_with_parameters_t> &&function_call_header_with_parameters_0_,
+    std::unique_ptr<token_t> &&right_paren_1_
+  ): function_call_header_with_parameters_0(std::move(function_call_header_with_parameters_0_)),
+     right_paren_1(std::move(right_paren_1_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // function_call_generic_t
+};  // function_call_generic_function_call_header_with_parameters_right_paren_t
+  
 
-const std::vector<function_call_generic_t::pattern_t> function_call_generic_t::patterns = {
-  {
-    pattern_item_t<function_call_header_with_parameters_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
-  }, {
-    pattern_item_t<function_call_header_no_parameters_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
+class function_call_generic_function_call_header_no_parameters_right_paren_t: public function_call_generic_t {
+
+public:
+
+  std::unique_ptr<function_call_header_no_parameters_t> function_call_header_no_parameters_0;
+
+  std::unique_ptr<token_t> right_paren_1;
+
+  function_call_generic_function_call_header_no_parameters_right_paren_t(
+    std::unique_ptr<function_call_header_no_parameters_t> &&function_call_header_no_parameters_0_,
+    std::unique_ptr<token_t> &&right_paren_1_
+  ): function_call_header_no_parameters_0(std::move(function_call_header_no_parameters_0_)),
+     right_paren_1(std::move(right_paren_1_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // function_call_generic_function_call_header_no_parameters_right_paren_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> function_call_generic_t::pattern<0>::list = {
+  pattern_item_t<function_call_header_with_parameters_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> function_call_generic_t::pattern<1>::list = {
+  pattern_item_t<function_call_header_no_parameters_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
 };
 
 }   // ast

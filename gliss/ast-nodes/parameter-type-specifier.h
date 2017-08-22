@@ -14,30 +14,48 @@ namespace gliss {
 
 namespace ast {
 
+class type_specifier_t;
+
 class parameter_type_specifier_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 1;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = parameter_type_specifier_type_specifier_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  parameter_type_specifier_t(
-    const type_specifier_t &
-  );
+  virtual ~parameter_type_specifier_t() = default;
+
+};  // parameter_type_specifier_t
+
+
+class parameter_type_specifier_type_specifier_t: public parameter_type_specifier_t {
+
+public:
+
+  std::unique_ptr<type_specifier_t> type_specifier_0;
+
+  parameter_type_specifier_type_specifier_t(
+    std::unique_ptr<type_specifier_t> &&type_specifier_0_
+  ): type_specifier_0(std::move(type_specifier_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // parameter_type_specifier_t
+};  // parameter_type_specifier_type_specifier_t
+  
 
-const std::vector<parameter_type_specifier_t::pattern_t> parameter_type_specifier_t::patterns = {
-  {
-    pattern_item_t<type_specifier_t>::get()
-  }
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> parameter_type_specifier_t::pattern<0>::list = {
+  pattern_item_t<type_specifier_t>::get()
 };
 
 }   // ast

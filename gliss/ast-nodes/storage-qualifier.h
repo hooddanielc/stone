@@ -14,72 +14,511 @@ namespace gliss {
 
 namespace ast {
 
+class type_name_list_t;
+
 class storage_qualifier_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 17;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = storage_qualifier_const_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  storage_qualifier_t(
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = storage_qualifier_inout_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  storage_qualifier_t(
-    const token_t &,
-    const token_t &,
-    const type_name_list_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = storage_qualifier_in_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 3>::type> {
+    using type = storage_qualifier_out_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 4>::type> {
+    using type = storage_qualifier_centroid_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 5>::type> {
+    using type = storage_qualifier_patch_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 6>::type> {
+    using type = storage_qualifier_sample_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 7>::type> {
+    using type = storage_qualifier_uniform_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 8>::type> {
+    using type = storage_qualifier_buffer_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 9>::type> {
+    using type = storage_qualifier_shared_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 10>::type> {
+    using type = storage_qualifier_coherent_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 11>::type> {
+    using type = storage_qualifier_volatile_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 12>::type> {
+    using type = storage_qualifier_restrict_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 13>::type> {
+    using type = storage_qualifier_readonly_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 14>::type> {
+    using type = storage_qualifier_writeonly_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 15>::type> {
+    using type = storage_qualifier_subroutine_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 16>::type> {
+    using type = storage_qualifier_subroutine_left_paren_type_name_list_right_paren_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  virtual ~storage_qualifier_t() = default;
+
+};  // storage_qualifier_t
+
+
+class storage_qualifier_const_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> const_0;
+
+  storage_qualifier_const_t(
+    std::unique_ptr<token_t> &&const_0_
+  ): const_0(std::move(const_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // storage_qualifier_t
+};  // storage_qualifier_const_t
+  
 
-const std::vector<storage_qualifier_t::pattern_t> storage_qualifier_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("CONST"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("INOUT"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IN"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("OUT"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("CENTROID"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PATCH"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLE"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UNIFORM"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BUFFER"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SHARED"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COHERENT"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("VOLATILE"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RESTRICT"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("READONLY"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("WRITEONLY"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SUBROUTINE"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SUBROUTINE")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
-    pattern_item_t<type_name_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
+class storage_qualifier_inout_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> inout_0;
+
+  storage_qualifier_inout_t(
+    std::unique_ptr<token_t> &&inout_0_
+  ): inout_0(std::move(inout_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // storage_qualifier_inout_t
+  
+
+class storage_qualifier_in_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> in_0;
+
+  storage_qualifier_in_t(
+    std::unique_ptr<token_t> &&in_0_
+  ): in_0(std::move(in_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_in_t
+  
+
+class storage_qualifier_out_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> out_0;
+
+  storage_qualifier_out_t(
+    std::unique_ptr<token_t> &&out_0_
+  ): out_0(std::move(out_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_out_t
+  
+
+class storage_qualifier_centroid_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> centroid_0;
+
+  storage_qualifier_centroid_t(
+    std::unique_ptr<token_t> &&centroid_0_
+  ): centroid_0(std::move(centroid_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_centroid_t
+  
+
+class storage_qualifier_patch_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> patch_0;
+
+  storage_qualifier_patch_t(
+    std::unique_ptr<token_t> &&patch_0_
+  ): patch_0(std::move(patch_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_patch_t
+  
+
+class storage_qualifier_sample_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> sample_0;
+
+  storage_qualifier_sample_t(
+    std::unique_ptr<token_t> &&sample_0_
+  ): sample_0(std::move(sample_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_sample_t
+  
+
+class storage_qualifier_uniform_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> uniform_0;
+
+  storage_qualifier_uniform_t(
+    std::unique_ptr<token_t> &&uniform_0_
+  ): uniform_0(std::move(uniform_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_uniform_t
+  
+
+class storage_qualifier_buffer_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> buffer_0;
+
+  storage_qualifier_buffer_t(
+    std::unique_ptr<token_t> &&buffer_0_
+  ): buffer_0(std::move(buffer_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_buffer_t
+  
+
+class storage_qualifier_shared_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> shared_0;
+
+  storage_qualifier_shared_t(
+    std::unique_ptr<token_t> &&shared_0_
+  ): shared_0(std::move(shared_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_shared_t
+  
+
+class storage_qualifier_coherent_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> coherent_0;
+
+  storage_qualifier_coherent_t(
+    std::unique_ptr<token_t> &&coherent_0_
+  ): coherent_0(std::move(coherent_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_coherent_t
+  
+
+class storage_qualifier_volatile_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> volatile_0;
+
+  storage_qualifier_volatile_t(
+    std::unique_ptr<token_t> &&volatile_0_
+  ): volatile_0(std::move(volatile_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_volatile_t
+  
+
+class storage_qualifier_restrict_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> restrict_0;
+
+  storage_qualifier_restrict_t(
+    std::unique_ptr<token_t> &&restrict_0_
+  ): restrict_0(std::move(restrict_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_restrict_t
+  
+
+class storage_qualifier_readonly_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> readonly_0;
+
+  storage_qualifier_readonly_t(
+    std::unique_ptr<token_t> &&readonly_0_
+  ): readonly_0(std::move(readonly_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_readonly_t
+  
+
+class storage_qualifier_writeonly_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> writeonly_0;
+
+  storage_qualifier_writeonly_t(
+    std::unique_ptr<token_t> &&writeonly_0_
+  ): writeonly_0(std::move(writeonly_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_writeonly_t
+  
+
+class storage_qualifier_subroutine_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> subroutine_0;
+
+  storage_qualifier_subroutine_t(
+    std::unique_ptr<token_t> &&subroutine_0_
+  ): subroutine_0(std::move(subroutine_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_subroutine_t
+  
+
+class storage_qualifier_subroutine_left_paren_type_name_list_right_paren_t: public storage_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> subroutine_0;
+
+  std::unique_ptr<token_t> left_paren_1;
+
+  std::unique_ptr<type_name_list_t> type_name_list_2;
+
+  std::unique_ptr<token_t> right_paren_3;
+
+  storage_qualifier_subroutine_left_paren_type_name_list_right_paren_t(
+    std::unique_ptr<token_t> &&subroutine_0_,
+    std::unique_ptr<token_t> &&left_paren_1_,
+    std::unique_ptr<type_name_list_t> &&type_name_list_2_,
+    std::unique_ptr<token_t> &&right_paren_3_
+  ): subroutine_0(std::move(subroutine_0_)),
+     left_paren_1(std::move(left_paren_1_)),
+     type_name_list_2(std::move(type_name_list_2_)),
+     right_paren_3(std::move(right_paren_3_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // storage_qualifier_subroutine_left_paren_type_name_list_right_paren_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<0>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("CONST"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<1>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("INOUT"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<2>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IN"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<3>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("OUT"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<4>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("CENTROID"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<5>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PATCH"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<6>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLE"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<7>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UNIFORM"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<8>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BUFFER"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<9>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SHARED"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<10>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COHERENT"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<11>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("VOLATILE"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<12>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RESTRICT"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<13>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("READONLY"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<14>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("WRITEONLY"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<15>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SUBROUTINE"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> storage_qualifier_t::pattern<16>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SUBROUTINE")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
+  pattern_item_t<type_name_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
 };
 
 }   // ast

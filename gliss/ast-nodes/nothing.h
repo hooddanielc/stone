@@ -14,27 +14,26 @@ namespace gliss {
 
 namespace ast {
 
+
+
 class nothing_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 0;
 
-  using pattern_t = std::vector<unique_pattern_t>;
-
-  static const std::vector<pattern_t> patterns;
+  template <int n, typename = void>
+  struct pattern;
 
   
 
-  virtual void accept(const visitor_t &visitor) const override {
-    visitor(this);
-  }
+  virtual ~nothing_t() = default;
 
 };  // nothing_t
 
-const std::vector<nothing_t::pattern_t> nothing_t::patterns = {
-  
-};
+
+
+
 
 }   // ast
 

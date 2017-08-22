@@ -14,32 +14,53 @@ namespace gliss {
 
 namespace ast {
 
+class function_identifier_t;
+
 class function_call_header_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 1;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = function_call_header_function_identifier_left_paren_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  function_call_header_t(
-    const function_identifier_t &,
-    const token_t &
-  );
+  virtual ~function_call_header_t() = default;
+
+};  // function_call_header_t
+
+
+class function_call_header_function_identifier_left_paren_t: public function_call_header_t {
+
+public:
+
+  std::unique_ptr<function_identifier_t> function_identifier_0;
+
+  std::unique_ptr<token_t> left_paren_1;
+
+  function_call_header_function_identifier_left_paren_t(
+    std::unique_ptr<function_identifier_t> &&function_identifier_0_,
+    std::unique_ptr<token_t> &&left_paren_1_
+  ): function_identifier_0(std::move(function_identifier_0_)),
+     left_paren_1(std::move(left_paren_1_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // function_call_header_t
+};  // function_call_header_function_identifier_left_paren_t
+  
 
-const std::vector<function_call_header_t::pattern_t> function_call_header_t::patterns = {
-  {
-    pattern_item_t<function_identifier_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN"))
-  }
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> function_call_header_t::pattern<0>::list = {
+  pattern_item_t<function_identifier_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN"))
 };
 
 }   // ast

@@ -14,34 +14,104 @@ namespace gliss {
 
 namespace ast {
 
+
+
 class interpolation_qualifier_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 3;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = interpolation_qualifier_smooth_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  interpolation_qualifier_t(
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = interpolation_qualifier_flat_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = interpolation_qualifier_noperspective_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  virtual ~interpolation_qualifier_t() = default;
+
+};  // interpolation_qualifier_t
+
+
+class interpolation_qualifier_smooth_t: public interpolation_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> smooth_0;
+
+  interpolation_qualifier_smooth_t(
+    std::unique_ptr<token_t> &&smooth_0_
+  ): smooth_0(std::move(smooth_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // interpolation_qualifier_t
+};  // interpolation_qualifier_smooth_t
+  
 
-const std::vector<interpolation_qualifier_t::pattern_t> interpolation_qualifier_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SMOOTH"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("FLAT"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("NOPERSPECTIVE"))
+class interpolation_qualifier_flat_t: public interpolation_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> flat_0;
+
+  interpolation_qualifier_flat_t(
+    std::unique_ptr<token_t> &&flat_0_
+  ): flat_0(std::move(flat_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // interpolation_qualifier_flat_t
+  
+
+class interpolation_qualifier_noperspective_t: public interpolation_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> noperspective_0;
+
+  interpolation_qualifier_noperspective_t(
+    std::unique_ptr<token_t> &&noperspective_0_
+  ): noperspective_0(std::move(noperspective_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // interpolation_qualifier_noperspective_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> interpolation_qualifier_t::pattern<0>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SMOOTH"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> interpolation_qualifier_t::pattern<1>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("FLAT"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> interpolation_qualifier_t::pattern<2>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("NOPERSPECTIVE"))
 };
 
 }   // ast

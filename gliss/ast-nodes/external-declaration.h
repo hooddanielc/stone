@@ -15,42 +15,105 @@ namespace gliss {
 
 namespace ast {
 
+class function_definition_t;
+class declaration_t;
+
 class external_declaration_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 3;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = external_declaration_function_definition_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  external_declaration_t(
-    const function_definition_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = external_declaration_declaration_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  external_declaration_t(
-    const declaration_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = external_declaration_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  external_declaration_t(
-    const token_t &
-  );
+  virtual ~external_declaration_t() = default;
+
+};  // external_declaration_t
+
+
+class external_declaration_function_definition_t: public external_declaration_t {
+
+public:
+
+  std::unique_ptr<function_definition_t> function_definition_0;
+
+  external_declaration_function_definition_t(
+    std::unique_ptr<function_definition_t> &&function_definition_0_
+  ): function_definition_0(std::move(function_definition_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // external_declaration_t
+};  // external_declaration_function_definition_t
+  
 
-const std::vector<external_declaration_t::pattern_t> external_declaration_t::patterns = {
-  {
-    pattern_item_t<function_definition_t>::get()
-  }, {
-    pattern_item_t<declaration_t>::get()
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+class external_declaration_declaration_t: public external_declaration_t {
+
+public:
+
+  std::unique_ptr<declaration_t> declaration_0;
+
+  external_declaration_declaration_t(
+    std::unique_ptr<declaration_t> &&declaration_0_
+  ): declaration_0(std::move(declaration_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // external_declaration_declaration_t
+  
+
+class external_declaration_semicolon_t: public external_declaration_t {
+
+public:
+
+  std::unique_ptr<token_t> semicolon_0;
+
+  external_declaration_semicolon_t(
+    std::unique_ptr<token_t> &&semicolon_0_
+  ): semicolon_0(std::move(semicolon_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // external_declaration_semicolon_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> external_declaration_t::pattern<0>::list = {
+  pattern_item_t<function_definition_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> external_declaration_t::pattern<1>::list = {
+  pattern_item_t<declaration_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> external_declaration_t::pattern<2>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
 };
 
 }   // ast

@@ -13,12 +13,21 @@ const get_auto_gen_comment = () => {
   `
 }
 
-const get_class_name = (symbol) => {
+const get_base_class_name = (symbol) => {
   if (is_non_terminal(symbol)) {
     return `${symbol}_t`;
   }
 
   return `token_t`;
+}
+
+const get_derived_class_name = (group_name, pattern) => {
+  if (!is_non_terminal(group_name)) {
+    throw new Error(`${group_name} is terminal`);
+  }
+
+  const pattern_part = pattern.map((symbol) => symbol.toLowerCase()).join('_');
+  return `${group_name}_${pattern_part}_t`;
 }
 
 const get_node_header_file_name = (group_name) => {
@@ -101,8 +110,8 @@ const get_include_statements = (group_name) => {
   }).join('\n');
 }
 
-const get_forward_declaration = (group_name) => {
-  return `class ${get_class_name(group_name)};`;
+const get_forward_declaration = (group_name, pattern) => {
+  return `class ${get_base_class_name(group_name, pattern)};`;
 }
 
 const get_forward_declarations = (group_name) => {
@@ -115,85 +124,158 @@ const get_forward_declarations = (group_name) => {
   }).join('\n');
 }
 
-const get_constructor_params = (group_name, pattern) => {
-  let token_count = 0;
-  let non_terminal_count = 0;
-
-  return pattern.map((symbol) => {
-    if (is_non_terminal(symbol)) {
-      const variable_type = get_class_name(symbol);
-      const variable_name = `${symbol}_${non_terminal_count++}`;
-      return `    const ${variable_type} &`;
-    } else {
-      const variable_name = `token_${token_count++}`;
-      return `    const token_t &`;
-    }
-  }).join(',\n      ');
-}
-
-const get_constructor_declaration = (group_name, pattern) => {
-  const class_name = get_class_name(group_name);
-  const parameters = get_constructor_params(group_name, pattern);
-
-  return format_code(2, `
-    ${class_name}(
-      ${parameters}
-    );
-  `).trim();
-}
-
-const get_constructors = (group_name) => {
-  const constructors = grammar[group_name].map((pattern) => {
-    return get_constructor_declaration(group_name, pattern);
-  });
-
-  const taboo = [];
-  return constructors.filter((item) => {
-    if (taboo.indexOf(item) === -1) {
-      taboo.push(item);
-      return true;
-    }
-
-    return false;
-  }).join('\n\n  ');
-}
-
-const get_pattern_initializer_list = (pattern) => {
+const get_class_prop_names = (pattern) => {
   return pattern.map((symbol, idx) => {
-    const space = idx > 0 ? '        ' : '  ';
-    const class_name = get_class_name(symbol);
+    return `${symbol.toLowerCase()}_${idx}`;
+  });
+}
+
+const get_class_prop_types = (pattern) => {
+  return pattern.map((symbol) => {
+    return `std::unique_ptr<${get_base_class_name(symbol)}>`;
+  });
+}
+
+const get_constructor_params = (pattern) => {
+  const types = get_class_prop_types(pattern);
+  const names = get_class_prop_names(pattern);
+  return types.map((type, idx) => {
+    const name = names[idx];
+    return `${type} &&${name}_`;
+  }).join(',\n        ');
+}
+
+const get_constructor_init_list = (pattern) => {
+  const types = get_class_prop_types(pattern);
+  const names = get_class_prop_names(pattern);
+  return types.map((type, idx) => {
+    const name = names[idx];
+    return `${name}(std::move(${name}_))`;
+  }).join(',\n         ');
+}
+
+const get_constructor = (group_name, pattern) => {
+  const class_name = get_derived_class_name(group_name, pattern);
+  const parameters = get_constructor_params(pattern);
+  const init_list = get_constructor_init_list(pattern);
+
+  return `
+      ${class_name}(
+        ${parameters}
+      ): ${init_list} {}
+  `.trim();
+}
+
+const get_derived_class_properties = (group_name, pattern) => {
+  const types = get_class_prop_types(pattern);
+  const names = get_class_prop_names(pattern);
+  return types.map((type, idx) => {
+    const name = names[idx];
+    return `${type} ${name}`;
+  }).join(';\n\n      ') + ';';
+}
+
+const get_derived_class_declaration = (group_name, pattern, idx) => {
+  const class_name = get_derived_class_name(group_name, pattern);
+  const base_name = get_base_class_name(group_name);
+  const constructor = get_constructor(group_name, pattern);
+  const properties = get_derived_class_properties(group_name, pattern);
+
+  return `
+    class ${class_name}: public ${base_name} {
+
+    public:
+
+      ${properties}
+
+      ${constructor}
+
+      virtual void accept(const visitor_t &visitor) const override {
+        visitor(this);
+      }
+
+    };  // ${class_name}
+  `;
+}
+
+const get_pattern_init_list = (pattern) => {
+  return pattern.map((symbol, idx) => {
+    const class_name = get_base_class_name(symbol);
 
     if (is_non_terminal(symbol)) {
-      return `${space}pattern_item_t<${class_name}>::get()`;
+      return `pattern_item_t<${class_name}>::get()`;
     }
 
     const kind_cc = `token_t::uppercase_to_kind("${symbol}")`;
-    return `${space}pattern_item_t<${class_name}>::get(${kind_cc})`;
-  }).join(',\n');
+    return `pattern_item_t<${class_name}>::get(${kind_cc})`;
+  }).join(',\n      ');
 }
 
-const get_pattern_initializer_lists = (group_name) => {
-  return grammar[group_name].map((pattern) => {
-    return `{
-      ${get_pattern_initializer_list(pattern)}
-      }`;
-  }).join(', ');
+const get_pattern_struct_def = (group_name, pattern, idx) => {
+  const init_list = get_pattern_init_list(pattern);
+  const class_name = get_base_class_name(group_name);
+
+  return `
+    template <>
+    std::vector<std::shared_ptr<any_pattern_item_t>> ${class_name}::pattern<${idx}>::list = {
+      ${get_pattern_init_list(pattern)}
+    };
+  `.trim();
 }
 
-const get_pattern_initializer = (group_name) => {
-  const class_name = get_class_name(group_name);
-  const initializer_lists = get_pattern_initializer_lists(group_name);
-  return `const std::vector<${class_name}::pattern_t> ${class_name}::patterns = {
-      ${initializer_lists}
-    };`;
+const get_pattern_struct_defs = (group_name) => {
+  return grammar[group_name].map(
+    (pattern, idx) => get_pattern_struct_def(group_name, pattern, idx)
+  ).join('\n\n');
 }
 
-const get_class_declaration = (group_name) => {
-  const class_name = get_class_name(group_name);
+const get_pattern_struct = (group_name, pattern, idx) => {
+  const init_list = get_pattern_init_list(pattern);
+  const class_name = get_base_class_name(group_name);
+  const derived_name = get_derived_class_name(group_name, pattern);
+
+  return `
+      template<int n>
+      struct pattern<n, typename std::enable_if<n == ${idx}>::type> {
+        using type = ${derived_name};
+        static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+      };
+  `.trim();
+}
+
+const get_pattern_structs = (group_name) => {
+  return grammar[group_name].map(
+    (pattern, idx) => get_pattern_struct(group_name, pattern, idx)
+  ).join('\n\n  ');
+}
+
+const get_base_class_declaration = (group_name) => {
+  const class_name = get_base_class_name(group_name);
+
+  return `
+    class ${class_name}: public ast_t {
+
+    public:
+
+      static constexpr int num_types = ${grammar[group_name].length};
+
+      template <int n, typename = void>
+      struct pattern;
+
+      ${get_pattern_structs(group_name)}
+
+      virtual ~${class_name}() = default;
+
+    };  // ${class_name}
+  `.trim();
+}
+
+const get_ast_node_header = (group_name) => {
   const include_statements = get_include_statements(group_name);
-  const forward_declarations = get_forward_declarations(group_name);
-  const constructors = get_constructors(group_name);
-  const pattern_initializer = get_pattern_initializer(group_name);
+  const base_class = get_base_class_declaration(group_name);
+  const derived_classes = grammar[group_name].map(
+    (pattern, idx) => get_derived_class_declaration(group_name, pattern, idx)
+  ).join('\n    ');
 
   return format_code(4, `
     #pragma once
@@ -208,25 +290,13 @@ const get_class_declaration = (group_name) => {
 
     namespace ast {
 
-    class ${class_name}: public ast_t {
+    ${get_forward_declarations(group_name)}
 
-    public:
+    ${base_class}
 
-      using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+    ${derived_classes}
 
-      using pattern_t = std::vector<unique_pattern_t>;
-
-      static const std::vector<pattern_t> patterns;
-
-      ${constructors}
-
-      virtual void accept(const visitor_t &visitor) const override {
-        visitor(this);
-      }
-
-    };  // ${class_name}
-
-    ${pattern_initializer}
+    ${get_pattern_struct_defs(group_name)}
 
     }   // ast
 
@@ -234,19 +304,24 @@ const get_class_declaration = (group_name) => {
   `);
 }
 
+const get_all_classes = () => {
+  const classes = [];
+  Object.keys(grammar).forEach((key) => {
+    grammar[key].forEach((pattern) => {
+      classes.push(get_derived_class_name(key, pattern));
+    });
+  });
+  return classes;
+}
 
 const get_visitor_declarations = () => {
-  return Object.keys(grammar)
-    .map((key) => get_class_name(key))
+  return get_all_classes()
     .map((name) => `virtual void operator()(const ${name} *) const = 0;`)
     .join('\n      ');
 }
 
 const get_ast_nodes_h = () => {
-  const classes = Object.keys(grammar)
-    .map((key) => get_class_name(key))
-    .map((name) => `class ${name};`)
-    .join('\n');
+  const forwards = get_all_classes().map((name) => `class ${name};`).join('\n');
 
   return format_code(4, `
     #pragma once
@@ -255,7 +330,7 @@ const get_ast_nodes_h = () => {
 
     namespace ast {
 
-    ${classes}
+    ${forwards}
     class ast_t;
 
     struct empty_visitor_t {
@@ -287,7 +362,7 @@ const get_combined_ast_nodes_h = () => {
 }
 
 Object.keys(grammar).forEach((group_name) => {
-  const head_src = get_class_declaration(group_name);
+  const head_src = get_ast_node_header(group_name);
   const head_path = get_node_header_file_path(group_name);
   fs.writeFileSync(head_path, head_src);
 });

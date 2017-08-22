@@ -14,36 +14,63 @@ namespace gliss {
 
 namespace ast {
 
+class layout_qualifier_id_list_t;
+
 class layout_qualifier_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 1;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  layout_qualifier_t(
-    const token_t &,
-    const token_t &,
-    const layout_qualifier_id_list_t &,
-    const token_t &
-  );
+  virtual ~layout_qualifier_t() = default;
+
+};  // layout_qualifier_t
+
+
+class layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t: public layout_qualifier_t {
+
+public:
+
+  std::unique_ptr<token_t> layout_0;
+
+  std::unique_ptr<token_t> left_paren_1;
+
+  std::unique_ptr<layout_qualifier_id_list_t> layout_qualifier_id_list_2;
+
+  std::unique_ptr<token_t> right_paren_3;
+
+  layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t(
+    std::unique_ptr<token_t> &&layout_0_,
+    std::unique_ptr<token_t> &&left_paren_1_,
+    std::unique_ptr<layout_qualifier_id_list_t> &&layout_qualifier_id_list_2_,
+    std::unique_ptr<token_t> &&right_paren_3_
+  ): layout_0(std::move(layout_0_)),
+     left_paren_1(std::move(left_paren_1_)),
+     layout_qualifier_id_list_2(std::move(layout_qualifier_id_list_2_)),
+     right_paren_3(std::move(right_paren_3_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // layout_qualifier_t
+};  // layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t
+  
 
-const std::vector<layout_qualifier_t::pattern_t> layout_qualifier_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LAYOUT")),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
-    pattern_item_t<layout_qualifier_id_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
-  }
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> layout_qualifier_t::pattern<0>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LAYOUT")),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
+  pattern_item_t<layout_qualifier_id_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
 };
 
 }   // ast

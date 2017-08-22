@@ -15,42 +15,92 @@ namespace gliss {
 
 namespace ast {
 
+class conditionopt_t;
+class expression_t;
+
 class for_rest_statement_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = for_rest_statement_conditionopt_semicolon_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  for_rest_statement_t(
-    const conditionopt_t &,
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = for_rest_statement_conditionopt_semicolon_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  for_rest_statement_t(
-    const conditionopt_t &,
-    const token_t &,
-    const expression_t &
-  );
+  virtual ~for_rest_statement_t() = default;
+
+};  // for_rest_statement_t
+
+
+class for_rest_statement_conditionopt_semicolon_t: public for_rest_statement_t {
+
+public:
+
+  std::unique_ptr<conditionopt_t> conditionopt_0;
+
+  std::unique_ptr<token_t> semicolon_1;
+
+  for_rest_statement_conditionopt_semicolon_t(
+    std::unique_ptr<conditionopt_t> &&conditionopt_0_,
+    std::unique_ptr<token_t> &&semicolon_1_
+  ): conditionopt_0(std::move(conditionopt_0_)),
+     semicolon_1(std::move(semicolon_1_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // for_rest_statement_t
+};  // for_rest_statement_conditionopt_semicolon_t
+  
 
-const std::vector<for_rest_statement_t::pattern_t> for_rest_statement_t::patterns = {
-  {
-    pattern_item_t<conditionopt_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-  }, {
-    pattern_item_t<conditionopt_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON")),
-    pattern_item_t<expression_t>::get()
+class for_rest_statement_conditionopt_semicolon_expression_t: public for_rest_statement_t {
+
+public:
+
+  std::unique_ptr<conditionopt_t> conditionopt_0;
+
+  std::unique_ptr<token_t> semicolon_1;
+
+  std::unique_ptr<expression_t> expression_2;
+
+  for_rest_statement_conditionopt_semicolon_expression_t(
+    std::unique_ptr<conditionopt_t> &&conditionopt_0_,
+    std::unique_ptr<token_t> &&semicolon_1_,
+    std::unique_ptr<expression_t> &&expression_2_
+  ): conditionopt_0(std::move(conditionopt_0_)),
+     semicolon_1(std::move(semicolon_1_)),
+     expression_2(std::move(expression_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // for_rest_statement_conditionopt_semicolon_expression_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> for_rest_statement_t::pattern<0>::list = {
+  pattern_item_t<conditionopt_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> for_rest_statement_t::pattern<1>::list = {
+  pattern_item_t<conditionopt_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON")),
+  pattern_item_t<expression_t>::get()
 };
 
 }   // ast

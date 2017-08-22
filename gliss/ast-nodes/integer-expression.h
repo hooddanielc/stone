@@ -14,30 +14,48 @@ namespace gliss {
 
 namespace ast {
 
+class expression_t;
+
 class integer_expression_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 1;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = integer_expression_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  integer_expression_t(
-    const expression_t &
-  );
+  virtual ~integer_expression_t() = default;
+
+};  // integer_expression_t
+
+
+class integer_expression_expression_t: public integer_expression_t {
+
+public:
+
+  std::unique_ptr<expression_t> expression_0;
+
+  integer_expression_expression_t(
+    std::unique_ptr<expression_t> &&expression_0_
+  ): expression_0(std::move(expression_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // integer_expression_t
+};  // integer_expression_expression_t
+  
 
-const std::vector<integer_expression_t::pattern_t> integer_expression_t::patterns = {
-  {
-    pattern_item_t<expression_t>::get()
-  }
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> integer_expression_t::pattern<0>::list = {
+  pattern_item_t<expression_t>::get()
 };
 
 }   // ast

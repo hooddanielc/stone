@@ -14,36 +14,132 @@ namespace gliss {
 
 namespace ast {
 
+
+
 class unary_operator_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 4;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = unary_operator_plus_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  unary_operator_t(
-    const token_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = unary_operator_dash_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 2>::type> {
+    using type = unary_operator_bang_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 3>::type> {
+    using type = unary_operator_tilde_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
+
+  virtual ~unary_operator_t() = default;
+
+};  // unary_operator_t
+
+
+class unary_operator_plus_t: public unary_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> plus_0;
+
+  unary_operator_plus_t(
+    std::unique_ptr<token_t> &&plus_0_
+  ): plus_0(std::move(plus_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // unary_operator_t
+};  // unary_operator_plus_t
+  
 
-const std::vector<unary_operator_t::pattern_t> unary_operator_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PLUS"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DASH"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BANG"))
-  }, {
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("TILDE"))
+class unary_operator_dash_t: public unary_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> dash_0;
+
+  unary_operator_dash_t(
+    std::unique_ptr<token_t> &&dash_0_
+  ): dash_0(std::move(dash_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // unary_operator_dash_t
+  
+
+class unary_operator_bang_t: public unary_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> bang_0;
+
+  unary_operator_bang_t(
+    std::unique_ptr<token_t> &&bang_0_
+  ): bang_0(std::move(bang_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // unary_operator_bang_t
+  
+
+class unary_operator_tilde_t: public unary_operator_t {
+
+public:
+
+  std::unique_ptr<token_t> tilde_0;
+
+  unary_operator_tilde_t(
+    std::unique_ptr<token_t> &&tilde_0_
+  ): tilde_0(std::move(tilde_0_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+};  // unary_operator_tilde_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> unary_operator_t::pattern<0>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PLUS"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> unary_operator_t::pattern<1>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DASH"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> unary_operator_t::pattern<2>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BANG"))
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> unary_operator_t::pattern<3>::list = {
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("TILDE"))
 };
 
 }   // ast

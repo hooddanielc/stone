@@ -15,40 +15,87 @@ namespace gliss {
 
 namespace ast {
 
+class layout_qualifier_id_t;
+
+
 class layout_qualifier_id_list_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = layout_qualifier_id_list_layout_qualifier_id_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  layout_qualifier_id_list_t(
-    const layout_qualifier_id_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_id_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  layout_qualifier_id_list_t(
-    const layout_qualifier_id_list_t &,
-    const token_t &,
-    const layout_qualifier_id_t &
-  );
+  virtual ~layout_qualifier_id_list_t() = default;
+
+};  // layout_qualifier_id_list_t
+
+
+class layout_qualifier_id_list_layout_qualifier_id_t: public layout_qualifier_id_list_t {
+
+public:
+
+  std::unique_ptr<layout_qualifier_id_t> layout_qualifier_id_0;
+
+  layout_qualifier_id_list_layout_qualifier_id_t(
+    std::unique_ptr<layout_qualifier_id_t> &&layout_qualifier_id_0_
+  ): layout_qualifier_id_0(std::move(layout_qualifier_id_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // layout_qualifier_id_list_t
+};  // layout_qualifier_id_list_layout_qualifier_id_t
+  
 
-const std::vector<layout_qualifier_id_list_t::pattern_t> layout_qualifier_id_list_t::patterns = {
-  {
-    pattern_item_t<layout_qualifier_id_t>::get()
-  }, {
-    pattern_item_t<layout_qualifier_id_list_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-    pattern_item_t<layout_qualifier_id_t>::get()
+class layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_id_t: public layout_qualifier_id_list_t {
+
+public:
+
+  std::unique_ptr<layout_qualifier_id_list_t> layout_qualifier_id_list_0;
+
+  std::unique_ptr<token_t> comma_1;
+
+  std::unique_ptr<layout_qualifier_id_t> layout_qualifier_id_2;
+
+  layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_id_t(
+    std::unique_ptr<layout_qualifier_id_list_t> &&layout_qualifier_id_list_0_,
+    std::unique_ptr<token_t> &&comma_1_,
+    std::unique_ptr<layout_qualifier_id_t> &&layout_qualifier_id_2_
+  ): layout_qualifier_id_list_0(std::move(layout_qualifier_id_list_0_)),
+     comma_1(std::move(comma_1_)),
+     layout_qualifier_id_2(std::move(layout_qualifier_id_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_id_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> layout_qualifier_id_list_t::pattern<0>::list = {
+  pattern_item_t<layout_qualifier_id_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> layout_qualifier_id_list_t::pattern<1>::list = {
+  pattern_item_t<layout_qualifier_id_list_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
+  pattern_item_t<layout_qualifier_id_t>::get()
 };
 
 }   // ast

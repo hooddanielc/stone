@@ -15,40 +15,87 @@ namespace gliss {
 
 namespace ast {
 
+class logical_xor_expression_t;
+
+
 class logical_or_expression_t: public ast_t {
 
 public:
 
-  using unique_pattern_t = std::shared_ptr<any_pattern_item_t>;
+  static constexpr int num_types = 2;
 
-  using pattern_t = std::vector<unique_pattern_t>;
+  template <int n, typename = void>
+  struct pattern;
 
-  static const std::vector<pattern_t> patterns;
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 0>::type> {
+    using type = logical_or_expression_logical_xor_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  logical_or_expression_t(
-    const logical_xor_expression_t &
-  );
+  template<int n>
+  struct pattern<n, typename std::enable_if<n == 1>::type> {
+    using type = logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t;
+    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
+  };
 
-  logical_or_expression_t(
-    const logical_or_expression_t &,
-    const token_t &,
-    const logical_xor_expression_t &
-  );
+  virtual ~logical_or_expression_t() = default;
+
+};  // logical_or_expression_t
+
+
+class logical_or_expression_logical_xor_expression_t: public logical_or_expression_t {
+
+public:
+
+  std::unique_ptr<logical_xor_expression_t> logical_xor_expression_0;
+
+  logical_or_expression_logical_xor_expression_t(
+    std::unique_ptr<logical_xor_expression_t> &&logical_xor_expression_0_
+  ): logical_xor_expression_0(std::move(logical_xor_expression_0_)) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-};  // logical_or_expression_t
+};  // logical_or_expression_logical_xor_expression_t
+  
 
-const std::vector<logical_or_expression_t::pattern_t> logical_or_expression_t::patterns = {
-  {
-    pattern_item_t<logical_xor_expression_t>::get()
-  }, {
-    pattern_item_t<logical_or_expression_t>::get(),
-    pattern_item_t<token_t>::get(token_t::uppercase_to_kind("OR_OP")),
-    pattern_item_t<logical_xor_expression_t>::get()
+class logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t: public logical_or_expression_t {
+
+public:
+
+  std::unique_ptr<logical_or_expression_t> logical_or_expression_0;
+
+  std::unique_ptr<token_t> or_op_1;
+
+  std::unique_ptr<logical_xor_expression_t> logical_xor_expression_2;
+
+  logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t(
+    std::unique_ptr<logical_or_expression_t> &&logical_or_expression_0_,
+    std::unique_ptr<token_t> &&or_op_1_,
+    std::unique_ptr<logical_xor_expression_t> &&logical_xor_expression_2_
+  ): logical_or_expression_0(std::move(logical_or_expression_0_)),
+     or_op_1(std::move(or_op_1_)),
+     logical_xor_expression_2(std::move(logical_xor_expression_2_)) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
   }
+
+};  // logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t
+  
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> logical_or_expression_t::pattern<0>::list = {
+  pattern_item_t<logical_xor_expression_t>::get()
+};
+
+template <>
+std::vector<std::shared_ptr<any_pattern_item_t>> logical_or_expression_t::pattern<1>::list = {
+  pattern_item_t<logical_or_expression_t>::get(),
+  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("OR_OP")),
+  pattern_item_t<logical_xor_expression_t>::get()
 };
 
 }   // ast
