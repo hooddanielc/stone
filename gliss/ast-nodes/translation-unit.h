@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "external-declaration.h"
 
+/**
+ * Patterns for translation_unit
+ *
+ * 1. external_declaration
+ * 2. translation_unit external_declaration
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class translation_unit_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = translation_unit_external_declaration_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = translation_unit_translation_unit_external_declaration_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~translation_unit_t() = default;
 
@@ -51,6 +43,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<translation_unit_external_declaration_t> make(
+    std::unique_ptr<external_declaration_t> &&external_declaration_0_
+  ) {
+    return std::make_unique<translation_unit_external_declaration_t>(
+      std::move(external_declaration_0_)
+    );
   }
 
 };  // translation_unit_external_declaration_t
@@ -73,18 +73,17 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<translation_unit_translation_unit_external_declaration_t> make(
+    std::unique_ptr<translation_unit_t> &&translation_unit_0_,
+    std::unique_ptr<external_declaration_t> &&external_declaration_1_
+  ) {
+    return std::make_unique<translation_unit_translation_unit_external_declaration_t>(
+      std::move(translation_unit_0_),
+      std::move(external_declaration_1_)
+    );
+  }
+
 };  // translation_unit_translation_unit_external_declaration_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> translation_unit_t::pattern<0>::list = {
-  pattern_item_t<external_declaration_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> translation_unit_t::pattern<1>::list = {
-  pattern_item_t<translation_unit_t>::get(),
-  pattern_item_t<external_declaration_t>::get()
-};
 
 }   // ast
 

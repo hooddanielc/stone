@@ -10,6 +10,13 @@
 #include "expression.h"
 #include "assignment-expression.h"
 
+/**
+ * Patterns for conditional_expression
+ *
+ * 1. logical_or_expression
+ * 2. logical_or_expression QUESTION expression COLON assignment_expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -23,21 +30,6 @@ class conditional_expression_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = conditional_expression_logical_or_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = conditional_expression_logical_or_expression_question_expression_colon_assignment_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~conditional_expression_t() = default;
 
@@ -55,6 +47,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<conditional_expression_logical_or_expression_t> make(
+    std::unique_ptr<logical_or_expression_t> &&logical_or_expression_0_
+  ) {
+    return std::make_unique<conditional_expression_logical_or_expression_t>(
+      std::move(logical_or_expression_0_)
+    );
   }
 
 };  // conditional_expression_logical_or_expression_t
@@ -89,21 +89,23 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<conditional_expression_logical_or_expression_question_expression_colon_assignment_expression_t> make(
+    std::unique_ptr<logical_or_expression_t> &&logical_or_expression_0_,
+    const token_t *QUESTION_1_,
+    std::unique_ptr<expression_t> &&expression_2_,
+    const token_t *COLON_3_,
+    std::unique_ptr<assignment_expression_t> &&assignment_expression_4_
+  ) {
+    return std::make_unique<conditional_expression_logical_or_expression_question_expression_colon_assignment_expression_t>(
+      std::move(logical_or_expression_0_),
+      std::make_unique<token_t>(*QUESTION_1_),
+      std::move(expression_2_),
+      std::make_unique<token_t>(*COLON_3_),
+      std::move(assignment_expression_4_)
+    );
+  }
+
 };  // conditional_expression_logical_or_expression_question_expression_colon_assignment_expression_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> conditional_expression_t::pattern<0>::list = {
-  pattern_item_t<logical_or_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> conditional_expression_t::pattern<1>::list = {
-  pattern_item_t<logical_or_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("QUESTION")),
-  pattern_item_t<expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COLON")),
-  pattern_item_t<assignment_expression_t>::get()
-};
 
 }   // ast
 

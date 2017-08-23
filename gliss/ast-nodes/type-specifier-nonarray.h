@@ -8,6 +8,132 @@
 #include "../ast.h"
 #include "struct-specifier.h"
 
+/**
+ * Patterns for type_specifier_nonarray
+ *
+ * 1. VOID
+ * 2. FLOAT
+ * 3. DOUBLE
+ * 4. INT
+ * 5. UINT
+ * 6. BOOL
+ * 7. VEC2
+ * 8. VEC3
+ * 9. VEC4
+ * 10. DVEC2
+ * 11. DVEC3
+ * 12. DVEC4
+ * 13. BVEC2
+ * 14. BVEC3
+ * 15. BVEC4
+ * 16. IVEC2
+ * 17. IVEC3
+ * 18. IVEC4
+ * 19. UVEC2
+ * 20. UVEC3
+ * 21. UVEC4
+ * 22. MAT2
+ * 23. MAT3
+ * 24. MAT4
+ * 25. MAT2X2
+ * 26. MAT2X3
+ * 27. MAT2X4
+ * 28. MAT3X2
+ * 29. MAT3X3
+ * 30. MAT3X4
+ * 31. MAT4X2
+ * 32. MAT4X3
+ * 33. MAT4X4
+ * 34. DMAT2
+ * 35. DMAT3
+ * 36. DMAT4
+ * 37. DMAT2X2
+ * 38. DMAT2X3
+ * 39. DMAT2X4
+ * 40. DMAT3X2
+ * 41. DMAT3X3
+ * 42. DMAT3X4
+ * 43. DMAT4X2
+ * 44. DMAT4X3
+ * 45. DMAT4X4
+ * 46. ATOMIC_UINT
+ * 47. SAMPLER1D
+ * 48. SAMPLER2D
+ * 49. SAMPLER3D
+ * 50. SAMPLERCUBE
+ * 51. SAMPLER1DSHADOW
+ * 52. SAMPLER2DSHADOW
+ * 53. SAMPLERCUBESHADOW
+ * 54. SAMPLER1DARRAY
+ * 55. SAMPLER2DARRAY
+ * 56. SAMPLER1DARRAYSHADOW
+ * 57. SAMPLER2DARRAYSHADOW
+ * 58. SAMPLERCUBEARRAY
+ * 59. SAMPLERCUBEARRAYSHADOW
+ * 60. ISAMPLER1D
+ * 61. ISAMPLER2D
+ * 62. ISAMPLER3D
+ * 63. ISAMPLERCUBE
+ * 64. ISAMPLER1DARRAY
+ * 65. ISAMPLER2DARRAY
+ * 66. ISAMPLERCUBEARRAY
+ * 67. USAMPLER1D
+ * 68. USAMPLER2D
+ * 69. USAMPLER3D
+ * 70. USAMPLERCUBE
+ * 71. USAMPLER1DARRAY
+ * 72. USAMPLER2DARRAY
+ * 73. USAMPLERCUBEARRAY
+ * 74. SAMPLER2DRECT
+ * 75. SAMPLER2DRECTSHADOW
+ * 76. ISAMPLER2DRECT
+ * 77. USAMPLER2DRECT
+ * 78. SAMPLERBUFFER
+ * 79. ISAMPLERBUFFER
+ * 80. USAMPLERBUFFER
+ * 81. SAMPLER2DMS
+ * 82. ISAMPLER2DMS
+ * 83. USAMPLER2DMS
+ * 84. SAMPLER2DMSARRAY
+ * 85. ISAMPLER2DMSARRAY
+ * 86. USAMPLER2DMSARRAY
+ * 87. IMAGE1D
+ * 88. IIMAGE1D
+ * 89. UIMAGE1D
+ * 90. IMAGE2D
+ * 91. IIMAGE2D
+ * 92. UIMAGE2D
+ * 93. IMAGE3D
+ * 94. IIMAGE3D
+ * 95. UIMAGE3D
+ * 96. IMAGE2DRECT
+ * 97. IIMAGE2DRECT
+ * 98. UIMAGE2DRECT
+ * 99. IMAGECUBE
+ * 100. IIMAGECUBE
+ * 101. UIMAGECUBE
+ * 102. IMAGEBUFFER
+ * 103. IIMAGEBUFFER
+ * 104. UIMAGEBUFFER
+ * 105. IMAGE1DARRAY
+ * 106. IIMAGE1DARRAY
+ * 107. UIMAGE1DARRAY
+ * 108. IMAGE2DARRAY
+ * 109. IIMAGE2DARRAY
+ * 110. UIMAGE2DARRAY
+ * 111. IMAGECUBEARRAY
+ * 112. IIMAGECUBEARRAY
+ * 113. UIMAGECUBEARRAY
+ * 114. IMAGE2DMS
+ * 115. IIMAGE2DMS
+ * 116. UIMAGE2DMS
+ * 117. IMAGE2DMSARRAY
+ * 118. IIMAGE2DMSARRAY
+ * 119. UIMAGE2DMSARRAY
+ * 120. struct_specifier
+ * 121. TYPE_NAME
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,735 +145,6 @@ class type_specifier_nonarray_t: public ast_t {
 public:
 
   static constexpr int num_types = 121;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = type_specifier_nonarray_void_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = type_specifier_nonarray_float_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = type_specifier_nonarray_double_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 3>::type> {
-    using type = type_specifier_nonarray_int_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 4>::type> {
-    using type = type_specifier_nonarray_uint_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 5>::type> {
-    using type = type_specifier_nonarray_bool_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 6>::type> {
-    using type = type_specifier_nonarray_vec2_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 7>::type> {
-    using type = type_specifier_nonarray_vec3_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 8>::type> {
-    using type = type_specifier_nonarray_vec4_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 9>::type> {
-    using type = type_specifier_nonarray_dvec2_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 10>::type> {
-    using type = type_specifier_nonarray_dvec3_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 11>::type> {
-    using type = type_specifier_nonarray_dvec4_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 12>::type> {
-    using type = type_specifier_nonarray_bvec2_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 13>::type> {
-    using type = type_specifier_nonarray_bvec3_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 14>::type> {
-    using type = type_specifier_nonarray_bvec4_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 15>::type> {
-    using type = type_specifier_nonarray_ivec2_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 16>::type> {
-    using type = type_specifier_nonarray_ivec3_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 17>::type> {
-    using type = type_specifier_nonarray_ivec4_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 18>::type> {
-    using type = type_specifier_nonarray_uvec2_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 19>::type> {
-    using type = type_specifier_nonarray_uvec3_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 20>::type> {
-    using type = type_specifier_nonarray_uvec4_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 21>::type> {
-    using type = type_specifier_nonarray_mat2_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 22>::type> {
-    using type = type_specifier_nonarray_mat3_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 23>::type> {
-    using type = type_specifier_nonarray_mat4_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 24>::type> {
-    using type = type_specifier_nonarray_mat2x2_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 25>::type> {
-    using type = type_specifier_nonarray_mat2x3_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 26>::type> {
-    using type = type_specifier_nonarray_mat2x4_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 27>::type> {
-    using type = type_specifier_nonarray_mat3x2_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 28>::type> {
-    using type = type_specifier_nonarray_mat3x3_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 29>::type> {
-    using type = type_specifier_nonarray_mat3x4_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 30>::type> {
-    using type = type_specifier_nonarray_mat4x2_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 31>::type> {
-    using type = type_specifier_nonarray_mat4x3_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 32>::type> {
-    using type = type_specifier_nonarray_mat4x4_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 33>::type> {
-    using type = type_specifier_nonarray_dmat2_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 34>::type> {
-    using type = type_specifier_nonarray_dmat3_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 35>::type> {
-    using type = type_specifier_nonarray_dmat4_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 36>::type> {
-    using type = type_specifier_nonarray_dmat2x2_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 37>::type> {
-    using type = type_specifier_nonarray_dmat2x3_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 38>::type> {
-    using type = type_specifier_nonarray_dmat2x4_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 39>::type> {
-    using type = type_specifier_nonarray_dmat3x2_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 40>::type> {
-    using type = type_specifier_nonarray_dmat3x3_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 41>::type> {
-    using type = type_specifier_nonarray_dmat3x4_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 42>::type> {
-    using type = type_specifier_nonarray_dmat4x2_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 43>::type> {
-    using type = type_specifier_nonarray_dmat4x3_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 44>::type> {
-    using type = type_specifier_nonarray_dmat4x4_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 45>::type> {
-    using type = type_specifier_nonarray_atomic_uint_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 46>::type> {
-    using type = type_specifier_nonarray_sampler1d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 47>::type> {
-    using type = type_specifier_nonarray_sampler2d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 48>::type> {
-    using type = type_specifier_nonarray_sampler3d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 49>::type> {
-    using type = type_specifier_nonarray_samplercube_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 50>::type> {
-    using type = type_specifier_nonarray_sampler1dshadow_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 51>::type> {
-    using type = type_specifier_nonarray_sampler2dshadow_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 52>::type> {
-    using type = type_specifier_nonarray_samplercubeshadow_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 53>::type> {
-    using type = type_specifier_nonarray_sampler1darray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 54>::type> {
-    using type = type_specifier_nonarray_sampler2darray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 55>::type> {
-    using type = type_specifier_nonarray_sampler1darrayshadow_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 56>::type> {
-    using type = type_specifier_nonarray_sampler2darrayshadow_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 57>::type> {
-    using type = type_specifier_nonarray_samplercubearray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 58>::type> {
-    using type = type_specifier_nonarray_samplercubearrayshadow_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 59>::type> {
-    using type = type_specifier_nonarray_isampler1d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 60>::type> {
-    using type = type_specifier_nonarray_isampler2d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 61>::type> {
-    using type = type_specifier_nonarray_isampler3d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 62>::type> {
-    using type = type_specifier_nonarray_isamplercube_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 63>::type> {
-    using type = type_specifier_nonarray_isampler1darray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 64>::type> {
-    using type = type_specifier_nonarray_isampler2darray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 65>::type> {
-    using type = type_specifier_nonarray_isamplercubearray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 66>::type> {
-    using type = type_specifier_nonarray_usampler1d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 67>::type> {
-    using type = type_specifier_nonarray_usampler2d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 68>::type> {
-    using type = type_specifier_nonarray_usampler3d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 69>::type> {
-    using type = type_specifier_nonarray_usamplercube_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 70>::type> {
-    using type = type_specifier_nonarray_usampler1darray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 71>::type> {
-    using type = type_specifier_nonarray_usampler2darray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 72>::type> {
-    using type = type_specifier_nonarray_usamplercubearray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 73>::type> {
-    using type = type_specifier_nonarray_sampler2drect_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 74>::type> {
-    using type = type_specifier_nonarray_sampler2drectshadow_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 75>::type> {
-    using type = type_specifier_nonarray_isampler2drect_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 76>::type> {
-    using type = type_specifier_nonarray_usampler2drect_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 77>::type> {
-    using type = type_specifier_nonarray_samplerbuffer_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 78>::type> {
-    using type = type_specifier_nonarray_isamplerbuffer_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 79>::type> {
-    using type = type_specifier_nonarray_usamplerbuffer_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 80>::type> {
-    using type = type_specifier_nonarray_sampler2dms_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 81>::type> {
-    using type = type_specifier_nonarray_isampler2dms_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 82>::type> {
-    using type = type_specifier_nonarray_usampler2dms_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 83>::type> {
-    using type = type_specifier_nonarray_sampler2dmsarray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 84>::type> {
-    using type = type_specifier_nonarray_isampler2dmsarray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 85>::type> {
-    using type = type_specifier_nonarray_usampler2dmsarray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 86>::type> {
-    using type = type_specifier_nonarray_image1d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 87>::type> {
-    using type = type_specifier_nonarray_iimage1d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 88>::type> {
-    using type = type_specifier_nonarray_uimage1d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 89>::type> {
-    using type = type_specifier_nonarray_image2d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 90>::type> {
-    using type = type_specifier_nonarray_iimage2d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 91>::type> {
-    using type = type_specifier_nonarray_uimage2d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 92>::type> {
-    using type = type_specifier_nonarray_image3d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 93>::type> {
-    using type = type_specifier_nonarray_iimage3d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 94>::type> {
-    using type = type_specifier_nonarray_uimage3d_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 95>::type> {
-    using type = type_specifier_nonarray_image2drect_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 96>::type> {
-    using type = type_specifier_nonarray_iimage2drect_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 97>::type> {
-    using type = type_specifier_nonarray_uimage2drect_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 98>::type> {
-    using type = type_specifier_nonarray_imagecube_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 99>::type> {
-    using type = type_specifier_nonarray_iimagecube_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 100>::type> {
-    using type = type_specifier_nonarray_uimagecube_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 101>::type> {
-    using type = type_specifier_nonarray_imagebuffer_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 102>::type> {
-    using type = type_specifier_nonarray_iimagebuffer_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 103>::type> {
-    using type = type_specifier_nonarray_uimagebuffer_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 104>::type> {
-    using type = type_specifier_nonarray_image1darray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 105>::type> {
-    using type = type_specifier_nonarray_iimage1darray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 106>::type> {
-    using type = type_specifier_nonarray_uimage1darray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 107>::type> {
-    using type = type_specifier_nonarray_image2darray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 108>::type> {
-    using type = type_specifier_nonarray_iimage2darray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 109>::type> {
-    using type = type_specifier_nonarray_uimage2darray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 110>::type> {
-    using type = type_specifier_nonarray_imagecubearray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 111>::type> {
-    using type = type_specifier_nonarray_iimagecubearray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 112>::type> {
-    using type = type_specifier_nonarray_uimagecubearray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 113>::type> {
-    using type = type_specifier_nonarray_image2dms_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 114>::type> {
-    using type = type_specifier_nonarray_iimage2dms_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 115>::type> {
-    using type = type_specifier_nonarray_uimage2dms_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 116>::type> {
-    using type = type_specifier_nonarray_image2dmsarray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 117>::type> {
-    using type = type_specifier_nonarray_iimage2dmsarray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 118>::type> {
-    using type = type_specifier_nonarray_uimage2dmsarray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 119>::type> {
-    using type = type_specifier_nonarray_struct_specifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 120>::type> {
-    using type = type_specifier_nonarray_type_name_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~type_specifier_nonarray_t() = default;
 
@@ -767,6 +164,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_void_t> make(
+    const token_t *VOID_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_void_t>(
+      std::make_unique<token_t>(*VOID_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_void_t
 
 class type_specifier_nonarray_float_t: public type_specifier_nonarray_t {
@@ -781,6 +186,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_float_t> make(
+    const token_t *FLOAT_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_float_t>(
+      std::make_unique<token_t>(*FLOAT_0_)
+    );
   }
 
 };  // type_specifier_nonarray_float_t
@@ -799,6 +212,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_double_t> make(
+    const token_t *DOUBLE_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_double_t>(
+      std::make_unique<token_t>(*DOUBLE_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_double_t
 
 class type_specifier_nonarray_int_t: public type_specifier_nonarray_t {
@@ -813,6 +234,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_int_t> make(
+    const token_t *INT_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_int_t>(
+      std::make_unique<token_t>(*INT_0_)
+    );
   }
 
 };  // type_specifier_nonarray_int_t
@@ -831,6 +260,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_uint_t> make(
+    const token_t *UINT_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uint_t>(
+      std::make_unique<token_t>(*UINT_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_uint_t
 
 class type_specifier_nonarray_bool_t: public type_specifier_nonarray_t {
@@ -845,6 +282,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_bool_t> make(
+    const token_t *BOOL_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_bool_t>(
+      std::make_unique<token_t>(*BOOL_0_)
+    );
   }
 
 };  // type_specifier_nonarray_bool_t
@@ -863,6 +308,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_vec2_t> make(
+    const token_t *VEC2_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_vec2_t>(
+      std::make_unique<token_t>(*VEC2_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_vec2_t
 
 class type_specifier_nonarray_vec3_t: public type_specifier_nonarray_t {
@@ -877,6 +330,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_vec3_t> make(
+    const token_t *VEC3_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_vec3_t>(
+      std::make_unique<token_t>(*VEC3_0_)
+    );
   }
 
 };  // type_specifier_nonarray_vec3_t
@@ -895,6 +356,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_vec4_t> make(
+    const token_t *VEC4_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_vec4_t>(
+      std::make_unique<token_t>(*VEC4_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_vec4_t
 
 class type_specifier_nonarray_dvec2_t: public type_specifier_nonarray_t {
@@ -909,6 +378,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_dvec2_t> make(
+    const token_t *DVEC2_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dvec2_t>(
+      std::make_unique<token_t>(*DVEC2_0_)
+    );
   }
 
 };  // type_specifier_nonarray_dvec2_t
@@ -927,6 +404,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_dvec3_t> make(
+    const token_t *DVEC3_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dvec3_t>(
+      std::make_unique<token_t>(*DVEC3_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_dvec3_t
 
 class type_specifier_nonarray_dvec4_t: public type_specifier_nonarray_t {
@@ -941,6 +426,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_dvec4_t> make(
+    const token_t *DVEC4_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dvec4_t>(
+      std::make_unique<token_t>(*DVEC4_0_)
+    );
   }
 
 };  // type_specifier_nonarray_dvec4_t
@@ -959,6 +452,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_bvec2_t> make(
+    const token_t *BVEC2_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_bvec2_t>(
+      std::make_unique<token_t>(*BVEC2_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_bvec2_t
 
 class type_specifier_nonarray_bvec3_t: public type_specifier_nonarray_t {
@@ -973,6 +474,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_bvec3_t> make(
+    const token_t *BVEC3_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_bvec3_t>(
+      std::make_unique<token_t>(*BVEC3_0_)
+    );
   }
 
 };  // type_specifier_nonarray_bvec3_t
@@ -991,6 +500,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_bvec4_t> make(
+    const token_t *BVEC4_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_bvec4_t>(
+      std::make_unique<token_t>(*BVEC4_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_bvec4_t
 
 class type_specifier_nonarray_ivec2_t: public type_specifier_nonarray_t {
@@ -1005,6 +522,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_ivec2_t> make(
+    const token_t *IVEC2_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_ivec2_t>(
+      std::make_unique<token_t>(*IVEC2_0_)
+    );
   }
 
 };  // type_specifier_nonarray_ivec2_t
@@ -1023,6 +548,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_ivec3_t> make(
+    const token_t *IVEC3_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_ivec3_t>(
+      std::make_unique<token_t>(*IVEC3_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_ivec3_t
 
 class type_specifier_nonarray_ivec4_t: public type_specifier_nonarray_t {
@@ -1037,6 +570,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_ivec4_t> make(
+    const token_t *IVEC4_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_ivec4_t>(
+      std::make_unique<token_t>(*IVEC4_0_)
+    );
   }
 
 };  // type_specifier_nonarray_ivec4_t
@@ -1055,6 +596,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_uvec2_t> make(
+    const token_t *UVEC2_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uvec2_t>(
+      std::make_unique<token_t>(*UVEC2_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_uvec2_t
 
 class type_specifier_nonarray_uvec3_t: public type_specifier_nonarray_t {
@@ -1069,6 +618,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_uvec3_t> make(
+    const token_t *UVEC3_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uvec3_t>(
+      std::make_unique<token_t>(*UVEC3_0_)
+    );
   }
 
 };  // type_specifier_nonarray_uvec3_t
@@ -1087,6 +644,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_uvec4_t> make(
+    const token_t *UVEC4_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uvec4_t>(
+      std::make_unique<token_t>(*UVEC4_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_uvec4_t
 
 class type_specifier_nonarray_mat2_t: public type_specifier_nonarray_t {
@@ -1101,6 +666,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_mat2_t> make(
+    const token_t *MAT2_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_mat2_t>(
+      std::make_unique<token_t>(*MAT2_0_)
+    );
   }
 
 };  // type_specifier_nonarray_mat2_t
@@ -1119,6 +692,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_mat3_t> make(
+    const token_t *MAT3_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_mat3_t>(
+      std::make_unique<token_t>(*MAT3_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_mat3_t
 
 class type_specifier_nonarray_mat4_t: public type_specifier_nonarray_t {
@@ -1133,6 +714,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_mat4_t> make(
+    const token_t *MAT4_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_mat4_t>(
+      std::make_unique<token_t>(*MAT4_0_)
+    );
   }
 
 };  // type_specifier_nonarray_mat4_t
@@ -1151,6 +740,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_mat2x2_t> make(
+    const token_t *MAT2X2_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_mat2x2_t>(
+      std::make_unique<token_t>(*MAT2X2_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_mat2x2_t
 
 class type_specifier_nonarray_mat2x3_t: public type_specifier_nonarray_t {
@@ -1165,6 +762,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_mat2x3_t> make(
+    const token_t *MAT2X3_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_mat2x3_t>(
+      std::make_unique<token_t>(*MAT2X3_0_)
+    );
   }
 
 };  // type_specifier_nonarray_mat2x3_t
@@ -1183,6 +788,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_mat2x4_t> make(
+    const token_t *MAT2X4_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_mat2x4_t>(
+      std::make_unique<token_t>(*MAT2X4_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_mat2x4_t
 
 class type_specifier_nonarray_mat3x2_t: public type_specifier_nonarray_t {
@@ -1197,6 +810,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_mat3x2_t> make(
+    const token_t *MAT3X2_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_mat3x2_t>(
+      std::make_unique<token_t>(*MAT3X2_0_)
+    );
   }
 
 };  // type_specifier_nonarray_mat3x2_t
@@ -1215,6 +836,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_mat3x3_t> make(
+    const token_t *MAT3X3_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_mat3x3_t>(
+      std::make_unique<token_t>(*MAT3X3_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_mat3x3_t
 
 class type_specifier_nonarray_mat3x4_t: public type_specifier_nonarray_t {
@@ -1229,6 +858,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_mat3x4_t> make(
+    const token_t *MAT3X4_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_mat3x4_t>(
+      std::make_unique<token_t>(*MAT3X4_0_)
+    );
   }
 
 };  // type_specifier_nonarray_mat3x4_t
@@ -1247,6 +884,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_mat4x2_t> make(
+    const token_t *MAT4X2_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_mat4x2_t>(
+      std::make_unique<token_t>(*MAT4X2_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_mat4x2_t
 
 class type_specifier_nonarray_mat4x3_t: public type_specifier_nonarray_t {
@@ -1261,6 +906,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_mat4x3_t> make(
+    const token_t *MAT4X3_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_mat4x3_t>(
+      std::make_unique<token_t>(*MAT4X3_0_)
+    );
   }
 
 };  // type_specifier_nonarray_mat4x3_t
@@ -1279,6 +932,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_mat4x4_t> make(
+    const token_t *MAT4X4_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_mat4x4_t>(
+      std::make_unique<token_t>(*MAT4X4_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_mat4x4_t
 
 class type_specifier_nonarray_dmat2_t: public type_specifier_nonarray_t {
@@ -1293,6 +954,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_dmat2_t> make(
+    const token_t *DMAT2_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dmat2_t>(
+      std::make_unique<token_t>(*DMAT2_0_)
+    );
   }
 
 };  // type_specifier_nonarray_dmat2_t
@@ -1311,6 +980,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_dmat3_t> make(
+    const token_t *DMAT3_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dmat3_t>(
+      std::make_unique<token_t>(*DMAT3_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_dmat3_t
 
 class type_specifier_nonarray_dmat4_t: public type_specifier_nonarray_t {
@@ -1325,6 +1002,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_dmat4_t> make(
+    const token_t *DMAT4_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dmat4_t>(
+      std::make_unique<token_t>(*DMAT4_0_)
+    );
   }
 
 };  // type_specifier_nonarray_dmat4_t
@@ -1343,6 +1028,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_dmat2x2_t> make(
+    const token_t *DMAT2X2_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dmat2x2_t>(
+      std::make_unique<token_t>(*DMAT2X2_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_dmat2x2_t
 
 class type_specifier_nonarray_dmat2x3_t: public type_specifier_nonarray_t {
@@ -1357,6 +1050,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_dmat2x3_t> make(
+    const token_t *DMAT2X3_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dmat2x3_t>(
+      std::make_unique<token_t>(*DMAT2X3_0_)
+    );
   }
 
 };  // type_specifier_nonarray_dmat2x3_t
@@ -1375,6 +1076,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_dmat2x4_t> make(
+    const token_t *DMAT2X4_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dmat2x4_t>(
+      std::make_unique<token_t>(*DMAT2X4_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_dmat2x4_t
 
 class type_specifier_nonarray_dmat3x2_t: public type_specifier_nonarray_t {
@@ -1389,6 +1098,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_dmat3x2_t> make(
+    const token_t *DMAT3X2_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dmat3x2_t>(
+      std::make_unique<token_t>(*DMAT3X2_0_)
+    );
   }
 
 };  // type_specifier_nonarray_dmat3x2_t
@@ -1407,6 +1124,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_dmat3x3_t> make(
+    const token_t *DMAT3X3_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dmat3x3_t>(
+      std::make_unique<token_t>(*DMAT3X3_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_dmat3x3_t
 
 class type_specifier_nonarray_dmat3x4_t: public type_specifier_nonarray_t {
@@ -1421,6 +1146,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_dmat3x4_t> make(
+    const token_t *DMAT3X4_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dmat3x4_t>(
+      std::make_unique<token_t>(*DMAT3X4_0_)
+    );
   }
 
 };  // type_specifier_nonarray_dmat3x4_t
@@ -1439,6 +1172,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_dmat4x2_t> make(
+    const token_t *DMAT4X2_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dmat4x2_t>(
+      std::make_unique<token_t>(*DMAT4X2_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_dmat4x2_t
 
 class type_specifier_nonarray_dmat4x3_t: public type_specifier_nonarray_t {
@@ -1453,6 +1194,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_dmat4x3_t> make(
+    const token_t *DMAT4X3_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dmat4x3_t>(
+      std::make_unique<token_t>(*DMAT4X3_0_)
+    );
   }
 
 };  // type_specifier_nonarray_dmat4x3_t
@@ -1471,6 +1220,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_dmat4x4_t> make(
+    const token_t *DMAT4X4_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_dmat4x4_t>(
+      std::make_unique<token_t>(*DMAT4X4_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_dmat4x4_t
 
 class type_specifier_nonarray_atomic_uint_t: public type_specifier_nonarray_t {
@@ -1485,6 +1242,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_atomic_uint_t> make(
+    const token_t *ATOMIC_UINT_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_atomic_uint_t>(
+      std::make_unique<token_t>(*ATOMIC_UINT_0_)
+    );
   }
 
 };  // type_specifier_nonarray_atomic_uint_t
@@ -1503,6 +1268,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_sampler1d_t> make(
+    const token_t *SAMPLER1D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_sampler1d_t>(
+      std::make_unique<token_t>(*SAMPLER1D_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_sampler1d_t
 
 class type_specifier_nonarray_sampler2d_t: public type_specifier_nonarray_t {
@@ -1517,6 +1290,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_sampler2d_t> make(
+    const token_t *SAMPLER2D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_sampler2d_t>(
+      std::make_unique<token_t>(*SAMPLER2D_0_)
+    );
   }
 
 };  // type_specifier_nonarray_sampler2d_t
@@ -1535,6 +1316,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_sampler3d_t> make(
+    const token_t *SAMPLER3D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_sampler3d_t>(
+      std::make_unique<token_t>(*SAMPLER3D_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_sampler3d_t
 
 class type_specifier_nonarray_samplercube_t: public type_specifier_nonarray_t {
@@ -1549,6 +1338,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_samplercube_t> make(
+    const token_t *SAMPLERCUBE_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_samplercube_t>(
+      std::make_unique<token_t>(*SAMPLERCUBE_0_)
+    );
   }
 
 };  // type_specifier_nonarray_samplercube_t
@@ -1567,6 +1364,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_sampler1dshadow_t> make(
+    const token_t *SAMPLER1DSHADOW_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_sampler1dshadow_t>(
+      std::make_unique<token_t>(*SAMPLER1DSHADOW_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_sampler1dshadow_t
 
 class type_specifier_nonarray_sampler2dshadow_t: public type_specifier_nonarray_t {
@@ -1581,6 +1386,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_sampler2dshadow_t> make(
+    const token_t *SAMPLER2DSHADOW_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_sampler2dshadow_t>(
+      std::make_unique<token_t>(*SAMPLER2DSHADOW_0_)
+    );
   }
 
 };  // type_specifier_nonarray_sampler2dshadow_t
@@ -1599,6 +1412,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_samplercubeshadow_t> make(
+    const token_t *SAMPLERCUBESHADOW_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_samplercubeshadow_t>(
+      std::make_unique<token_t>(*SAMPLERCUBESHADOW_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_samplercubeshadow_t
 
 class type_specifier_nonarray_sampler1darray_t: public type_specifier_nonarray_t {
@@ -1613,6 +1434,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_sampler1darray_t> make(
+    const token_t *SAMPLER1DARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_sampler1darray_t>(
+      std::make_unique<token_t>(*SAMPLER1DARRAY_0_)
+    );
   }
 
 };  // type_specifier_nonarray_sampler1darray_t
@@ -1631,6 +1460,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_sampler2darray_t> make(
+    const token_t *SAMPLER2DARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_sampler2darray_t>(
+      std::make_unique<token_t>(*SAMPLER2DARRAY_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_sampler2darray_t
 
 class type_specifier_nonarray_sampler1darrayshadow_t: public type_specifier_nonarray_t {
@@ -1645,6 +1482,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_sampler1darrayshadow_t> make(
+    const token_t *SAMPLER1DARRAYSHADOW_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_sampler1darrayshadow_t>(
+      std::make_unique<token_t>(*SAMPLER1DARRAYSHADOW_0_)
+    );
   }
 
 };  // type_specifier_nonarray_sampler1darrayshadow_t
@@ -1663,6 +1508,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_sampler2darrayshadow_t> make(
+    const token_t *SAMPLER2DARRAYSHADOW_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_sampler2darrayshadow_t>(
+      std::make_unique<token_t>(*SAMPLER2DARRAYSHADOW_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_sampler2darrayshadow_t
 
 class type_specifier_nonarray_samplercubearray_t: public type_specifier_nonarray_t {
@@ -1677,6 +1530,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_samplercubearray_t> make(
+    const token_t *SAMPLERCUBEARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_samplercubearray_t>(
+      std::make_unique<token_t>(*SAMPLERCUBEARRAY_0_)
+    );
   }
 
 };  // type_specifier_nonarray_samplercubearray_t
@@ -1695,6 +1556,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_samplercubearrayshadow_t> make(
+    const token_t *SAMPLERCUBEARRAYSHADOW_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_samplercubearrayshadow_t>(
+      std::make_unique<token_t>(*SAMPLERCUBEARRAYSHADOW_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_samplercubearrayshadow_t
 
 class type_specifier_nonarray_isampler1d_t: public type_specifier_nonarray_t {
@@ -1709,6 +1578,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_isampler1d_t> make(
+    const token_t *ISAMPLER1D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_isampler1d_t>(
+      std::make_unique<token_t>(*ISAMPLER1D_0_)
+    );
   }
 
 };  // type_specifier_nonarray_isampler1d_t
@@ -1727,6 +1604,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_isampler2d_t> make(
+    const token_t *ISAMPLER2D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_isampler2d_t>(
+      std::make_unique<token_t>(*ISAMPLER2D_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_isampler2d_t
 
 class type_specifier_nonarray_isampler3d_t: public type_specifier_nonarray_t {
@@ -1741,6 +1626,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_isampler3d_t> make(
+    const token_t *ISAMPLER3D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_isampler3d_t>(
+      std::make_unique<token_t>(*ISAMPLER3D_0_)
+    );
   }
 
 };  // type_specifier_nonarray_isampler3d_t
@@ -1759,6 +1652,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_isamplercube_t> make(
+    const token_t *ISAMPLERCUBE_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_isamplercube_t>(
+      std::make_unique<token_t>(*ISAMPLERCUBE_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_isamplercube_t
 
 class type_specifier_nonarray_isampler1darray_t: public type_specifier_nonarray_t {
@@ -1773,6 +1674,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_isampler1darray_t> make(
+    const token_t *ISAMPLER1DARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_isampler1darray_t>(
+      std::make_unique<token_t>(*ISAMPLER1DARRAY_0_)
+    );
   }
 
 };  // type_specifier_nonarray_isampler1darray_t
@@ -1791,6 +1700,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_isampler2darray_t> make(
+    const token_t *ISAMPLER2DARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_isampler2darray_t>(
+      std::make_unique<token_t>(*ISAMPLER2DARRAY_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_isampler2darray_t
 
 class type_specifier_nonarray_isamplercubearray_t: public type_specifier_nonarray_t {
@@ -1805,6 +1722,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_isamplercubearray_t> make(
+    const token_t *ISAMPLERCUBEARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_isamplercubearray_t>(
+      std::make_unique<token_t>(*ISAMPLERCUBEARRAY_0_)
+    );
   }
 
 };  // type_specifier_nonarray_isamplercubearray_t
@@ -1823,6 +1748,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_usampler1d_t> make(
+    const token_t *USAMPLER1D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_usampler1d_t>(
+      std::make_unique<token_t>(*USAMPLER1D_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_usampler1d_t
 
 class type_specifier_nonarray_usampler2d_t: public type_specifier_nonarray_t {
@@ -1837,6 +1770,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_usampler2d_t> make(
+    const token_t *USAMPLER2D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_usampler2d_t>(
+      std::make_unique<token_t>(*USAMPLER2D_0_)
+    );
   }
 
 };  // type_specifier_nonarray_usampler2d_t
@@ -1855,6 +1796,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_usampler3d_t> make(
+    const token_t *USAMPLER3D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_usampler3d_t>(
+      std::make_unique<token_t>(*USAMPLER3D_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_usampler3d_t
 
 class type_specifier_nonarray_usamplercube_t: public type_specifier_nonarray_t {
@@ -1869,6 +1818,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_usamplercube_t> make(
+    const token_t *USAMPLERCUBE_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_usamplercube_t>(
+      std::make_unique<token_t>(*USAMPLERCUBE_0_)
+    );
   }
 
 };  // type_specifier_nonarray_usamplercube_t
@@ -1887,6 +1844,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_usampler1darray_t> make(
+    const token_t *USAMPLER1DARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_usampler1darray_t>(
+      std::make_unique<token_t>(*USAMPLER1DARRAY_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_usampler1darray_t
 
 class type_specifier_nonarray_usampler2darray_t: public type_specifier_nonarray_t {
@@ -1901,6 +1866,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_usampler2darray_t> make(
+    const token_t *USAMPLER2DARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_usampler2darray_t>(
+      std::make_unique<token_t>(*USAMPLER2DARRAY_0_)
+    );
   }
 
 };  // type_specifier_nonarray_usampler2darray_t
@@ -1919,6 +1892,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_usamplercubearray_t> make(
+    const token_t *USAMPLERCUBEARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_usamplercubearray_t>(
+      std::make_unique<token_t>(*USAMPLERCUBEARRAY_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_usamplercubearray_t
 
 class type_specifier_nonarray_sampler2drect_t: public type_specifier_nonarray_t {
@@ -1933,6 +1914,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_sampler2drect_t> make(
+    const token_t *SAMPLER2DRECT_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_sampler2drect_t>(
+      std::make_unique<token_t>(*SAMPLER2DRECT_0_)
+    );
   }
 
 };  // type_specifier_nonarray_sampler2drect_t
@@ -1951,6 +1940,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_sampler2drectshadow_t> make(
+    const token_t *SAMPLER2DRECTSHADOW_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_sampler2drectshadow_t>(
+      std::make_unique<token_t>(*SAMPLER2DRECTSHADOW_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_sampler2drectshadow_t
 
 class type_specifier_nonarray_isampler2drect_t: public type_specifier_nonarray_t {
@@ -1965,6 +1962,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_isampler2drect_t> make(
+    const token_t *ISAMPLER2DRECT_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_isampler2drect_t>(
+      std::make_unique<token_t>(*ISAMPLER2DRECT_0_)
+    );
   }
 
 };  // type_specifier_nonarray_isampler2drect_t
@@ -1983,6 +1988,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_usampler2drect_t> make(
+    const token_t *USAMPLER2DRECT_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_usampler2drect_t>(
+      std::make_unique<token_t>(*USAMPLER2DRECT_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_usampler2drect_t
 
 class type_specifier_nonarray_samplerbuffer_t: public type_specifier_nonarray_t {
@@ -1997,6 +2010,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_samplerbuffer_t> make(
+    const token_t *SAMPLERBUFFER_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_samplerbuffer_t>(
+      std::make_unique<token_t>(*SAMPLERBUFFER_0_)
+    );
   }
 
 };  // type_specifier_nonarray_samplerbuffer_t
@@ -2015,6 +2036,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_isamplerbuffer_t> make(
+    const token_t *ISAMPLERBUFFER_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_isamplerbuffer_t>(
+      std::make_unique<token_t>(*ISAMPLERBUFFER_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_isamplerbuffer_t
 
 class type_specifier_nonarray_usamplerbuffer_t: public type_specifier_nonarray_t {
@@ -2029,6 +2058,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_usamplerbuffer_t> make(
+    const token_t *USAMPLERBUFFER_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_usamplerbuffer_t>(
+      std::make_unique<token_t>(*USAMPLERBUFFER_0_)
+    );
   }
 
 };  // type_specifier_nonarray_usamplerbuffer_t
@@ -2047,6 +2084,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_sampler2dms_t> make(
+    const token_t *SAMPLER2DMS_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_sampler2dms_t>(
+      std::make_unique<token_t>(*SAMPLER2DMS_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_sampler2dms_t
 
 class type_specifier_nonarray_isampler2dms_t: public type_specifier_nonarray_t {
@@ -2061,6 +2106,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_isampler2dms_t> make(
+    const token_t *ISAMPLER2DMS_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_isampler2dms_t>(
+      std::make_unique<token_t>(*ISAMPLER2DMS_0_)
+    );
   }
 
 };  // type_specifier_nonarray_isampler2dms_t
@@ -2079,6 +2132,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_usampler2dms_t> make(
+    const token_t *USAMPLER2DMS_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_usampler2dms_t>(
+      std::make_unique<token_t>(*USAMPLER2DMS_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_usampler2dms_t
 
 class type_specifier_nonarray_sampler2dmsarray_t: public type_specifier_nonarray_t {
@@ -2093,6 +2154,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_sampler2dmsarray_t> make(
+    const token_t *SAMPLER2DMSARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_sampler2dmsarray_t>(
+      std::make_unique<token_t>(*SAMPLER2DMSARRAY_0_)
+    );
   }
 
 };  // type_specifier_nonarray_sampler2dmsarray_t
@@ -2111,6 +2180,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_isampler2dmsarray_t> make(
+    const token_t *ISAMPLER2DMSARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_isampler2dmsarray_t>(
+      std::make_unique<token_t>(*ISAMPLER2DMSARRAY_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_isampler2dmsarray_t
 
 class type_specifier_nonarray_usampler2dmsarray_t: public type_specifier_nonarray_t {
@@ -2125,6 +2202,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_usampler2dmsarray_t> make(
+    const token_t *USAMPLER2DMSARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_usampler2dmsarray_t>(
+      std::make_unique<token_t>(*USAMPLER2DMSARRAY_0_)
+    );
   }
 
 };  // type_specifier_nonarray_usampler2dmsarray_t
@@ -2143,6 +2228,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_image1d_t> make(
+    const token_t *IMAGE1D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_image1d_t>(
+      std::make_unique<token_t>(*IMAGE1D_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_image1d_t
 
 class type_specifier_nonarray_iimage1d_t: public type_specifier_nonarray_t {
@@ -2157,6 +2250,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_iimage1d_t> make(
+    const token_t *IIMAGE1D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_iimage1d_t>(
+      std::make_unique<token_t>(*IIMAGE1D_0_)
+    );
   }
 
 };  // type_specifier_nonarray_iimage1d_t
@@ -2175,6 +2276,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_uimage1d_t> make(
+    const token_t *UIMAGE1D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uimage1d_t>(
+      std::make_unique<token_t>(*UIMAGE1D_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_uimage1d_t
 
 class type_specifier_nonarray_image2d_t: public type_specifier_nonarray_t {
@@ -2189,6 +2298,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_image2d_t> make(
+    const token_t *IMAGE2D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_image2d_t>(
+      std::make_unique<token_t>(*IMAGE2D_0_)
+    );
   }
 
 };  // type_specifier_nonarray_image2d_t
@@ -2207,6 +2324,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_iimage2d_t> make(
+    const token_t *IIMAGE2D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_iimage2d_t>(
+      std::make_unique<token_t>(*IIMAGE2D_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_iimage2d_t
 
 class type_specifier_nonarray_uimage2d_t: public type_specifier_nonarray_t {
@@ -2221,6 +2346,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_uimage2d_t> make(
+    const token_t *UIMAGE2D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uimage2d_t>(
+      std::make_unique<token_t>(*UIMAGE2D_0_)
+    );
   }
 
 };  // type_specifier_nonarray_uimage2d_t
@@ -2239,6 +2372,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_image3d_t> make(
+    const token_t *IMAGE3D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_image3d_t>(
+      std::make_unique<token_t>(*IMAGE3D_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_image3d_t
 
 class type_specifier_nonarray_iimage3d_t: public type_specifier_nonarray_t {
@@ -2253,6 +2394,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_iimage3d_t> make(
+    const token_t *IIMAGE3D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_iimage3d_t>(
+      std::make_unique<token_t>(*IIMAGE3D_0_)
+    );
   }
 
 };  // type_specifier_nonarray_iimage3d_t
@@ -2271,6 +2420,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_uimage3d_t> make(
+    const token_t *UIMAGE3D_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uimage3d_t>(
+      std::make_unique<token_t>(*UIMAGE3D_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_uimage3d_t
 
 class type_specifier_nonarray_image2drect_t: public type_specifier_nonarray_t {
@@ -2285,6 +2442,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_image2drect_t> make(
+    const token_t *IMAGE2DRECT_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_image2drect_t>(
+      std::make_unique<token_t>(*IMAGE2DRECT_0_)
+    );
   }
 
 };  // type_specifier_nonarray_image2drect_t
@@ -2303,6 +2468,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_iimage2drect_t> make(
+    const token_t *IIMAGE2DRECT_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_iimage2drect_t>(
+      std::make_unique<token_t>(*IIMAGE2DRECT_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_iimage2drect_t
 
 class type_specifier_nonarray_uimage2drect_t: public type_specifier_nonarray_t {
@@ -2317,6 +2490,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_uimage2drect_t> make(
+    const token_t *UIMAGE2DRECT_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uimage2drect_t>(
+      std::make_unique<token_t>(*UIMAGE2DRECT_0_)
+    );
   }
 
 };  // type_specifier_nonarray_uimage2drect_t
@@ -2335,6 +2516,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_imagecube_t> make(
+    const token_t *IMAGECUBE_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_imagecube_t>(
+      std::make_unique<token_t>(*IMAGECUBE_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_imagecube_t
 
 class type_specifier_nonarray_iimagecube_t: public type_specifier_nonarray_t {
@@ -2349,6 +2538,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_iimagecube_t> make(
+    const token_t *IIMAGECUBE_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_iimagecube_t>(
+      std::make_unique<token_t>(*IIMAGECUBE_0_)
+    );
   }
 
 };  // type_specifier_nonarray_iimagecube_t
@@ -2367,6 +2564,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_uimagecube_t> make(
+    const token_t *UIMAGECUBE_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uimagecube_t>(
+      std::make_unique<token_t>(*UIMAGECUBE_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_uimagecube_t
 
 class type_specifier_nonarray_imagebuffer_t: public type_specifier_nonarray_t {
@@ -2381,6 +2586,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_imagebuffer_t> make(
+    const token_t *IMAGEBUFFER_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_imagebuffer_t>(
+      std::make_unique<token_t>(*IMAGEBUFFER_0_)
+    );
   }
 
 };  // type_specifier_nonarray_imagebuffer_t
@@ -2399,6 +2612,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_iimagebuffer_t> make(
+    const token_t *IIMAGEBUFFER_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_iimagebuffer_t>(
+      std::make_unique<token_t>(*IIMAGEBUFFER_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_iimagebuffer_t
 
 class type_specifier_nonarray_uimagebuffer_t: public type_specifier_nonarray_t {
@@ -2413,6 +2634,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_uimagebuffer_t> make(
+    const token_t *UIMAGEBUFFER_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uimagebuffer_t>(
+      std::make_unique<token_t>(*UIMAGEBUFFER_0_)
+    );
   }
 
 };  // type_specifier_nonarray_uimagebuffer_t
@@ -2431,6 +2660,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_image1darray_t> make(
+    const token_t *IMAGE1DARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_image1darray_t>(
+      std::make_unique<token_t>(*IMAGE1DARRAY_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_image1darray_t
 
 class type_specifier_nonarray_iimage1darray_t: public type_specifier_nonarray_t {
@@ -2445,6 +2682,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_iimage1darray_t> make(
+    const token_t *IIMAGE1DARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_iimage1darray_t>(
+      std::make_unique<token_t>(*IIMAGE1DARRAY_0_)
+    );
   }
 
 };  // type_specifier_nonarray_iimage1darray_t
@@ -2463,6 +2708,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_uimage1darray_t> make(
+    const token_t *UIMAGE1DARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uimage1darray_t>(
+      std::make_unique<token_t>(*UIMAGE1DARRAY_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_uimage1darray_t
 
 class type_specifier_nonarray_image2darray_t: public type_specifier_nonarray_t {
@@ -2477,6 +2730,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_image2darray_t> make(
+    const token_t *IMAGE2DARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_image2darray_t>(
+      std::make_unique<token_t>(*IMAGE2DARRAY_0_)
+    );
   }
 
 };  // type_specifier_nonarray_image2darray_t
@@ -2495,6 +2756,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_iimage2darray_t> make(
+    const token_t *IIMAGE2DARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_iimage2darray_t>(
+      std::make_unique<token_t>(*IIMAGE2DARRAY_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_iimage2darray_t
 
 class type_specifier_nonarray_uimage2darray_t: public type_specifier_nonarray_t {
@@ -2509,6 +2778,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_uimage2darray_t> make(
+    const token_t *UIMAGE2DARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uimage2darray_t>(
+      std::make_unique<token_t>(*UIMAGE2DARRAY_0_)
+    );
   }
 
 };  // type_specifier_nonarray_uimage2darray_t
@@ -2527,6 +2804,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_imagecubearray_t> make(
+    const token_t *IMAGECUBEARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_imagecubearray_t>(
+      std::make_unique<token_t>(*IMAGECUBEARRAY_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_imagecubearray_t
 
 class type_specifier_nonarray_iimagecubearray_t: public type_specifier_nonarray_t {
@@ -2541,6 +2826,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_iimagecubearray_t> make(
+    const token_t *IIMAGECUBEARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_iimagecubearray_t>(
+      std::make_unique<token_t>(*IIMAGECUBEARRAY_0_)
+    );
   }
 
 };  // type_specifier_nonarray_iimagecubearray_t
@@ -2559,6 +2852,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_uimagecubearray_t> make(
+    const token_t *UIMAGECUBEARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uimagecubearray_t>(
+      std::make_unique<token_t>(*UIMAGECUBEARRAY_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_uimagecubearray_t
 
 class type_specifier_nonarray_image2dms_t: public type_specifier_nonarray_t {
@@ -2573,6 +2874,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_image2dms_t> make(
+    const token_t *IMAGE2DMS_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_image2dms_t>(
+      std::make_unique<token_t>(*IMAGE2DMS_0_)
+    );
   }
 
 };  // type_specifier_nonarray_image2dms_t
@@ -2591,6 +2900,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_iimage2dms_t> make(
+    const token_t *IIMAGE2DMS_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_iimage2dms_t>(
+      std::make_unique<token_t>(*IIMAGE2DMS_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_iimage2dms_t
 
 class type_specifier_nonarray_uimage2dms_t: public type_specifier_nonarray_t {
@@ -2605,6 +2922,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_uimage2dms_t> make(
+    const token_t *UIMAGE2DMS_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uimage2dms_t>(
+      std::make_unique<token_t>(*UIMAGE2DMS_0_)
+    );
   }
 
 };  // type_specifier_nonarray_uimage2dms_t
@@ -2623,6 +2948,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_image2dmsarray_t> make(
+    const token_t *IMAGE2DMSARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_image2dmsarray_t>(
+      std::make_unique<token_t>(*IMAGE2DMSARRAY_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_image2dmsarray_t
 
 class type_specifier_nonarray_iimage2dmsarray_t: public type_specifier_nonarray_t {
@@ -2637,6 +2970,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_iimage2dmsarray_t> make(
+    const token_t *IIMAGE2DMSARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_iimage2dmsarray_t>(
+      std::make_unique<token_t>(*IIMAGE2DMSARRAY_0_)
+    );
   }
 
 };  // type_specifier_nonarray_iimage2dmsarray_t
@@ -2655,6 +2996,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_uimage2dmsarray_t> make(
+    const token_t *UIMAGE2DMSARRAY_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_uimage2dmsarray_t>(
+      std::make_unique<token_t>(*UIMAGE2DMSARRAY_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_uimage2dmsarray_t
 
 class type_specifier_nonarray_struct_specifier_t: public type_specifier_nonarray_t {
@@ -2669,6 +3018,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_nonarray_struct_specifier_t> make(
+    std::unique_ptr<struct_specifier_t> &&struct_specifier_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_struct_specifier_t>(
+      std::move(struct_specifier_0_)
+    );
   }
 
 };  // type_specifier_nonarray_struct_specifier_t
@@ -2687,612 +3044,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_nonarray_type_name_t> make(
+    const token_t *TYPE_NAME_0_
+  ) {
+    return std::make_unique<type_specifier_nonarray_type_name_t>(
+      std::make_unique<token_t>(*TYPE_NAME_0_)
+    );
+  }
+
 };  // type_specifier_nonarray_type_name_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("VOID"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<1>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("FLOAT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<2>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DOUBLE"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<3>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("INT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<4>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UINT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<5>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BOOL"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<6>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("VEC2"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<7>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("VEC3"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<8>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("VEC4"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<9>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DVEC2"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<10>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DVEC3"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<11>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DVEC4"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<12>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BVEC2"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<13>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BVEC3"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<14>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BVEC4"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<15>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IVEC2"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<16>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IVEC3"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<17>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IVEC4"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<18>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UVEC2"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<19>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UVEC3"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<20>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UVEC4"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<21>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MAT2"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<22>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MAT3"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<23>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MAT4"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<24>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MAT2X2"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<25>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MAT2X3"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<26>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MAT2X4"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<27>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MAT3X2"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<28>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MAT3X3"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<29>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MAT3X4"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<30>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MAT4X2"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<31>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MAT4X3"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<32>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MAT4X4"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<33>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DMAT2"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<34>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DMAT3"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<35>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DMAT4"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<36>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DMAT2X2"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<37>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DMAT2X3"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<38>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DMAT2X4"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<39>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DMAT3X2"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<40>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DMAT3X3"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<41>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DMAT3X4"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<42>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DMAT4X2"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<43>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DMAT4X3"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<44>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DMAT4X4"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<45>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ATOMIC_UINT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<46>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLER1D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<47>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLER2D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<48>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLER3D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<49>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLERCUBE"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<50>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLER1DSHADOW"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<51>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLER2DSHADOW"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<52>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLERCUBESHADOW"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<53>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLER1DARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<54>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLER2DARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<55>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLER1DARRAYSHADOW"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<56>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLER2DARRAYSHADOW"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<57>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLERCUBEARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<58>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLERCUBEARRAYSHADOW"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<59>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ISAMPLER1D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<60>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ISAMPLER2D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<61>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ISAMPLER3D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<62>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ISAMPLERCUBE"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<63>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ISAMPLER1DARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<64>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ISAMPLER2DARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<65>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ISAMPLERCUBEARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<66>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("USAMPLER1D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<67>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("USAMPLER2D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<68>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("USAMPLER3D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<69>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("USAMPLERCUBE"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<70>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("USAMPLER1DARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<71>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("USAMPLER2DARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<72>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("USAMPLERCUBEARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<73>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLER2DRECT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<74>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLER2DRECTSHADOW"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<75>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ISAMPLER2DRECT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<76>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("USAMPLER2DRECT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<77>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLERBUFFER"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<78>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ISAMPLERBUFFER"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<79>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("USAMPLERBUFFER"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<80>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLER2DMS"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<81>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ISAMPLER2DMS"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<82>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("USAMPLER2DMS"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<83>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SAMPLER2DMSARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<84>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ISAMPLER2DMSARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<85>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("USAMPLER2DMSARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<86>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IMAGE1D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<87>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IIMAGE1D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<88>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UIMAGE1D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<89>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IMAGE2D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<90>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IIMAGE2D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<91>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UIMAGE2D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<92>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IMAGE3D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<93>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IIMAGE3D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<94>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UIMAGE3D"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<95>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IMAGE2DRECT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<96>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IIMAGE2DRECT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<97>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UIMAGE2DRECT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<98>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IMAGECUBE"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<99>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IIMAGECUBE"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<100>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UIMAGECUBE"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<101>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IMAGEBUFFER"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<102>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IIMAGEBUFFER"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<103>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UIMAGEBUFFER"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<104>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IMAGE1DARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<105>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IIMAGE1DARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<106>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UIMAGE1DARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<107>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IMAGE2DARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<108>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IIMAGE2DARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<109>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UIMAGE2DARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<110>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IMAGECUBEARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<111>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IIMAGECUBEARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<112>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UIMAGECUBEARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<113>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IMAGE2DMS"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<114>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IIMAGE2DMS"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<115>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UIMAGE2DMS"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<116>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IMAGE2DMSARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<117>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IIMAGE2DMSARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<118>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UIMAGE2DMSARRAY"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<119>::list = {
-  pattern_item_t<struct_specifier_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_nonarray_t::pattern<120>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("TYPE_NAME"))
-};
 
 }   // ast
 

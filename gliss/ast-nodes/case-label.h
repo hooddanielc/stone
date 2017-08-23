@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "expression.h"
 
+/**
+ * Patterns for case_label
+ *
+ * 1. CASE expression COLON
+ * 2. DEFAULT COLON
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class case_label_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = case_label_case_expression_colon_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = case_label_default_colon_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~case_label_t() = default;
 
@@ -61,6 +53,18 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<case_label_case_expression_colon_t> make(
+    const token_t *CASE_0_,
+    std::unique_ptr<expression_t> &&expression_1_,
+    const token_t *COLON_2_
+  ) {
+    return std::make_unique<case_label_case_expression_colon_t>(
+      std::make_unique<token_t>(*CASE_0_),
+      std::move(expression_1_),
+      std::make_unique<token_t>(*COLON_2_)
+    );
+  }
+
 };  // case_label_case_expression_colon_t
 
 class case_label_default_colon_t: public case_label_t {
@@ -81,20 +85,17 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<case_label_default_colon_t> make(
+    const token_t *DEFAULT_0_,
+    const token_t *COLON_1_
+  ) {
+    return std::make_unique<case_label_default_colon_t>(
+      std::make_unique<token_t>(*DEFAULT_0_),
+      std::make_unique<token_t>(*COLON_1_)
+    );
+  }
+
 };  // case_label_default_colon_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> case_label_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("CASE")),
-  pattern_item_t<expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COLON"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> case_label_t::pattern<1>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DEFAULT")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COLON"))
-};
 
 }   // ast
 

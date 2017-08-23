@@ -8,6 +8,12 @@
 #include "../ast.h"
 #include "expression.h"
 
+/**
+ * Patterns for integer_expression
+ *
+ * 1. expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,15 +25,6 @@ class integer_expression_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = integer_expression_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~integer_expression_t() = default;
 
@@ -47,12 +44,15 @@ public:
     visitor(this);
   }
 
-};  // integer_expression_expression_t
+  static std::unique_ptr<integer_expression_expression_t> make(
+    std::unique_ptr<expression_t> &&expression_0_
+  ) {
+    return std::make_unique<integer_expression_expression_t>(
+      std::move(expression_0_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> integer_expression_t::pattern<0>::list = {
-  pattern_item_t<expression_t>::get()
-};
+};  // integer_expression_expression_t
 
 }   // ast
 

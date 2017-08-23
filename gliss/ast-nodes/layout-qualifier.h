@@ -8,6 +8,12 @@
 #include "../ast.h"
 #include "layout-qualifier-id-list.h"
 
+/**
+ * Patterns for layout_qualifier
+ *
+ * 1. LAYOUT LEFT_PAREN layout_qualifier_id_list RIGHT_PAREN
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,15 +25,6 @@ class layout_qualifier_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~layout_qualifier_t() = default;
 
@@ -59,15 +56,21 @@ public:
     visitor(this);
   }
 
-};  // layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t
+  static std::unique_ptr<layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t> make(
+    const token_t *LAYOUT_0_,
+    const token_t *LEFT_PAREN_1_,
+    std::unique_ptr<layout_qualifier_id_list_t> &&layout_qualifier_id_list_2_,
+    const token_t *RIGHT_PAREN_3_
+  ) {
+    return std::make_unique<layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t>(
+      std::make_unique<token_t>(*LAYOUT_0_),
+      std::make_unique<token_t>(*LEFT_PAREN_1_),
+      std::move(layout_qualifier_id_list_2_),
+      std::make_unique<token_t>(*RIGHT_PAREN_3_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> layout_qualifier_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LAYOUT")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
-  pattern_item_t<layout_qualifier_id_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
-};
+};  // layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t
 
 }   // ast
 

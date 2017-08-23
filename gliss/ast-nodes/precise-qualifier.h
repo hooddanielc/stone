@@ -7,6 +7,12 @@
 #include <vector>
 #include "../ast.h"
 
+/**
+ * Patterns for precise_qualifier
+ *
+ * 1. PRECISE
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -16,15 +22,6 @@ class precise_qualifier_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = precise_qualifier_precise_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~precise_qualifier_t() = default;
 
@@ -44,12 +41,15 @@ public:
     visitor(this);
   }
 
-};  // precise_qualifier_precise_t
+  static std::unique_ptr<precise_qualifier_precise_t> make(
+    const token_t *PRECISE_0_
+  ) {
+    return std::make_unique<precise_qualifier_precise_t>(
+      std::make_unique<token_t>(*PRECISE_0_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> precise_qualifier_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PRECISE"))
-};
+};  // precise_qualifier_precise_t
 
 }   // ast
 

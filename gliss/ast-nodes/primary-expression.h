@@ -9,6 +9,18 @@
 #include "variable-identifier.h"
 #include "expression.h"
 
+/**
+ * Patterns for primary_expression
+ *
+ * 1. variable_identifier
+ * 2. INTCONSTANT
+ * 3. UINTCONSTANT
+ * 4. FLOATCONSTANT
+ * 5. BOOLCONSTANT
+ * 6. DOUBLECONSTANT
+ * 7. LEFT_PAREN expression RIGHT_PAREN
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,51 +33,6 @@ class primary_expression_t: public ast_t {
 public:
 
   static constexpr int num_types = 7;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = primary_expression_variable_identifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = primary_expression_intconstant_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = primary_expression_uintconstant_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 3>::type> {
-    using type = primary_expression_floatconstant_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 4>::type> {
-    using type = primary_expression_boolconstant_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 5>::type> {
-    using type = primary_expression_doubleconstant_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 6>::type> {
-    using type = primary_expression_left_paren_expression_right_paren_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~primary_expression_t() = default;
 
@@ -85,6 +52,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<primary_expression_variable_identifier_t> make(
+    std::unique_ptr<variable_identifier_t> &&variable_identifier_0_
+  ) {
+    return std::make_unique<primary_expression_variable_identifier_t>(
+      std::move(variable_identifier_0_)
+    );
+  }
+
 };  // primary_expression_variable_identifier_t
 
 class primary_expression_intconstant_t: public primary_expression_t {
@@ -99,6 +74,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<primary_expression_intconstant_t> make(
+    const token_t *INTCONSTANT_0_
+  ) {
+    return std::make_unique<primary_expression_intconstant_t>(
+      std::make_unique<token_t>(*INTCONSTANT_0_)
+    );
   }
 
 };  // primary_expression_intconstant_t
@@ -117,6 +100,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<primary_expression_uintconstant_t> make(
+    const token_t *UINTCONSTANT_0_
+  ) {
+    return std::make_unique<primary_expression_uintconstant_t>(
+      std::make_unique<token_t>(*UINTCONSTANT_0_)
+    );
+  }
+
 };  // primary_expression_uintconstant_t
 
 class primary_expression_floatconstant_t: public primary_expression_t {
@@ -131,6 +122,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<primary_expression_floatconstant_t> make(
+    const token_t *FLOATCONSTANT_0_
+  ) {
+    return std::make_unique<primary_expression_floatconstant_t>(
+      std::make_unique<token_t>(*FLOATCONSTANT_0_)
+    );
   }
 
 };  // primary_expression_floatconstant_t
@@ -149,6 +148,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<primary_expression_boolconstant_t> make(
+    const token_t *BOOLCONSTANT_0_
+  ) {
+    return std::make_unique<primary_expression_boolconstant_t>(
+      std::make_unique<token_t>(*BOOLCONSTANT_0_)
+    );
+  }
+
 };  // primary_expression_boolconstant_t
 
 class primary_expression_doubleconstant_t: public primary_expression_t {
@@ -163,6 +170,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<primary_expression_doubleconstant_t> make(
+    const token_t *DOUBLECONSTANT_0_
+  ) {
+    return std::make_unique<primary_expression_doubleconstant_t>(
+      std::make_unique<token_t>(*DOUBLECONSTANT_0_)
+    );
   }
 
 };  // primary_expression_doubleconstant_t
@@ -189,44 +204,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<primary_expression_left_paren_expression_right_paren_t> make(
+    const token_t *LEFT_PAREN_0_,
+    std::unique_ptr<expression_t> &&expression_1_,
+    const token_t *RIGHT_PAREN_2_
+  ) {
+    return std::make_unique<primary_expression_left_paren_expression_right_paren_t>(
+      std::make_unique<token_t>(*LEFT_PAREN_0_),
+      std::move(expression_1_),
+      std::make_unique<token_t>(*RIGHT_PAREN_2_)
+    );
+  }
+
 };  // primary_expression_left_paren_expression_right_paren_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<0>::list = {
-  pattern_item_t<variable_identifier_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<1>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("INTCONSTANT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<2>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("UINTCONSTANT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<3>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("FLOATCONSTANT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<4>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BOOLCONSTANT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<5>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DOUBLECONSTANT"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> primary_expression_t::pattern<6>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
-  pattern_item_t<expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
-};
 
 }   // ast
 

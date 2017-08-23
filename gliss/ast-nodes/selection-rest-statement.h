@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "statement.h"
 
+/**
+ * Patterns for selection_rest_statement
+ *
+ * 1. statement ELSE statement
+ * 2. statement
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class selection_rest_statement_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = selection_rest_statement_statement_else_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = selection_rest_statement_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~selection_rest_statement_t() = default;
 
@@ -61,6 +53,18 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<selection_rest_statement_statement_else_statement_t> make(
+    std::unique_ptr<statement_t> &&statement_0_,
+    const token_t *ELSE_1_,
+    std::unique_ptr<statement_t> &&statement_2_
+  ) {
+    return std::make_unique<selection_rest_statement_statement_else_statement_t>(
+      std::move(statement_0_),
+      std::make_unique<token_t>(*ELSE_1_),
+      std::move(statement_2_)
+    );
+  }
+
 };  // selection_rest_statement_statement_else_statement_t
 
 class selection_rest_statement_statement_t: public selection_rest_statement_t {
@@ -77,19 +81,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<selection_rest_statement_statement_t> make(
+    std::unique_ptr<statement_t> &&statement_0_
+  ) {
+    return std::make_unique<selection_rest_statement_statement_t>(
+      std::move(statement_0_)
+    );
+  }
+
 };  // selection_rest_statement_statement_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> selection_rest_statement_t::pattern<0>::list = {
-  pattern_item_t<statement_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ELSE")),
-  pattern_item_t<statement_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> selection_rest_statement_t::pattern<1>::list = {
-  pattern_item_t<statement_t>::get()
-};
 
 }   // ast
 

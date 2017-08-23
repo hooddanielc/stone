@@ -10,6 +10,16 @@
 #include "array-specifier.h"
 #include "initializer.h"
 
+/**
+ * Patterns for single_declaration
+ *
+ * 1. fully_specified_type
+ * 2. fully_specified_type IDENTIFIER
+ * 3. fully_specified_type IDENTIFIER array_specifier
+ * 4. fully_specified_type IDENTIFIER array_specifier EQUAL initializer
+ * 5. fully_specified_type IDENTIFIER EQUAL initializer
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -23,39 +33,6 @@ class single_declaration_t: public ast_t {
 public:
 
   static constexpr int num_types = 5;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = single_declaration_fully_specified_type_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = single_declaration_fully_specified_type_identifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = single_declaration_fully_specified_type_identifier_array_specifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 3>::type> {
-    using type = single_declaration_fully_specified_type_identifier_array_specifier_equal_initializer_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 4>::type> {
-    using type = single_declaration_fully_specified_type_identifier_equal_initializer_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~single_declaration_t() = default;
 
@@ -73,6 +50,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<single_declaration_fully_specified_type_t> make(
+    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_
+  ) {
+    return std::make_unique<single_declaration_fully_specified_type_t>(
+      std::move(fully_specified_type_0_)
+    );
   }
 
 };  // single_declaration_fully_specified_type_t
@@ -93,6 +78,16 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<single_declaration_fully_specified_type_identifier_t> make(
+    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
+    const token_t *IDENTIFIER_1_
+  ) {
+    return std::make_unique<single_declaration_fully_specified_type_identifier_t>(
+      std::move(fully_specified_type_0_),
+      std::make_unique<token_t>(*IDENTIFIER_1_)
+    );
   }
 
 };  // single_declaration_fully_specified_type_identifier_t
@@ -117,6 +112,18 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<single_declaration_fully_specified_type_identifier_array_specifier_t> make(
+    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
+    const token_t *IDENTIFIER_1_,
+    std::unique_ptr<array_specifier_t> &&array_specifier_2_
+  ) {
+    return std::make_unique<single_declaration_fully_specified_type_identifier_array_specifier_t>(
+      std::move(fully_specified_type_0_),
+      std::make_unique<token_t>(*IDENTIFIER_1_),
+      std::move(array_specifier_2_)
+    );
   }
 
 };  // single_declaration_fully_specified_type_identifier_array_specifier_t
@@ -151,6 +158,22 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<single_declaration_fully_specified_type_identifier_array_specifier_equal_initializer_t> make(
+    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
+    const token_t *IDENTIFIER_1_,
+    std::unique_ptr<array_specifier_t> &&array_specifier_2_,
+    const token_t *EQUAL_3_,
+    std::unique_ptr<initializer_t> &&initializer_4_
+  ) {
+    return std::make_unique<single_declaration_fully_specified_type_identifier_array_specifier_equal_initializer_t>(
+      std::move(fully_specified_type_0_),
+      std::make_unique<token_t>(*IDENTIFIER_1_),
+      std::move(array_specifier_2_),
+      std::make_unique<token_t>(*EQUAL_3_),
+      std::move(initializer_4_)
+    );
+  }
+
 };  // single_declaration_fully_specified_type_identifier_array_specifier_equal_initializer_t
 
 class single_declaration_fully_specified_type_identifier_equal_initializer_t: public single_declaration_t {
@@ -179,42 +202,21 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<single_declaration_fully_specified_type_identifier_equal_initializer_t> make(
+    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
+    const token_t *IDENTIFIER_1_,
+    const token_t *EQUAL_2_,
+    std::unique_ptr<initializer_t> &&initializer_3_
+  ) {
+    return std::make_unique<single_declaration_fully_specified_type_identifier_equal_initializer_t>(
+      std::move(fully_specified_type_0_),
+      std::make_unique<token_t>(*IDENTIFIER_1_),
+      std::make_unique<token_t>(*EQUAL_2_),
+      std::move(initializer_3_)
+    );
+  }
+
 };  // single_declaration_fully_specified_type_identifier_equal_initializer_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> single_declaration_t::pattern<0>::list = {
-  pattern_item_t<fully_specified_type_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> single_declaration_t::pattern<1>::list = {
-  pattern_item_t<fully_specified_type_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> single_declaration_t::pattern<2>::list = {
-  pattern_item_t<fully_specified_type_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-  pattern_item_t<array_specifier_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> single_declaration_t::pattern<3>::list = {
-  pattern_item_t<fully_specified_type_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-  pattern_item_t<array_specifier_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
-  pattern_item_t<initializer_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> single_declaration_t::pattern<4>::list = {
-  pattern_item_t<fully_specified_type_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
-  pattern_item_t<initializer_t>::get()
-};
 
 }   // ast
 

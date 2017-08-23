@@ -27,8 +27,6 @@ class fixture_node_t: public ast_t {
 
 public:
 
-  static const std::vector<std::vector<std::shared_ptr<any_pattern_item_t>>> patterns;
-
   fixture_node_t(
     const token_t &,
     const token_t &
@@ -41,13 +39,6 @@ public:
   }
 
 };  // fixture_node_t
-
-const std::vector<std::vector<std::shared_ptr<any_pattern_item_t>>> fixture_node_t::patterns = {
-  {
-    pattern_item_t<token_t>::get(token_t::left_bracket),
-    pattern_item_t<token_t>::get(token_t::right_bracket)
-  }
-};
 
 FIXTURE(visits) {
   pos_t pos;

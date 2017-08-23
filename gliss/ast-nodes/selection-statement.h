@@ -9,6 +9,12 @@
 #include "expression.h"
 #include "selection-rest-statement.h"
 
+/**
+ * Patterns for selection_statement
+ *
+ * 1. IF LEFT_PAREN expression RIGHT_PAREN selection_rest_statement
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,15 +27,6 @@ class selection_statement_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = selection_statement_if_left_paren_expression_right_paren_selection_rest_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~selection_statement_t() = default;
 
@@ -65,16 +62,23 @@ public:
     visitor(this);
   }
 
-};  // selection_statement_if_left_paren_expression_right_paren_selection_rest_statement_t
+  static std::unique_ptr<selection_statement_if_left_paren_expression_right_paren_selection_rest_statement_t> make(
+    const token_t *IF_0_,
+    const token_t *LEFT_PAREN_1_,
+    std::unique_ptr<expression_t> &&expression_2_,
+    const token_t *RIGHT_PAREN_3_,
+    std::unique_ptr<selection_rest_statement_t> &&selection_rest_statement_4_
+  ) {
+    return std::make_unique<selection_statement_if_left_paren_expression_right_paren_selection_rest_statement_t>(
+      std::make_unique<token_t>(*IF_0_),
+      std::make_unique<token_t>(*LEFT_PAREN_1_),
+      std::move(expression_2_),
+      std::make_unique<token_t>(*RIGHT_PAREN_3_),
+      std::move(selection_rest_statement_4_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> selection_statement_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IF")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
-  pattern_item_t<expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN")),
-  pattern_item_t<selection_rest_statement_t>::get()
-};
+};  // selection_statement_if_left_paren_expression_right_paren_selection_rest_statement_t
 
 }   // ast
 

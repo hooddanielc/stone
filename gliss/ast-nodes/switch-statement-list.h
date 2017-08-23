@@ -9,6 +9,13 @@
 #include "nothing.h"
 #include "statement-list.h"
 
+/**
+ * Patterns for switch_statement_list
+ *
+ * 1. nothing
+ * 2. statement_list
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,21 +28,6 @@ class switch_statement_list_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = switch_statement_list_nothing_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = switch_statement_list_statement_list_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~switch_statement_list_t() = default;
 
@@ -55,6 +47,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<switch_statement_list_nothing_t> make(
+    std::unique_ptr<nothing_t> &&nothing_0_
+  ) {
+    return std::make_unique<switch_statement_list_nothing_t>(
+      std::move(nothing_0_)
+    );
+  }
+
 };  // switch_statement_list_nothing_t
 
 class switch_statement_list_statement_list_t: public switch_statement_list_t {
@@ -71,17 +71,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<switch_statement_list_statement_list_t> make(
+    std::unique_ptr<statement_list_t> &&statement_list_0_
+  ) {
+    return std::make_unique<switch_statement_list_statement_list_t>(
+      std::move(statement_list_0_)
+    );
+  }
+
 };  // switch_statement_list_statement_list_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> switch_statement_list_t::pattern<0>::list = {
-  pattern_item_t<nothing_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> switch_statement_list_t::pattern<1>::list = {
-  pattern_item_t<statement_list_t>::get()
-};
 
 }   // ast
 

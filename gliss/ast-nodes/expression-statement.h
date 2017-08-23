@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "expression.h"
 
+/**
+ * Patterns for expression_statement
+ *
+ * 1. SEMICOLON
+ * 2. expression SEMICOLON
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class expression_statement_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = expression_statement_semicolon_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = expression_statement_expression_semicolon_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~expression_statement_t() = default;
 
@@ -51,6 +43,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<expression_statement_semicolon_t> make(
+    const token_t *SEMICOLON_0_
+  ) {
+    return std::make_unique<expression_statement_semicolon_t>(
+      std::make_unique<token_t>(*SEMICOLON_0_)
+    );
   }
 
 };  // expression_statement_semicolon_t
@@ -73,18 +73,17 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<expression_statement_expression_semicolon_t> make(
+    std::unique_ptr<expression_t> &&expression_0_,
+    const token_t *SEMICOLON_1_
+  ) {
+    return std::make_unique<expression_statement_expression_semicolon_t>(
+      std::move(expression_0_),
+      std::make_unique<token_t>(*SEMICOLON_1_)
+    );
+  }
+
 };  // expression_statement_expression_semicolon_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> expression_statement_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> expression_statement_t::pattern<1>::list = {
-  pattern_item_t<expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-};
 
 }   // ast
 

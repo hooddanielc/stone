@@ -9,6 +9,13 @@
 #include "function-header.h"
 #include "function-header-with-parameters.h"
 
+/**
+ * Patterns for function_declarator
+ *
+ * 1. function_header
+ * 2. function_header_with_parameters
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,21 +28,6 @@ class function_declarator_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = function_declarator_function_header_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = function_declarator_function_header_with_parameters_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~function_declarator_t() = default;
 
@@ -55,6 +47,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<function_declarator_function_header_t> make(
+    std::unique_ptr<function_header_t> &&function_header_0_
+  ) {
+    return std::make_unique<function_declarator_function_header_t>(
+      std::move(function_header_0_)
+    );
+  }
+
 };  // function_declarator_function_header_t
 
 class function_declarator_function_header_with_parameters_t: public function_declarator_t {
@@ -71,17 +71,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<function_declarator_function_header_with_parameters_t> make(
+    std::unique_ptr<function_header_with_parameters_t> &&function_header_with_parameters_0_
+  ) {
+    return std::make_unique<function_declarator_function_header_with_parameters_t>(
+      std::move(function_header_with_parameters_0_)
+    );
+  }
+
 };  // function_declarator_function_header_with_parameters_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> function_declarator_t::pattern<0>::list = {
-  pattern_item_t<function_header_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> function_declarator_t::pattern<1>::list = {
-  pattern_item_t<function_header_with_parameters_t>::get()
-};
 
 }   // ast
 

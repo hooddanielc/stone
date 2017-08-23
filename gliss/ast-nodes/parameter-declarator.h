@@ -9,6 +9,13 @@
 #include "type-specifier.h"
 #include "array-specifier.h"
 
+/**
+ * Patterns for parameter_declarator
+ *
+ * 1. type_specifier IDENTIFIER
+ * 2. type_specifier IDENTIFIER array_specifier
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,21 +28,6 @@ class parameter_declarator_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = parameter_declarator_type_specifier_identifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = parameter_declarator_type_specifier_identifier_array_specifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~parameter_declarator_t() = default;
 
@@ -57,6 +49,16 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<parameter_declarator_type_specifier_identifier_t> make(
+    std::unique_ptr<type_specifier_t> &&type_specifier_0_,
+    const token_t *IDENTIFIER_1_
+  ) {
+    return std::make_unique<parameter_declarator_type_specifier_identifier_t>(
+      std::move(type_specifier_0_),
+      std::make_unique<token_t>(*IDENTIFIER_1_)
+    );
   }
 
 };  // parameter_declarator_type_specifier_identifier_t
@@ -83,20 +85,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<parameter_declarator_type_specifier_identifier_array_specifier_t> make(
+    std::unique_ptr<type_specifier_t> &&type_specifier_0_,
+    const token_t *IDENTIFIER_1_,
+    std::unique_ptr<array_specifier_t> &&array_specifier_2_
+  ) {
+    return std::make_unique<parameter_declarator_type_specifier_identifier_array_specifier_t>(
+      std::move(type_specifier_0_),
+      std::make_unique<token_t>(*IDENTIFIER_1_),
+      std::move(array_specifier_2_)
+    );
+  }
+
 };  // parameter_declarator_type_specifier_identifier_array_specifier_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> parameter_declarator_t::pattern<0>::list = {
-  pattern_item_t<type_specifier_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> parameter_declarator_t::pattern<1>::list = {
-  pattern_item_t<type_specifier_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-  pattern_item_t<array_specifier_t>::get()
-};
 
 }   // ast
 

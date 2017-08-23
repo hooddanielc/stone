@@ -7,6 +7,13 @@
 #include <vector>
 #include "../ast.h"
 
+/**
+ * Patterns for identifier_list
+ *
+ * 1. COMMA IDENTIFIER
+ * 2. identifier_list COMMA IDENTIFIER
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -16,21 +23,6 @@ class identifier_list_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = identifier_list_comma_identifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = identifier_list_identifier_list_comma_identifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~identifier_list_t() = default;
 
@@ -52,6 +44,16 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<identifier_list_comma_identifier_t> make(
+    const token_t *COMMA_0_,
+    const token_t *IDENTIFIER_1_
+  ) {
+    return std::make_unique<identifier_list_comma_identifier_t>(
+      std::make_unique<token_t>(*COMMA_0_),
+      std::make_unique<token_t>(*IDENTIFIER_1_)
+    );
   }
 
 };  // identifier_list_comma_identifier_t
@@ -78,20 +80,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<identifier_list_identifier_list_comma_identifier_t> make(
+    std::unique_ptr<identifier_list_t> &&identifier_list_0_,
+    const token_t *COMMA_1_,
+    const token_t *IDENTIFIER_2_
+  ) {
+    return std::make_unique<identifier_list_identifier_list_comma_identifier_t>(
+      std::move(identifier_list_0_),
+      std::make_unique<token_t>(*COMMA_1_),
+      std::make_unique<token_t>(*IDENTIFIER_2_)
+    );
+  }
+
 };  // identifier_list_identifier_list_comma_identifier_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> identifier_list_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> identifier_list_t::pattern<1>::list = {
-  pattern_item_t<identifier_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
-};
 
 }   // ast
 

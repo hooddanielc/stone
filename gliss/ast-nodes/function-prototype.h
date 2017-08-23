@@ -8,6 +8,12 @@
 #include "../ast.h"
 #include "function-declarator.h"
 
+/**
+ * Patterns for function_prototype
+ *
+ * 1. function_declarator RIGHT_PAREN
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,15 +25,6 @@ class function_prototype_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = function_prototype_function_declarator_right_paren_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~function_prototype_t() = default;
 
@@ -51,13 +48,17 @@ public:
     visitor(this);
   }
 
-};  // function_prototype_function_declarator_right_paren_t
+  static std::unique_ptr<function_prototype_function_declarator_right_paren_t> make(
+    std::unique_ptr<function_declarator_t> &&function_declarator_0_,
+    const token_t *RIGHT_PAREN_1_
+  ) {
+    return std::make_unique<function_prototype_function_declarator_right_paren_t>(
+      std::move(function_declarator_0_),
+      std::make_unique<token_t>(*RIGHT_PAREN_1_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> function_prototype_t::pattern<0>::list = {
-  pattern_item_t<function_declarator_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
-};
+};  // function_prototype_function_declarator_right_paren_t
 
 }   // ast
 

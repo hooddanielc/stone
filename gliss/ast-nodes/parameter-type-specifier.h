@@ -8,6 +8,12 @@
 #include "../ast.h"
 #include "type-specifier.h"
 
+/**
+ * Patterns for parameter_type_specifier
+ *
+ * 1. type_specifier
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,15 +25,6 @@ class parameter_type_specifier_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = parameter_type_specifier_type_specifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~parameter_type_specifier_t() = default;
 
@@ -47,12 +44,15 @@ public:
     visitor(this);
   }
 
-};  // parameter_type_specifier_type_specifier_t
+  static std::unique_ptr<parameter_type_specifier_type_specifier_t> make(
+    std::unique_ptr<type_specifier_t> &&type_specifier_0_
+  ) {
+    return std::make_unique<parameter_type_specifier_type_specifier_t>(
+      std::move(type_specifier_0_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> parameter_type_specifier_t::pattern<0>::list = {
-  pattern_item_t<type_specifier_t>::get()
-};
+};  // parameter_type_specifier_type_specifier_t
 
 }   // ast
 

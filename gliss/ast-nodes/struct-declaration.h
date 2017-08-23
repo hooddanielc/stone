@@ -10,6 +10,13 @@
 #include "struct-declarator-list.h"
 #include "type-qualifier.h"
 
+/**
+ * Patterns for struct_declaration
+ *
+ * 1. type_specifier struct_declarator_list SEMICOLON
+ * 2. type_qualifier type_specifier struct_declarator_list SEMICOLON
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -23,21 +30,6 @@ class struct_declaration_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = struct_declaration_type_specifier_struct_declarator_list_semicolon_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = struct_declaration_type_qualifier_type_specifier_struct_declarator_list_semicolon_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~struct_declaration_t() = default;
 
@@ -63,6 +55,18 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<struct_declaration_type_specifier_struct_declarator_list_semicolon_t> make(
+    std::unique_ptr<type_specifier_t> &&type_specifier_0_,
+    std::unique_ptr<struct_declarator_list_t> &&struct_declarator_list_1_,
+    const token_t *SEMICOLON_2_
+  ) {
+    return std::make_unique<struct_declaration_type_specifier_struct_declarator_list_semicolon_t>(
+      std::move(type_specifier_0_),
+      std::move(struct_declarator_list_1_),
+      std::make_unique<token_t>(*SEMICOLON_2_)
+    );
   }
 
 };  // struct_declaration_type_specifier_struct_declarator_list_semicolon_t
@@ -93,22 +97,21 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<struct_declaration_type_qualifier_type_specifier_struct_declarator_list_semicolon_t> make(
+    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
+    std::unique_ptr<type_specifier_t> &&type_specifier_1_,
+    std::unique_ptr<struct_declarator_list_t> &&struct_declarator_list_2_,
+    const token_t *SEMICOLON_3_
+  ) {
+    return std::make_unique<struct_declaration_type_qualifier_type_specifier_struct_declarator_list_semicolon_t>(
+      std::move(type_qualifier_0_),
+      std::move(type_specifier_1_),
+      std::move(struct_declarator_list_2_),
+      std::make_unique<token_t>(*SEMICOLON_3_)
+    );
+  }
+
 };  // struct_declaration_type_qualifier_type_specifier_struct_declarator_list_semicolon_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> struct_declaration_t::pattern<0>::list = {
-  pattern_item_t<type_specifier_t>::get(),
-  pattern_item_t<struct_declarator_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> struct_declaration_t::pattern<1>::list = {
-  pattern_item_t<type_qualifier_t>::get(),
-  pattern_item_t<type_specifier_t>::get(),
-  pattern_item_t<struct_declarator_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-};
 
 }   // ast
 

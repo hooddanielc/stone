@@ -8,6 +8,15 @@
 #include "../ast.h"
 #include "unary-expression.h"
 
+/**
+ * Patterns for multiplicative_expression
+ *
+ * 1. unary_expression
+ * 2. multiplicative_expression STAR unary_expression
+ * 3. multiplicative_expression SLASH unary_expression
+ * 4. multiplicative_expression PERCENT unary_expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,33 +28,6 @@ class multiplicative_expression_t: public ast_t {
 public:
 
   static constexpr int num_types = 4;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = multiplicative_expression_unary_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = multiplicative_expression_multiplicative_expression_star_unary_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = multiplicative_expression_multiplicative_expression_slash_unary_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 3>::type> {
-    using type = multiplicative_expression_multiplicative_expression_percent_unary_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~multiplicative_expression_t() = default;
 
@@ -63,6 +45,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<multiplicative_expression_unary_expression_t> make(
+    std::unique_ptr<unary_expression_t> &&unary_expression_0_
+  ) {
+    return std::make_unique<multiplicative_expression_unary_expression_t>(
+      std::move(unary_expression_0_)
+    );
   }
 
 };  // multiplicative_expression_unary_expression_t
@@ -89,6 +79,18 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<multiplicative_expression_multiplicative_expression_star_unary_expression_t> make(
+    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_0_,
+    const token_t *STAR_1_,
+    std::unique_ptr<unary_expression_t> &&unary_expression_2_
+  ) {
+    return std::make_unique<multiplicative_expression_multiplicative_expression_star_unary_expression_t>(
+      std::move(multiplicative_expression_0_),
+      std::make_unique<token_t>(*STAR_1_),
+      std::move(unary_expression_2_)
+    );
+  }
+
 };  // multiplicative_expression_multiplicative_expression_star_unary_expression_t
 
 class multiplicative_expression_multiplicative_expression_slash_unary_expression_t: public multiplicative_expression_t {
@@ -111,6 +113,18 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<multiplicative_expression_multiplicative_expression_slash_unary_expression_t> make(
+    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_0_,
+    const token_t *SLASH_1_,
+    std::unique_ptr<unary_expression_t> &&unary_expression_2_
+  ) {
+    return std::make_unique<multiplicative_expression_multiplicative_expression_slash_unary_expression_t>(
+      std::move(multiplicative_expression_0_),
+      std::make_unique<token_t>(*SLASH_1_),
+      std::move(unary_expression_2_)
+    );
   }
 
 };  // multiplicative_expression_multiplicative_expression_slash_unary_expression_t
@@ -137,33 +151,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<multiplicative_expression_multiplicative_expression_percent_unary_expression_t> make(
+    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_0_,
+    const token_t *PERCENT_1_,
+    std::unique_ptr<unary_expression_t> &&unary_expression_2_
+  ) {
+    return std::make_unique<multiplicative_expression_multiplicative_expression_percent_unary_expression_t>(
+      std::move(multiplicative_expression_0_),
+      std::make_unique<token_t>(*PERCENT_1_),
+      std::move(unary_expression_2_)
+    );
+  }
+
 };  // multiplicative_expression_multiplicative_expression_percent_unary_expression_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> multiplicative_expression_t::pattern<0>::list = {
-  pattern_item_t<unary_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> multiplicative_expression_t::pattern<1>::list = {
-  pattern_item_t<multiplicative_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("STAR")),
-  pattern_item_t<unary_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> multiplicative_expression_t::pattern<2>::list = {
-  pattern_item_t<multiplicative_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SLASH")),
-  pattern_item_t<unary_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> multiplicative_expression_t::pattern<3>::list = {
-  pattern_item_t<multiplicative_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PERCENT")),
-  pattern_item_t<unary_expression_t>::get()
-};
 
 }   // ast
 

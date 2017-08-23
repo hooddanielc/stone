@@ -8,6 +8,15 @@
 #include "../ast.h"
 #include "conditional-expression.h"
 
+/**
+ * Patterns for array_specifier
+ *
+ * 1. LEFT_BRACKET RIGHT_BRACKET
+ * 2. LEFT_BRACKET conditional_expression RIGHT_BRACKET
+ * 3. array_specifier LEFT_BRACKET RIGHT_BRACKET
+ * 4. array_specifier LEFT_BRACKET conditional_expression RIGHT_BRACKET
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,33 +28,6 @@ class array_specifier_t: public ast_t {
 public:
 
   static constexpr int num_types = 4;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = array_specifier_left_bracket_right_bracket_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = array_specifier_left_bracket_conditional_expression_right_bracket_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = array_specifier_array_specifier_left_bracket_right_bracket_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 3>::type> {
-    using type = array_specifier_array_specifier_left_bracket_conditional_expression_right_bracket_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~array_specifier_t() = default;
 
@@ -67,6 +49,16 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<array_specifier_left_bracket_right_bracket_t> make(
+    const token_t *LEFT_BRACKET_0_,
+    const token_t *RIGHT_BRACKET_1_
+  ) {
+    return std::make_unique<array_specifier_left_bracket_right_bracket_t>(
+      std::make_unique<token_t>(*LEFT_BRACKET_0_),
+      std::make_unique<token_t>(*RIGHT_BRACKET_1_)
+    );
   }
 
 };  // array_specifier_left_bracket_right_bracket_t
@@ -93,6 +85,18 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<array_specifier_left_bracket_conditional_expression_right_bracket_t> make(
+    const token_t *LEFT_BRACKET_0_,
+    std::unique_ptr<conditional_expression_t> &&conditional_expression_1_,
+    const token_t *RIGHT_BRACKET_2_
+  ) {
+    return std::make_unique<array_specifier_left_bracket_conditional_expression_right_bracket_t>(
+      std::make_unique<token_t>(*LEFT_BRACKET_0_),
+      std::move(conditional_expression_1_),
+      std::make_unique<token_t>(*RIGHT_BRACKET_2_)
+    );
+  }
+
 };  // array_specifier_left_bracket_conditional_expression_right_bracket_t
 
 class array_specifier_array_specifier_left_bracket_right_bracket_t: public array_specifier_t {
@@ -115,6 +119,18 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<array_specifier_array_specifier_left_bracket_right_bracket_t> make(
+    std::unique_ptr<array_specifier_t> &&array_specifier_0_,
+    const token_t *LEFT_BRACKET_1_,
+    const token_t *RIGHT_BRACKET_2_
+  ) {
+    return std::make_unique<array_specifier_array_specifier_left_bracket_right_bracket_t>(
+      std::move(array_specifier_0_),
+      std::make_unique<token_t>(*LEFT_BRACKET_1_),
+      std::make_unique<token_t>(*RIGHT_BRACKET_2_)
+    );
   }
 
 };  // array_specifier_array_specifier_left_bracket_right_bracket_t
@@ -145,35 +161,21 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<array_specifier_array_specifier_left_bracket_conditional_expression_right_bracket_t> make(
+    std::unique_ptr<array_specifier_t> &&array_specifier_0_,
+    const token_t *LEFT_BRACKET_1_,
+    std::unique_ptr<conditional_expression_t> &&conditional_expression_2_,
+    const token_t *RIGHT_BRACKET_3_
+  ) {
+    return std::make_unique<array_specifier_array_specifier_left_bracket_conditional_expression_right_bracket_t>(
+      std::move(array_specifier_0_),
+      std::make_unique<token_t>(*LEFT_BRACKET_1_),
+      std::move(conditional_expression_2_),
+      std::make_unique<token_t>(*RIGHT_BRACKET_3_)
+    );
+  }
+
 };  // array_specifier_array_specifier_left_bracket_conditional_expression_right_bracket_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> array_specifier_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACKET")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACKET"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> array_specifier_t::pattern<1>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACKET")),
-  pattern_item_t<conditional_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACKET"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> array_specifier_t::pattern<2>::list = {
-  pattern_item_t<array_specifier_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACKET")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACKET"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> array_specifier_t::pattern<3>::list = {
-  pattern_item_t<array_specifier_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACKET")),
-  pattern_item_t<conditional_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACKET"))
-};
 
 }   // ast
 

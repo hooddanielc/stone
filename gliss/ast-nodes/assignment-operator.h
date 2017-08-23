@@ -7,6 +7,22 @@
 #include <vector>
 #include "../ast.h"
 
+/**
+ * Patterns for assignment_operator
+ *
+ * 1. EQUAL
+ * 2. MUL_ASSIGN
+ * 3. DIV_ASSIGN
+ * 4. MOD_ASSIGN
+ * 5. ADD_ASSIGN
+ * 6. SUB_ASSIGN
+ * 7. LEFT_ASSIGN
+ * 8. RIGHT_ASSIGN
+ * 9. AND_ASSIGN
+ * 10. XOR_ASSIGN
+ * 11. OR_ASSIGN
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -16,75 +32,6 @@ class assignment_operator_t: public ast_t {
 public:
 
   static constexpr int num_types = 11;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = assignment_operator_equal_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = assignment_operator_mul_assign_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = assignment_operator_div_assign_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 3>::type> {
-    using type = assignment_operator_mod_assign_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 4>::type> {
-    using type = assignment_operator_add_assign_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 5>::type> {
-    using type = assignment_operator_sub_assign_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 6>::type> {
-    using type = assignment_operator_left_assign_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 7>::type> {
-    using type = assignment_operator_right_assign_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 8>::type> {
-    using type = assignment_operator_and_assign_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 9>::type> {
-    using type = assignment_operator_xor_assign_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 10>::type> {
-    using type = assignment_operator_or_assign_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~assignment_operator_t() = default;
 
@@ -104,6 +51,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<assignment_operator_equal_t> make(
+    const token_t *EQUAL_0_
+  ) {
+    return std::make_unique<assignment_operator_equal_t>(
+      std::make_unique<token_t>(*EQUAL_0_)
+    );
+  }
+
 };  // assignment_operator_equal_t
 
 class assignment_operator_mul_assign_t: public assignment_operator_t {
@@ -118,6 +73,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<assignment_operator_mul_assign_t> make(
+    const token_t *MUL_ASSIGN_0_
+  ) {
+    return std::make_unique<assignment_operator_mul_assign_t>(
+      std::make_unique<token_t>(*MUL_ASSIGN_0_)
+    );
   }
 
 };  // assignment_operator_mul_assign_t
@@ -136,6 +99,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<assignment_operator_div_assign_t> make(
+    const token_t *DIV_ASSIGN_0_
+  ) {
+    return std::make_unique<assignment_operator_div_assign_t>(
+      std::make_unique<token_t>(*DIV_ASSIGN_0_)
+    );
+  }
+
 };  // assignment_operator_div_assign_t
 
 class assignment_operator_mod_assign_t: public assignment_operator_t {
@@ -150,6 +121,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<assignment_operator_mod_assign_t> make(
+    const token_t *MOD_ASSIGN_0_
+  ) {
+    return std::make_unique<assignment_operator_mod_assign_t>(
+      std::make_unique<token_t>(*MOD_ASSIGN_0_)
+    );
   }
 
 };  // assignment_operator_mod_assign_t
@@ -168,6 +147,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<assignment_operator_add_assign_t> make(
+    const token_t *ADD_ASSIGN_0_
+  ) {
+    return std::make_unique<assignment_operator_add_assign_t>(
+      std::make_unique<token_t>(*ADD_ASSIGN_0_)
+    );
+  }
+
 };  // assignment_operator_add_assign_t
 
 class assignment_operator_sub_assign_t: public assignment_operator_t {
@@ -182,6 +169,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<assignment_operator_sub_assign_t> make(
+    const token_t *SUB_ASSIGN_0_
+  ) {
+    return std::make_unique<assignment_operator_sub_assign_t>(
+      std::make_unique<token_t>(*SUB_ASSIGN_0_)
+    );
   }
 
 };  // assignment_operator_sub_assign_t
@@ -200,6 +195,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<assignment_operator_left_assign_t> make(
+    const token_t *LEFT_ASSIGN_0_
+  ) {
+    return std::make_unique<assignment_operator_left_assign_t>(
+      std::make_unique<token_t>(*LEFT_ASSIGN_0_)
+    );
+  }
+
 };  // assignment_operator_left_assign_t
 
 class assignment_operator_right_assign_t: public assignment_operator_t {
@@ -214,6 +217,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<assignment_operator_right_assign_t> make(
+    const token_t *RIGHT_ASSIGN_0_
+  ) {
+    return std::make_unique<assignment_operator_right_assign_t>(
+      std::make_unique<token_t>(*RIGHT_ASSIGN_0_)
+    );
   }
 
 };  // assignment_operator_right_assign_t
@@ -232,6 +243,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<assignment_operator_and_assign_t> make(
+    const token_t *AND_ASSIGN_0_
+  ) {
+    return std::make_unique<assignment_operator_and_assign_t>(
+      std::make_unique<token_t>(*AND_ASSIGN_0_)
+    );
+  }
+
 };  // assignment_operator_and_assign_t
 
 class assignment_operator_xor_assign_t: public assignment_operator_t {
@@ -246,6 +265,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<assignment_operator_xor_assign_t> make(
+    const token_t *XOR_ASSIGN_0_
+  ) {
+    return std::make_unique<assignment_operator_xor_assign_t>(
+      std::make_unique<token_t>(*XOR_ASSIGN_0_)
+    );
   }
 
 };  // assignment_operator_xor_assign_t
@@ -264,62 +291,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<assignment_operator_or_assign_t> make(
+    const token_t *OR_ASSIGN_0_
+  ) {
+    return std::make_unique<assignment_operator_or_assign_t>(
+      std::make_unique<token_t>(*OR_ASSIGN_0_)
+    );
+  }
+
 };  // assignment_operator_or_assign_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<1>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MUL_ASSIGN"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<2>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DIV_ASSIGN"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<3>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MOD_ASSIGN"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<4>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("ADD_ASSIGN"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<5>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SUB_ASSIGN"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<6>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_ASSIGN"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<7>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_ASSIGN"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<8>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("AND_ASSIGN"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<9>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("XOR_ASSIGN"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> assignment_operator_t::pattern<10>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("OR_ASSIGN"))
-};
 
 }   // ast
 

@@ -9,6 +9,13 @@
 #include "compound-statement.h"
 #include "simple-statement.h"
 
+/**
+ * Patterns for statement
+ *
+ * 1. compound_statement
+ * 2. simple_statement
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,21 +28,6 @@ class statement_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = statement_compound_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = statement_simple_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~statement_t() = default;
 
@@ -55,6 +47,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<statement_compound_statement_t> make(
+    std::unique_ptr<compound_statement_t> &&compound_statement_0_
+  ) {
+    return std::make_unique<statement_compound_statement_t>(
+      std::move(compound_statement_0_)
+    );
+  }
+
 };  // statement_compound_statement_t
 
 class statement_simple_statement_t: public statement_t {
@@ -71,17 +71,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<statement_simple_statement_t> make(
+    std::unique_ptr<simple_statement_t> &&simple_statement_0_
+  ) {
+    return std::make_unique<statement_simple_statement_t>(
+      std::move(simple_statement_0_)
+    );
+  }
+
 };  // statement_simple_statement_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> statement_t::pattern<0>::list = {
-  pattern_item_t<compound_statement_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> statement_t::pattern<1>::list = {
-  pattern_item_t<simple_statement_t>::get()
-};
 
 }   // ast
 

@@ -8,6 +8,12 @@
 #include "../ast.h"
 #include "function-call-or-method.h"
 
+/**
+ * Patterns for function_call
+ *
+ * 1. function_call_or_method
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,15 +25,6 @@ class function_call_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = function_call_function_call_or_method_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~function_call_t() = default;
 
@@ -47,12 +44,15 @@ public:
     visitor(this);
   }
 
-};  // function_call_function_call_or_method_t
+  static std::unique_ptr<function_call_function_call_or_method_t> make(
+    std::unique_ptr<function_call_or_method_t> &&function_call_or_method_0_
+  ) {
+    return std::make_unique<function_call_function_call_or_method_t>(
+      std::move(function_call_or_method_0_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> function_call_t::pattern<0>::list = {
-  pattern_item_t<function_call_or_method_t>::get()
-};
+};  // function_call_function_call_or_method_t
 
 }   // ast
 

@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "statement-list.h"
 
+/**
+ * Patterns for compound_statement
+ *
+ * 1. LEFT_BRACE RIGHT_BRACE
+ * 2. LEFT_BRACE statement_list RIGHT_BRACE
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class compound_statement_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = compound_statement_left_brace_right_brace_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = compound_statement_left_brace_statement_list_right_brace_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~compound_statement_t() = default;
 
@@ -55,6 +47,16 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<compound_statement_left_brace_right_brace_t> make(
+    const token_t *LEFT_BRACE_0_,
+    const token_t *RIGHT_BRACE_1_
+  ) {
+    return std::make_unique<compound_statement_left_brace_right_brace_t>(
+      std::make_unique<token_t>(*LEFT_BRACE_0_),
+      std::make_unique<token_t>(*RIGHT_BRACE_1_)
+    );
   }
 
 };  // compound_statement_left_brace_right_brace_t
@@ -81,20 +83,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<compound_statement_left_brace_statement_list_right_brace_t> make(
+    const token_t *LEFT_BRACE_0_,
+    std::unique_ptr<statement_list_t> &&statement_list_1_,
+    const token_t *RIGHT_BRACE_2_
+  ) {
+    return std::make_unique<compound_statement_left_brace_statement_list_right_brace_t>(
+      std::make_unique<token_t>(*LEFT_BRACE_0_),
+      std::move(statement_list_1_),
+      std::make_unique<token_t>(*RIGHT_BRACE_2_)
+    );
+  }
+
 };  // compound_statement_left_brace_statement_list_right_brace_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> compound_statement_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> compound_statement_t::pattern<1>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
-  pattern_item_t<statement_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
-};
 
 }   // ast
 

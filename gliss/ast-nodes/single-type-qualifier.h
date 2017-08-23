@@ -13,6 +13,17 @@
 #include "invariant-qualifier.h"
 #include "precise-qualifier.h"
 
+/**
+ * Patterns for single_type_qualifier
+ *
+ * 1. storage_qualifier
+ * 2. layout_qualifier
+ * 3. precision_qualifier
+ * 4. interpolation_qualifier
+ * 5. invariant_qualifier
+ * 6. precise_qualifier
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -29,45 +40,6 @@ class single_type_qualifier_t: public ast_t {
 public:
 
   static constexpr int num_types = 6;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = single_type_qualifier_storage_qualifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = single_type_qualifier_layout_qualifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = single_type_qualifier_precision_qualifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 3>::type> {
-    using type = single_type_qualifier_interpolation_qualifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 4>::type> {
-    using type = single_type_qualifier_invariant_qualifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 5>::type> {
-    using type = single_type_qualifier_precise_qualifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~single_type_qualifier_t() = default;
 
@@ -87,6 +59,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<single_type_qualifier_storage_qualifier_t> make(
+    std::unique_ptr<storage_qualifier_t> &&storage_qualifier_0_
+  ) {
+    return std::make_unique<single_type_qualifier_storage_qualifier_t>(
+      std::move(storage_qualifier_0_)
+    );
+  }
+
 };  // single_type_qualifier_storage_qualifier_t
 
 class single_type_qualifier_layout_qualifier_t: public single_type_qualifier_t {
@@ -101,6 +81,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<single_type_qualifier_layout_qualifier_t> make(
+    std::unique_ptr<layout_qualifier_t> &&layout_qualifier_0_
+  ) {
+    return std::make_unique<single_type_qualifier_layout_qualifier_t>(
+      std::move(layout_qualifier_0_)
+    );
   }
 
 };  // single_type_qualifier_layout_qualifier_t
@@ -119,6 +107,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<single_type_qualifier_precision_qualifier_t> make(
+    std::unique_ptr<precision_qualifier_t> &&precision_qualifier_0_
+  ) {
+    return std::make_unique<single_type_qualifier_precision_qualifier_t>(
+      std::move(precision_qualifier_0_)
+    );
+  }
+
 };  // single_type_qualifier_precision_qualifier_t
 
 class single_type_qualifier_interpolation_qualifier_t: public single_type_qualifier_t {
@@ -133,6 +129,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<single_type_qualifier_interpolation_qualifier_t> make(
+    std::unique_ptr<interpolation_qualifier_t> &&interpolation_qualifier_0_
+  ) {
+    return std::make_unique<single_type_qualifier_interpolation_qualifier_t>(
+      std::move(interpolation_qualifier_0_)
+    );
   }
 
 };  // single_type_qualifier_interpolation_qualifier_t
@@ -151,6 +155,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<single_type_qualifier_invariant_qualifier_t> make(
+    std::unique_ptr<invariant_qualifier_t> &&invariant_qualifier_0_
+  ) {
+    return std::make_unique<single_type_qualifier_invariant_qualifier_t>(
+      std::move(invariant_qualifier_0_)
+    );
+  }
+
 };  // single_type_qualifier_invariant_qualifier_t
 
 class single_type_qualifier_precise_qualifier_t: public single_type_qualifier_t {
@@ -167,37 +179,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<single_type_qualifier_precise_qualifier_t> make(
+    std::unique_ptr<precise_qualifier_t> &&precise_qualifier_0_
+  ) {
+    return std::make_unique<single_type_qualifier_precise_qualifier_t>(
+      std::move(precise_qualifier_0_)
+    );
+  }
+
 };  // single_type_qualifier_precise_qualifier_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> single_type_qualifier_t::pattern<0>::list = {
-  pattern_item_t<storage_qualifier_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> single_type_qualifier_t::pattern<1>::list = {
-  pattern_item_t<layout_qualifier_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> single_type_qualifier_t::pattern<2>::list = {
-  pattern_item_t<precision_qualifier_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> single_type_qualifier_t::pattern<3>::list = {
-  pattern_item_t<interpolation_qualifier_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> single_type_qualifier_t::pattern<4>::list = {
-  pattern_item_t<invariant_qualifier_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> single_type_qualifier_t::pattern<5>::list = {
-  pattern_item_t<precise_qualifier_t>::get()
-};
 
 }   // ast
 

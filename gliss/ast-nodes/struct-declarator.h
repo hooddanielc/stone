@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "array-specifier.h"
 
+/**
+ * Patterns for struct_declarator
+ *
+ * 1. IDENTIFIER
+ * 2. IDENTIFIER array_specifier
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class struct_declarator_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = struct_declarator_identifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = struct_declarator_identifier_array_specifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~struct_declarator_t() = default;
 
@@ -51,6 +43,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<struct_declarator_identifier_t> make(
+    const token_t *IDENTIFIER_0_
+  ) {
+    return std::make_unique<struct_declarator_identifier_t>(
+      std::make_unique<token_t>(*IDENTIFIER_0_)
+    );
   }
 
 };  // struct_declarator_identifier_t
@@ -73,18 +73,17 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<struct_declarator_identifier_array_specifier_t> make(
+    const token_t *IDENTIFIER_0_,
+    std::unique_ptr<array_specifier_t> &&array_specifier_1_
+  ) {
+    return std::make_unique<struct_declarator_identifier_array_specifier_t>(
+      std::make_unique<token_t>(*IDENTIFIER_0_),
+      std::move(array_specifier_1_)
+    );
+  }
+
 };  // struct_declarator_identifier_array_specifier_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> struct_declarator_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> struct_declarator_t::pattern<1>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-  pattern_item_t<array_specifier_t>::get()
-};
 
 }   // ast
 

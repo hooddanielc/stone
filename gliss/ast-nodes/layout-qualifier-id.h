@@ -8,6 +8,14 @@
 #include "../ast.h"
 #include "constant-expression.h"
 
+/**
+ * Patterns for layout_qualifier_id
+ *
+ * 1. IDENTIFIER
+ * 2. IDENTIFIER EQUAL constant_expression
+ * 3. SHARED
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,27 +27,6 @@ class layout_qualifier_id_t: public ast_t {
 public:
 
   static constexpr int num_types = 3;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = layout_qualifier_id_identifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = layout_qualifier_id_identifier_equal_constant_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = layout_qualifier_id_shared_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~layout_qualifier_id_t() = default;
 
@@ -57,6 +44,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<layout_qualifier_id_identifier_t> make(
+    const token_t *IDENTIFIER_0_
+  ) {
+    return std::make_unique<layout_qualifier_id_identifier_t>(
+      std::make_unique<token_t>(*IDENTIFIER_0_)
+    );
   }
 
 };  // layout_qualifier_id_identifier_t
@@ -83,6 +78,18 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<layout_qualifier_id_identifier_equal_constant_expression_t> make(
+    const token_t *IDENTIFIER_0_,
+    const token_t *EQUAL_1_,
+    std::unique_ptr<constant_expression_t> &&constant_expression_2_
+  ) {
+    return std::make_unique<layout_qualifier_id_identifier_equal_constant_expression_t>(
+      std::make_unique<token_t>(*IDENTIFIER_0_),
+      std::make_unique<token_t>(*EQUAL_1_),
+      std::move(constant_expression_2_)
+    );
+  }
+
 };  // layout_qualifier_id_identifier_equal_constant_expression_t
 
 class layout_qualifier_id_shared_t: public layout_qualifier_id_t {
@@ -99,24 +106,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<layout_qualifier_id_shared_t> make(
+    const token_t *SHARED_0_
+  ) {
+    return std::make_unique<layout_qualifier_id_shared_t>(
+      std::make_unique<token_t>(*SHARED_0_)
+    );
+  }
+
 };  // layout_qualifier_id_shared_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> layout_qualifier_id_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> layout_qualifier_id_t::pattern<1>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
-  pattern_item_t<constant_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> layout_qualifier_id_t::pattern<2>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SHARED"))
-};
 
 }   // ast
 

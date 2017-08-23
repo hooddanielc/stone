@@ -8,6 +8,16 @@
 #include "../ast.h"
 #include "shift-expression.h"
 
+/**
+ * Patterns for relational_expression
+ *
+ * 1. shift_expression
+ * 2. relational_expression LEFT_ANGLE shift_expression
+ * 3. relational_expression RIGHT_ANGLE shift_expression
+ * 4. relational_expression LE_OP shift_expression
+ * 5. relational_expression GE_OP shift_expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,39 +29,6 @@ class relational_expression_t: public ast_t {
 public:
 
   static constexpr int num_types = 5;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = relational_expression_shift_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = relational_expression_relational_expression_left_angle_shift_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = relational_expression_relational_expression_right_angle_shift_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 3>::type> {
-    using type = relational_expression_relational_expression_le_op_shift_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 4>::type> {
-    using type = relational_expression_relational_expression_ge_op_shift_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~relational_expression_t() = default;
 
@@ -69,6 +46,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<relational_expression_shift_expression_t> make(
+    std::unique_ptr<shift_expression_t> &&shift_expression_0_
+  ) {
+    return std::make_unique<relational_expression_shift_expression_t>(
+      std::move(shift_expression_0_)
+    );
   }
 
 };  // relational_expression_shift_expression_t
@@ -95,6 +80,18 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<relational_expression_relational_expression_left_angle_shift_expression_t> make(
+    std::unique_ptr<relational_expression_t> &&relational_expression_0_,
+    const token_t *LEFT_ANGLE_1_,
+    std::unique_ptr<shift_expression_t> &&shift_expression_2_
+  ) {
+    return std::make_unique<relational_expression_relational_expression_left_angle_shift_expression_t>(
+      std::move(relational_expression_0_),
+      std::make_unique<token_t>(*LEFT_ANGLE_1_),
+      std::move(shift_expression_2_)
+    );
+  }
+
 };  // relational_expression_relational_expression_left_angle_shift_expression_t
 
 class relational_expression_relational_expression_right_angle_shift_expression_t: public relational_expression_t {
@@ -117,6 +114,18 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<relational_expression_relational_expression_right_angle_shift_expression_t> make(
+    std::unique_ptr<relational_expression_t> &&relational_expression_0_,
+    const token_t *RIGHT_ANGLE_1_,
+    std::unique_ptr<shift_expression_t> &&shift_expression_2_
+  ) {
+    return std::make_unique<relational_expression_relational_expression_right_angle_shift_expression_t>(
+      std::move(relational_expression_0_),
+      std::make_unique<token_t>(*RIGHT_ANGLE_1_),
+      std::move(shift_expression_2_)
+    );
   }
 
 };  // relational_expression_relational_expression_right_angle_shift_expression_t
@@ -143,6 +152,18 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<relational_expression_relational_expression_le_op_shift_expression_t> make(
+    std::unique_ptr<relational_expression_t> &&relational_expression_0_,
+    const token_t *LE_OP_1_,
+    std::unique_ptr<shift_expression_t> &&shift_expression_2_
+  ) {
+    return std::make_unique<relational_expression_relational_expression_le_op_shift_expression_t>(
+      std::move(relational_expression_0_),
+      std::make_unique<token_t>(*LE_OP_1_),
+      std::move(shift_expression_2_)
+    );
+  }
+
 };  // relational_expression_relational_expression_le_op_shift_expression_t
 
 class relational_expression_relational_expression_ge_op_shift_expression_t: public relational_expression_t {
@@ -167,40 +188,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<relational_expression_relational_expression_ge_op_shift_expression_t> make(
+    std::unique_ptr<relational_expression_t> &&relational_expression_0_,
+    const token_t *GE_OP_1_,
+    std::unique_ptr<shift_expression_t> &&shift_expression_2_
+  ) {
+    return std::make_unique<relational_expression_relational_expression_ge_op_shift_expression_t>(
+      std::move(relational_expression_0_),
+      std::make_unique<token_t>(*GE_OP_1_),
+      std::move(shift_expression_2_)
+    );
+  }
+
 };  // relational_expression_relational_expression_ge_op_shift_expression_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> relational_expression_t::pattern<0>::list = {
-  pattern_item_t<shift_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> relational_expression_t::pattern<1>::list = {
-  pattern_item_t<relational_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_ANGLE")),
-  pattern_item_t<shift_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> relational_expression_t::pattern<2>::list = {
-  pattern_item_t<relational_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_ANGLE")),
-  pattern_item_t<shift_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> relational_expression_t::pattern<3>::list = {
-  pattern_item_t<relational_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LE_OP")),
-  pattern_item_t<shift_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> relational_expression_t::pattern<4>::list = {
-  pattern_item_t<relational_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("GE_OP")),
-  pattern_item_t<shift_expression_t>::get()
-};
 
 }   // ast
 

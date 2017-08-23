@@ -9,6 +9,13 @@
 #include "function-call-header-with-parameters.h"
 #include "function-call-header-no-parameters.h"
 
+/**
+ * Patterns for function_call_generic
+ *
+ * 1. function_call_header_with_parameters RIGHT_PAREN
+ * 2. function_call_header_no_parameters RIGHT_PAREN
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,21 +28,6 @@ class function_call_generic_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = function_call_generic_function_call_header_with_parameters_right_paren_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = function_call_generic_function_call_header_no_parameters_right_paren_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~function_call_generic_t() = default;
 
@@ -59,6 +51,16 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<function_call_generic_function_call_header_with_parameters_right_paren_t> make(
+    std::unique_ptr<function_call_header_with_parameters_t> &&function_call_header_with_parameters_0_,
+    const token_t *RIGHT_PAREN_1_
+  ) {
+    return std::make_unique<function_call_generic_function_call_header_with_parameters_right_paren_t>(
+      std::move(function_call_header_with_parameters_0_),
+      std::make_unique<token_t>(*RIGHT_PAREN_1_)
+    );
+  }
+
 };  // function_call_generic_function_call_header_with_parameters_right_paren_t
 
 class function_call_generic_function_call_header_no_parameters_right_paren_t: public function_call_generic_t {
@@ -79,19 +81,17 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<function_call_generic_function_call_header_no_parameters_right_paren_t> make(
+    std::unique_ptr<function_call_header_no_parameters_t> &&function_call_header_no_parameters_0_,
+    const token_t *RIGHT_PAREN_1_
+  ) {
+    return std::make_unique<function_call_generic_function_call_header_no_parameters_right_paren_t>(
+      std::move(function_call_header_no_parameters_0_),
+      std::make_unique<token_t>(*RIGHT_PAREN_1_)
+    );
+  }
+
 };  // function_call_generic_function_call_header_no_parameters_right_paren_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> function_call_generic_t::pattern<0>::list = {
-  pattern_item_t<function_call_header_with_parameters_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> function_call_generic_t::pattern<1>::list = {
-  pattern_item_t<function_call_header_no_parameters_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN"))
-};
 
 }   // ast
 

@@ -8,6 +8,14 @@
 #include "../ast.h"
 #include "multiplicative-expression.h"
 
+/**
+ * Patterns for additive_expression
+ *
+ * 1. multiplicative_expression
+ * 2. additive_expression PLUS multiplicative_expression
+ * 3. additive_expression DASH multiplicative_expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,27 +27,6 @@ class additive_expression_t: public ast_t {
 public:
 
   static constexpr int num_types = 3;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = additive_expression_multiplicative_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = additive_expression_additive_expression_plus_multiplicative_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = additive_expression_additive_expression_dash_multiplicative_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~additive_expression_t() = default;
 
@@ -57,6 +44,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<additive_expression_multiplicative_expression_t> make(
+    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_0_
+  ) {
+    return std::make_unique<additive_expression_multiplicative_expression_t>(
+      std::move(multiplicative_expression_0_)
+    );
   }
 
 };  // additive_expression_multiplicative_expression_t
@@ -83,6 +78,18 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<additive_expression_additive_expression_plus_multiplicative_expression_t> make(
+    std::unique_ptr<additive_expression_t> &&additive_expression_0_,
+    const token_t *PLUS_1_,
+    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_2_
+  ) {
+    return std::make_unique<additive_expression_additive_expression_plus_multiplicative_expression_t>(
+      std::move(additive_expression_0_),
+      std::make_unique<token_t>(*PLUS_1_),
+      std::move(multiplicative_expression_2_)
+    );
+  }
+
 };  // additive_expression_additive_expression_plus_multiplicative_expression_t
 
 class additive_expression_additive_expression_dash_multiplicative_expression_t: public additive_expression_t {
@@ -107,26 +114,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<additive_expression_additive_expression_dash_multiplicative_expression_t> make(
+    std::unique_ptr<additive_expression_t> &&additive_expression_0_,
+    const token_t *DASH_1_,
+    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_2_
+  ) {
+    return std::make_unique<additive_expression_additive_expression_dash_multiplicative_expression_t>(
+      std::move(additive_expression_0_),
+      std::make_unique<token_t>(*DASH_1_),
+      std::move(multiplicative_expression_2_)
+    );
+  }
+
 };  // additive_expression_additive_expression_dash_multiplicative_expression_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> additive_expression_t::pattern<0>::list = {
-  pattern_item_t<multiplicative_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> additive_expression_t::pattern<1>::list = {
-  pattern_item_t<additive_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PLUS")),
-  pattern_item_t<multiplicative_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> additive_expression_t::pattern<2>::list = {
-  pattern_item_t<additive_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DASH")),
-  pattern_item_t<multiplicative_expression_t>::get()
-};
 
 }   // ast
 

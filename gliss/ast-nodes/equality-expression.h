@@ -8,6 +8,14 @@
 #include "../ast.h"
 #include "relational-expression.h"
 
+/**
+ * Patterns for equality_expression
+ *
+ * 1. relational_expression
+ * 2. equality_expression EQ_OP relational_expression
+ * 3. equality_expression NE_OP relational_expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,27 +27,6 @@ class equality_expression_t: public ast_t {
 public:
 
   static constexpr int num_types = 3;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = equality_expression_relational_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = equality_expression_equality_expression_eq_op_relational_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = equality_expression_equality_expression_ne_op_relational_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~equality_expression_t() = default;
 
@@ -57,6 +44,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<equality_expression_relational_expression_t> make(
+    std::unique_ptr<relational_expression_t> &&relational_expression_0_
+  ) {
+    return std::make_unique<equality_expression_relational_expression_t>(
+      std::move(relational_expression_0_)
+    );
   }
 
 };  // equality_expression_relational_expression_t
@@ -83,6 +78,18 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<equality_expression_equality_expression_eq_op_relational_expression_t> make(
+    std::unique_ptr<equality_expression_t> &&equality_expression_0_,
+    const token_t *EQ_OP_1_,
+    std::unique_ptr<relational_expression_t> &&relational_expression_2_
+  ) {
+    return std::make_unique<equality_expression_equality_expression_eq_op_relational_expression_t>(
+      std::move(equality_expression_0_),
+      std::make_unique<token_t>(*EQ_OP_1_),
+      std::move(relational_expression_2_)
+    );
+  }
+
 };  // equality_expression_equality_expression_eq_op_relational_expression_t
 
 class equality_expression_equality_expression_ne_op_relational_expression_t: public equality_expression_t {
@@ -107,26 +114,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<equality_expression_equality_expression_ne_op_relational_expression_t> make(
+    std::unique_ptr<equality_expression_t> &&equality_expression_0_,
+    const token_t *NE_OP_1_,
+    std::unique_ptr<relational_expression_t> &&relational_expression_2_
+  ) {
+    return std::make_unique<equality_expression_equality_expression_ne_op_relational_expression_t>(
+      std::move(equality_expression_0_),
+      std::make_unique<token_t>(*NE_OP_1_),
+      std::move(relational_expression_2_)
+    );
+  }
+
 };  // equality_expression_equality_expression_ne_op_relational_expression_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> equality_expression_t::pattern<0>::list = {
-  pattern_item_t<relational_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> equality_expression_t::pattern<1>::list = {
-  pattern_item_t<equality_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQ_OP")),
-  pattern_item_t<relational_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> equality_expression_t::pattern<2>::list = {
-  pattern_item_t<equality_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("NE_OP")),
-  pattern_item_t<relational_expression_t>::get()
-};
 
 }   // ast
 

@@ -10,6 +10,13 @@
 #include "fully-specified-type.h"
 #include "initializer.h"
 
+/**
+ * Patterns for condition
+ *
+ * 1. expression
+ * 2. fully_specified_type IDENTIFIER EQUAL initializer
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -23,21 +30,6 @@ class condition_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = condition_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = condition_fully_specified_type_identifier_equal_initializer_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~condition_t() = default;
 
@@ -55,6 +47,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<condition_expression_t> make(
+    std::unique_ptr<expression_t> &&expression_0_
+  ) {
+    return std::make_unique<condition_expression_t>(
+      std::move(expression_0_)
+    );
   }
 
 };  // condition_expression_t
@@ -85,20 +85,21 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<condition_fully_specified_type_identifier_equal_initializer_t> make(
+    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
+    const token_t *IDENTIFIER_1_,
+    const token_t *EQUAL_2_,
+    std::unique_ptr<initializer_t> &&initializer_3_
+  ) {
+    return std::make_unique<condition_fully_specified_type_identifier_equal_initializer_t>(
+      std::move(fully_specified_type_0_),
+      std::make_unique<token_t>(*IDENTIFIER_1_),
+      std::make_unique<token_t>(*EQUAL_2_),
+      std::move(initializer_3_)
+    );
+  }
+
 };  // condition_fully_specified_type_identifier_equal_initializer_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> condition_t::pattern<0>::list = {
-  pattern_item_t<expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> condition_t::pattern<1>::list = {
-  pattern_item_t<fully_specified_type_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
-  pattern_item_t<initializer_t>::get()
-};
 
 }   // ast
 

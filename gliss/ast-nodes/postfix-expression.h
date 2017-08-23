@@ -11,6 +11,17 @@
 #include "integer-expression.h"
 #include "function-call.h"
 
+/**
+ * Patterns for postfix_expression
+ *
+ * 1. primary_expression
+ * 2. postfix_expression LEFT_BRACKET integer_expression RIGHT_BRACKET
+ * 3. function_call
+ * 4. postfix_expression DOT FIELD_SELECTION
+ * 5. postfix_expression INC_OP
+ * 6. postfix_expression DEC_OP
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -25,45 +36,6 @@ class postfix_expression_t: public ast_t {
 public:
 
   static constexpr int num_types = 6;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = postfix_expression_primary_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = postfix_expression_postfix_expression_left_bracket_integer_expression_right_bracket_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = postfix_expression_function_call_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 3>::type> {
-    using type = postfix_expression_postfix_expression_dot_field_selection_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 4>::type> {
-    using type = postfix_expression_postfix_expression_inc_op_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 5>::type> {
-    using type = postfix_expression_postfix_expression_dec_op_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~postfix_expression_t() = default;
 
@@ -81,6 +53,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<postfix_expression_primary_expression_t> make(
+    std::unique_ptr<primary_expression_t> &&primary_expression_0_
+  ) {
+    return std::make_unique<postfix_expression_primary_expression_t>(
+      std::move(primary_expression_0_)
+    );
   }
 
 };  // postfix_expression_primary_expression_t
@@ -111,6 +91,20 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<postfix_expression_postfix_expression_left_bracket_integer_expression_right_bracket_t> make(
+    std::unique_ptr<postfix_expression_t> &&postfix_expression_0_,
+    const token_t *LEFT_BRACKET_1_,
+    std::unique_ptr<integer_expression_t> &&integer_expression_2_,
+    const token_t *RIGHT_BRACKET_3_
+  ) {
+    return std::make_unique<postfix_expression_postfix_expression_left_bracket_integer_expression_right_bracket_t>(
+      std::move(postfix_expression_0_),
+      std::make_unique<token_t>(*LEFT_BRACKET_1_),
+      std::move(integer_expression_2_),
+      std::make_unique<token_t>(*RIGHT_BRACKET_3_)
+    );
+  }
+
 };  // postfix_expression_postfix_expression_left_bracket_integer_expression_right_bracket_t
 
 class postfix_expression_function_call_t: public postfix_expression_t {
@@ -125,6 +119,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<postfix_expression_function_call_t> make(
+    std::unique_ptr<function_call_t> &&function_call_0_
+  ) {
+    return std::make_unique<postfix_expression_function_call_t>(
+      std::move(function_call_0_)
+    );
   }
 
 };  // postfix_expression_function_call_t
@@ -151,6 +153,18 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<postfix_expression_postfix_expression_dot_field_selection_t> make(
+    std::unique_ptr<postfix_expression_t> &&postfix_expression_0_,
+    const token_t *DOT_1_,
+    const token_t *FIELD_SELECTION_2_
+  ) {
+    return std::make_unique<postfix_expression_postfix_expression_dot_field_selection_t>(
+      std::move(postfix_expression_0_),
+      std::make_unique<token_t>(*DOT_1_),
+      std::make_unique<token_t>(*FIELD_SELECTION_2_)
+    );
+  }
+
 };  // postfix_expression_postfix_expression_dot_field_selection_t
 
 class postfix_expression_postfix_expression_inc_op_t: public postfix_expression_t {
@@ -169,6 +183,16 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<postfix_expression_postfix_expression_inc_op_t> make(
+    std::unique_ptr<postfix_expression_t> &&postfix_expression_0_,
+    const token_t *INC_OP_1_
+  ) {
+    return std::make_unique<postfix_expression_postfix_expression_inc_op_t>(
+      std::move(postfix_expression_0_),
+      std::make_unique<token_t>(*INC_OP_1_)
+    );
   }
 
 };  // postfix_expression_postfix_expression_inc_op_t
@@ -191,44 +215,17 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<postfix_expression_postfix_expression_dec_op_t> make(
+    std::unique_ptr<postfix_expression_t> &&postfix_expression_0_,
+    const token_t *DEC_OP_1_
+  ) {
+    return std::make_unique<postfix_expression_postfix_expression_dec_op_t>(
+      std::move(postfix_expression_0_),
+      std::make_unique<token_t>(*DEC_OP_1_)
+    );
+  }
+
 };  // postfix_expression_postfix_expression_dec_op_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> postfix_expression_t::pattern<0>::list = {
-  pattern_item_t<primary_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> postfix_expression_t::pattern<1>::list = {
-  pattern_item_t<postfix_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACKET")),
-  pattern_item_t<integer_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACKET"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> postfix_expression_t::pattern<2>::list = {
-  pattern_item_t<function_call_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> postfix_expression_t::pattern<3>::list = {
-  pattern_item_t<postfix_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DOT")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("FIELD_SELECTION"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> postfix_expression_t::pattern<4>::list = {
-  pattern_item_t<postfix_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("INC_OP"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> postfix_expression_t::pattern<5>::list = {
-  pattern_item_t<postfix_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DEC_OP"))
-};
 
 }   // ast
 

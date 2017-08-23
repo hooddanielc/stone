@@ -8,6 +8,12 @@
 #include "../ast.h"
 #include "function-identifier.h"
 
+/**
+ * Patterns for function_call_header
+ *
+ * 1. function_identifier LEFT_PAREN
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,15 +25,6 @@ class function_call_header_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = function_call_header_function_identifier_left_paren_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~function_call_header_t() = default;
 
@@ -51,13 +48,17 @@ public:
     visitor(this);
   }
 
-};  // function_call_header_function_identifier_left_paren_t
+  static std::unique_ptr<function_call_header_function_identifier_left_paren_t> make(
+    std::unique_ptr<function_identifier_t> &&function_identifier_0_,
+    const token_t *LEFT_PAREN_1_
+  ) {
+    return std::make_unique<function_call_header_function_identifier_left_paren_t>(
+      std::move(function_identifier_0_),
+      std::make_unique<token_t>(*LEFT_PAREN_1_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> function_call_header_t::pattern<0>::list = {
-  pattern_item_t<function_identifier_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN"))
-};
+};  // function_call_header_function_identifier_left_paren_t
 
 }   // ast
 

@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "single-type-qualifier.h"
 
+/**
+ * Patterns for type_qualifier
+ *
+ * 1. single_type_qualifier
+ * 2. type_qualifier single_type_qualifier
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class type_qualifier_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = type_qualifier_single_type_qualifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = type_qualifier_type_qualifier_single_type_qualifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~type_qualifier_t() = default;
 
@@ -51,6 +43,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_qualifier_single_type_qualifier_t> make(
+    std::unique_ptr<single_type_qualifier_t> &&single_type_qualifier_0_
+  ) {
+    return std::make_unique<type_qualifier_single_type_qualifier_t>(
+      std::move(single_type_qualifier_0_)
+    );
   }
 
 };  // type_qualifier_single_type_qualifier_t
@@ -73,18 +73,17 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_qualifier_type_qualifier_single_type_qualifier_t> make(
+    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
+    std::unique_ptr<single_type_qualifier_t> &&single_type_qualifier_1_
+  ) {
+    return std::make_unique<type_qualifier_type_qualifier_single_type_qualifier_t>(
+      std::move(type_qualifier_0_),
+      std::move(single_type_qualifier_1_)
+    );
+  }
+
 };  // type_qualifier_type_qualifier_single_type_qualifier_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_qualifier_t::pattern<0>::list = {
-  pattern_item_t<single_type_qualifier_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_qualifier_t::pattern<1>::list = {
-  pattern_item_t<type_qualifier_t>::get(),
-  pattern_item_t<single_type_qualifier_t>::get()
-};
 
 }   // ast
 

@@ -9,6 +9,12 @@
 #include "function-prototype.h"
 #include "compound-statement-no-new-scope.h"
 
+/**
+ * Patterns for function_definition
+ *
+ * 1. function_prototype compound_statement_no_new_scope
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,15 +27,6 @@ class function_definition_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = function_definition_function_prototype_compound_statement_no_new_scope_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~function_definition_t() = default;
 
@@ -53,13 +50,17 @@ public:
     visitor(this);
   }
 
-};  // function_definition_function_prototype_compound_statement_no_new_scope_t
+  static std::unique_ptr<function_definition_function_prototype_compound_statement_no_new_scope_t> make(
+    std::unique_ptr<function_prototype_t> &&function_prototype_0_,
+    std::unique_ptr<compound_statement_no_new_scope_t> &&compound_statement_no_new_scope_1_
+  ) {
+    return std::make_unique<function_definition_function_prototype_compound_statement_no_new_scope_t>(
+      std::move(function_prototype_0_),
+      std::move(compound_statement_no_new_scope_1_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> function_definition_t::pattern<0>::list = {
-  pattern_item_t<function_prototype_t>::get(),
-  pattern_item_t<compound_statement_no_new_scope_t>::get()
-};
+};  // function_definition_function_prototype_compound_statement_no_new_scope_t
 
 }   // ast
 

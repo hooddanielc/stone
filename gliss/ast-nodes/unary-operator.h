@@ -7,6 +7,15 @@
 #include <vector>
 #include "../ast.h"
 
+/**
+ * Patterns for unary_operator
+ *
+ * 1. PLUS
+ * 2. DASH
+ * 3. BANG
+ * 4. TILDE
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -16,33 +25,6 @@ class unary_operator_t: public ast_t {
 public:
 
   static constexpr int num_types = 4;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = unary_operator_plus_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = unary_operator_dash_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = unary_operator_bang_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 3>::type> {
-    using type = unary_operator_tilde_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~unary_operator_t() = default;
 
@@ -62,6 +44,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<unary_operator_plus_t> make(
+    const token_t *PLUS_0_
+  ) {
+    return std::make_unique<unary_operator_plus_t>(
+      std::make_unique<token_t>(*PLUS_0_)
+    );
+  }
+
 };  // unary_operator_plus_t
 
 class unary_operator_dash_t: public unary_operator_t {
@@ -76,6 +66,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<unary_operator_dash_t> make(
+    const token_t *DASH_0_
+  ) {
+    return std::make_unique<unary_operator_dash_t>(
+      std::make_unique<token_t>(*DASH_0_)
+    );
   }
 
 };  // unary_operator_dash_t
@@ -94,6 +92,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<unary_operator_bang_t> make(
+    const token_t *BANG_0_
+  ) {
+    return std::make_unique<unary_operator_bang_t>(
+      std::make_unique<token_t>(*BANG_0_)
+    );
+  }
+
 };  // unary_operator_bang_t
 
 class unary_operator_tilde_t: public unary_operator_t {
@@ -110,27 +116,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<unary_operator_tilde_t> make(
+    const token_t *TILDE_0_
+  ) {
+    return std::make_unique<unary_operator_tilde_t>(
+      std::make_unique<token_t>(*TILDE_0_)
+    );
+  }
+
 };  // unary_operator_tilde_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> unary_operator_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("PLUS"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> unary_operator_t::pattern<1>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("DASH"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> unary_operator_t::pattern<2>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("BANG"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> unary_operator_t::pattern<3>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("TILDE"))
-};
 
 }   // ast
 

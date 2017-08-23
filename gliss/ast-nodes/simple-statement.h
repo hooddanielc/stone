@@ -14,6 +14,18 @@
 #include "iteration-statement.h"
 #include "jump-statement.h"
 
+/**
+ * Patterns for simple_statement
+ *
+ * 1. declaration_statement
+ * 2. expression_statement
+ * 3. selection_statement
+ * 4. switch_statement
+ * 5. case_label
+ * 6. iteration_statement
+ * 7. jump_statement
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -31,51 +43,6 @@ class simple_statement_t: public ast_t {
 public:
 
   static constexpr int num_types = 7;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = simple_statement_declaration_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = simple_statement_expression_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = simple_statement_selection_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 3>::type> {
-    using type = simple_statement_switch_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 4>::type> {
-    using type = simple_statement_case_label_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 5>::type> {
-    using type = simple_statement_iteration_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 6>::type> {
-    using type = simple_statement_jump_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~simple_statement_t() = default;
 
@@ -95,6 +62,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<simple_statement_declaration_statement_t> make(
+    std::unique_ptr<declaration_statement_t> &&declaration_statement_0_
+  ) {
+    return std::make_unique<simple_statement_declaration_statement_t>(
+      std::move(declaration_statement_0_)
+    );
+  }
+
 };  // simple_statement_declaration_statement_t
 
 class simple_statement_expression_statement_t: public simple_statement_t {
@@ -109,6 +84,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<simple_statement_expression_statement_t> make(
+    std::unique_ptr<expression_statement_t> &&expression_statement_0_
+  ) {
+    return std::make_unique<simple_statement_expression_statement_t>(
+      std::move(expression_statement_0_)
+    );
   }
 
 };  // simple_statement_expression_statement_t
@@ -127,6 +110,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<simple_statement_selection_statement_t> make(
+    std::unique_ptr<selection_statement_t> &&selection_statement_0_
+  ) {
+    return std::make_unique<simple_statement_selection_statement_t>(
+      std::move(selection_statement_0_)
+    );
+  }
+
 };  // simple_statement_selection_statement_t
 
 class simple_statement_switch_statement_t: public simple_statement_t {
@@ -141,6 +132,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<simple_statement_switch_statement_t> make(
+    std::unique_ptr<switch_statement_t> &&switch_statement_0_
+  ) {
+    return std::make_unique<simple_statement_switch_statement_t>(
+      std::move(switch_statement_0_)
+    );
   }
 
 };  // simple_statement_switch_statement_t
@@ -159,6 +158,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<simple_statement_case_label_t> make(
+    std::unique_ptr<case_label_t> &&case_label_0_
+  ) {
+    return std::make_unique<simple_statement_case_label_t>(
+      std::move(case_label_0_)
+    );
+  }
+
 };  // simple_statement_case_label_t
 
 class simple_statement_iteration_statement_t: public simple_statement_t {
@@ -173,6 +180,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<simple_statement_iteration_statement_t> make(
+    std::unique_ptr<iteration_statement_t> &&iteration_statement_0_
+  ) {
+    return std::make_unique<simple_statement_iteration_statement_t>(
+      std::move(iteration_statement_0_)
+    );
   }
 
 };  // simple_statement_iteration_statement_t
@@ -191,42 +206,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<simple_statement_jump_statement_t> make(
+    std::unique_ptr<jump_statement_t> &&jump_statement_0_
+  ) {
+    return std::make_unique<simple_statement_jump_statement_t>(
+      std::move(jump_statement_0_)
+    );
+  }
+
 };  // simple_statement_jump_statement_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> simple_statement_t::pattern<0>::list = {
-  pattern_item_t<declaration_statement_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> simple_statement_t::pattern<1>::list = {
-  pattern_item_t<expression_statement_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> simple_statement_t::pattern<2>::list = {
-  pattern_item_t<selection_statement_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> simple_statement_t::pattern<3>::list = {
-  pattern_item_t<switch_statement_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> simple_statement_t::pattern<4>::list = {
-  pattern_item_t<case_label_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> simple_statement_t::pattern<5>::list = {
-  pattern_item_t<iteration_statement_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> simple_statement_t::pattern<6>::list = {
-  pattern_item_t<jump_statement_t>::get()
-};
 
 }   // ast
 

@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "equality-expression.h"
 
+/**
+ * Patterns for and_expression
+ *
+ * 1. equality_expression
+ * 2. and_expression AMPERSAND equality_expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class and_expression_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = and_expression_equality_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = and_expression_and_expression_ampersand_equality_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~and_expression_t() = default;
 
@@ -51,6 +43,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<and_expression_equality_expression_t> make(
+    std::unique_ptr<equality_expression_t> &&equality_expression_0_
+  ) {
+    return std::make_unique<and_expression_equality_expression_t>(
+      std::move(equality_expression_0_)
+    );
   }
 
 };  // and_expression_equality_expression_t
@@ -77,19 +77,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<and_expression_and_expression_ampersand_equality_expression_t> make(
+    std::unique_ptr<and_expression_t> &&and_expression_0_,
+    const token_t *AMPERSAND_1_,
+    std::unique_ptr<equality_expression_t> &&equality_expression_2_
+  ) {
+    return std::make_unique<and_expression_and_expression_ampersand_equality_expression_t>(
+      std::move(and_expression_0_),
+      std::make_unique<token_t>(*AMPERSAND_1_),
+      std::move(equality_expression_2_)
+    );
+  }
+
 };  // and_expression_and_expression_ampersand_equality_expression_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> and_expression_t::pattern<0>::list = {
-  pattern_item_t<equality_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> and_expression_t::pattern<1>::list = {
-  pattern_item_t<and_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("AMPERSAND")),
-  pattern_item_t<equality_expression_t>::get()
-};
 
 }   // ast
 

@@ -7,6 +7,12 @@
 #include <vector>
 #include "../ast.h"
 
+/**
+ * Patterns for variable_identifier
+ *
+ * 1. IDENTIFIER
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -16,15 +22,6 @@ class variable_identifier_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = variable_identifier_identifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~variable_identifier_t() = default;
 
@@ -44,12 +41,15 @@ public:
     visitor(this);
   }
 
-};  // variable_identifier_identifier_t
+  static std::unique_ptr<variable_identifier_identifier_t> make(
+    const token_t *IDENTIFIER_0_
+  ) {
+    return std::make_unique<variable_identifier_identifier_t>(
+      std::make_unique<token_t>(*IDENTIFIER_0_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> variable_identifier_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
-};
+};  // variable_identifier_identifier_t
 
 }   // ast
 

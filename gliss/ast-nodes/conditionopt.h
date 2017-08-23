@@ -9,6 +9,13 @@
 #include "condition.h"
 #include "nothing.h"
 
+/**
+ * Patterns for conditionopt
+ *
+ * 1. condition
+ * 2. nothing
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,21 +28,6 @@ class conditionopt_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = conditionopt_condition_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = conditionopt_nothing_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~conditionopt_t() = default;
 
@@ -55,6 +47,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<conditionopt_condition_t> make(
+    std::unique_ptr<condition_t> &&condition_0_
+  ) {
+    return std::make_unique<conditionopt_condition_t>(
+      std::move(condition_0_)
+    );
+  }
+
 };  // conditionopt_condition_t
 
 class conditionopt_nothing_t: public conditionopt_t {
@@ -71,17 +71,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<conditionopt_nothing_t> make(
+    std::unique_ptr<nothing_t> &&nothing_0_
+  ) {
+    return std::make_unique<conditionopt_nothing_t>(
+      std::move(nothing_0_)
+    );
+  }
+
 };  // conditionopt_nothing_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> conditionopt_t::pattern<0>::list = {
-  pattern_item_t<condition_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> conditionopt_t::pattern<1>::list = {
-  pattern_item_t<nothing_t>::get()
-};
 
 }   // ast
 

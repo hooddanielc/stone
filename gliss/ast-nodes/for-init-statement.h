@@ -9,6 +9,13 @@
 #include "expression-statement.h"
 #include "declaration-statement.h"
 
+/**
+ * Patterns for for_init_statement
+ *
+ * 1. expression_statement
+ * 2. declaration_statement
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,21 +28,6 @@ class for_init_statement_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = for_init_statement_expression_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = for_init_statement_declaration_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~for_init_statement_t() = default;
 
@@ -55,6 +47,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<for_init_statement_expression_statement_t> make(
+    std::unique_ptr<expression_statement_t> &&expression_statement_0_
+  ) {
+    return std::make_unique<for_init_statement_expression_statement_t>(
+      std::move(expression_statement_0_)
+    );
+  }
+
 };  // for_init_statement_expression_statement_t
 
 class for_init_statement_declaration_statement_t: public for_init_statement_t {
@@ -71,17 +71,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<for_init_statement_declaration_statement_t> make(
+    std::unique_ptr<declaration_statement_t> &&declaration_statement_0_
+  ) {
+    return std::make_unique<for_init_statement_declaration_statement_t>(
+      std::move(declaration_statement_0_)
+    );
+  }
+
 };  // for_init_statement_declaration_statement_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> for_init_statement_t::pattern<0>::list = {
-  pattern_item_t<expression_statement_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> for_init_statement_t::pattern<1>::list = {
-  pattern_item_t<declaration_statement_t>::get()
-};
 
 }   // ast
 

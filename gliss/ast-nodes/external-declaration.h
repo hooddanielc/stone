@@ -9,6 +9,14 @@
 #include "function-definition.h"
 #include "declaration.h"
 
+/**
+ * Patterns for external_declaration
+ *
+ * 1. function_definition
+ * 2. declaration
+ * 3. SEMICOLON
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,27 +29,6 @@ class external_declaration_t: public ast_t {
 public:
 
   static constexpr int num_types = 3;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = external_declaration_function_definition_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = external_declaration_declaration_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = external_declaration_semicolon_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~external_declaration_t() = default;
 
@@ -61,6 +48,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<external_declaration_function_definition_t> make(
+    std::unique_ptr<function_definition_t> &&function_definition_0_
+  ) {
+    return std::make_unique<external_declaration_function_definition_t>(
+      std::move(function_definition_0_)
+    );
+  }
+
 };  // external_declaration_function_definition_t
 
 class external_declaration_declaration_t: public external_declaration_t {
@@ -75,6 +70,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<external_declaration_declaration_t> make(
+    std::unique_ptr<declaration_t> &&declaration_0_
+  ) {
+    return std::make_unique<external_declaration_declaration_t>(
+      std::move(declaration_0_)
+    );
   }
 
 };  // external_declaration_declaration_t
@@ -93,22 +96,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<external_declaration_semicolon_t> make(
+    const token_t *SEMICOLON_0_
+  ) {
+    return std::make_unique<external_declaration_semicolon_t>(
+      std::make_unique<token_t>(*SEMICOLON_0_)
+    );
+  }
+
 };  // external_declaration_semicolon_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> external_declaration_t::pattern<0>::list = {
-  pattern_item_t<function_definition_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> external_declaration_t::pattern<1>::list = {
-  pattern_item_t<declaration_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> external_declaration_t::pattern<2>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-};
 
 }   // ast
 

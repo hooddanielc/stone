@@ -7,6 +7,12 @@
 #include <vector>
 #include "../ast.h"
 
+/**
+ * Patterns for nothing
+ *
+
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -16,9 +22,6 @@ class nothing_t: public ast_t {
 public:
 
   static constexpr int num_types = 0;
-
-  template <int n, typename = void>
-  struct pattern;
 
   virtual void accept(const visitor_t &) const override {}
   virtual ~nothing_t() = default;

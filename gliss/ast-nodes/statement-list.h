@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "statement.h"
 
+/**
+ * Patterns for statement_list
+ *
+ * 1. statement
+ * 2. statement_list statement
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class statement_list_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = statement_list_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = statement_list_statement_list_statement_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~statement_list_t() = default;
 
@@ -51,6 +43,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<statement_list_statement_t> make(
+    std::unique_ptr<statement_t> &&statement_0_
+  ) {
+    return std::make_unique<statement_list_statement_t>(
+      std::move(statement_0_)
+    );
   }
 
 };  // statement_list_statement_t
@@ -73,18 +73,17 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<statement_list_statement_list_statement_t> make(
+    std::unique_ptr<statement_list_t> &&statement_list_0_,
+    std::unique_ptr<statement_t> &&statement_1_
+  ) {
+    return std::make_unique<statement_list_statement_list_statement_t>(
+      std::move(statement_list_0_),
+      std::move(statement_1_)
+    );
+  }
+
 };  // statement_list_statement_list_statement_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> statement_list_t::pattern<0>::list = {
-  pattern_item_t<statement_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> statement_list_t::pattern<1>::list = {
-  pattern_item_t<statement_list_t>::get(),
-  pattern_item_t<statement_t>::get()
-};
 
 }   // ast
 

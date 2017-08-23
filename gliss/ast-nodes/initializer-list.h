@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "initializer.h"
 
+/**
+ * Patterns for initializer_list
+ *
+ * 1. initializer
+ * 2. initializer_list COMMA initializer
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class initializer_list_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = initializer_list_initializer_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = initializer_list_initializer_list_comma_initializer_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~initializer_list_t() = default;
 
@@ -51,6 +43,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<initializer_list_initializer_t> make(
+    std::unique_ptr<initializer_t> &&initializer_0_
+  ) {
+    return std::make_unique<initializer_list_initializer_t>(
+      std::move(initializer_0_)
+    );
   }
 
 };  // initializer_list_initializer_t
@@ -77,19 +77,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<initializer_list_initializer_list_comma_initializer_t> make(
+    std::unique_ptr<initializer_list_t> &&initializer_list_0_,
+    const token_t *COMMA_1_,
+    std::unique_ptr<initializer_t> &&initializer_2_
+  ) {
+    return std::make_unique<initializer_list_initializer_list_comma_initializer_t>(
+      std::move(initializer_list_0_),
+      std::make_unique<token_t>(*COMMA_1_),
+      std::move(initializer_2_)
+    );
+  }
+
 };  // initializer_list_initializer_list_comma_initializer_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> initializer_list_t::pattern<0>::list = {
-  pattern_item_t<initializer_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> initializer_list_t::pattern<1>::list = {
-  pattern_item_t<initializer_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-  pattern_item_t<initializer_t>::get()
-};
 
 }   // ast
 

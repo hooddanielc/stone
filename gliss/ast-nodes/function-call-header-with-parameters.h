@@ -9,6 +9,13 @@
 #include "function-call-header.h"
 #include "assignment-expression.h"
 
+/**
+ * Patterns for function_call_header_with_parameters
+ *
+ * 1. function_call_header assignment_expression
+ * 2. function_call_header_with_parameters COMMA assignment_expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,21 +28,6 @@ class function_call_header_with_parameters_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = function_call_header_with_parameters_function_call_header_assignment_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = function_call_header_with_parameters_function_call_header_with_parameters_comma_assignment_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~function_call_header_with_parameters_t() = default;
 
@@ -57,6 +49,16 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<function_call_header_with_parameters_function_call_header_assignment_expression_t> make(
+    std::unique_ptr<function_call_header_t> &&function_call_header_0_,
+    std::unique_ptr<assignment_expression_t> &&assignment_expression_1_
+  ) {
+    return std::make_unique<function_call_header_with_parameters_function_call_header_assignment_expression_t>(
+      std::move(function_call_header_0_),
+      std::move(assignment_expression_1_)
+    );
   }
 
 };  // function_call_header_with_parameters_function_call_header_assignment_expression_t
@@ -83,20 +85,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<function_call_header_with_parameters_function_call_header_with_parameters_comma_assignment_expression_t> make(
+    std::unique_ptr<function_call_header_with_parameters_t> &&function_call_header_with_parameters_0_,
+    const token_t *COMMA_1_,
+    std::unique_ptr<assignment_expression_t> &&assignment_expression_2_
+  ) {
+    return std::make_unique<function_call_header_with_parameters_function_call_header_with_parameters_comma_assignment_expression_t>(
+      std::move(function_call_header_with_parameters_0_),
+      std::make_unique<token_t>(*COMMA_1_),
+      std::move(assignment_expression_2_)
+    );
+  }
+
 };  // function_call_header_with_parameters_function_call_header_with_parameters_comma_assignment_expression_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> function_call_header_with_parameters_t::pattern<0>::list = {
-  pattern_item_t<function_call_header_t>::get(),
-  pattern_item_t<assignment_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> function_call_header_with_parameters_t::pattern<1>::list = {
-  pattern_item_t<function_call_header_with_parameters_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-  pattern_item_t<assignment_expression_t>::get()
-};
 
 }   // ast
 

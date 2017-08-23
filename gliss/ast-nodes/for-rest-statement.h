@@ -9,6 +9,13 @@
 #include "conditionopt.h"
 #include "expression.h"
 
+/**
+ * Patterns for for_rest_statement
+ *
+ * 1. conditionopt SEMICOLON
+ * 2. conditionopt SEMICOLON expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,21 +28,6 @@ class for_rest_statement_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = for_rest_statement_conditionopt_semicolon_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = for_rest_statement_conditionopt_semicolon_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~for_rest_statement_t() = default;
 
@@ -57,6 +49,16 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<for_rest_statement_conditionopt_semicolon_t> make(
+    std::unique_ptr<conditionopt_t> &&conditionopt_0_,
+    const token_t *SEMICOLON_1_
+  ) {
+    return std::make_unique<for_rest_statement_conditionopt_semicolon_t>(
+      std::move(conditionopt_0_),
+      std::make_unique<token_t>(*SEMICOLON_1_)
+    );
   }
 
 };  // for_rest_statement_conditionopt_semicolon_t
@@ -83,20 +85,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<for_rest_statement_conditionopt_semicolon_expression_t> make(
+    std::unique_ptr<conditionopt_t> &&conditionopt_0_,
+    const token_t *SEMICOLON_1_,
+    std::unique_ptr<expression_t> &&expression_2_
+  ) {
+    return std::make_unique<for_rest_statement_conditionopt_semicolon_expression_t>(
+      std::move(conditionopt_0_),
+      std::make_unique<token_t>(*SEMICOLON_1_),
+      std::move(expression_2_)
+    );
+  }
+
 };  // for_rest_statement_conditionopt_semicolon_expression_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> for_rest_statement_t::pattern<0>::list = {
-  pattern_item_t<conditionopt_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> for_rest_statement_t::pattern<1>::list = {
-  pattern_item_t<conditionopt_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SEMICOLON")),
-  pattern_item_t<expression_t>::get()
-};
 
 }   // ast
 

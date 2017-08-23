@@ -11,6 +11,16 @@
 #include "array-specifier.h"
 #include "initializer.h"
 
+/**
+ * Patterns for init_declarator_list
+ *
+ * 1. single_declaration
+ * 2. init_declarator_list COMMA IDENTIFIER
+ * 3. init_declarator_list COMMA IDENTIFIER array_specifier
+ * 4. init_declarator_list COMMA IDENTIFIER array_specifier EQUAL initializer
+ * 5. init_declarator_list COMMA IDENTIFIER EQUAL initializer
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -25,39 +35,6 @@ class init_declarator_list_t: public ast_t {
 public:
 
   static constexpr int num_types = 5;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = init_declarator_list_single_declaration_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = init_declarator_list_init_declarator_list_comma_identifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = init_declarator_list_init_declarator_list_comma_identifier_array_specifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 3>::type> {
-    using type = init_declarator_list_init_declarator_list_comma_identifier_array_specifier_equal_initializer_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 4>::type> {
-    using type = init_declarator_list_init_declarator_list_comma_identifier_equal_initializer_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~init_declarator_list_t() = default;
 
@@ -75,6 +52,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<init_declarator_list_single_declaration_t> make(
+    std::unique_ptr<single_declaration_t> &&single_declaration_0_
+  ) {
+    return std::make_unique<init_declarator_list_single_declaration_t>(
+      std::move(single_declaration_0_)
+    );
   }
 
 };  // init_declarator_list_single_declaration_t
@@ -99,6 +84,18 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<init_declarator_list_init_declarator_list_comma_identifier_t> make(
+    std::unique_ptr<init_declarator_list_t> &&init_declarator_list_0_,
+    const token_t *COMMA_1_,
+    const token_t *IDENTIFIER_2_
+  ) {
+    return std::make_unique<init_declarator_list_init_declarator_list_comma_identifier_t>(
+      std::move(init_declarator_list_0_),
+      std::make_unique<token_t>(*COMMA_1_),
+      std::make_unique<token_t>(*IDENTIFIER_2_)
+    );
   }
 
 };  // init_declarator_list_init_declarator_list_comma_identifier_t
@@ -127,6 +124,20 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<init_declarator_list_init_declarator_list_comma_identifier_array_specifier_t> make(
+    std::unique_ptr<init_declarator_list_t> &&init_declarator_list_0_,
+    const token_t *COMMA_1_,
+    const token_t *IDENTIFIER_2_,
+    std::unique_ptr<array_specifier_t> &&array_specifier_3_
+  ) {
+    return std::make_unique<init_declarator_list_init_declarator_list_comma_identifier_array_specifier_t>(
+      std::move(init_declarator_list_0_),
+      std::make_unique<token_t>(*COMMA_1_),
+      std::make_unique<token_t>(*IDENTIFIER_2_),
+      std::move(array_specifier_3_)
+    );
   }
 
 };  // init_declarator_list_init_declarator_list_comma_identifier_array_specifier_t
@@ -165,6 +176,24 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<init_declarator_list_init_declarator_list_comma_identifier_array_specifier_equal_initializer_t> make(
+    std::unique_ptr<init_declarator_list_t> &&init_declarator_list_0_,
+    const token_t *COMMA_1_,
+    const token_t *IDENTIFIER_2_,
+    std::unique_ptr<array_specifier_t> &&array_specifier_3_,
+    const token_t *EQUAL_4_,
+    std::unique_ptr<initializer_t> &&initializer_5_
+  ) {
+    return std::make_unique<init_declarator_list_init_declarator_list_comma_identifier_array_specifier_equal_initializer_t>(
+      std::move(init_declarator_list_0_),
+      std::make_unique<token_t>(*COMMA_1_),
+      std::make_unique<token_t>(*IDENTIFIER_2_),
+      std::move(array_specifier_3_),
+      std::make_unique<token_t>(*EQUAL_4_),
+      std::move(initializer_5_)
+    );
+  }
+
 };  // init_declarator_list_init_declarator_list_comma_identifier_array_specifier_equal_initializer_t
 
 class init_declarator_list_init_declarator_list_comma_identifier_equal_initializer_t: public init_declarator_list_t {
@@ -197,46 +226,23 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<init_declarator_list_init_declarator_list_comma_identifier_equal_initializer_t> make(
+    std::unique_ptr<init_declarator_list_t> &&init_declarator_list_0_,
+    const token_t *COMMA_1_,
+    const token_t *IDENTIFIER_2_,
+    const token_t *EQUAL_3_,
+    std::unique_ptr<initializer_t> &&initializer_4_
+  ) {
+    return std::make_unique<init_declarator_list_init_declarator_list_comma_identifier_equal_initializer_t>(
+      std::move(init_declarator_list_0_),
+      std::make_unique<token_t>(*COMMA_1_),
+      std::make_unique<token_t>(*IDENTIFIER_2_),
+      std::make_unique<token_t>(*EQUAL_3_),
+      std::move(initializer_4_)
+    );
+  }
+
 };  // init_declarator_list_init_declarator_list_comma_identifier_equal_initializer_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> init_declarator_list_t::pattern<0>::list = {
-  pattern_item_t<single_declaration_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> init_declarator_list_t::pattern<1>::list = {
-  pattern_item_t<init_declarator_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> init_declarator_list_t::pattern<2>::list = {
-  pattern_item_t<init_declarator_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-  pattern_item_t<array_specifier_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> init_declarator_list_t::pattern<3>::list = {
-  pattern_item_t<init_declarator_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-  pattern_item_t<array_specifier_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
-  pattern_item_t<initializer_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> init_declarator_list_t::pattern<4>::list = {
-  pattern_item_t<init_declarator_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("EQUAL")),
-  pattern_item_t<initializer_t>::get()
-};
 
 }   // ast
 

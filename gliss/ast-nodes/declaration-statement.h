@@ -8,6 +8,12 @@
 #include "../ast.h"
 #include "declaration.h"
 
+/**
+ * Patterns for declaration_statement
+ *
+ * 1. declaration
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,15 +25,6 @@ class declaration_statement_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = declaration_statement_declaration_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~declaration_statement_t() = default;
 
@@ -47,12 +44,15 @@ public:
     visitor(this);
   }
 
-};  // declaration_statement_declaration_t
+  static std::unique_ptr<declaration_statement_declaration_t> make(
+    std::unique_ptr<declaration_t> &&declaration_0_
+  ) {
+    return std::make_unique<declaration_statement_declaration_t>(
+      std::move(declaration_0_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> declaration_statement_t::pattern<0>::list = {
-  pattern_item_t<declaration_t>::get()
-};
+};  // declaration_statement_declaration_t
 
 }   // ast
 

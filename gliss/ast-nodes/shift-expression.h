@@ -8,6 +8,14 @@
 #include "../ast.h"
 #include "additive-expression.h"
 
+/**
+ * Patterns for shift_expression
+ *
+ * 1. additive_expression
+ * 2. shift_expression LEFT_OP additive_expression
+ * 3. shift_expression RIGHT_OP additive_expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,27 +27,6 @@ class shift_expression_t: public ast_t {
 public:
 
   static constexpr int num_types = 3;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = shift_expression_additive_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = shift_expression_shift_expression_left_op_additive_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = shift_expression_shift_expression_right_op_additive_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~shift_expression_t() = default;
 
@@ -57,6 +44,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<shift_expression_additive_expression_t> make(
+    std::unique_ptr<additive_expression_t> &&additive_expression_0_
+  ) {
+    return std::make_unique<shift_expression_additive_expression_t>(
+      std::move(additive_expression_0_)
+    );
   }
 
 };  // shift_expression_additive_expression_t
@@ -83,6 +78,18 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<shift_expression_shift_expression_left_op_additive_expression_t> make(
+    std::unique_ptr<shift_expression_t> &&shift_expression_0_,
+    const token_t *LEFT_OP_1_,
+    std::unique_ptr<additive_expression_t> &&additive_expression_2_
+  ) {
+    return std::make_unique<shift_expression_shift_expression_left_op_additive_expression_t>(
+      std::move(shift_expression_0_),
+      std::make_unique<token_t>(*LEFT_OP_1_),
+      std::move(additive_expression_2_)
+    );
+  }
+
 };  // shift_expression_shift_expression_left_op_additive_expression_t
 
 class shift_expression_shift_expression_right_op_additive_expression_t: public shift_expression_t {
@@ -107,26 +114,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<shift_expression_shift_expression_right_op_additive_expression_t> make(
+    std::unique_ptr<shift_expression_t> &&shift_expression_0_,
+    const token_t *RIGHT_OP_1_,
+    std::unique_ptr<additive_expression_t> &&additive_expression_2_
+  ) {
+    return std::make_unique<shift_expression_shift_expression_right_op_additive_expression_t>(
+      std::move(shift_expression_0_),
+      std::make_unique<token_t>(*RIGHT_OP_1_),
+      std::move(additive_expression_2_)
+    );
+  }
+
 };  // shift_expression_shift_expression_right_op_additive_expression_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> shift_expression_t::pattern<0>::list = {
-  pattern_item_t<additive_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> shift_expression_t::pattern<1>::list = {
-  pattern_item_t<shift_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_OP")),
-  pattern_item_t<additive_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> shift_expression_t::pattern<2>::list = {
-  pattern_item_t<shift_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_OP")),
-  pattern_item_t<additive_expression_t>::get()
-};
 
 }   // ast
 

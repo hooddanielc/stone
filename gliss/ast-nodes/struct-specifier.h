@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "struct-declaration-list.h"
 
+/**
+ * Patterns for struct_specifier
+ *
+ * 1. STRUCT IDENTIFIER LEFT_BRACE struct_declaration_list RIGHT_BRACE
+ * 2. STRUCT LEFT_BRACE struct_declaration_list RIGHT_BRACE
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class struct_specifier_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = struct_specifier_struct_identifier_left_brace_struct_declaration_list_right_brace_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~struct_specifier_t() = default;
 
@@ -69,6 +61,22 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<struct_specifier_struct_identifier_left_brace_struct_declaration_list_right_brace_t> make(
+    const token_t *STRUCT_0_,
+    const token_t *IDENTIFIER_1_,
+    const token_t *LEFT_BRACE_2_,
+    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_3_,
+    const token_t *RIGHT_BRACE_4_
+  ) {
+    return std::make_unique<struct_specifier_struct_identifier_left_brace_struct_declaration_list_right_brace_t>(
+      std::make_unique<token_t>(*STRUCT_0_),
+      std::make_unique<token_t>(*IDENTIFIER_1_),
+      std::make_unique<token_t>(*LEFT_BRACE_2_),
+      std::move(struct_declaration_list_3_),
+      std::make_unique<token_t>(*RIGHT_BRACE_4_)
+    );
+  }
+
 };  // struct_specifier_struct_identifier_left_brace_struct_declaration_list_right_brace_t
 
 class struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t: public struct_specifier_t {
@@ -97,24 +105,21 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t> make(
+    const token_t *STRUCT_0_,
+    const token_t *LEFT_BRACE_1_,
+    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_2_,
+    const token_t *RIGHT_BRACE_3_
+  ) {
+    return std::make_unique<struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t>(
+      std::make_unique<token_t>(*STRUCT_0_),
+      std::make_unique<token_t>(*LEFT_BRACE_1_),
+      std::move(struct_declaration_list_2_),
+      std::make_unique<token_t>(*RIGHT_BRACE_3_)
+    );
+  }
+
 };  // struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> struct_specifier_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("STRUCT")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
-  pattern_item_t<struct_declaration_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> struct_specifier_t::pattern<1>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("STRUCT")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
-  pattern_item_t<struct_declaration_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
-};
 
 }   // ast
 

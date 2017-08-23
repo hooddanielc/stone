@@ -8,6 +8,12 @@
 #include "../ast.h"
 #include "fully-specified-type.h"
 
+/**
+ * Patterns for function_header
+ *
+ * 1. fully_specified_type IDENTIFIER LEFT_PAREN
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,15 +25,6 @@ class function_header_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = function_header_fully_specified_type_identifier_left_paren_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~function_header_t() = default;
 
@@ -55,14 +52,19 @@ public:
     visitor(this);
   }
 
-};  // function_header_fully_specified_type_identifier_left_paren_t
+  static std::unique_ptr<function_header_fully_specified_type_identifier_left_paren_t> make(
+    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
+    const token_t *IDENTIFIER_1_,
+    const token_t *LEFT_PAREN_2_
+  ) {
+    return std::make_unique<function_header_fully_specified_type_identifier_left_paren_t>(
+      std::move(fully_specified_type_0_),
+      std::make_unique<token_t>(*IDENTIFIER_1_),
+      std::make_unique<token_t>(*LEFT_PAREN_2_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> function_header_t::pattern<0>::list = {
-  pattern_item_t<fully_specified_type_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("IDENTIFIER")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN"))
-};
+};  // function_header_fully_specified_type_identifier_left_paren_t
 
 }   // ast
 

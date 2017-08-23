@@ -39,6 +39,8 @@ public:
 
   virtual bool is_leaf() = 0;
 
+  virtual int get_kind() = 0;
+
 };
 
 template <typename node_t>
@@ -48,25 +50,35 @@ public:
 
   static std::shared_ptr<any_pattern_item_t> get() {
     static_assert(!std::is_same<node_t, token_t>::value, "must use get(token_t::kind_t)");
-    static auto singleton = std::make_shared<pattern_item_t>(false);
+    static auto singleton = std::make_shared<pattern_item_t>(false, 0);
     return singleton;
   }
 
-  static std::shared_ptr<any_pattern_item_t> get(const token_t::kind_t &) {
+  static std::shared_ptr<any_pattern_item_t> get(const token_t::kind_t &tok) {
     static_assert(std::is_same<node_t, token_t>::value, "must use get()");
-    static auto singleton = std::make_shared<pattern_item_t>(true);
+    static auto singleton = std::make_shared<pattern_item_t>(true, tok);
     return singleton;
   }
 
-  virtual bool is_leaf() {
+  virtual bool is_leaf() override {
     return leaf;
   }
 
-  pattern_item_t(bool leaf_): leaf(leaf_) {}
+  virtual int get_kind() override {
+    if (std::is_same<node_t, token_t>::value) {
+      return 1;
+    }
+
+    return 0;
+  }
+
+  pattern_item_t(bool leaf_, int kind_): leaf(leaf_), kind(kind_) {}
 
 private:
 
   bool leaf;
+
+  int kind;
 
 };  // pattern_item_t
 

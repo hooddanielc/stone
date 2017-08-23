@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "logical-xor-expression.h"
 
+/**
+ * Patterns for logical_or_expression
+ *
+ * 1. logical_xor_expression
+ * 2. logical_or_expression OR_OP logical_xor_expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class logical_or_expression_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = logical_or_expression_logical_xor_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~logical_or_expression_t() = default;
 
@@ -51,6 +43,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<logical_or_expression_logical_xor_expression_t> make(
+    std::unique_ptr<logical_xor_expression_t> &&logical_xor_expression_0_
+  ) {
+    return std::make_unique<logical_or_expression_logical_xor_expression_t>(
+      std::move(logical_xor_expression_0_)
+    );
   }
 
 };  // logical_or_expression_logical_xor_expression_t
@@ -77,19 +77,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t> make(
+    std::unique_ptr<logical_or_expression_t> &&logical_or_expression_0_,
+    const token_t *OR_OP_1_,
+    std::unique_ptr<logical_xor_expression_t> &&logical_xor_expression_2_
+  ) {
+    return std::make_unique<logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t>(
+      std::move(logical_or_expression_0_),
+      std::make_unique<token_t>(*OR_OP_1_),
+      std::move(logical_xor_expression_2_)
+    );
+  }
+
 };  // logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> logical_or_expression_t::pattern<0>::list = {
-  pattern_item_t<logical_xor_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> logical_or_expression_t::pattern<1>::list = {
-  pattern_item_t<logical_or_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("OR_OP")),
-  pattern_item_t<logical_xor_expression_t>::get()
-};
 
 }   // ast
 

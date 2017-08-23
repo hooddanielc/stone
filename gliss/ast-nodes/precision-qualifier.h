@@ -7,6 +7,14 @@
 #include <vector>
 #include "../ast.h"
 
+/**
+ * Patterns for precision_qualifier
+ *
+ * 1. HIGH_PRECISION
+ * 2. MEDIUM_PRECISION
+ * 3. LOW_PRECISION
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -16,27 +24,6 @@ class precision_qualifier_t: public ast_t {
 public:
 
   static constexpr int num_types = 3;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = precision_qualifier_high_precision_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = precision_qualifier_medium_precision_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 2>::type> {
-    using type = precision_qualifier_low_precision_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~precision_qualifier_t() = default;
 
@@ -56,6 +43,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<precision_qualifier_high_precision_t> make(
+    const token_t *HIGH_PRECISION_0_
+  ) {
+    return std::make_unique<precision_qualifier_high_precision_t>(
+      std::make_unique<token_t>(*HIGH_PRECISION_0_)
+    );
+  }
+
 };  // precision_qualifier_high_precision_t
 
 class precision_qualifier_medium_precision_t: public precision_qualifier_t {
@@ -70,6 +65,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<precision_qualifier_medium_precision_t> make(
+    const token_t *MEDIUM_PRECISION_0_
+  ) {
+    return std::make_unique<precision_qualifier_medium_precision_t>(
+      std::make_unique<token_t>(*MEDIUM_PRECISION_0_)
+    );
   }
 
 };  // precision_qualifier_medium_precision_t
@@ -88,22 +91,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<precision_qualifier_low_precision_t> make(
+    const token_t *LOW_PRECISION_0_
+  ) {
+    return std::make_unique<precision_qualifier_low_precision_t>(
+      std::make_unique<token_t>(*LOW_PRECISION_0_)
+    );
+  }
+
 };  // precision_qualifier_low_precision_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> precision_qualifier_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("HIGH_PRECISION"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> precision_qualifier_t::pattern<1>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("MEDIUM_PRECISION"))
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> precision_qualifier_t::pattern<2>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LOW_PRECISION"))
-};
 
 }   // ast
 

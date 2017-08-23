@@ -147,6 +147,44 @@ const get_constructor_params = (pattern) => {
   }).join(',\n        ');
 }
 
+const get_factory_func = (group_name, pattern) => {
+  const class_name = get_derived_class_name(group_name, pattern);
+  const params = pattern.map((symbol, idx) => {
+    if (is_non_terminal(symbol)) {
+      return `
+        std::unique_ptr<${get_base_class_name(symbol)}> &&${symbol}_${idx}_
+      `.trim();
+    } else {
+      return `
+        const token_t *${symbol}_${idx}_
+      `.trim();
+    }
+  }).join(',\n        ');
+
+  const initializers = pattern.map((symbol, idx) => {
+    if (is_non_terminal(symbol)) {
+      return `
+        std::move(${symbol}_${idx}_)
+      `.trim();
+    } else {
+      return `
+        std::make_unique<token_t>(*${symbol}_${idx}_)
+      `.trim();
+    }
+  }).join(',\n          ');
+
+  return `
+      static std::unique_ptr<${class_name}> make(
+        ${params}
+      ) {
+        return std::make_unique<${class_name}>(
+          ${initializers}
+        );
+      }
+  `.trim();
+
+}
+
 const get_constructor_init_list = (pattern) => {
   const types = get_class_prop_types(pattern);
   const names = get_class_prop_names(pattern);
@@ -196,59 +234,10 @@ const get_derived_class_declaration = (group_name, pattern, idx) => {
         visitor(this);
       }
 
+      ${get_factory_func(group_name, pattern)}
+
     };  // ${class_name}
   `;
-}
-
-const get_pattern_init_list = (pattern) => {
-  return pattern.map((symbol, idx) => {
-    const class_name = get_base_class_name(symbol);
-
-    if (is_non_terminal(symbol)) {
-      return `pattern_item_t<${class_name}>::get()`;
-    }
-
-    const kind_cc = `token_t::uppercase_to_kind("${symbol}")`;
-    return `pattern_item_t<${class_name}>::get(${kind_cc})`;
-  }).join(',\n      ');
-}
-
-const get_pattern_struct_def = (group_name, pattern, idx) => {
-  const init_list = get_pattern_init_list(pattern);
-  const class_name = get_base_class_name(group_name);
-
-  return `
-    template <>
-    std::vector<std::shared_ptr<any_pattern_item_t>> ${class_name}::pattern<${idx}>::list = {
-      ${get_pattern_init_list(pattern)}
-    };
-  `.trim();
-}
-
-const get_pattern_struct_defs = (group_name) => {
-  return grammar[group_name].map(
-    (pattern, idx) => get_pattern_struct_def(group_name, pattern, idx)
-  ).join('\n\n');
-}
-
-const get_pattern_struct = (group_name, pattern, idx) => {
-  const init_list = get_pattern_init_list(pattern);
-  const class_name = get_base_class_name(group_name);
-  const derived_name = get_derived_class_name(group_name, pattern);
-
-  return `
-      template<int n>
-      struct pattern<n, typename std::enable_if<n == ${idx}>::type> {
-        using type = ${derived_name};
-        static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-      };
-  `.trim();
-}
-
-const get_pattern_structs = (group_name) => {
-  return grammar[group_name].map(
-    (pattern, idx) => get_pattern_struct(group_name, pattern, idx)
-  ).join('\n\n  ');
 }
 
 const get_empty_visitor = (group_name) => {
@@ -258,6 +247,24 @@ const get_empty_visitor = (group_name) => {
   }
 
   return '';
+}
+
+const get_pattern_comments = (group_name) => {
+  return grammar[group_name].map((pattern, idx) => {
+    return `
+     * ${idx+1}. ${pattern.join(' ')}
+    `.trim();
+  }).join('\n ');
+}
+
+const get_pattern_comment = (group_name) => {
+  return `
+    /**
+     * Patterns for ${group_name}
+     *
+     ${get_pattern_comments(group_name)}
+     */
+  `
 }
 
 const get_base_class_declaration = (group_name) => {
@@ -270,10 +277,6 @@ const get_base_class_declaration = (group_name) => {
 
       static constexpr int num_types = ${grammar[group_name].length};
 
-      template <int n, typename = void>
-      struct pattern;
-
-      ${get_pattern_structs(group_name)}
       ${get_empty_visitor(group_name)}
       virtual ~${class_name}() = default;
 
@@ -297,6 +300,8 @@ const get_ast_node_header = (group_name) => {
     #include "../ast.h"
     ${include_statements}
 
+    ${get_pattern_comment(group_name)}
+
     namespace gliss {
 
     namespace ast {
@@ -306,8 +311,6 @@ const get_ast_node_header = (group_name) => {
     ${base_class}
 
     ${derived_classes}
-
-    ${get_pattern_struct_defs(group_name)}
 
     }   // ast
 

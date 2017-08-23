@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "layout-qualifier-id.h"
 
+/**
+ * Patterns for layout_qualifier_id_list
+ *
+ * 1. layout_qualifier_id
+ * 2. layout_qualifier_id_list COMMA layout_qualifier_id
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class layout_qualifier_id_list_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = layout_qualifier_id_list_layout_qualifier_id_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_id_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~layout_qualifier_id_list_t() = default;
 
@@ -51,6 +43,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<layout_qualifier_id_list_layout_qualifier_id_t> make(
+    std::unique_ptr<layout_qualifier_id_t> &&layout_qualifier_id_0_
+  ) {
+    return std::make_unique<layout_qualifier_id_list_layout_qualifier_id_t>(
+      std::move(layout_qualifier_id_0_)
+    );
   }
 
 };  // layout_qualifier_id_list_layout_qualifier_id_t
@@ -77,19 +77,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_id_t> make(
+    std::unique_ptr<layout_qualifier_id_list_t> &&layout_qualifier_id_list_0_,
+    const token_t *COMMA_1_,
+    std::unique_ptr<layout_qualifier_id_t> &&layout_qualifier_id_2_
+  ) {
+    return std::make_unique<layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_id_t>(
+      std::move(layout_qualifier_id_list_0_),
+      std::make_unique<token_t>(*COMMA_1_),
+      std::move(layout_qualifier_id_2_)
+    );
+  }
+
 };  // layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_id_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> layout_qualifier_id_list_t::pattern<0>::list = {
-  pattern_item_t<layout_qualifier_id_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> layout_qualifier_id_list_t::pattern<1>::list = {
-  pattern_item_t<layout_qualifier_id_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("COMMA")),
-  pattern_item_t<layout_qualifier_id_t>::get()
-};
 
 }   // ast
 

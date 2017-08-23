@@ -9,6 +9,13 @@
 #include "type-specifier-nonarray.h"
 #include "array-specifier.h"
 
+/**
+ * Patterns for type_specifier
+ *
+ * 1. type_specifier_nonarray
+ * 2. type_specifier_nonarray array_specifier
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,21 +28,6 @@ class type_specifier_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = type_specifier_type_specifier_nonarray_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = type_specifier_type_specifier_nonarray_array_specifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~type_specifier_t() = default;
 
@@ -53,6 +45,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<type_specifier_type_specifier_nonarray_t> make(
+    std::unique_ptr<type_specifier_nonarray_t> &&type_specifier_nonarray_0_
+  ) {
+    return std::make_unique<type_specifier_type_specifier_nonarray_t>(
+      std::move(type_specifier_nonarray_0_)
+    );
   }
 
 };  // type_specifier_type_specifier_nonarray_t
@@ -75,18 +75,17 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<type_specifier_type_specifier_nonarray_array_specifier_t> make(
+    std::unique_ptr<type_specifier_nonarray_t> &&type_specifier_nonarray_0_,
+    std::unique_ptr<array_specifier_t> &&array_specifier_1_
+  ) {
+    return std::make_unique<type_specifier_type_specifier_nonarray_array_specifier_t>(
+      std::move(type_specifier_nonarray_0_),
+      std::move(array_specifier_1_)
+    );
+  }
+
 };  // type_specifier_type_specifier_nonarray_array_specifier_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_t::pattern<0>::list = {
-  pattern_item_t<type_specifier_nonarray_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> type_specifier_t::pattern<1>::list = {
-  pattern_item_t<type_specifier_nonarray_t>::get(),
-  pattern_item_t<array_specifier_t>::get()
-};
 
 }   // ast
 

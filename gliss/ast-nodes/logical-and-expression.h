@@ -8,6 +8,13 @@
 #include "../ast.h"
 #include "inclusive-or-expression.h"
 
+/**
+ * Patterns for logical_and_expression
+ *
+ * 1. inclusive_or_expression
+ * 2. logical_and_expression AND_OP inclusive_or_expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,21 +26,6 @@ class logical_and_expression_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = logical_and_expression_inclusive_or_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = logical_and_expression_logical_and_expression_and_op_inclusive_or_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~logical_and_expression_t() = default;
 
@@ -51,6 +43,14 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
+  }
+
+  static std::unique_ptr<logical_and_expression_inclusive_or_expression_t> make(
+    std::unique_ptr<inclusive_or_expression_t> &&inclusive_or_expression_0_
+  ) {
+    return std::make_unique<logical_and_expression_inclusive_or_expression_t>(
+      std::move(inclusive_or_expression_0_)
+    );
   }
 
 };  // logical_and_expression_inclusive_or_expression_t
@@ -77,19 +77,19 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<logical_and_expression_logical_and_expression_and_op_inclusive_or_expression_t> make(
+    std::unique_ptr<logical_and_expression_t> &&logical_and_expression_0_,
+    const token_t *AND_OP_1_,
+    std::unique_ptr<inclusive_or_expression_t> &&inclusive_or_expression_2_
+  ) {
+    return std::make_unique<logical_and_expression_logical_and_expression_and_op_inclusive_or_expression_t>(
+      std::move(logical_and_expression_0_),
+      std::make_unique<token_t>(*AND_OP_1_),
+      std::move(inclusive_or_expression_2_)
+    );
+  }
+
 };  // logical_and_expression_logical_and_expression_and_op_inclusive_or_expression_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> logical_and_expression_t::pattern<0>::list = {
-  pattern_item_t<inclusive_or_expression_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> logical_and_expression_t::pattern<1>::list = {
-  pattern_item_t<logical_and_expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("AND_OP")),
-  pattern_item_t<inclusive_or_expression_t>::get()
-};
 
 }   // ast
 

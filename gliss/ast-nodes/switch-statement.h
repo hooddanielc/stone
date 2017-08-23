@@ -9,6 +9,12 @@
 #include "expression.h"
 #include "switch-statement-list.h"
 
+/**
+ * Patterns for switch_statement
+ *
+ * 1. SWITCH LEFT_PAREN expression RIGHT_PAREN LEFT_BRACE switch_statement_list RIGHT_BRACE
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,15 +27,6 @@ class switch_statement_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~switch_statement_t() = default;
 
@@ -73,18 +70,27 @@ public:
     visitor(this);
   }
 
-};  // switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t
+  static std::unique_ptr<switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t> make(
+    const token_t *SWITCH_0_,
+    const token_t *LEFT_PAREN_1_,
+    std::unique_ptr<expression_t> &&expression_2_,
+    const token_t *RIGHT_PAREN_3_,
+    const token_t *LEFT_BRACE_4_,
+    std::unique_ptr<switch_statement_list_t> &&switch_statement_list_5_,
+    const token_t *RIGHT_BRACE_6_
+  ) {
+    return std::make_unique<switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t>(
+      std::make_unique<token_t>(*SWITCH_0_),
+      std::make_unique<token_t>(*LEFT_PAREN_1_),
+      std::move(expression_2_),
+      std::make_unique<token_t>(*RIGHT_PAREN_3_),
+      std::make_unique<token_t>(*LEFT_BRACE_4_),
+      std::move(switch_statement_list_5_),
+      std::make_unique<token_t>(*RIGHT_BRACE_6_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> switch_statement_t::pattern<0>::list = {
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("SWITCH")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_PAREN")),
-  pattern_item_t<expression_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_PAREN")),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("LEFT_BRACE")),
-  pattern_item_t<switch_statement_list_t>::get(),
-  pattern_item_t<token_t>::get(token_t::uppercase_to_kind("RIGHT_BRACE"))
-};
+};  // switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t
 
 }   // ast
 

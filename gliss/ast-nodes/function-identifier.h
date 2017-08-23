@@ -9,6 +9,13 @@
 #include "type-specifier.h"
 #include "postfix-expression.h"
 
+/**
+ * Patterns for function_identifier
+ *
+ * 1. type_specifier
+ * 2. postfix_expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -21,21 +28,6 @@ class function_identifier_t: public ast_t {
 public:
 
   static constexpr int num_types = 2;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = function_identifier_type_specifier_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 1>::type> {
-    using type = function_identifier_postfix_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~function_identifier_t() = default;
 
@@ -55,6 +47,14 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<function_identifier_type_specifier_t> make(
+    std::unique_ptr<type_specifier_t> &&type_specifier_0_
+  ) {
+    return std::make_unique<function_identifier_type_specifier_t>(
+      std::move(type_specifier_0_)
+    );
+  }
+
 };  // function_identifier_type_specifier_t
 
 class function_identifier_postfix_expression_t: public function_identifier_t {
@@ -71,17 +71,15 @@ public:
     visitor(this);
   }
 
+  static std::unique_ptr<function_identifier_postfix_expression_t> make(
+    std::unique_ptr<postfix_expression_t> &&postfix_expression_0_
+  ) {
+    return std::make_unique<function_identifier_postfix_expression_t>(
+      std::move(postfix_expression_0_)
+    );
+  }
+
 };  // function_identifier_postfix_expression_t
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> function_identifier_t::pattern<0>::list = {
-  pattern_item_t<type_specifier_t>::get()
-};
-
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> function_identifier_t::pattern<1>::list = {
-  pattern_item_t<postfix_expression_t>::get()
-};
 
 }   // ast
 

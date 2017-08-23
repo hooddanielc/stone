@@ -8,6 +8,12 @@
 #include "../ast.h"
 #include "conditional-expression.h"
 
+/**
+ * Patterns for constant_expression
+ *
+ * 1. conditional_expression
+ */
+
 namespace gliss {
 
 namespace ast {
@@ -19,15 +25,6 @@ class constant_expression_t: public ast_t {
 public:
 
   static constexpr int num_types = 1;
-
-  template <int n, typename = void>
-  struct pattern;
-
-  template<int n>
-  struct pattern<n, typename std::enable_if<n == 0>::type> {
-    using type = constant_expression_conditional_expression_t;
-    static std::vector<std::shared_ptr<any_pattern_item_t>> list;
-  };
 
   virtual ~constant_expression_t() = default;
 
@@ -47,12 +44,15 @@ public:
     visitor(this);
   }
 
-};  // constant_expression_conditional_expression_t
+  static std::unique_ptr<constant_expression_conditional_expression_t> make(
+    std::unique_ptr<conditional_expression_t> &&conditional_expression_0_
+  ) {
+    return std::make_unique<constant_expression_conditional_expression_t>(
+      std::move(conditional_expression_0_)
+    );
+  }
 
-template <>
-std::vector<std::shared_ptr<any_pattern_item_t>> constant_expression_t::pattern<0>::list = {
-  pattern_item_t<conditional_expression_t>::get()
-};
+};  // constant_expression_conditional_expression_t
 
 }   // ast
 
