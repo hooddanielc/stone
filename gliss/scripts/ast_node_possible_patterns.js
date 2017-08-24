@@ -5,23 +5,28 @@ const possible_patterns = {};
 const nodes = Object.keys(ast_nodes).map((id) => ast_nodes[id]);
 
 nodes.forEach((node) => {
+  const id = node.id;
+  const taboo = [];
+
   nodes.forEach((possible) => {
     if (!possible.terminal) {
-      const pattern_id = possible.pattern_id;
-      const last = pattern_id[pattern_id.length - 1];
-      const id = node.id;
+      const last = possible.pattern_id[possible.pattern_id.length - 1];
 
       if (id === last) {
-        console.log(pattern_id[pattern_id.length - 1], id);
-        possible_patterns[id] = possible_patterns[id] || [];
+        if (!possible_patterns[id]) {
+          possible_patterns[id] = [];
+        }
+
+        if (taboo.indexOf(possible.pattern_id) > -1) {
+          return;
+        }
+
         possible_patterns[id].push(possible.pattern_id);
       }
     }
   });
 });
 
+/* return a map of possible reductions starting */
+/* from the right most symbol of a production */
 module.exports = possible_patterns;
-console.log(possible_patterns);
-console.log(ast_nodes_by_id[287]);
-console.log(ast_nodes_by_id[287].pattern_id[ast_nodes_by_id[287].pattern_id.length - 1], ast_nodes_by_id[287].id);
-console.log(possible_patterns[287]);

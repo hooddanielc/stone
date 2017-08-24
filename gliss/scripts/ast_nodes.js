@@ -32,8 +32,8 @@ Object.keys(grammar).forEach((group_name) => {
 });
 
 patterns.sort((A, B) => {
-  const a = A.pattern.length + 1;
-  const b = B.pattern.length + 1;
+  const a = A.pattern.length;
+  const b = B.pattern.length;
 
   if (a > b) {
     return 1;
@@ -44,7 +44,11 @@ patterns.sort((A, B) => {
   }
 }).forEach((group_item) => {
   id_map[get_ast_name(group_item.group_name, group_item.pattern)] = {
+    /* multiple tokens may have the same id, use importance for uniqueness */
+    /* each ast node is identified by the group it's production was reduced to */
     id: group_ids[group_item.group_name],
+    /* an ast's group_name and production is always unique, but to make things easier, */
+    /* added another number here */
     importance: importance++,
     terminal: false,
     group_name: group_item.group_name,
