@@ -1,10 +1,14 @@
 const grammar = require('./grammar');
 const tokens = require('./tokens');
+const nice_token_names = require('./nice_token_names');
 
 let idx = 0;
 let importance = 0;
 const id_map = {};
 const group_ids = {};
+const terminal_symbols = [];
+const reduced_symbols = [];
+const rules = {};
 
 const get_ast_name = (group_name, pattern) => {
   return `${group_name}_${pattern.join('_')}`;
@@ -14,12 +18,16 @@ tokens.forEach((terminal) => {
   group_ids[terminal] = idx++;
 
   id_map[terminal] = {
-    id: group_ids[terminal],
-    importance: importance++,
+    name: terminal,
+    nice_name: nice_token_names[terminal],
+    group_id: group_ids[terminal],
+    rule_id: importance++,
     terminal: true,
-    pattern: [terminal],
-    pattern_id: [group_ids[terminal]]
+    rule_def: [terminal],
+    rule: [group_ids[terminal]]
   };
+
+  terminal_symbols.push(id_map[terminal]);
 });
 
 const patterns = [];
@@ -43,18 +51,66 @@ patterns.sort((A, B) => {
     return 0;
   }
 }).forEach((group_item) => {
-  id_map[get_ast_name(group_item.group_name, group_item.pattern)] = {
-    /* multiple tokens may have the same id, use importance for uniqueness */
-    /* each ast node is identified by the group it's production was reduced to */
-    id: group_ids[group_item.group_name],
-    /* an ast's group_name and production is always unique, but to make things easier, */
-    /* added another number here */
-    importance: importance++,
+  const name = get_ast_name(group_item.group_name, group_item.pattern);
+  id_map[name] = {
+    group_id: group_ids[group_item.group_name],
+    rule_id: importance++,
     terminal: false,
+    name: name,
+    nice_name: group_item.group_name,
     group_name: group_item.group_name,
-    pattern: group_item.pattern,
-    pattern_id: group_item.pattern.map((name) => group_ids[name] || -1)
+    rule_def: group_item.pattern,
+    rule: group_item.pattern.map((name) => group_ids[name] || -1)
   };
+
+  reduced_symbols.push(id_map[name]);
 });
 
-module.exports = id_map;
+const get_reductions = (symbol) => {
+  const reductions = [];
+  reduced_symbols.forEach((reduction) => {
+    const last_symbol = reduction.rule[reduction.rule.length - 1];
+    if (last_symbol === symbol.group_id) {
+      reductions.push({
+        group_id: reduction.group_id,
+        rule: reduction.rule
+      });
+    }
+  });
+  return reductions;
+}
+
+const symbol_to_reductions = {};
+
+terminal_symbols.forEach((symbol) => {
+  const reductions = get_reductions(symbol);
+  if (!reductions.length) {
+    return;
+  }
+  symbol_to_reductions[symbol.group_id] = reductions;
+});
+
+reduced_symbols.forEach((symbol) => {
+  const reductions = get_reductions(symbol);
+  if (!reductions.length) {
+    return;
+  }
+  symbol_to_reductions[symbol.group_id] = reductions;
+});
+
+const symbol_enum_values = {};
+
+terminal_symbols.forEach(({group_id, nice_name}) => {
+  symbol_enum_values[nice_name] = group_id;
+});
+
+reduced_symbols.forEach(({group_id, nice_name}) => {
+  symbol_enum_values[nice_name] = group_id;
+});
+
+module.exports = {
+  symbols: id_map,
+  terminal_symbols: terminal_symbols,
+  reduced_symbols: reduced_symbols,
+  symbol_enum_values: symbol_enum_values
+};

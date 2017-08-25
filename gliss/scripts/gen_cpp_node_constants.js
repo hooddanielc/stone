@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const grammar = require('./grammar');
 const tokens = require('./tokens');
+const ast_nodes = require('./ast_nodes');
 
 const get_auto_gen_comment = () => {
   const filename = path.basename(__filename);
@@ -50,6 +51,10 @@ const get_node_cc_file_path = (group_name) => {
 
 const get_all_header_file_path = () => {
   return path.resolve(__dirname, '..', 'ast-nodes.h');
+}
+
+const get_symbol_header_file_path = () => {
+  return path.resolve(__dirname, '..', 'symbols.h');
 }
 
 const get_combined_header_file_path = () => {
@@ -375,6 +380,29 @@ const get_combined_ast_nodes_h = () => {
   `);
 }
 
+const get_symbols_h = () => {
+  const list = Object.keys(ast_nodes.symbol_enum_values).map((key) => {
+    return `${key} = ${ast_nodes.symbol_enum_values[key]}`;
+  });
+  // adding some custom tokens for lexer
+  list.unshift(`end = ${list.length}`);
+  list.unshift(`varying = ${list.length}`);
+  list.unshift(`attribute = ${list.length}`);
+  list.unshift(`reserved_keyword = ${list.length}`);
+  const enums = list.join(',\n  ');
+  return format_code(4, `
+    #pragma once
+
+    namespace gliss {
+
+    enum symbol_t {
+      ${enums}
+    };
+
+    }   // gliss
+  `);
+}
+
 Object.keys(grammar).forEach((group_name) => {
   const head_src = get_ast_node_header(group_name);
   const head_path = get_node_header_file_path(group_name);
@@ -388,3 +416,7 @@ fs.writeFileSync(all_path, all_src);
 const combined_header = get_combined_header_file_path();
 const combined_src = get_combined_ast_nodes_h();
 fs.writeFileSync(combined_header, combined_src);
+
+const symbols_src = get_symbols_h();
+const symbol_path = get_symbol_header_file_path();
+fs.writeFileSync(symbol_path, symbols_src);
