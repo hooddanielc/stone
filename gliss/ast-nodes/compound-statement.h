@@ -25,7 +25,9 @@ class compound_statement_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 2;
+  static constexpr int rules = 2;
+
+  static constexpr int id = 276;
 
   virtual ~compound_statement_t() = default;
 

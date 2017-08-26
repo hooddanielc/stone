@@ -11,7 +11,7 @@ const reduced_symbols = [];
 const rules = {};
 
 const get_ast_name = (group_name, pattern) => {
-  return `${group_name}_${pattern.join('_')}`;
+  return `${group_name}_${pattern.join('_')}`.toLowerCase();
 }
 
 tokens.forEach((terminal) => {
@@ -73,11 +73,18 @@ const get_reductions = (symbol) => {
     if (last_symbol === symbol.group_id) {
       reductions.push({
         group_id: reduction.group_id,
+        id: reduction.rule_id,
+        name: reduction.name,
         rule: reduction.rule
       });
     }
   });
-  return reductions;
+  return reductions.sort((a, b) => {
+    const d = a.rule.length - b.rule.length;
+    if (d < 0) return 1;
+    if (d > 0) return -1;
+    return 0;
+  });
 }
 
 const symbol_to_reductions = {};
@@ -112,5 +119,6 @@ module.exports = {
   symbols: id_map,
   terminal_symbols: terminal_symbols,
   reduced_symbols: reduced_symbols,
-  symbol_enum_values: symbol_enum_values
+  symbol_enum_values: symbol_enum_values,
+  symbol_to_reductions
 };

@@ -24,7 +24,9 @@ class parameter_type_specifier_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 1;
+  static constexpr int rules = 1;
+
+  static constexpr int id = 248;
 
   virtual ~parameter_type_specifier_t() = default;
 

@@ -24,7 +24,9 @@ class function_prototype_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 1;
+  static constexpr int rules = 1;
+
+  static constexpr int id = 242;
 
   virtual ~function_prototype_t() = default;
 

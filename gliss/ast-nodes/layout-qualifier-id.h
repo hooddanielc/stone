@@ -26,7 +26,9 @@ class layout_qualifier_id_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 3;
+  static constexpr int rules = 3;
+
+  static constexpr int id = 256;
 
   virtual ~layout_qualifier_id_t() = default;
 

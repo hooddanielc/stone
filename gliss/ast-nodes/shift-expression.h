@@ -26,7 +26,9 @@ class shift_expression_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 3;
+  static constexpr int rules = 3;
+
+  static constexpr int id = 226;
 
   virtual ~shift_expression_t() = default;
 

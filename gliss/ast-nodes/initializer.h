@@ -28,7 +28,9 @@ class initializer_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 3;
+  static constexpr int rules = 3;
+
+  static constexpr int id = 271;
 
   virtual ~initializer_t() = default;
 

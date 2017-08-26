@@ -25,7 +25,9 @@ class case_label_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 2;
+  static constexpr int rules = 2;
+
+  static constexpr int id = 286;
 
   virtual ~case_label_t() = default;
 

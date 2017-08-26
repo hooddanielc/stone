@@ -21,7 +21,9 @@ class invariant_qualifier_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 1;
+  static constexpr int rules = 1;
+
+  static constexpr int id = 252;
 
   virtual ~invariant_qualifier_t() = default;
 

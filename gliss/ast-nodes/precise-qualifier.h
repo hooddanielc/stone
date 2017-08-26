@@ -21,7 +21,9 @@ class precise_qualifier_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 1;
+  static constexpr int rules = 1;
+
+  static constexpr int id = 257;
 
   virtual ~precise_qualifier_t() = default;
 

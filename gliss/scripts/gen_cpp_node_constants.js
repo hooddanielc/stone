@@ -4,6 +4,14 @@ const grammar = require('./grammar');
 const tokens = require('./tokens');
 const ast_nodes = require('./ast_nodes');
 
+const get_group_id = (group_name) => {
+  const symbols = ast_nodes.reduced_symbols.filter((sym) => {
+    return sym.group_name === group_name;
+  });
+
+  return symbols[0] ? symbols[0].group_id : -1;
+}
+
 const get_auto_gen_comment = () => {
   const filename = path.basename(__filename);
 
@@ -280,13 +288,53 @@ const get_base_class_declaration = (group_name) => {
 
     public:
 
-      static constexpr int num_types = ${grammar[group_name].length};
+      static constexpr int rules = ${grammar[group_name].length};
+
+      static constexpr int id = ${get_group_id(group_name)};
 
       ${get_empty_visitor(group_name)}
       virtual ~${class_name}() = default;
 
     };  // ${class_name}
   `.trim();
+}
+
+const get_rule_array = (rules) => {
+  return `{ ${rules.join(', ')} }`;
+}
+
+const get_reduction = (reduction) => {
+  return `
+    {${reduction.id}, ${get_rule_array(reduction.rule)}}
+  `.trim();
+}
+
+const get_possible_reductions_from_right = () => {
+  const reductions = ast_nodes.symbol_to_reductions;
+  return Object.keys(ast_nodes.symbol_to_reductions).map((id) => {
+    const defs = reductions[id].map(get_reduction).join(',\n        ');
+    return '  ' +  `
+      template <>
+      struct reductions_from_t<${id}> {
+        static const std::map<int, std::vector<int>> reductions;
+      };
+
+      const std::map<int, std::vector<int>> reductions_from_t<${id}>::reductions = {
+        ${defs}
+      };
+    `.trim();
+  }).join('\n');
+}
+
+const get_ast_nodes_by_id = () => {
+  return ast_nodes.reduced_symbols.map((ast) => {
+    return '  ' + `
+      template <>
+      struct ast_by_id<${ast.rule_id}> {
+        using type_t = ${ast.name}_t;
+      };
+    `.trim();
+  }).join('\n');
 }
 
 const get_ast_node_header = (group_name) => {
@@ -360,6 +408,16 @@ const get_ast_nodes_h = () => {
       virtual ~default_visitor_t() = default;
       ${get_visitor_declarations()}
     };  // default_visitor_t
+
+    template <int N>
+    struct reductions_from_t;
+
+    template <int N>
+    struct ast_by_id;
+
+    ${get_ast_nodes_by_id()}
+
+    ${get_possible_reductions_from_right()}
 
     }   // ast
 

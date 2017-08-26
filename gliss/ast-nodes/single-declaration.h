@@ -32,7 +32,9 @@ class single_declaration_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 5;
+  static constexpr int rules = 5;
+
+  static constexpr int id = 250;
 
   virtual ~single_declaration_t() = default;
 

@@ -22,7 +22,9 @@ class type_name_list_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 2;
+  static constexpr int rules = 2;
+
+  static constexpr int id = 261;
 
   virtual ~type_name_list_t() = default;
 

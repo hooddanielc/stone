@@ -35,7 +35,9 @@ class postfix_expression_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 6;
+  static constexpr int rules = 6;
+
+  static constexpr int id = 213;
 
   virtual ~postfix_expression_t() = default;
 

@@ -46,7 +46,9 @@ class declaration_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 9;
+  static constexpr int rules = 9;
+
+  static constexpr int id = 240;
 
   virtual ~declaration_t() = default;
 

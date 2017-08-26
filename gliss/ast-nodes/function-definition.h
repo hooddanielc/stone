@@ -26,7 +26,9 @@ class function_definition_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 1;
+  static constexpr int rules = 1;
+
+  static constexpr int id = 294;
 
   virtual ~function_definition_t() = default;
 

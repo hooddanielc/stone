@@ -27,7 +27,9 @@ class function_call_generic_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 2;
+  static constexpr int rules = 2;
+
+  static constexpr int id = 217;
 
   virtual ~function_call_generic_t() = default;
 

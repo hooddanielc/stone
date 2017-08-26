@@ -144,7 +144,9 @@ class type_specifier_nonarray_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 121;
+  static constexpr int rules = 121;
+
+  static constexpr int id = 264;
 
   virtual ~type_specifier_nonarray_t() = default;
 

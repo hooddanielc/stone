@@ -31,7 +31,9 @@ class assignment_operator_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 11;
+  static constexpr int rules = 11;
+
+  static constexpr int id = 237;
 
   virtual ~assignment_operator_t() = default;
 

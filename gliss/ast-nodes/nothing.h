@@ -21,7 +21,9 @@ class nothing_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 0;
+  static constexpr int rules = 0;
+
+  static constexpr int id = -1;
 
   virtual void accept(const visitor_t &) const override {}
   virtual ~nothing_t() = default;

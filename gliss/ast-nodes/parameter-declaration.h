@@ -31,7 +31,9 @@ class parameter_declaration_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 4;
+  static constexpr int rules = 4;
+
+  static constexpr int id = 247;
 
   virtual ~parameter_declaration_t() = default;
 

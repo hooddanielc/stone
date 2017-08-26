@@ -24,7 +24,9 @@ class unary_operator_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 4;
+  static constexpr int rules = 4;
+
+  static constexpr int id = 223;
 
   virtual ~unary_operator_t() = default;
 

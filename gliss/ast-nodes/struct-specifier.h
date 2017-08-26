@@ -25,7 +25,9 @@ class struct_specifier_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 2;
+  static constexpr int rules = 2;
+
+  static constexpr int id = 266;
 
   virtual ~struct_specifier_t() = default;
 

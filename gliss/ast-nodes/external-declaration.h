@@ -28,7 +28,9 @@ class external_declaration_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 3;
+  static constexpr int rules = 3;
+
+  static constexpr int id = 293;
 
   virtual ~external_declaration_t() = default;
 

@@ -34,7 +34,9 @@ class init_declarator_list_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 5;
+  static constexpr int rules = 5;
+
+  static constexpr int id = 249;
 
   virtual ~init_declarator_list_t() = default;
 

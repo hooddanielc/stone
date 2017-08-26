@@ -42,7 +42,9 @@ class simple_statement_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 7;
+  static constexpr int rules = 7;
+
+  static constexpr int id = 275;
 
   virtual ~simple_statement_t() = default;
 

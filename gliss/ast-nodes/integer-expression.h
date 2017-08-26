@@ -24,7 +24,9 @@ class integer_expression_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 1;
+  static constexpr int rules = 1;
+
+  static constexpr int id = 214;
 
   virtual ~integer_expression_t() = default;
 

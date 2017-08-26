@@ -27,7 +27,9 @@ class function_call_header_with_parameters_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 2;
+  static constexpr int rules = 2;
+
+  static constexpr int id = 219;
 
   virtual ~function_call_header_with_parameters_t() = default;
 

@@ -40,7 +40,9 @@ class storage_qualifier_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 17;
+  static constexpr int rules = 17;
+
+  static constexpr int id = 260;
 
   virtual ~storage_qualifier_t() = default;
 

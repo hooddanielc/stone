@@ -25,7 +25,9 @@ class selection_rest_statement_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 2;
+  static constexpr int rules = 2;
+
+  static constexpr int id = 282;
 
   virtual ~selection_rest_statement_t() = default;
 

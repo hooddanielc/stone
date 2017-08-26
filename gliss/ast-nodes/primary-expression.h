@@ -32,7 +32,9 @@ class primary_expression_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 7;
+  static constexpr int rules = 7;
+
+  static constexpr int id = 212;
 
   virtual ~primary_expression_t() = default;
 

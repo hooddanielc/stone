@@ -23,7 +23,9 @@ class interpolation_qualifier_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 3;
+  static constexpr int rules = 3;
+
+  static constexpr int id = 253;
 
   virtual ~interpolation_qualifier_t() = default;
 

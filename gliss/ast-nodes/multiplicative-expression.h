@@ -27,7 +27,9 @@ class multiplicative_expression_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 4;
+  static constexpr int rules = 4;
+
+  static constexpr int id = 224;
 
   virtual ~multiplicative_expression_t() = default;
 

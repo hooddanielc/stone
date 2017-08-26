@@ -25,7 +25,9 @@ class compound_statement_no_new_scope_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 2;
+  static constexpr int rules = 2;
+
+  static constexpr int id = 278;
 
   virtual ~compound_statement_no_new_scope_t() = default;
 

@@ -28,7 +28,9 @@ class jump_statement_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 5;
+  static constexpr int rules = 5;
+
+  static constexpr int id = 291;
 
   virtual ~jump_statement_t() = default;
 

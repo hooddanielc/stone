@@ -36,7 +36,9 @@ class iteration_statement_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 3;
+  static constexpr int rules = 3;
+
+  static constexpr int id = 287;
 
   virtual ~iteration_statement_t() = default;
 

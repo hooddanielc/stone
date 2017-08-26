@@ -29,7 +29,9 @@ class assignment_expression_t: public ast_t {
 
 public:
 
-  static constexpr int num_types = 2;
+  static constexpr int rules = 2;
+
+  static constexpr int id = 236;
 
   virtual ~assignment_expression_t() = default;
 

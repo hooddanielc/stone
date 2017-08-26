@@ -80,6 +80,12 @@ public:
     return temp;
   }
 
+  const token_t *shift() {
+    auto *temp = get();
+    ++(*this);
+    return temp;
+  }
+
 private:
 
   const token_t *token, *limit;
