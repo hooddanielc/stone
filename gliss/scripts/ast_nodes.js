@@ -127,11 +127,25 @@ const symbols_by_group = () => {
   return result;
 }
 
+const rules_by_symbol = {};
+
+Object.keys(grammar).forEach((group_name) => {
+  grammar[group_name].forEach((pattern) => {
+    pattern.forEach((symbol) => {
+      rules_by_symbol[symbol] = rules_by_symbol[symbol] || {patterns: 0};
+      rules_by_symbol[symbol][group_name] = rules_by_symbol[symbol][group_name] || [];
+      rules_by_symbol[symbol][group_name].push(pattern);
+      rules_by_symbol[symbol].patterns += 1;
+    });
+  });
+});
+
 module.exports = {
   symbols: id_map,
   terminal_symbols: terminal_symbols,
   reduced_symbols: reduced_symbols,
   symbol_enum_values: symbol_enum_values,
   symbol_to_reductions,
-  symbols_by_group: symbols_by_group()
+  symbols_by_group: symbols_by_group(),
+  rules_by_symbol
 };
