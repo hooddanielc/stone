@@ -1,6 +1,10 @@
 # Gliss
 
-## A GLSL Lexer and Parser (almost)
+## A GLSL Lexer and Parser
+
+### Dependencies
+
+None! You can easily copy and paste this code into another build system super easily. I recommend continuing to use ib since it saves you a lot of time by removing some features ;)
 
 ### Building
 
@@ -8,7 +12,17 @@
 
 2. Install clang
 
-3. Run the build `cd gliss && ib gliss/test/lexer-test`. To build on osx, use osx-debug config `ib gliss/test/lexer-test --cfg osx-debug.cfg` If you modify any of the generator code in `scripts/gen_cpp_node_constants.js` just run it with nodejs.
+3. Run the build. To build on osx, use osx-debug config
+
+```
+# Use default debug config
+ib gliss/test/lexer-test
+
+# Use osx-debug config
+ib gliss/test/lexer-test --cfg osx-debug.cfg
+```
+
+4. If you modify any of the generator code in `scripts/gen_cpp_node_constants.js` just run it with nodejs.
 
 ```
 node gliss/scripts/gen_cpp_node_constants.js # generate c++ parser
