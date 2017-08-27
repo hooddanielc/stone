@@ -26,7 +26,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 254;
+  static constexpr int id = 255;
 
   virtual ~layout_qualifier_t() = default;
 
@@ -36,39 +36,43 @@ class layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t:
 
 public:
 
-  std::unique_ptr<token_t> layout_0;
+  std::shared_ptr<ast_token_t> layout_0;
 
-  std::unique_ptr<token_t> left_paren_1;
+  std::shared_ptr<ast_token_t> left_paren_1;
 
-  std::unique_ptr<layout_qualifier_id_list_t> layout_qualifier_id_list_2;
+  std::shared_ptr<layout_qualifier_id_list_t> layout_qualifier_id_list_2;
 
-  std::unique_ptr<token_t> right_paren_3;
+  std::shared_ptr<ast_token_t> right_paren_3;
 
   layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t(
-    std::unique_ptr<token_t> &&layout_0_,
-    std::unique_ptr<token_t> &&left_paren_1_,
-    std::unique_ptr<layout_qualifier_id_list_t> &&layout_qualifier_id_list_2_,
-    std::unique_ptr<token_t> &&right_paren_3_
-  ): layout_0(std::move(layout_0_)),
-     left_paren_1(std::move(left_paren_1_)),
-     layout_qualifier_id_list_2(std::move(layout_qualifier_id_list_2_)),
-     right_paren_3(std::move(right_paren_3_)) {}
+    std::shared_ptr<ast_token_t> layout_0_,
+    std::shared_ptr<ast_token_t> left_paren_1_,
+    std::shared_ptr<layout_qualifier_id_list_t> layout_qualifier_id_list_2_,
+    std::shared_ptr<ast_token_t> right_paren_3_
+  ): layout_0(layout_0_),
+     left_paren_1(left_paren_1_),
+     layout_qualifier_id_list_2(layout_qualifier_id_list_2_),
+     right_paren_3(right_paren_3_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t> make(
-    const token_t *LAYOUT_0_,
-    const token_t *LEFT_PAREN_1_,
-    std::unique_ptr<layout_qualifier_id_list_t> &&layout_qualifier_id_list_2_,
-    const token_t *RIGHT_PAREN_3_
+  virtual int get_id() const override {
+    return 255;
+  }
+
+  static std::shared_ptr<layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t> make(
+    std::shared_ptr<ast_token_t> LAYOUT_0_,
+    std::shared_ptr<ast_token_t> LEFT_PAREN_1_,
+    std::shared_ptr<layout_qualifier_id_list_t> layout_qualifier_id_list_2_,
+    std::shared_ptr<ast_token_t> RIGHT_PAREN_3_
   ) {
-    return std::make_unique<layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t>(
-      std::make_unique<token_t>(*LAYOUT_0_),
-      std::make_unique<token_t>(*LEFT_PAREN_1_),
-      std::move(layout_qualifier_id_list_2_),
-      std::make_unique<token_t>(*RIGHT_PAREN_3_)
+    return std::make_shared<layout_qualifier_layout_left_paren_layout_qualifier_id_list_right_paren_t>(
+      LAYOUT_0_,
+      LEFT_PAREN_1_,
+      layout_qualifier_id_list_2_,
+      RIGHT_PAREN_3_
     );
   }
 

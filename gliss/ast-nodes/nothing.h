@@ -26,6 +26,8 @@ public:
   static constexpr int id = -1;
 
   virtual void accept(const visitor_t &) const override {}
+  virtual int get_id() const override {return -1;}
+
   virtual ~nothing_t() = default;
 
 };  // nothing_t

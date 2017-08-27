@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 244;
+  static constexpr int id = 245;
 
   virtual ~function_header_with_parameters_t() = default;
 
@@ -39,27 +39,31 @@ class function_header_with_parameters_function_header_parameter_declaration_t: p
 
 public:
 
-  std::unique_ptr<function_header_t> function_header_0;
+  std::shared_ptr<function_header_t> function_header_0;
 
-  std::unique_ptr<parameter_declaration_t> parameter_declaration_1;
+  std::shared_ptr<parameter_declaration_t> parameter_declaration_1;
 
   function_header_with_parameters_function_header_parameter_declaration_t(
-    std::unique_ptr<function_header_t> &&function_header_0_,
-    std::unique_ptr<parameter_declaration_t> &&parameter_declaration_1_
-  ): function_header_0(std::move(function_header_0_)),
-     parameter_declaration_1(std::move(parameter_declaration_1_)) {}
+    std::shared_ptr<function_header_t> function_header_0_,
+    std::shared_ptr<parameter_declaration_t> parameter_declaration_1_
+  ): function_header_0(function_header_0_),
+     parameter_declaration_1(parameter_declaration_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_header_with_parameters_function_header_parameter_declaration_t> make(
-    std::unique_ptr<function_header_t> &&function_header_0_,
-    std::unique_ptr<parameter_declaration_t> &&parameter_declaration_1_
+  virtual int get_id() const override {
+    return 245;
+  }
+
+  static std::shared_ptr<function_header_with_parameters_function_header_parameter_declaration_t> make(
+    std::shared_ptr<function_header_t> function_header_0_,
+    std::shared_ptr<parameter_declaration_t> parameter_declaration_1_
   ) {
-    return std::make_unique<function_header_with_parameters_function_header_parameter_declaration_t>(
-      std::move(function_header_0_),
-      std::move(parameter_declaration_1_)
+    return std::make_shared<function_header_with_parameters_function_header_parameter_declaration_t>(
+      function_header_0_,
+      parameter_declaration_1_
     );
   }
 
@@ -69,33 +73,37 @@ class function_header_with_parameters_function_header_with_parameters_comma_para
 
 public:
 
-  std::unique_ptr<function_header_with_parameters_t> function_header_with_parameters_0;
+  std::shared_ptr<function_header_with_parameters_t> function_header_with_parameters_0;
 
-  std::unique_ptr<token_t> comma_1;
+  std::shared_ptr<ast_token_t> comma_1;
 
-  std::unique_ptr<parameter_declaration_t> parameter_declaration_2;
+  std::shared_ptr<parameter_declaration_t> parameter_declaration_2;
 
   function_header_with_parameters_function_header_with_parameters_comma_parameter_declaration_t(
-    std::unique_ptr<function_header_with_parameters_t> &&function_header_with_parameters_0_,
-    std::unique_ptr<token_t> &&comma_1_,
-    std::unique_ptr<parameter_declaration_t> &&parameter_declaration_2_
-  ): function_header_with_parameters_0(std::move(function_header_with_parameters_0_)),
-     comma_1(std::move(comma_1_)),
-     parameter_declaration_2(std::move(parameter_declaration_2_)) {}
+    std::shared_ptr<function_header_with_parameters_t> function_header_with_parameters_0_,
+    std::shared_ptr<ast_token_t> comma_1_,
+    std::shared_ptr<parameter_declaration_t> parameter_declaration_2_
+  ): function_header_with_parameters_0(function_header_with_parameters_0_),
+     comma_1(comma_1_),
+     parameter_declaration_2(parameter_declaration_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_header_with_parameters_function_header_with_parameters_comma_parameter_declaration_t> make(
-    std::unique_ptr<function_header_with_parameters_t> &&function_header_with_parameters_0_,
-    const token_t *COMMA_1_,
-    std::unique_ptr<parameter_declaration_t> &&parameter_declaration_2_
+  virtual int get_id() const override {
+    return 245;
+  }
+
+  static std::shared_ptr<function_header_with_parameters_function_header_with_parameters_comma_parameter_declaration_t> make(
+    std::shared_ptr<function_header_with_parameters_t> function_header_with_parameters_0_,
+    std::shared_ptr<ast_token_t> COMMA_1_,
+    std::shared_ptr<parameter_declaration_t> parameter_declaration_2_
   ) {
-    return std::make_unique<function_header_with_parameters_function_header_with_parameters_comma_parameter_declaration_t>(
-      std::move(function_header_with_parameters_0_),
-      std::make_unique<token_t>(*COMMA_1_),
-      std::move(parameter_declaration_2_)
+    return std::make_shared<function_header_with_parameters_function_header_with_parameters_comma_parameter_declaration_t>(
+      function_header_with_parameters_0_,
+      COMMA_1_,
+      parameter_declaration_2_
     );
   }
 

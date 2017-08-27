@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 277;
+  static constexpr int id = 278;
 
   virtual ~statement_no_new_scope_t() = default;
 
@@ -39,21 +39,25 @@ class statement_no_new_scope_compound_statement_no_new_scope_t: public statement
 
 public:
 
-  std::unique_ptr<compound_statement_no_new_scope_t> compound_statement_no_new_scope_0;
+  std::shared_ptr<compound_statement_no_new_scope_t> compound_statement_no_new_scope_0;
 
   statement_no_new_scope_compound_statement_no_new_scope_t(
-    std::unique_ptr<compound_statement_no_new_scope_t> &&compound_statement_no_new_scope_0_
-  ): compound_statement_no_new_scope_0(std::move(compound_statement_no_new_scope_0_)) {}
+    std::shared_ptr<compound_statement_no_new_scope_t> compound_statement_no_new_scope_0_
+  ): compound_statement_no_new_scope_0(compound_statement_no_new_scope_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<statement_no_new_scope_compound_statement_no_new_scope_t> make(
-    std::unique_ptr<compound_statement_no_new_scope_t> &&compound_statement_no_new_scope_0_
+  virtual int get_id() const override {
+    return 278;
+  }
+
+  static std::shared_ptr<statement_no_new_scope_compound_statement_no_new_scope_t> make(
+    std::shared_ptr<compound_statement_no_new_scope_t> compound_statement_no_new_scope_0_
   ) {
-    return std::make_unique<statement_no_new_scope_compound_statement_no_new_scope_t>(
-      std::move(compound_statement_no_new_scope_0_)
+    return std::make_shared<statement_no_new_scope_compound_statement_no_new_scope_t>(
+      compound_statement_no_new_scope_0_
     );
   }
 
@@ -63,21 +67,25 @@ class statement_no_new_scope_simple_statement_t: public statement_no_new_scope_t
 
 public:
 
-  std::unique_ptr<simple_statement_t> simple_statement_0;
+  std::shared_ptr<simple_statement_t> simple_statement_0;
 
   statement_no_new_scope_simple_statement_t(
-    std::unique_ptr<simple_statement_t> &&simple_statement_0_
-  ): simple_statement_0(std::move(simple_statement_0_)) {}
+    std::shared_ptr<simple_statement_t> simple_statement_0_
+  ): simple_statement_0(simple_statement_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<statement_no_new_scope_simple_statement_t> make(
-    std::unique_ptr<simple_statement_t> &&simple_statement_0_
+  virtual int get_id() const override {
+    return 278;
+  }
+
+  static std::shared_ptr<statement_no_new_scope_simple_statement_t> make(
+    std::shared_ptr<simple_statement_t> simple_statement_0_
   ) {
-    return std::make_unique<statement_no_new_scope_simple_statement_t>(
-      std::move(simple_statement_0_)
+    return std::make_shared<statement_no_new_scope_simple_statement_t>(
+      simple_statement_0_
     );
   }
 

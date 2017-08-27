@@ -30,7 +30,7 @@ public:
 
   static constexpr int rules = 5;
 
-  static constexpr int id = 227;
+  static constexpr int id = 228;
 
   virtual ~relational_expression_t() = default;
 
@@ -40,21 +40,25 @@ class relational_expression_shift_expression_t: public relational_expression_t {
 
 public:
 
-  std::unique_ptr<shift_expression_t> shift_expression_0;
+  std::shared_ptr<shift_expression_t> shift_expression_0;
 
   relational_expression_shift_expression_t(
-    std::unique_ptr<shift_expression_t> &&shift_expression_0_
-  ): shift_expression_0(std::move(shift_expression_0_)) {}
+    std::shared_ptr<shift_expression_t> shift_expression_0_
+  ): shift_expression_0(shift_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<relational_expression_shift_expression_t> make(
-    std::unique_ptr<shift_expression_t> &&shift_expression_0_
+  virtual int get_id() const override {
+    return 228;
+  }
+
+  static std::shared_ptr<relational_expression_shift_expression_t> make(
+    std::shared_ptr<shift_expression_t> shift_expression_0_
   ) {
-    return std::make_unique<relational_expression_shift_expression_t>(
-      std::move(shift_expression_0_)
+    return std::make_shared<relational_expression_shift_expression_t>(
+      shift_expression_0_
     );
   }
 
@@ -64,33 +68,37 @@ class relational_expression_relational_expression_left_angle_shift_expression_t:
 
 public:
 
-  std::unique_ptr<relational_expression_t> relational_expression_0;
+  std::shared_ptr<relational_expression_t> relational_expression_0;
 
-  std::unique_ptr<token_t> left_angle_1;
+  std::shared_ptr<ast_token_t> left_angle_1;
 
-  std::unique_ptr<shift_expression_t> shift_expression_2;
+  std::shared_ptr<shift_expression_t> shift_expression_2;
 
   relational_expression_relational_expression_left_angle_shift_expression_t(
-    std::unique_ptr<relational_expression_t> &&relational_expression_0_,
-    std::unique_ptr<token_t> &&left_angle_1_,
-    std::unique_ptr<shift_expression_t> &&shift_expression_2_
-  ): relational_expression_0(std::move(relational_expression_0_)),
-     left_angle_1(std::move(left_angle_1_)),
-     shift_expression_2(std::move(shift_expression_2_)) {}
+    std::shared_ptr<relational_expression_t> relational_expression_0_,
+    std::shared_ptr<ast_token_t> left_angle_1_,
+    std::shared_ptr<shift_expression_t> shift_expression_2_
+  ): relational_expression_0(relational_expression_0_),
+     left_angle_1(left_angle_1_),
+     shift_expression_2(shift_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<relational_expression_relational_expression_left_angle_shift_expression_t> make(
-    std::unique_ptr<relational_expression_t> &&relational_expression_0_,
-    const token_t *LEFT_ANGLE_1_,
-    std::unique_ptr<shift_expression_t> &&shift_expression_2_
+  virtual int get_id() const override {
+    return 228;
+  }
+
+  static std::shared_ptr<relational_expression_relational_expression_left_angle_shift_expression_t> make(
+    std::shared_ptr<relational_expression_t> relational_expression_0_,
+    std::shared_ptr<ast_token_t> LEFT_ANGLE_1_,
+    std::shared_ptr<shift_expression_t> shift_expression_2_
   ) {
-    return std::make_unique<relational_expression_relational_expression_left_angle_shift_expression_t>(
-      std::move(relational_expression_0_),
-      std::make_unique<token_t>(*LEFT_ANGLE_1_),
-      std::move(shift_expression_2_)
+    return std::make_shared<relational_expression_relational_expression_left_angle_shift_expression_t>(
+      relational_expression_0_,
+      LEFT_ANGLE_1_,
+      shift_expression_2_
     );
   }
 
@@ -100,33 +108,37 @@ class relational_expression_relational_expression_right_angle_shift_expression_t
 
 public:
 
-  std::unique_ptr<relational_expression_t> relational_expression_0;
+  std::shared_ptr<relational_expression_t> relational_expression_0;
 
-  std::unique_ptr<token_t> right_angle_1;
+  std::shared_ptr<ast_token_t> right_angle_1;
 
-  std::unique_ptr<shift_expression_t> shift_expression_2;
+  std::shared_ptr<shift_expression_t> shift_expression_2;
 
   relational_expression_relational_expression_right_angle_shift_expression_t(
-    std::unique_ptr<relational_expression_t> &&relational_expression_0_,
-    std::unique_ptr<token_t> &&right_angle_1_,
-    std::unique_ptr<shift_expression_t> &&shift_expression_2_
-  ): relational_expression_0(std::move(relational_expression_0_)),
-     right_angle_1(std::move(right_angle_1_)),
-     shift_expression_2(std::move(shift_expression_2_)) {}
+    std::shared_ptr<relational_expression_t> relational_expression_0_,
+    std::shared_ptr<ast_token_t> right_angle_1_,
+    std::shared_ptr<shift_expression_t> shift_expression_2_
+  ): relational_expression_0(relational_expression_0_),
+     right_angle_1(right_angle_1_),
+     shift_expression_2(shift_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<relational_expression_relational_expression_right_angle_shift_expression_t> make(
-    std::unique_ptr<relational_expression_t> &&relational_expression_0_,
-    const token_t *RIGHT_ANGLE_1_,
-    std::unique_ptr<shift_expression_t> &&shift_expression_2_
+  virtual int get_id() const override {
+    return 228;
+  }
+
+  static std::shared_ptr<relational_expression_relational_expression_right_angle_shift_expression_t> make(
+    std::shared_ptr<relational_expression_t> relational_expression_0_,
+    std::shared_ptr<ast_token_t> RIGHT_ANGLE_1_,
+    std::shared_ptr<shift_expression_t> shift_expression_2_
   ) {
-    return std::make_unique<relational_expression_relational_expression_right_angle_shift_expression_t>(
-      std::move(relational_expression_0_),
-      std::make_unique<token_t>(*RIGHT_ANGLE_1_),
-      std::move(shift_expression_2_)
+    return std::make_shared<relational_expression_relational_expression_right_angle_shift_expression_t>(
+      relational_expression_0_,
+      RIGHT_ANGLE_1_,
+      shift_expression_2_
     );
   }
 
@@ -136,33 +148,37 @@ class relational_expression_relational_expression_le_op_shift_expression_t: publ
 
 public:
 
-  std::unique_ptr<relational_expression_t> relational_expression_0;
+  std::shared_ptr<relational_expression_t> relational_expression_0;
 
-  std::unique_ptr<token_t> le_op_1;
+  std::shared_ptr<ast_token_t> le_op_1;
 
-  std::unique_ptr<shift_expression_t> shift_expression_2;
+  std::shared_ptr<shift_expression_t> shift_expression_2;
 
   relational_expression_relational_expression_le_op_shift_expression_t(
-    std::unique_ptr<relational_expression_t> &&relational_expression_0_,
-    std::unique_ptr<token_t> &&le_op_1_,
-    std::unique_ptr<shift_expression_t> &&shift_expression_2_
-  ): relational_expression_0(std::move(relational_expression_0_)),
-     le_op_1(std::move(le_op_1_)),
-     shift_expression_2(std::move(shift_expression_2_)) {}
+    std::shared_ptr<relational_expression_t> relational_expression_0_,
+    std::shared_ptr<ast_token_t> le_op_1_,
+    std::shared_ptr<shift_expression_t> shift_expression_2_
+  ): relational_expression_0(relational_expression_0_),
+     le_op_1(le_op_1_),
+     shift_expression_2(shift_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<relational_expression_relational_expression_le_op_shift_expression_t> make(
-    std::unique_ptr<relational_expression_t> &&relational_expression_0_,
-    const token_t *LE_OP_1_,
-    std::unique_ptr<shift_expression_t> &&shift_expression_2_
+  virtual int get_id() const override {
+    return 228;
+  }
+
+  static std::shared_ptr<relational_expression_relational_expression_le_op_shift_expression_t> make(
+    std::shared_ptr<relational_expression_t> relational_expression_0_,
+    std::shared_ptr<ast_token_t> LE_OP_1_,
+    std::shared_ptr<shift_expression_t> shift_expression_2_
   ) {
-    return std::make_unique<relational_expression_relational_expression_le_op_shift_expression_t>(
-      std::move(relational_expression_0_),
-      std::make_unique<token_t>(*LE_OP_1_),
-      std::move(shift_expression_2_)
+    return std::make_shared<relational_expression_relational_expression_le_op_shift_expression_t>(
+      relational_expression_0_,
+      LE_OP_1_,
+      shift_expression_2_
     );
   }
 
@@ -172,33 +188,37 @@ class relational_expression_relational_expression_ge_op_shift_expression_t: publ
 
 public:
 
-  std::unique_ptr<relational_expression_t> relational_expression_0;
+  std::shared_ptr<relational_expression_t> relational_expression_0;
 
-  std::unique_ptr<token_t> ge_op_1;
+  std::shared_ptr<ast_token_t> ge_op_1;
 
-  std::unique_ptr<shift_expression_t> shift_expression_2;
+  std::shared_ptr<shift_expression_t> shift_expression_2;
 
   relational_expression_relational_expression_ge_op_shift_expression_t(
-    std::unique_ptr<relational_expression_t> &&relational_expression_0_,
-    std::unique_ptr<token_t> &&ge_op_1_,
-    std::unique_ptr<shift_expression_t> &&shift_expression_2_
-  ): relational_expression_0(std::move(relational_expression_0_)),
-     ge_op_1(std::move(ge_op_1_)),
-     shift_expression_2(std::move(shift_expression_2_)) {}
+    std::shared_ptr<relational_expression_t> relational_expression_0_,
+    std::shared_ptr<ast_token_t> ge_op_1_,
+    std::shared_ptr<shift_expression_t> shift_expression_2_
+  ): relational_expression_0(relational_expression_0_),
+     ge_op_1(ge_op_1_),
+     shift_expression_2(shift_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<relational_expression_relational_expression_ge_op_shift_expression_t> make(
-    std::unique_ptr<relational_expression_t> &&relational_expression_0_,
-    const token_t *GE_OP_1_,
-    std::unique_ptr<shift_expression_t> &&shift_expression_2_
+  virtual int get_id() const override {
+    return 228;
+  }
+
+  static std::shared_ptr<relational_expression_relational_expression_ge_op_shift_expression_t> make(
+    std::shared_ptr<relational_expression_t> relational_expression_0_,
+    std::shared_ptr<ast_token_t> GE_OP_1_,
+    std::shared_ptr<shift_expression_t> shift_expression_2_
   ) {
-    return std::make_unique<relational_expression_relational_expression_ge_op_shift_expression_t>(
-      std::move(relational_expression_0_),
-      std::make_unique<token_t>(*GE_OP_1_),
-      std::move(shift_expression_2_)
+    return std::make_shared<relational_expression_relational_expression_ge_op_shift_expression_t>(
+      relational_expression_0_,
+      GE_OP_1_,
+      shift_expression_2_
     );
   }
 

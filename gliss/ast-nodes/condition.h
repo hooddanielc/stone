@@ -31,7 +31,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 283;
+  static constexpr int id = 284;
 
   virtual ~condition_t() = default;
 
@@ -41,21 +41,25 @@ class condition_expression_t: public condition_t {
 
 public:
 
-  std::unique_ptr<expression_t> expression_0;
+  std::shared_ptr<expression_t> expression_0;
 
   condition_expression_t(
-    std::unique_ptr<expression_t> &&expression_0_
-  ): expression_0(std::move(expression_0_)) {}
+    std::shared_ptr<expression_t> expression_0_
+  ): expression_0(expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<condition_expression_t> make(
-    std::unique_ptr<expression_t> &&expression_0_
+  virtual int get_id() const override {
+    return 284;
+  }
+
+  static std::shared_ptr<condition_expression_t> make(
+    std::shared_ptr<expression_t> expression_0_
   ) {
-    return std::make_unique<condition_expression_t>(
-      std::move(expression_0_)
+    return std::make_shared<condition_expression_t>(
+      expression_0_
     );
   }
 
@@ -65,39 +69,43 @@ class condition_fully_specified_type_identifier_equal_initializer_t: public cond
 
 public:
 
-  std::unique_ptr<fully_specified_type_t> fully_specified_type_0;
+  std::shared_ptr<fully_specified_type_t> fully_specified_type_0;
 
-  std::unique_ptr<token_t> identifier_1;
+  std::shared_ptr<ast_token_t> identifier_1;
 
-  std::unique_ptr<token_t> equal_2;
+  std::shared_ptr<ast_token_t> equal_2;
 
-  std::unique_ptr<initializer_t> initializer_3;
+  std::shared_ptr<initializer_t> initializer_3;
 
   condition_fully_specified_type_identifier_equal_initializer_t(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
-    std::unique_ptr<token_t> &&identifier_1_,
-    std::unique_ptr<token_t> &&equal_2_,
-    std::unique_ptr<initializer_t> &&initializer_3_
-  ): fully_specified_type_0(std::move(fully_specified_type_0_)),
-     identifier_1(std::move(identifier_1_)),
-     equal_2(std::move(equal_2_)),
-     initializer_3(std::move(initializer_3_)) {}
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_,
+    std::shared_ptr<ast_token_t> identifier_1_,
+    std::shared_ptr<ast_token_t> equal_2_,
+    std::shared_ptr<initializer_t> initializer_3_
+  ): fully_specified_type_0(fully_specified_type_0_),
+     identifier_1(identifier_1_),
+     equal_2(equal_2_),
+     initializer_3(initializer_3_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<condition_fully_specified_type_identifier_equal_initializer_t> make(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
-    const token_t *IDENTIFIER_1_,
-    const token_t *EQUAL_2_,
-    std::unique_ptr<initializer_t> &&initializer_3_
+  virtual int get_id() const override {
+    return 284;
+  }
+
+  static std::shared_ptr<condition_fully_specified_type_identifier_equal_initializer_t> make(
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_1_,
+    std::shared_ptr<ast_token_t> EQUAL_2_,
+    std::shared_ptr<initializer_t> initializer_3_
   ) {
-    return std::make_unique<condition_fully_specified_type_identifier_equal_initializer_t>(
-      std::move(fully_specified_type_0_),
-      std::make_unique<token_t>(*IDENTIFIER_1_),
-      std::make_unique<token_t>(*EQUAL_2_),
-      std::move(initializer_3_)
+    return std::make_shared<condition_fully_specified_type_identifier_equal_initializer_t>(
+      fully_specified_type_0_,
+      IDENTIFIER_1_,
+      EQUAL_2_,
+      initializer_3_
     );
   }
 

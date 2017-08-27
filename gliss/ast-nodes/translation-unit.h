@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 292;
+  static constexpr int id = 293;
 
   virtual ~translation_unit_t() = default;
 
@@ -37,21 +37,25 @@ class translation_unit_external_declaration_t: public translation_unit_t {
 
 public:
 
-  std::unique_ptr<external_declaration_t> external_declaration_0;
+  std::shared_ptr<external_declaration_t> external_declaration_0;
 
   translation_unit_external_declaration_t(
-    std::unique_ptr<external_declaration_t> &&external_declaration_0_
-  ): external_declaration_0(std::move(external_declaration_0_)) {}
+    std::shared_ptr<external_declaration_t> external_declaration_0_
+  ): external_declaration_0(external_declaration_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<translation_unit_external_declaration_t> make(
-    std::unique_ptr<external_declaration_t> &&external_declaration_0_
+  virtual int get_id() const override {
+    return 293;
+  }
+
+  static std::shared_ptr<translation_unit_external_declaration_t> make(
+    std::shared_ptr<external_declaration_t> external_declaration_0_
   ) {
-    return std::make_unique<translation_unit_external_declaration_t>(
-      std::move(external_declaration_0_)
+    return std::make_shared<translation_unit_external_declaration_t>(
+      external_declaration_0_
     );
   }
 
@@ -61,27 +65,31 @@ class translation_unit_translation_unit_external_declaration_t: public translati
 
 public:
 
-  std::unique_ptr<translation_unit_t> translation_unit_0;
+  std::shared_ptr<translation_unit_t> translation_unit_0;
 
-  std::unique_ptr<external_declaration_t> external_declaration_1;
+  std::shared_ptr<external_declaration_t> external_declaration_1;
 
   translation_unit_translation_unit_external_declaration_t(
-    std::unique_ptr<translation_unit_t> &&translation_unit_0_,
-    std::unique_ptr<external_declaration_t> &&external_declaration_1_
-  ): translation_unit_0(std::move(translation_unit_0_)),
-     external_declaration_1(std::move(external_declaration_1_)) {}
+    std::shared_ptr<translation_unit_t> translation_unit_0_,
+    std::shared_ptr<external_declaration_t> external_declaration_1_
+  ): translation_unit_0(translation_unit_0_),
+     external_declaration_1(external_declaration_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<translation_unit_translation_unit_external_declaration_t> make(
-    std::unique_ptr<translation_unit_t> &&translation_unit_0_,
-    std::unique_ptr<external_declaration_t> &&external_declaration_1_
+  virtual int get_id() const override {
+    return 293;
+  }
+
+  static std::shared_ptr<translation_unit_translation_unit_external_declaration_t> make(
+    std::shared_ptr<translation_unit_t> translation_unit_0_,
+    std::shared_ptr<external_declaration_t> external_declaration_1_
   ) {
-    return std::make_unique<translation_unit_translation_unit_external_declaration_t>(
-      std::move(translation_unit_0_),
-      std::move(external_declaration_1_)
+    return std::make_shared<translation_unit_translation_unit_external_declaration_t>(
+      translation_unit_0_,
+      external_declaration_1_
     );
   }
 

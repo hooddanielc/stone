@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 243;
+  static constexpr int id = 244;
 
   virtual ~function_declarator_t() = default;
 
@@ -39,21 +39,25 @@ class function_declarator_function_header_t: public function_declarator_t {
 
 public:
 
-  std::unique_ptr<function_header_t> function_header_0;
+  std::shared_ptr<function_header_t> function_header_0;
 
   function_declarator_function_header_t(
-    std::unique_ptr<function_header_t> &&function_header_0_
-  ): function_header_0(std::move(function_header_0_)) {}
+    std::shared_ptr<function_header_t> function_header_0_
+  ): function_header_0(function_header_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_declarator_function_header_t> make(
-    std::unique_ptr<function_header_t> &&function_header_0_
+  virtual int get_id() const override {
+    return 244;
+  }
+
+  static std::shared_ptr<function_declarator_function_header_t> make(
+    std::shared_ptr<function_header_t> function_header_0_
   ) {
-    return std::make_unique<function_declarator_function_header_t>(
-      std::move(function_header_0_)
+    return std::make_shared<function_declarator_function_header_t>(
+      function_header_0_
     );
   }
 
@@ -63,21 +67,25 @@ class function_declarator_function_header_with_parameters_t: public function_dec
 
 public:
 
-  std::unique_ptr<function_header_with_parameters_t> function_header_with_parameters_0;
+  std::shared_ptr<function_header_with_parameters_t> function_header_with_parameters_0;
 
   function_declarator_function_header_with_parameters_t(
-    std::unique_ptr<function_header_with_parameters_t> &&function_header_with_parameters_0_
-  ): function_header_with_parameters_0(std::move(function_header_with_parameters_0_)) {}
+    std::shared_ptr<function_header_with_parameters_t> function_header_with_parameters_0_
+  ): function_header_with_parameters_0(function_header_with_parameters_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_declarator_function_header_with_parameters_t> make(
-    std::unique_ptr<function_header_with_parameters_t> &&function_header_with_parameters_0_
+  virtual int get_id() const override {
+    return 244;
+  }
+
+  static std::shared_ptr<function_declarator_function_header_with_parameters_t> make(
+    std::shared_ptr<function_header_with_parameters_t> function_header_with_parameters_0_
   ) {
-    return std::make_unique<function_declarator_function_header_with_parameters_t>(
-      std::move(function_header_with_parameters_0_)
+    return std::make_shared<function_declarator_function_header_with_parameters_t>(
+      function_header_with_parameters_0_
     );
   }
 

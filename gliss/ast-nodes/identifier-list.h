@@ -24,7 +24,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 241;
+  static constexpr int id = 242;
 
   virtual ~identifier_list_t() = default;
 
@@ -34,27 +34,31 @@ class identifier_list_comma_identifier_t: public identifier_list_t {
 
 public:
 
-  std::unique_ptr<token_t> comma_0;
+  std::shared_ptr<ast_token_t> comma_0;
 
-  std::unique_ptr<token_t> identifier_1;
+  std::shared_ptr<ast_token_t> identifier_1;
 
   identifier_list_comma_identifier_t(
-    std::unique_ptr<token_t> &&comma_0_,
-    std::unique_ptr<token_t> &&identifier_1_
-  ): comma_0(std::move(comma_0_)),
-     identifier_1(std::move(identifier_1_)) {}
+    std::shared_ptr<ast_token_t> comma_0_,
+    std::shared_ptr<ast_token_t> identifier_1_
+  ): comma_0(comma_0_),
+     identifier_1(identifier_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<identifier_list_comma_identifier_t> make(
-    const token_t *COMMA_0_,
-    const token_t *IDENTIFIER_1_
+  virtual int get_id() const override {
+    return 242;
+  }
+
+  static std::shared_ptr<identifier_list_comma_identifier_t> make(
+    std::shared_ptr<ast_token_t> COMMA_0_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_1_
   ) {
-    return std::make_unique<identifier_list_comma_identifier_t>(
-      std::make_unique<token_t>(*COMMA_0_),
-      std::make_unique<token_t>(*IDENTIFIER_1_)
+    return std::make_shared<identifier_list_comma_identifier_t>(
+      COMMA_0_,
+      IDENTIFIER_1_
     );
   }
 
@@ -64,33 +68,37 @@ class identifier_list_identifier_list_comma_identifier_t: public identifier_list
 
 public:
 
-  std::unique_ptr<identifier_list_t> identifier_list_0;
+  std::shared_ptr<identifier_list_t> identifier_list_0;
 
-  std::unique_ptr<token_t> comma_1;
+  std::shared_ptr<ast_token_t> comma_1;
 
-  std::unique_ptr<token_t> identifier_2;
+  std::shared_ptr<ast_token_t> identifier_2;
 
   identifier_list_identifier_list_comma_identifier_t(
-    std::unique_ptr<identifier_list_t> &&identifier_list_0_,
-    std::unique_ptr<token_t> &&comma_1_,
-    std::unique_ptr<token_t> &&identifier_2_
-  ): identifier_list_0(std::move(identifier_list_0_)),
-     comma_1(std::move(comma_1_)),
-     identifier_2(std::move(identifier_2_)) {}
+    std::shared_ptr<identifier_list_t> identifier_list_0_,
+    std::shared_ptr<ast_token_t> comma_1_,
+    std::shared_ptr<ast_token_t> identifier_2_
+  ): identifier_list_0(identifier_list_0_),
+     comma_1(comma_1_),
+     identifier_2(identifier_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<identifier_list_identifier_list_comma_identifier_t> make(
-    std::unique_ptr<identifier_list_t> &&identifier_list_0_,
-    const token_t *COMMA_1_,
-    const token_t *IDENTIFIER_2_
+  virtual int get_id() const override {
+    return 242;
+  }
+
+  static std::shared_ptr<identifier_list_identifier_list_comma_identifier_t> make(
+    std::shared_ptr<identifier_list_t> identifier_list_0_,
+    std::shared_ptr<ast_token_t> COMMA_1_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_2_
   ) {
-    return std::make_unique<identifier_list_identifier_list_comma_identifier_t>(
-      std::move(identifier_list_0_),
-      std::make_unique<token_t>(*COMMA_1_),
-      std::make_unique<token_t>(*IDENTIFIER_2_)
+    return std::make_shared<identifier_list_identifier_list_comma_identifier_t>(
+      identifier_list_0_,
+      COMMA_1_,
+      IDENTIFIER_2_
     );
   }
 

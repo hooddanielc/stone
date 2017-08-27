@@ -26,7 +26,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 242;
+  static constexpr int id = 243;
 
   virtual ~function_prototype_t() = default;
 
@@ -36,27 +36,31 @@ class function_prototype_function_declarator_right_paren_t: public function_prot
 
 public:
 
-  std::unique_ptr<function_declarator_t> function_declarator_0;
+  std::shared_ptr<function_declarator_t> function_declarator_0;
 
-  std::unique_ptr<token_t> right_paren_1;
+  std::shared_ptr<ast_token_t> right_paren_1;
 
   function_prototype_function_declarator_right_paren_t(
-    std::unique_ptr<function_declarator_t> &&function_declarator_0_,
-    std::unique_ptr<token_t> &&right_paren_1_
-  ): function_declarator_0(std::move(function_declarator_0_)),
-     right_paren_1(std::move(right_paren_1_)) {}
+    std::shared_ptr<function_declarator_t> function_declarator_0_,
+    std::shared_ptr<ast_token_t> right_paren_1_
+  ): function_declarator_0(function_declarator_0_),
+     right_paren_1(right_paren_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_prototype_function_declarator_right_paren_t> make(
-    std::unique_ptr<function_declarator_t> &&function_declarator_0_,
-    const token_t *RIGHT_PAREN_1_
+  virtual int get_id() const override {
+    return 243;
+  }
+
+  static std::shared_ptr<function_prototype_function_declarator_right_paren_t> make(
+    std::shared_ptr<function_declarator_t> function_declarator_0_,
+    std::shared_ptr<ast_token_t> RIGHT_PAREN_1_
   ) {
-    return std::make_unique<function_prototype_function_declarator_right_paren_t>(
-      std::move(function_declarator_0_),
-      std::make_unique<token_t>(*RIGHT_PAREN_1_)
+    return std::make_shared<function_prototype_function_declarator_right_paren_t>(
+      function_declarator_0_,
+      RIGHT_PAREN_1_
     );
   }
 

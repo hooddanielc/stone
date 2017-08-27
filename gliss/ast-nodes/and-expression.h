@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 229;
+  static constexpr int id = 230;
 
   virtual ~and_expression_t() = default;
 
@@ -37,21 +37,25 @@ class and_expression_equality_expression_t: public and_expression_t {
 
 public:
 
-  std::unique_ptr<equality_expression_t> equality_expression_0;
+  std::shared_ptr<equality_expression_t> equality_expression_0;
 
   and_expression_equality_expression_t(
-    std::unique_ptr<equality_expression_t> &&equality_expression_0_
-  ): equality_expression_0(std::move(equality_expression_0_)) {}
+    std::shared_ptr<equality_expression_t> equality_expression_0_
+  ): equality_expression_0(equality_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<and_expression_equality_expression_t> make(
-    std::unique_ptr<equality_expression_t> &&equality_expression_0_
+  virtual int get_id() const override {
+    return 230;
+  }
+
+  static std::shared_ptr<and_expression_equality_expression_t> make(
+    std::shared_ptr<equality_expression_t> equality_expression_0_
   ) {
-    return std::make_unique<and_expression_equality_expression_t>(
-      std::move(equality_expression_0_)
+    return std::make_shared<and_expression_equality_expression_t>(
+      equality_expression_0_
     );
   }
 
@@ -61,33 +65,37 @@ class and_expression_and_expression_ampersand_equality_expression_t: public and_
 
 public:
 
-  std::unique_ptr<and_expression_t> and_expression_0;
+  std::shared_ptr<and_expression_t> and_expression_0;
 
-  std::unique_ptr<token_t> ampersand_1;
+  std::shared_ptr<ast_token_t> ampersand_1;
 
-  std::unique_ptr<equality_expression_t> equality_expression_2;
+  std::shared_ptr<equality_expression_t> equality_expression_2;
 
   and_expression_and_expression_ampersand_equality_expression_t(
-    std::unique_ptr<and_expression_t> &&and_expression_0_,
-    std::unique_ptr<token_t> &&ampersand_1_,
-    std::unique_ptr<equality_expression_t> &&equality_expression_2_
-  ): and_expression_0(std::move(and_expression_0_)),
-     ampersand_1(std::move(ampersand_1_)),
-     equality_expression_2(std::move(equality_expression_2_)) {}
+    std::shared_ptr<and_expression_t> and_expression_0_,
+    std::shared_ptr<ast_token_t> ampersand_1_,
+    std::shared_ptr<equality_expression_t> equality_expression_2_
+  ): and_expression_0(and_expression_0_),
+     ampersand_1(ampersand_1_),
+     equality_expression_2(equality_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<and_expression_and_expression_ampersand_equality_expression_t> make(
-    std::unique_ptr<and_expression_t> &&and_expression_0_,
-    const token_t *AMPERSAND_1_,
-    std::unique_ptr<equality_expression_t> &&equality_expression_2_
+  virtual int get_id() const override {
+    return 230;
+  }
+
+  static std::shared_ptr<and_expression_and_expression_ampersand_equality_expression_t> make(
+    std::shared_ptr<and_expression_t> and_expression_0_,
+    std::shared_ptr<ast_token_t> AMPERSAND_1_,
+    std::shared_ptr<equality_expression_t> equality_expression_2_
   ) {
-    return std::make_unique<and_expression_and_expression_ampersand_equality_expression_t>(
-      std::move(and_expression_0_),
-      std::make_unique<token_t>(*AMPERSAND_1_),
-      std::move(equality_expression_2_)
+    return std::make_shared<and_expression_and_expression_ampersand_equality_expression_t>(
+      and_expression_0_,
+      AMPERSAND_1_,
+      equality_expression_2_
     );
   }
 

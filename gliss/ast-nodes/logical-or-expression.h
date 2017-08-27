@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 234;
+  static constexpr int id = 235;
 
   virtual ~logical_or_expression_t() = default;
 
@@ -37,21 +37,25 @@ class logical_or_expression_logical_xor_expression_t: public logical_or_expressi
 
 public:
 
-  std::unique_ptr<logical_xor_expression_t> logical_xor_expression_0;
+  std::shared_ptr<logical_xor_expression_t> logical_xor_expression_0;
 
   logical_or_expression_logical_xor_expression_t(
-    std::unique_ptr<logical_xor_expression_t> &&logical_xor_expression_0_
-  ): logical_xor_expression_0(std::move(logical_xor_expression_0_)) {}
+    std::shared_ptr<logical_xor_expression_t> logical_xor_expression_0_
+  ): logical_xor_expression_0(logical_xor_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<logical_or_expression_logical_xor_expression_t> make(
-    std::unique_ptr<logical_xor_expression_t> &&logical_xor_expression_0_
+  virtual int get_id() const override {
+    return 235;
+  }
+
+  static std::shared_ptr<logical_or_expression_logical_xor_expression_t> make(
+    std::shared_ptr<logical_xor_expression_t> logical_xor_expression_0_
   ) {
-    return std::make_unique<logical_or_expression_logical_xor_expression_t>(
-      std::move(logical_xor_expression_0_)
+    return std::make_shared<logical_or_expression_logical_xor_expression_t>(
+      logical_xor_expression_0_
     );
   }
 
@@ -61,33 +65,37 @@ class logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t
 
 public:
 
-  std::unique_ptr<logical_or_expression_t> logical_or_expression_0;
+  std::shared_ptr<logical_or_expression_t> logical_or_expression_0;
 
-  std::unique_ptr<token_t> or_op_1;
+  std::shared_ptr<ast_token_t> or_op_1;
 
-  std::unique_ptr<logical_xor_expression_t> logical_xor_expression_2;
+  std::shared_ptr<logical_xor_expression_t> logical_xor_expression_2;
 
   logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t(
-    std::unique_ptr<logical_or_expression_t> &&logical_or_expression_0_,
-    std::unique_ptr<token_t> &&or_op_1_,
-    std::unique_ptr<logical_xor_expression_t> &&logical_xor_expression_2_
-  ): logical_or_expression_0(std::move(logical_or_expression_0_)),
-     or_op_1(std::move(or_op_1_)),
-     logical_xor_expression_2(std::move(logical_xor_expression_2_)) {}
+    std::shared_ptr<logical_or_expression_t> logical_or_expression_0_,
+    std::shared_ptr<ast_token_t> or_op_1_,
+    std::shared_ptr<logical_xor_expression_t> logical_xor_expression_2_
+  ): logical_or_expression_0(logical_or_expression_0_),
+     or_op_1(or_op_1_),
+     logical_xor_expression_2(logical_xor_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t> make(
-    std::unique_ptr<logical_or_expression_t> &&logical_or_expression_0_,
-    const token_t *OR_OP_1_,
-    std::unique_ptr<logical_xor_expression_t> &&logical_xor_expression_2_
+  virtual int get_id() const override {
+    return 235;
+  }
+
+  static std::shared_ptr<logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t> make(
+    std::shared_ptr<logical_or_expression_t> logical_or_expression_0_,
+    std::shared_ptr<ast_token_t> OR_OP_1_,
+    std::shared_ptr<logical_xor_expression_t> logical_xor_expression_2_
   ) {
-    return std::make_unique<logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t>(
-      std::move(logical_or_expression_0_),
-      std::make_unique<token_t>(*OR_OP_1_),
-      std::move(logical_xor_expression_2_)
+    return std::make_shared<logical_or_expression_logical_or_expression_or_op_logical_xor_expression_t>(
+      logical_or_expression_0_,
+      OR_OP_1_,
+      logical_xor_expression_2_
     );
   }
 

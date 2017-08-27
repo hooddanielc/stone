@@ -30,7 +30,7 @@ public:
 
   static constexpr int rules = 3;
 
-  static constexpr int id = 271;
+  static constexpr int id = 272;
 
   virtual ~initializer_t() = default;
 
@@ -40,21 +40,25 @@ class initializer_assignment_expression_t: public initializer_t {
 
 public:
 
-  std::unique_ptr<assignment_expression_t> assignment_expression_0;
+  std::shared_ptr<assignment_expression_t> assignment_expression_0;
 
   initializer_assignment_expression_t(
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_0_
-  ): assignment_expression_0(std::move(assignment_expression_0_)) {}
+    std::shared_ptr<assignment_expression_t> assignment_expression_0_
+  ): assignment_expression_0(assignment_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<initializer_assignment_expression_t> make(
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_0_
+  virtual int get_id() const override {
+    return 272;
+  }
+
+  static std::shared_ptr<initializer_assignment_expression_t> make(
+    std::shared_ptr<assignment_expression_t> assignment_expression_0_
   ) {
-    return std::make_unique<initializer_assignment_expression_t>(
-      std::move(assignment_expression_0_)
+    return std::make_shared<initializer_assignment_expression_t>(
+      assignment_expression_0_
     );
   }
 
@@ -64,33 +68,37 @@ class initializer_left_brace_initializer_list_right_brace_t: public initializer_
 
 public:
 
-  std::unique_ptr<token_t> left_brace_0;
+  std::shared_ptr<ast_token_t> left_brace_0;
 
-  std::unique_ptr<initializer_list_t> initializer_list_1;
+  std::shared_ptr<initializer_list_t> initializer_list_1;
 
-  std::unique_ptr<token_t> right_brace_2;
+  std::shared_ptr<ast_token_t> right_brace_2;
 
   initializer_left_brace_initializer_list_right_brace_t(
-    std::unique_ptr<token_t> &&left_brace_0_,
-    std::unique_ptr<initializer_list_t> &&initializer_list_1_,
-    std::unique_ptr<token_t> &&right_brace_2_
-  ): left_brace_0(std::move(left_brace_0_)),
-     initializer_list_1(std::move(initializer_list_1_)),
-     right_brace_2(std::move(right_brace_2_)) {}
+    std::shared_ptr<ast_token_t> left_brace_0_,
+    std::shared_ptr<initializer_list_t> initializer_list_1_,
+    std::shared_ptr<ast_token_t> right_brace_2_
+  ): left_brace_0(left_brace_0_),
+     initializer_list_1(initializer_list_1_),
+     right_brace_2(right_brace_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<initializer_left_brace_initializer_list_right_brace_t> make(
-    const token_t *LEFT_BRACE_0_,
-    std::unique_ptr<initializer_list_t> &&initializer_list_1_,
-    const token_t *RIGHT_BRACE_2_
+  virtual int get_id() const override {
+    return 272;
+  }
+
+  static std::shared_ptr<initializer_left_brace_initializer_list_right_brace_t> make(
+    std::shared_ptr<ast_token_t> LEFT_BRACE_0_,
+    std::shared_ptr<initializer_list_t> initializer_list_1_,
+    std::shared_ptr<ast_token_t> RIGHT_BRACE_2_
   ) {
-    return std::make_unique<initializer_left_brace_initializer_list_right_brace_t>(
-      std::make_unique<token_t>(*LEFT_BRACE_0_),
-      std::move(initializer_list_1_),
-      std::make_unique<token_t>(*RIGHT_BRACE_2_)
+    return std::make_shared<initializer_left_brace_initializer_list_right_brace_t>(
+      LEFT_BRACE_0_,
+      initializer_list_1_,
+      RIGHT_BRACE_2_
     );
   }
 
@@ -100,39 +108,43 @@ class initializer_left_brace_initializer_list_comma_right_brace_t: public initia
 
 public:
 
-  std::unique_ptr<token_t> left_brace_0;
+  std::shared_ptr<ast_token_t> left_brace_0;
 
-  std::unique_ptr<initializer_list_t> initializer_list_1;
+  std::shared_ptr<initializer_list_t> initializer_list_1;
 
-  std::unique_ptr<token_t> comma_2;
+  std::shared_ptr<ast_token_t> comma_2;
 
-  std::unique_ptr<token_t> right_brace_3;
+  std::shared_ptr<ast_token_t> right_brace_3;
 
   initializer_left_brace_initializer_list_comma_right_brace_t(
-    std::unique_ptr<token_t> &&left_brace_0_,
-    std::unique_ptr<initializer_list_t> &&initializer_list_1_,
-    std::unique_ptr<token_t> &&comma_2_,
-    std::unique_ptr<token_t> &&right_brace_3_
-  ): left_brace_0(std::move(left_brace_0_)),
-     initializer_list_1(std::move(initializer_list_1_)),
-     comma_2(std::move(comma_2_)),
-     right_brace_3(std::move(right_brace_3_)) {}
+    std::shared_ptr<ast_token_t> left_brace_0_,
+    std::shared_ptr<initializer_list_t> initializer_list_1_,
+    std::shared_ptr<ast_token_t> comma_2_,
+    std::shared_ptr<ast_token_t> right_brace_3_
+  ): left_brace_0(left_brace_0_),
+     initializer_list_1(initializer_list_1_),
+     comma_2(comma_2_),
+     right_brace_3(right_brace_3_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<initializer_left_brace_initializer_list_comma_right_brace_t> make(
-    const token_t *LEFT_BRACE_0_,
-    std::unique_ptr<initializer_list_t> &&initializer_list_1_,
-    const token_t *COMMA_2_,
-    const token_t *RIGHT_BRACE_3_
+  virtual int get_id() const override {
+    return 272;
+  }
+
+  static std::shared_ptr<initializer_left_brace_initializer_list_comma_right_brace_t> make(
+    std::shared_ptr<ast_token_t> LEFT_BRACE_0_,
+    std::shared_ptr<initializer_list_t> initializer_list_1_,
+    std::shared_ptr<ast_token_t> COMMA_2_,
+    std::shared_ptr<ast_token_t> RIGHT_BRACE_3_
   ) {
-    return std::make_unique<initializer_left_brace_initializer_list_comma_right_brace_t>(
-      std::make_unique<token_t>(*LEFT_BRACE_0_),
-      std::move(initializer_list_1_),
-      std::make_unique<token_t>(*COMMA_2_),
-      std::make_unique<token_t>(*RIGHT_BRACE_3_)
+    return std::make_shared<initializer_left_brace_initializer_list_comma_right_brace_t>(
+      LEFT_BRACE_0_,
+      initializer_list_1_,
+      COMMA_2_,
+      RIGHT_BRACE_3_
     );
   }
 

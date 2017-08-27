@@ -33,7 +33,7 @@ public:
 
   static constexpr int rules = 11;
 
-  static constexpr int id = 237;
+  static constexpr int id = 238;
 
   virtual ~assignment_operator_t() = default;
 
@@ -43,21 +43,25 @@ class assignment_operator_equal_t: public assignment_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> equal_0;
+  std::shared_ptr<ast_token_t> equal_0;
 
   assignment_operator_equal_t(
-    std::unique_ptr<token_t> &&equal_0_
-  ): equal_0(std::move(equal_0_)) {}
+    std::shared_ptr<ast_token_t> equal_0_
+  ): equal_0(equal_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<assignment_operator_equal_t> make(
-    const token_t *EQUAL_0_
+  virtual int get_id() const override {
+    return 238;
+  }
+
+  static std::shared_ptr<assignment_operator_equal_t> make(
+    std::shared_ptr<ast_token_t> EQUAL_0_
   ) {
-    return std::make_unique<assignment_operator_equal_t>(
-      std::make_unique<token_t>(*EQUAL_0_)
+    return std::make_shared<assignment_operator_equal_t>(
+      EQUAL_0_
     );
   }
 
@@ -67,21 +71,25 @@ class assignment_operator_mul_assign_t: public assignment_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> mul_assign_0;
+  std::shared_ptr<ast_token_t> mul_assign_0;
 
   assignment_operator_mul_assign_t(
-    std::unique_ptr<token_t> &&mul_assign_0_
-  ): mul_assign_0(std::move(mul_assign_0_)) {}
+    std::shared_ptr<ast_token_t> mul_assign_0_
+  ): mul_assign_0(mul_assign_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<assignment_operator_mul_assign_t> make(
-    const token_t *MUL_ASSIGN_0_
+  virtual int get_id() const override {
+    return 238;
+  }
+
+  static std::shared_ptr<assignment_operator_mul_assign_t> make(
+    std::shared_ptr<ast_token_t> MUL_ASSIGN_0_
   ) {
-    return std::make_unique<assignment_operator_mul_assign_t>(
-      std::make_unique<token_t>(*MUL_ASSIGN_0_)
+    return std::make_shared<assignment_operator_mul_assign_t>(
+      MUL_ASSIGN_0_
     );
   }
 
@@ -91,21 +99,25 @@ class assignment_operator_div_assign_t: public assignment_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> div_assign_0;
+  std::shared_ptr<ast_token_t> div_assign_0;
 
   assignment_operator_div_assign_t(
-    std::unique_ptr<token_t> &&div_assign_0_
-  ): div_assign_0(std::move(div_assign_0_)) {}
+    std::shared_ptr<ast_token_t> div_assign_0_
+  ): div_assign_0(div_assign_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<assignment_operator_div_assign_t> make(
-    const token_t *DIV_ASSIGN_0_
+  virtual int get_id() const override {
+    return 238;
+  }
+
+  static std::shared_ptr<assignment_operator_div_assign_t> make(
+    std::shared_ptr<ast_token_t> DIV_ASSIGN_0_
   ) {
-    return std::make_unique<assignment_operator_div_assign_t>(
-      std::make_unique<token_t>(*DIV_ASSIGN_0_)
+    return std::make_shared<assignment_operator_div_assign_t>(
+      DIV_ASSIGN_0_
     );
   }
 
@@ -115,21 +127,25 @@ class assignment_operator_mod_assign_t: public assignment_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> mod_assign_0;
+  std::shared_ptr<ast_token_t> mod_assign_0;
 
   assignment_operator_mod_assign_t(
-    std::unique_ptr<token_t> &&mod_assign_0_
-  ): mod_assign_0(std::move(mod_assign_0_)) {}
+    std::shared_ptr<ast_token_t> mod_assign_0_
+  ): mod_assign_0(mod_assign_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<assignment_operator_mod_assign_t> make(
-    const token_t *MOD_ASSIGN_0_
+  virtual int get_id() const override {
+    return 238;
+  }
+
+  static std::shared_ptr<assignment_operator_mod_assign_t> make(
+    std::shared_ptr<ast_token_t> MOD_ASSIGN_0_
   ) {
-    return std::make_unique<assignment_operator_mod_assign_t>(
-      std::make_unique<token_t>(*MOD_ASSIGN_0_)
+    return std::make_shared<assignment_operator_mod_assign_t>(
+      MOD_ASSIGN_0_
     );
   }
 
@@ -139,21 +155,25 @@ class assignment_operator_add_assign_t: public assignment_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> add_assign_0;
+  std::shared_ptr<ast_token_t> add_assign_0;
 
   assignment_operator_add_assign_t(
-    std::unique_ptr<token_t> &&add_assign_0_
-  ): add_assign_0(std::move(add_assign_0_)) {}
+    std::shared_ptr<ast_token_t> add_assign_0_
+  ): add_assign_0(add_assign_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<assignment_operator_add_assign_t> make(
-    const token_t *ADD_ASSIGN_0_
+  virtual int get_id() const override {
+    return 238;
+  }
+
+  static std::shared_ptr<assignment_operator_add_assign_t> make(
+    std::shared_ptr<ast_token_t> ADD_ASSIGN_0_
   ) {
-    return std::make_unique<assignment_operator_add_assign_t>(
-      std::make_unique<token_t>(*ADD_ASSIGN_0_)
+    return std::make_shared<assignment_operator_add_assign_t>(
+      ADD_ASSIGN_0_
     );
   }
 
@@ -163,21 +183,25 @@ class assignment_operator_sub_assign_t: public assignment_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> sub_assign_0;
+  std::shared_ptr<ast_token_t> sub_assign_0;
 
   assignment_operator_sub_assign_t(
-    std::unique_ptr<token_t> &&sub_assign_0_
-  ): sub_assign_0(std::move(sub_assign_0_)) {}
+    std::shared_ptr<ast_token_t> sub_assign_0_
+  ): sub_assign_0(sub_assign_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<assignment_operator_sub_assign_t> make(
-    const token_t *SUB_ASSIGN_0_
+  virtual int get_id() const override {
+    return 238;
+  }
+
+  static std::shared_ptr<assignment_operator_sub_assign_t> make(
+    std::shared_ptr<ast_token_t> SUB_ASSIGN_0_
   ) {
-    return std::make_unique<assignment_operator_sub_assign_t>(
-      std::make_unique<token_t>(*SUB_ASSIGN_0_)
+    return std::make_shared<assignment_operator_sub_assign_t>(
+      SUB_ASSIGN_0_
     );
   }
 
@@ -187,21 +211,25 @@ class assignment_operator_left_assign_t: public assignment_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> left_assign_0;
+  std::shared_ptr<ast_token_t> left_assign_0;
 
   assignment_operator_left_assign_t(
-    std::unique_ptr<token_t> &&left_assign_0_
-  ): left_assign_0(std::move(left_assign_0_)) {}
+    std::shared_ptr<ast_token_t> left_assign_0_
+  ): left_assign_0(left_assign_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<assignment_operator_left_assign_t> make(
-    const token_t *LEFT_ASSIGN_0_
+  virtual int get_id() const override {
+    return 238;
+  }
+
+  static std::shared_ptr<assignment_operator_left_assign_t> make(
+    std::shared_ptr<ast_token_t> LEFT_ASSIGN_0_
   ) {
-    return std::make_unique<assignment_operator_left_assign_t>(
-      std::make_unique<token_t>(*LEFT_ASSIGN_0_)
+    return std::make_shared<assignment_operator_left_assign_t>(
+      LEFT_ASSIGN_0_
     );
   }
 
@@ -211,21 +239,25 @@ class assignment_operator_right_assign_t: public assignment_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> right_assign_0;
+  std::shared_ptr<ast_token_t> right_assign_0;
 
   assignment_operator_right_assign_t(
-    std::unique_ptr<token_t> &&right_assign_0_
-  ): right_assign_0(std::move(right_assign_0_)) {}
+    std::shared_ptr<ast_token_t> right_assign_0_
+  ): right_assign_0(right_assign_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<assignment_operator_right_assign_t> make(
-    const token_t *RIGHT_ASSIGN_0_
+  virtual int get_id() const override {
+    return 238;
+  }
+
+  static std::shared_ptr<assignment_operator_right_assign_t> make(
+    std::shared_ptr<ast_token_t> RIGHT_ASSIGN_0_
   ) {
-    return std::make_unique<assignment_operator_right_assign_t>(
-      std::make_unique<token_t>(*RIGHT_ASSIGN_0_)
+    return std::make_shared<assignment_operator_right_assign_t>(
+      RIGHT_ASSIGN_0_
     );
   }
 
@@ -235,21 +267,25 @@ class assignment_operator_and_assign_t: public assignment_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> and_assign_0;
+  std::shared_ptr<ast_token_t> and_assign_0;
 
   assignment_operator_and_assign_t(
-    std::unique_ptr<token_t> &&and_assign_0_
-  ): and_assign_0(std::move(and_assign_0_)) {}
+    std::shared_ptr<ast_token_t> and_assign_0_
+  ): and_assign_0(and_assign_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<assignment_operator_and_assign_t> make(
-    const token_t *AND_ASSIGN_0_
+  virtual int get_id() const override {
+    return 238;
+  }
+
+  static std::shared_ptr<assignment_operator_and_assign_t> make(
+    std::shared_ptr<ast_token_t> AND_ASSIGN_0_
   ) {
-    return std::make_unique<assignment_operator_and_assign_t>(
-      std::make_unique<token_t>(*AND_ASSIGN_0_)
+    return std::make_shared<assignment_operator_and_assign_t>(
+      AND_ASSIGN_0_
     );
   }
 
@@ -259,21 +295,25 @@ class assignment_operator_xor_assign_t: public assignment_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> xor_assign_0;
+  std::shared_ptr<ast_token_t> xor_assign_0;
 
   assignment_operator_xor_assign_t(
-    std::unique_ptr<token_t> &&xor_assign_0_
-  ): xor_assign_0(std::move(xor_assign_0_)) {}
+    std::shared_ptr<ast_token_t> xor_assign_0_
+  ): xor_assign_0(xor_assign_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<assignment_operator_xor_assign_t> make(
-    const token_t *XOR_ASSIGN_0_
+  virtual int get_id() const override {
+    return 238;
+  }
+
+  static std::shared_ptr<assignment_operator_xor_assign_t> make(
+    std::shared_ptr<ast_token_t> XOR_ASSIGN_0_
   ) {
-    return std::make_unique<assignment_operator_xor_assign_t>(
-      std::make_unique<token_t>(*XOR_ASSIGN_0_)
+    return std::make_shared<assignment_operator_xor_assign_t>(
+      XOR_ASSIGN_0_
     );
   }
 
@@ -283,21 +323,25 @@ class assignment_operator_or_assign_t: public assignment_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> or_assign_0;
+  std::shared_ptr<ast_token_t> or_assign_0;
 
   assignment_operator_or_assign_t(
-    std::unique_ptr<token_t> &&or_assign_0_
-  ): or_assign_0(std::move(or_assign_0_)) {}
+    std::shared_ptr<ast_token_t> or_assign_0_
+  ): or_assign_0(or_assign_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<assignment_operator_or_assign_t> make(
-    const token_t *OR_ASSIGN_0_
+  virtual int get_id() const override {
+    return 238;
+  }
+
+  static std::shared_ptr<assignment_operator_or_assign_t> make(
+    std::shared_ptr<ast_token_t> OR_ASSIGN_0_
   ) {
-    return std::make_unique<assignment_operator_or_assign_t>(
-      std::make_unique<token_t>(*OR_ASSIGN_0_)
+    return std::make_shared<assignment_operator_or_assign_t>(
+      OR_ASSIGN_0_
     );
   }
 

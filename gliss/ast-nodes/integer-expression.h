@@ -26,7 +26,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 214;
+  static constexpr int id = 215;
 
   virtual ~integer_expression_t() = default;
 
@@ -36,21 +36,25 @@ class integer_expression_expression_t: public integer_expression_t {
 
 public:
 
-  std::unique_ptr<expression_t> expression_0;
+  std::shared_ptr<expression_t> expression_0;
 
   integer_expression_expression_t(
-    std::unique_ptr<expression_t> &&expression_0_
-  ): expression_0(std::move(expression_0_)) {}
+    std::shared_ptr<expression_t> expression_0_
+  ): expression_0(expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<integer_expression_expression_t> make(
-    std::unique_ptr<expression_t> &&expression_0_
+  virtual int get_id() const override {
+    return 215;
+  }
+
+  static std::shared_ptr<integer_expression_expression_t> make(
+    std::shared_ptr<expression_t> expression_0_
   ) {
-    return std::make_unique<integer_expression_expression_t>(
-      std::move(expression_0_)
+    return std::make_shared<integer_expression_expression_t>(
+      expression_0_
     );
   }
 

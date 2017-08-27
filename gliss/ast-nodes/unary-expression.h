@@ -33,7 +33,7 @@ public:
 
   static constexpr int rules = 4;
 
-  static constexpr int id = 222;
+  static constexpr int id = 223;
 
   virtual ~unary_expression_t() = default;
 
@@ -43,21 +43,25 @@ class unary_expression_postfix_expression_t: public unary_expression_t {
 
 public:
 
-  std::unique_ptr<postfix_expression_t> postfix_expression_0;
+  std::shared_ptr<postfix_expression_t> postfix_expression_0;
 
   unary_expression_postfix_expression_t(
-    std::unique_ptr<postfix_expression_t> &&postfix_expression_0_
-  ): postfix_expression_0(std::move(postfix_expression_0_)) {}
+    std::shared_ptr<postfix_expression_t> postfix_expression_0_
+  ): postfix_expression_0(postfix_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<unary_expression_postfix_expression_t> make(
-    std::unique_ptr<postfix_expression_t> &&postfix_expression_0_
+  virtual int get_id() const override {
+    return 223;
+  }
+
+  static std::shared_ptr<unary_expression_postfix_expression_t> make(
+    std::shared_ptr<postfix_expression_t> postfix_expression_0_
   ) {
-    return std::make_unique<unary_expression_postfix_expression_t>(
-      std::move(postfix_expression_0_)
+    return std::make_shared<unary_expression_postfix_expression_t>(
+      postfix_expression_0_
     );
   }
 
@@ -67,27 +71,31 @@ class unary_expression_inc_op_unary_expression_t: public unary_expression_t {
 
 public:
 
-  std::unique_ptr<token_t> inc_op_0;
+  std::shared_ptr<ast_token_t> inc_op_0;
 
-  std::unique_ptr<unary_expression_t> unary_expression_1;
+  std::shared_ptr<unary_expression_t> unary_expression_1;
 
   unary_expression_inc_op_unary_expression_t(
-    std::unique_ptr<token_t> &&inc_op_0_,
-    std::unique_ptr<unary_expression_t> &&unary_expression_1_
-  ): inc_op_0(std::move(inc_op_0_)),
-     unary_expression_1(std::move(unary_expression_1_)) {}
+    std::shared_ptr<ast_token_t> inc_op_0_,
+    std::shared_ptr<unary_expression_t> unary_expression_1_
+  ): inc_op_0(inc_op_0_),
+     unary_expression_1(unary_expression_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<unary_expression_inc_op_unary_expression_t> make(
-    const token_t *INC_OP_0_,
-    std::unique_ptr<unary_expression_t> &&unary_expression_1_
+  virtual int get_id() const override {
+    return 223;
+  }
+
+  static std::shared_ptr<unary_expression_inc_op_unary_expression_t> make(
+    std::shared_ptr<ast_token_t> INC_OP_0_,
+    std::shared_ptr<unary_expression_t> unary_expression_1_
   ) {
-    return std::make_unique<unary_expression_inc_op_unary_expression_t>(
-      std::make_unique<token_t>(*INC_OP_0_),
-      std::move(unary_expression_1_)
+    return std::make_shared<unary_expression_inc_op_unary_expression_t>(
+      INC_OP_0_,
+      unary_expression_1_
     );
   }
 
@@ -97,27 +105,31 @@ class unary_expression_dec_op_unary_expression_t: public unary_expression_t {
 
 public:
 
-  std::unique_ptr<token_t> dec_op_0;
+  std::shared_ptr<ast_token_t> dec_op_0;
 
-  std::unique_ptr<unary_expression_t> unary_expression_1;
+  std::shared_ptr<unary_expression_t> unary_expression_1;
 
   unary_expression_dec_op_unary_expression_t(
-    std::unique_ptr<token_t> &&dec_op_0_,
-    std::unique_ptr<unary_expression_t> &&unary_expression_1_
-  ): dec_op_0(std::move(dec_op_0_)),
-     unary_expression_1(std::move(unary_expression_1_)) {}
+    std::shared_ptr<ast_token_t> dec_op_0_,
+    std::shared_ptr<unary_expression_t> unary_expression_1_
+  ): dec_op_0(dec_op_0_),
+     unary_expression_1(unary_expression_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<unary_expression_dec_op_unary_expression_t> make(
-    const token_t *DEC_OP_0_,
-    std::unique_ptr<unary_expression_t> &&unary_expression_1_
+  virtual int get_id() const override {
+    return 223;
+  }
+
+  static std::shared_ptr<unary_expression_dec_op_unary_expression_t> make(
+    std::shared_ptr<ast_token_t> DEC_OP_0_,
+    std::shared_ptr<unary_expression_t> unary_expression_1_
   ) {
-    return std::make_unique<unary_expression_dec_op_unary_expression_t>(
-      std::make_unique<token_t>(*DEC_OP_0_),
-      std::move(unary_expression_1_)
+    return std::make_shared<unary_expression_dec_op_unary_expression_t>(
+      DEC_OP_0_,
+      unary_expression_1_
     );
   }
 
@@ -127,27 +139,31 @@ class unary_expression_unary_operator_unary_expression_t: public unary_expressio
 
 public:
 
-  std::unique_ptr<unary_operator_t> unary_operator_0;
+  std::shared_ptr<unary_operator_t> unary_operator_0;
 
-  std::unique_ptr<unary_expression_t> unary_expression_1;
+  std::shared_ptr<unary_expression_t> unary_expression_1;
 
   unary_expression_unary_operator_unary_expression_t(
-    std::unique_ptr<unary_operator_t> &&unary_operator_0_,
-    std::unique_ptr<unary_expression_t> &&unary_expression_1_
-  ): unary_operator_0(std::move(unary_operator_0_)),
-     unary_expression_1(std::move(unary_expression_1_)) {}
+    std::shared_ptr<unary_operator_t> unary_operator_0_,
+    std::shared_ptr<unary_expression_t> unary_expression_1_
+  ): unary_operator_0(unary_operator_0_),
+     unary_expression_1(unary_expression_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<unary_expression_unary_operator_unary_expression_t> make(
-    std::unique_ptr<unary_operator_t> &&unary_operator_0_,
-    std::unique_ptr<unary_expression_t> &&unary_expression_1_
+  virtual int get_id() const override {
+    return 223;
+  }
+
+  static std::shared_ptr<unary_expression_unary_operator_unary_expression_t> make(
+    std::shared_ptr<unary_operator_t> unary_operator_0_,
+    std::shared_ptr<unary_expression_t> unary_expression_1_
   ) {
-    return std::make_unique<unary_expression_unary_operator_unary_expression_t>(
-      std::move(unary_operator_0_),
-      std::move(unary_expression_1_)
+    return std::make_shared<unary_expression_unary_operator_unary_expression_t>(
+      unary_operator_0_,
+      unary_expression_1_
     );
   }
 

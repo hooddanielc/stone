@@ -36,7 +36,7 @@ public:
 
   static constexpr int rules = 5;
 
-  static constexpr int id = 249;
+  static constexpr int id = 250;
 
   virtual ~init_declarator_list_t() = default;
 
@@ -46,21 +46,25 @@ class init_declarator_list_single_declaration_t: public init_declarator_list_t {
 
 public:
 
-  std::unique_ptr<single_declaration_t> single_declaration_0;
+  std::shared_ptr<single_declaration_t> single_declaration_0;
 
   init_declarator_list_single_declaration_t(
-    std::unique_ptr<single_declaration_t> &&single_declaration_0_
-  ): single_declaration_0(std::move(single_declaration_0_)) {}
+    std::shared_ptr<single_declaration_t> single_declaration_0_
+  ): single_declaration_0(single_declaration_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<init_declarator_list_single_declaration_t> make(
-    std::unique_ptr<single_declaration_t> &&single_declaration_0_
+  virtual int get_id() const override {
+    return 250;
+  }
+
+  static std::shared_ptr<init_declarator_list_single_declaration_t> make(
+    std::shared_ptr<single_declaration_t> single_declaration_0_
   ) {
-    return std::make_unique<init_declarator_list_single_declaration_t>(
-      std::move(single_declaration_0_)
+    return std::make_shared<init_declarator_list_single_declaration_t>(
+      single_declaration_0_
     );
   }
 
@@ -70,33 +74,37 @@ class init_declarator_list_init_declarator_list_comma_identifier_t: public init_
 
 public:
 
-  std::unique_ptr<init_declarator_list_t> init_declarator_list_0;
+  std::shared_ptr<init_declarator_list_t> init_declarator_list_0;
 
-  std::unique_ptr<token_t> comma_1;
+  std::shared_ptr<ast_token_t> comma_1;
 
-  std::unique_ptr<token_t> identifier_2;
+  std::shared_ptr<ast_token_t> identifier_2;
 
   init_declarator_list_init_declarator_list_comma_identifier_t(
-    std::unique_ptr<init_declarator_list_t> &&init_declarator_list_0_,
-    std::unique_ptr<token_t> &&comma_1_,
-    std::unique_ptr<token_t> &&identifier_2_
-  ): init_declarator_list_0(std::move(init_declarator_list_0_)),
-     comma_1(std::move(comma_1_)),
-     identifier_2(std::move(identifier_2_)) {}
+    std::shared_ptr<init_declarator_list_t> init_declarator_list_0_,
+    std::shared_ptr<ast_token_t> comma_1_,
+    std::shared_ptr<ast_token_t> identifier_2_
+  ): init_declarator_list_0(init_declarator_list_0_),
+     comma_1(comma_1_),
+     identifier_2(identifier_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<init_declarator_list_init_declarator_list_comma_identifier_t> make(
-    std::unique_ptr<init_declarator_list_t> &&init_declarator_list_0_,
-    const token_t *COMMA_1_,
-    const token_t *IDENTIFIER_2_
+  virtual int get_id() const override {
+    return 250;
+  }
+
+  static std::shared_ptr<init_declarator_list_init_declarator_list_comma_identifier_t> make(
+    std::shared_ptr<init_declarator_list_t> init_declarator_list_0_,
+    std::shared_ptr<ast_token_t> COMMA_1_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_2_
   ) {
-    return std::make_unique<init_declarator_list_init_declarator_list_comma_identifier_t>(
-      std::move(init_declarator_list_0_),
-      std::make_unique<token_t>(*COMMA_1_),
-      std::make_unique<token_t>(*IDENTIFIER_2_)
+    return std::make_shared<init_declarator_list_init_declarator_list_comma_identifier_t>(
+      init_declarator_list_0_,
+      COMMA_1_,
+      IDENTIFIER_2_
     );
   }
 
@@ -106,39 +114,43 @@ class init_declarator_list_init_declarator_list_comma_identifier_array_specifier
 
 public:
 
-  std::unique_ptr<init_declarator_list_t> init_declarator_list_0;
+  std::shared_ptr<init_declarator_list_t> init_declarator_list_0;
 
-  std::unique_ptr<token_t> comma_1;
+  std::shared_ptr<ast_token_t> comma_1;
 
-  std::unique_ptr<token_t> identifier_2;
+  std::shared_ptr<ast_token_t> identifier_2;
 
-  std::unique_ptr<array_specifier_t> array_specifier_3;
+  std::shared_ptr<array_specifier_t> array_specifier_3;
 
   init_declarator_list_init_declarator_list_comma_identifier_array_specifier_t(
-    std::unique_ptr<init_declarator_list_t> &&init_declarator_list_0_,
-    std::unique_ptr<token_t> &&comma_1_,
-    std::unique_ptr<token_t> &&identifier_2_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_3_
-  ): init_declarator_list_0(std::move(init_declarator_list_0_)),
-     comma_1(std::move(comma_1_)),
-     identifier_2(std::move(identifier_2_)),
-     array_specifier_3(std::move(array_specifier_3_)) {}
+    std::shared_ptr<init_declarator_list_t> init_declarator_list_0_,
+    std::shared_ptr<ast_token_t> comma_1_,
+    std::shared_ptr<ast_token_t> identifier_2_,
+    std::shared_ptr<array_specifier_t> array_specifier_3_
+  ): init_declarator_list_0(init_declarator_list_0_),
+     comma_1(comma_1_),
+     identifier_2(identifier_2_),
+     array_specifier_3(array_specifier_3_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<init_declarator_list_init_declarator_list_comma_identifier_array_specifier_t> make(
-    std::unique_ptr<init_declarator_list_t> &&init_declarator_list_0_,
-    const token_t *COMMA_1_,
-    const token_t *IDENTIFIER_2_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_3_
+  virtual int get_id() const override {
+    return 250;
+  }
+
+  static std::shared_ptr<init_declarator_list_init_declarator_list_comma_identifier_array_specifier_t> make(
+    std::shared_ptr<init_declarator_list_t> init_declarator_list_0_,
+    std::shared_ptr<ast_token_t> COMMA_1_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_2_,
+    std::shared_ptr<array_specifier_t> array_specifier_3_
   ) {
-    return std::make_unique<init_declarator_list_init_declarator_list_comma_identifier_array_specifier_t>(
-      std::move(init_declarator_list_0_),
-      std::make_unique<token_t>(*COMMA_1_),
-      std::make_unique<token_t>(*IDENTIFIER_2_),
-      std::move(array_specifier_3_)
+    return std::make_shared<init_declarator_list_init_declarator_list_comma_identifier_array_specifier_t>(
+      init_declarator_list_0_,
+      COMMA_1_,
+      IDENTIFIER_2_,
+      array_specifier_3_
     );
   }
 
@@ -148,51 +160,55 @@ class init_declarator_list_init_declarator_list_comma_identifier_array_specifier
 
 public:
 
-  std::unique_ptr<init_declarator_list_t> init_declarator_list_0;
+  std::shared_ptr<init_declarator_list_t> init_declarator_list_0;
 
-  std::unique_ptr<token_t> comma_1;
+  std::shared_ptr<ast_token_t> comma_1;
 
-  std::unique_ptr<token_t> identifier_2;
+  std::shared_ptr<ast_token_t> identifier_2;
 
-  std::unique_ptr<array_specifier_t> array_specifier_3;
+  std::shared_ptr<array_specifier_t> array_specifier_3;
 
-  std::unique_ptr<token_t> equal_4;
+  std::shared_ptr<ast_token_t> equal_4;
 
-  std::unique_ptr<initializer_t> initializer_5;
+  std::shared_ptr<initializer_t> initializer_5;
 
   init_declarator_list_init_declarator_list_comma_identifier_array_specifier_equal_initializer_t(
-    std::unique_ptr<init_declarator_list_t> &&init_declarator_list_0_,
-    std::unique_ptr<token_t> &&comma_1_,
-    std::unique_ptr<token_t> &&identifier_2_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_3_,
-    std::unique_ptr<token_t> &&equal_4_,
-    std::unique_ptr<initializer_t> &&initializer_5_
-  ): init_declarator_list_0(std::move(init_declarator_list_0_)),
-     comma_1(std::move(comma_1_)),
-     identifier_2(std::move(identifier_2_)),
-     array_specifier_3(std::move(array_specifier_3_)),
-     equal_4(std::move(equal_4_)),
-     initializer_5(std::move(initializer_5_)) {}
+    std::shared_ptr<init_declarator_list_t> init_declarator_list_0_,
+    std::shared_ptr<ast_token_t> comma_1_,
+    std::shared_ptr<ast_token_t> identifier_2_,
+    std::shared_ptr<array_specifier_t> array_specifier_3_,
+    std::shared_ptr<ast_token_t> equal_4_,
+    std::shared_ptr<initializer_t> initializer_5_
+  ): init_declarator_list_0(init_declarator_list_0_),
+     comma_1(comma_1_),
+     identifier_2(identifier_2_),
+     array_specifier_3(array_specifier_3_),
+     equal_4(equal_4_),
+     initializer_5(initializer_5_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<init_declarator_list_init_declarator_list_comma_identifier_array_specifier_equal_initializer_t> make(
-    std::unique_ptr<init_declarator_list_t> &&init_declarator_list_0_,
-    const token_t *COMMA_1_,
-    const token_t *IDENTIFIER_2_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_3_,
-    const token_t *EQUAL_4_,
-    std::unique_ptr<initializer_t> &&initializer_5_
+  virtual int get_id() const override {
+    return 250;
+  }
+
+  static std::shared_ptr<init_declarator_list_init_declarator_list_comma_identifier_array_specifier_equal_initializer_t> make(
+    std::shared_ptr<init_declarator_list_t> init_declarator_list_0_,
+    std::shared_ptr<ast_token_t> COMMA_1_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_2_,
+    std::shared_ptr<array_specifier_t> array_specifier_3_,
+    std::shared_ptr<ast_token_t> EQUAL_4_,
+    std::shared_ptr<initializer_t> initializer_5_
   ) {
-    return std::make_unique<init_declarator_list_init_declarator_list_comma_identifier_array_specifier_equal_initializer_t>(
-      std::move(init_declarator_list_0_),
-      std::make_unique<token_t>(*COMMA_1_),
-      std::make_unique<token_t>(*IDENTIFIER_2_),
-      std::move(array_specifier_3_),
-      std::make_unique<token_t>(*EQUAL_4_),
-      std::move(initializer_5_)
+    return std::make_shared<init_declarator_list_init_declarator_list_comma_identifier_array_specifier_equal_initializer_t>(
+      init_declarator_list_0_,
+      COMMA_1_,
+      IDENTIFIER_2_,
+      array_specifier_3_,
+      EQUAL_4_,
+      initializer_5_
     );
   }
 
@@ -202,45 +218,49 @@ class init_declarator_list_init_declarator_list_comma_identifier_equal_initializ
 
 public:
 
-  std::unique_ptr<init_declarator_list_t> init_declarator_list_0;
+  std::shared_ptr<init_declarator_list_t> init_declarator_list_0;
 
-  std::unique_ptr<token_t> comma_1;
+  std::shared_ptr<ast_token_t> comma_1;
 
-  std::unique_ptr<token_t> identifier_2;
+  std::shared_ptr<ast_token_t> identifier_2;
 
-  std::unique_ptr<token_t> equal_3;
+  std::shared_ptr<ast_token_t> equal_3;
 
-  std::unique_ptr<initializer_t> initializer_4;
+  std::shared_ptr<initializer_t> initializer_4;
 
   init_declarator_list_init_declarator_list_comma_identifier_equal_initializer_t(
-    std::unique_ptr<init_declarator_list_t> &&init_declarator_list_0_,
-    std::unique_ptr<token_t> &&comma_1_,
-    std::unique_ptr<token_t> &&identifier_2_,
-    std::unique_ptr<token_t> &&equal_3_,
-    std::unique_ptr<initializer_t> &&initializer_4_
-  ): init_declarator_list_0(std::move(init_declarator_list_0_)),
-     comma_1(std::move(comma_1_)),
-     identifier_2(std::move(identifier_2_)),
-     equal_3(std::move(equal_3_)),
-     initializer_4(std::move(initializer_4_)) {}
+    std::shared_ptr<init_declarator_list_t> init_declarator_list_0_,
+    std::shared_ptr<ast_token_t> comma_1_,
+    std::shared_ptr<ast_token_t> identifier_2_,
+    std::shared_ptr<ast_token_t> equal_3_,
+    std::shared_ptr<initializer_t> initializer_4_
+  ): init_declarator_list_0(init_declarator_list_0_),
+     comma_1(comma_1_),
+     identifier_2(identifier_2_),
+     equal_3(equal_3_),
+     initializer_4(initializer_4_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<init_declarator_list_init_declarator_list_comma_identifier_equal_initializer_t> make(
-    std::unique_ptr<init_declarator_list_t> &&init_declarator_list_0_,
-    const token_t *COMMA_1_,
-    const token_t *IDENTIFIER_2_,
-    const token_t *EQUAL_3_,
-    std::unique_ptr<initializer_t> &&initializer_4_
+  virtual int get_id() const override {
+    return 250;
+  }
+
+  static std::shared_ptr<init_declarator_list_init_declarator_list_comma_identifier_equal_initializer_t> make(
+    std::shared_ptr<init_declarator_list_t> init_declarator_list_0_,
+    std::shared_ptr<ast_token_t> COMMA_1_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_2_,
+    std::shared_ptr<ast_token_t> EQUAL_3_,
+    std::shared_ptr<initializer_t> initializer_4_
   ) {
-    return std::make_unique<init_declarator_list_init_declarator_list_comma_identifier_equal_initializer_t>(
-      std::move(init_declarator_list_0_),
-      std::make_unique<token_t>(*COMMA_1_),
-      std::make_unique<token_t>(*IDENTIFIER_2_),
-      std::make_unique<token_t>(*EQUAL_3_),
-      std::move(initializer_4_)
+    return std::make_shared<init_declarator_list_init_declarator_list_comma_identifier_equal_initializer_t>(
+      init_declarator_list_0_,
+      COMMA_1_,
+      IDENTIFIER_2_,
+      EQUAL_3_,
+      initializer_4_
     );
   }
 

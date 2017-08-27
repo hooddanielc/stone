@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 266;
+  static constexpr int id = 267;
 
   virtual ~struct_specifier_t() = default;
 
@@ -37,45 +37,49 @@ class struct_specifier_struct_identifier_left_brace_struct_declaration_list_righ
 
 public:
 
-  std::unique_ptr<token_t> struct_0;
+  std::shared_ptr<ast_token_t> struct_0;
 
-  std::unique_ptr<token_t> identifier_1;
+  std::shared_ptr<ast_token_t> identifier_1;
 
-  std::unique_ptr<token_t> left_brace_2;
+  std::shared_ptr<ast_token_t> left_brace_2;
 
-  std::unique_ptr<struct_declaration_list_t> struct_declaration_list_3;
+  std::shared_ptr<struct_declaration_list_t> struct_declaration_list_3;
 
-  std::unique_ptr<token_t> right_brace_4;
+  std::shared_ptr<ast_token_t> right_brace_4;
 
   struct_specifier_struct_identifier_left_brace_struct_declaration_list_right_brace_t(
-    std::unique_ptr<token_t> &&struct_0_,
-    std::unique_ptr<token_t> &&identifier_1_,
-    std::unique_ptr<token_t> &&left_brace_2_,
-    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_3_,
-    std::unique_ptr<token_t> &&right_brace_4_
-  ): struct_0(std::move(struct_0_)),
-     identifier_1(std::move(identifier_1_)),
-     left_brace_2(std::move(left_brace_2_)),
-     struct_declaration_list_3(std::move(struct_declaration_list_3_)),
-     right_brace_4(std::move(right_brace_4_)) {}
+    std::shared_ptr<ast_token_t> struct_0_,
+    std::shared_ptr<ast_token_t> identifier_1_,
+    std::shared_ptr<ast_token_t> left_brace_2_,
+    std::shared_ptr<struct_declaration_list_t> struct_declaration_list_3_,
+    std::shared_ptr<ast_token_t> right_brace_4_
+  ): struct_0(struct_0_),
+     identifier_1(identifier_1_),
+     left_brace_2(left_brace_2_),
+     struct_declaration_list_3(struct_declaration_list_3_),
+     right_brace_4(right_brace_4_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<struct_specifier_struct_identifier_left_brace_struct_declaration_list_right_brace_t> make(
-    const token_t *STRUCT_0_,
-    const token_t *IDENTIFIER_1_,
-    const token_t *LEFT_BRACE_2_,
-    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_3_,
-    const token_t *RIGHT_BRACE_4_
+  virtual int get_id() const override {
+    return 267;
+  }
+
+  static std::shared_ptr<struct_specifier_struct_identifier_left_brace_struct_declaration_list_right_brace_t> make(
+    std::shared_ptr<ast_token_t> STRUCT_0_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_1_,
+    std::shared_ptr<ast_token_t> LEFT_BRACE_2_,
+    std::shared_ptr<struct_declaration_list_t> struct_declaration_list_3_,
+    std::shared_ptr<ast_token_t> RIGHT_BRACE_4_
   ) {
-    return std::make_unique<struct_specifier_struct_identifier_left_brace_struct_declaration_list_right_brace_t>(
-      std::make_unique<token_t>(*STRUCT_0_),
-      std::make_unique<token_t>(*IDENTIFIER_1_),
-      std::make_unique<token_t>(*LEFT_BRACE_2_),
-      std::move(struct_declaration_list_3_),
-      std::make_unique<token_t>(*RIGHT_BRACE_4_)
+    return std::make_shared<struct_specifier_struct_identifier_left_brace_struct_declaration_list_right_brace_t>(
+      STRUCT_0_,
+      IDENTIFIER_1_,
+      LEFT_BRACE_2_,
+      struct_declaration_list_3_,
+      RIGHT_BRACE_4_
     );
   }
 
@@ -85,39 +89,43 @@ class struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t: 
 
 public:
 
-  std::unique_ptr<token_t> struct_0;
+  std::shared_ptr<ast_token_t> struct_0;
 
-  std::unique_ptr<token_t> left_brace_1;
+  std::shared_ptr<ast_token_t> left_brace_1;
 
-  std::unique_ptr<struct_declaration_list_t> struct_declaration_list_2;
+  std::shared_ptr<struct_declaration_list_t> struct_declaration_list_2;
 
-  std::unique_ptr<token_t> right_brace_3;
+  std::shared_ptr<ast_token_t> right_brace_3;
 
   struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t(
-    std::unique_ptr<token_t> &&struct_0_,
-    std::unique_ptr<token_t> &&left_brace_1_,
-    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_2_,
-    std::unique_ptr<token_t> &&right_brace_3_
-  ): struct_0(std::move(struct_0_)),
-     left_brace_1(std::move(left_brace_1_)),
-     struct_declaration_list_2(std::move(struct_declaration_list_2_)),
-     right_brace_3(std::move(right_brace_3_)) {}
+    std::shared_ptr<ast_token_t> struct_0_,
+    std::shared_ptr<ast_token_t> left_brace_1_,
+    std::shared_ptr<struct_declaration_list_t> struct_declaration_list_2_,
+    std::shared_ptr<ast_token_t> right_brace_3_
+  ): struct_0(struct_0_),
+     left_brace_1(left_brace_1_),
+     struct_declaration_list_2(struct_declaration_list_2_),
+     right_brace_3(right_brace_3_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t> make(
-    const token_t *STRUCT_0_,
-    const token_t *LEFT_BRACE_1_,
-    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_2_,
-    const token_t *RIGHT_BRACE_3_
+  virtual int get_id() const override {
+    return 267;
+  }
+
+  static std::shared_ptr<struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t> make(
+    std::shared_ptr<ast_token_t> STRUCT_0_,
+    std::shared_ptr<ast_token_t> LEFT_BRACE_1_,
+    std::shared_ptr<struct_declaration_list_t> struct_declaration_list_2_,
+    std::shared_ptr<ast_token_t> RIGHT_BRACE_3_
   ) {
-    return std::make_unique<struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t>(
-      std::make_unique<token_t>(*STRUCT_0_),
-      std::make_unique<token_t>(*LEFT_BRACE_1_),
-      std::move(struct_declaration_list_2_),
-      std::make_unique<token_t>(*RIGHT_BRACE_3_)
+    return std::make_shared<struct_specifier_struct_left_brace_struct_declaration_list_right_brace_t>(
+      STRUCT_0_,
+      LEFT_BRACE_1_,
+      struct_declaration_list_2_,
+      RIGHT_BRACE_3_
     );
   }
 

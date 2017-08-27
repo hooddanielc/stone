@@ -42,7 +42,7 @@ public:
 
   static constexpr int rules = 17;
 
-  static constexpr int id = 260;
+  static constexpr int id = 261;
 
   virtual ~storage_qualifier_t() = default;
 
@@ -52,21 +52,25 @@ class storage_qualifier_const_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> const_0;
+  std::shared_ptr<ast_token_t> const_0;
 
   storage_qualifier_const_t(
-    std::unique_ptr<token_t> &&const_0_
-  ): const_0(std::move(const_0_)) {}
+    std::shared_ptr<ast_token_t> const_0_
+  ): const_0(const_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_const_t> make(
-    const token_t *CONST_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_const_t> make(
+    std::shared_ptr<ast_token_t> CONST_0_
   ) {
-    return std::make_unique<storage_qualifier_const_t>(
-      std::make_unique<token_t>(*CONST_0_)
+    return std::make_shared<storage_qualifier_const_t>(
+      CONST_0_
     );
   }
 
@@ -76,21 +80,25 @@ class storage_qualifier_inout_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> inout_0;
+  std::shared_ptr<ast_token_t> inout_0;
 
   storage_qualifier_inout_t(
-    std::unique_ptr<token_t> &&inout_0_
-  ): inout_0(std::move(inout_0_)) {}
+    std::shared_ptr<ast_token_t> inout_0_
+  ): inout_0(inout_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_inout_t> make(
-    const token_t *INOUT_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_inout_t> make(
+    std::shared_ptr<ast_token_t> INOUT_0_
   ) {
-    return std::make_unique<storage_qualifier_inout_t>(
-      std::make_unique<token_t>(*INOUT_0_)
+    return std::make_shared<storage_qualifier_inout_t>(
+      INOUT_0_
     );
   }
 
@@ -100,21 +108,25 @@ class storage_qualifier_in_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> in_0;
+  std::shared_ptr<ast_token_t> in_0;
 
   storage_qualifier_in_t(
-    std::unique_ptr<token_t> &&in_0_
-  ): in_0(std::move(in_0_)) {}
+    std::shared_ptr<ast_token_t> in_0_
+  ): in_0(in_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_in_t> make(
-    const token_t *IN_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_in_t> make(
+    std::shared_ptr<ast_token_t> IN_0_
   ) {
-    return std::make_unique<storage_qualifier_in_t>(
-      std::make_unique<token_t>(*IN_0_)
+    return std::make_shared<storage_qualifier_in_t>(
+      IN_0_
     );
   }
 
@@ -124,21 +136,25 @@ class storage_qualifier_out_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> out_0;
+  std::shared_ptr<ast_token_t> out_0;
 
   storage_qualifier_out_t(
-    std::unique_ptr<token_t> &&out_0_
-  ): out_0(std::move(out_0_)) {}
+    std::shared_ptr<ast_token_t> out_0_
+  ): out_0(out_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_out_t> make(
-    const token_t *OUT_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_out_t> make(
+    std::shared_ptr<ast_token_t> OUT_0_
   ) {
-    return std::make_unique<storage_qualifier_out_t>(
-      std::make_unique<token_t>(*OUT_0_)
+    return std::make_shared<storage_qualifier_out_t>(
+      OUT_0_
     );
   }
 
@@ -148,21 +164,25 @@ class storage_qualifier_centroid_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> centroid_0;
+  std::shared_ptr<ast_token_t> centroid_0;
 
   storage_qualifier_centroid_t(
-    std::unique_ptr<token_t> &&centroid_0_
-  ): centroid_0(std::move(centroid_0_)) {}
+    std::shared_ptr<ast_token_t> centroid_0_
+  ): centroid_0(centroid_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_centroid_t> make(
-    const token_t *CENTROID_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_centroid_t> make(
+    std::shared_ptr<ast_token_t> CENTROID_0_
   ) {
-    return std::make_unique<storage_qualifier_centroid_t>(
-      std::make_unique<token_t>(*CENTROID_0_)
+    return std::make_shared<storage_qualifier_centroid_t>(
+      CENTROID_0_
     );
   }
 
@@ -172,21 +192,25 @@ class storage_qualifier_patch_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> patch_0;
+  std::shared_ptr<ast_token_t> patch_0;
 
   storage_qualifier_patch_t(
-    std::unique_ptr<token_t> &&patch_0_
-  ): patch_0(std::move(patch_0_)) {}
+    std::shared_ptr<ast_token_t> patch_0_
+  ): patch_0(patch_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_patch_t> make(
-    const token_t *PATCH_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_patch_t> make(
+    std::shared_ptr<ast_token_t> PATCH_0_
   ) {
-    return std::make_unique<storage_qualifier_patch_t>(
-      std::make_unique<token_t>(*PATCH_0_)
+    return std::make_shared<storage_qualifier_patch_t>(
+      PATCH_0_
     );
   }
 
@@ -196,21 +220,25 @@ class storage_qualifier_sample_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> sample_0;
+  std::shared_ptr<ast_token_t> sample_0;
 
   storage_qualifier_sample_t(
-    std::unique_ptr<token_t> &&sample_0_
-  ): sample_0(std::move(sample_0_)) {}
+    std::shared_ptr<ast_token_t> sample_0_
+  ): sample_0(sample_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_sample_t> make(
-    const token_t *SAMPLE_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_sample_t> make(
+    std::shared_ptr<ast_token_t> SAMPLE_0_
   ) {
-    return std::make_unique<storage_qualifier_sample_t>(
-      std::make_unique<token_t>(*SAMPLE_0_)
+    return std::make_shared<storage_qualifier_sample_t>(
+      SAMPLE_0_
     );
   }
 
@@ -220,21 +248,25 @@ class storage_qualifier_uniform_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> uniform_0;
+  std::shared_ptr<ast_token_t> uniform_0;
 
   storage_qualifier_uniform_t(
-    std::unique_ptr<token_t> &&uniform_0_
-  ): uniform_0(std::move(uniform_0_)) {}
+    std::shared_ptr<ast_token_t> uniform_0_
+  ): uniform_0(uniform_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_uniform_t> make(
-    const token_t *UNIFORM_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_uniform_t> make(
+    std::shared_ptr<ast_token_t> UNIFORM_0_
   ) {
-    return std::make_unique<storage_qualifier_uniform_t>(
-      std::make_unique<token_t>(*UNIFORM_0_)
+    return std::make_shared<storage_qualifier_uniform_t>(
+      UNIFORM_0_
     );
   }
 
@@ -244,21 +276,25 @@ class storage_qualifier_buffer_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> buffer_0;
+  std::shared_ptr<ast_token_t> buffer_0;
 
   storage_qualifier_buffer_t(
-    std::unique_ptr<token_t> &&buffer_0_
-  ): buffer_0(std::move(buffer_0_)) {}
+    std::shared_ptr<ast_token_t> buffer_0_
+  ): buffer_0(buffer_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_buffer_t> make(
-    const token_t *BUFFER_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_buffer_t> make(
+    std::shared_ptr<ast_token_t> BUFFER_0_
   ) {
-    return std::make_unique<storage_qualifier_buffer_t>(
-      std::make_unique<token_t>(*BUFFER_0_)
+    return std::make_shared<storage_qualifier_buffer_t>(
+      BUFFER_0_
     );
   }
 
@@ -268,21 +304,25 @@ class storage_qualifier_shared_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> shared_0;
+  std::shared_ptr<ast_token_t> shared_0;
 
   storage_qualifier_shared_t(
-    std::unique_ptr<token_t> &&shared_0_
-  ): shared_0(std::move(shared_0_)) {}
+    std::shared_ptr<ast_token_t> shared_0_
+  ): shared_0(shared_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_shared_t> make(
-    const token_t *SHARED_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_shared_t> make(
+    std::shared_ptr<ast_token_t> SHARED_0_
   ) {
-    return std::make_unique<storage_qualifier_shared_t>(
-      std::make_unique<token_t>(*SHARED_0_)
+    return std::make_shared<storage_qualifier_shared_t>(
+      SHARED_0_
     );
   }
 
@@ -292,21 +332,25 @@ class storage_qualifier_coherent_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> coherent_0;
+  std::shared_ptr<ast_token_t> coherent_0;
 
   storage_qualifier_coherent_t(
-    std::unique_ptr<token_t> &&coherent_0_
-  ): coherent_0(std::move(coherent_0_)) {}
+    std::shared_ptr<ast_token_t> coherent_0_
+  ): coherent_0(coherent_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_coherent_t> make(
-    const token_t *COHERENT_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_coherent_t> make(
+    std::shared_ptr<ast_token_t> COHERENT_0_
   ) {
-    return std::make_unique<storage_qualifier_coherent_t>(
-      std::make_unique<token_t>(*COHERENT_0_)
+    return std::make_shared<storage_qualifier_coherent_t>(
+      COHERENT_0_
     );
   }
 
@@ -316,21 +360,25 @@ class storage_qualifier_volatile_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> volatile_0;
+  std::shared_ptr<ast_token_t> volatile_0;
 
   storage_qualifier_volatile_t(
-    std::unique_ptr<token_t> &&volatile_0_
-  ): volatile_0(std::move(volatile_0_)) {}
+    std::shared_ptr<ast_token_t> volatile_0_
+  ): volatile_0(volatile_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_volatile_t> make(
-    const token_t *VOLATILE_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_volatile_t> make(
+    std::shared_ptr<ast_token_t> VOLATILE_0_
   ) {
-    return std::make_unique<storage_qualifier_volatile_t>(
-      std::make_unique<token_t>(*VOLATILE_0_)
+    return std::make_shared<storage_qualifier_volatile_t>(
+      VOLATILE_0_
     );
   }
 
@@ -340,21 +388,25 @@ class storage_qualifier_restrict_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> restrict_0;
+  std::shared_ptr<ast_token_t> restrict_0;
 
   storage_qualifier_restrict_t(
-    std::unique_ptr<token_t> &&restrict_0_
-  ): restrict_0(std::move(restrict_0_)) {}
+    std::shared_ptr<ast_token_t> restrict_0_
+  ): restrict_0(restrict_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_restrict_t> make(
-    const token_t *RESTRICT_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_restrict_t> make(
+    std::shared_ptr<ast_token_t> RESTRICT_0_
   ) {
-    return std::make_unique<storage_qualifier_restrict_t>(
-      std::make_unique<token_t>(*RESTRICT_0_)
+    return std::make_shared<storage_qualifier_restrict_t>(
+      RESTRICT_0_
     );
   }
 
@@ -364,21 +416,25 @@ class storage_qualifier_readonly_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> readonly_0;
+  std::shared_ptr<ast_token_t> readonly_0;
 
   storage_qualifier_readonly_t(
-    std::unique_ptr<token_t> &&readonly_0_
-  ): readonly_0(std::move(readonly_0_)) {}
+    std::shared_ptr<ast_token_t> readonly_0_
+  ): readonly_0(readonly_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_readonly_t> make(
-    const token_t *READONLY_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_readonly_t> make(
+    std::shared_ptr<ast_token_t> READONLY_0_
   ) {
-    return std::make_unique<storage_qualifier_readonly_t>(
-      std::make_unique<token_t>(*READONLY_0_)
+    return std::make_shared<storage_qualifier_readonly_t>(
+      READONLY_0_
     );
   }
 
@@ -388,21 +444,25 @@ class storage_qualifier_writeonly_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> writeonly_0;
+  std::shared_ptr<ast_token_t> writeonly_0;
 
   storage_qualifier_writeonly_t(
-    std::unique_ptr<token_t> &&writeonly_0_
-  ): writeonly_0(std::move(writeonly_0_)) {}
+    std::shared_ptr<ast_token_t> writeonly_0_
+  ): writeonly_0(writeonly_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_writeonly_t> make(
-    const token_t *WRITEONLY_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_writeonly_t> make(
+    std::shared_ptr<ast_token_t> WRITEONLY_0_
   ) {
-    return std::make_unique<storage_qualifier_writeonly_t>(
-      std::make_unique<token_t>(*WRITEONLY_0_)
+    return std::make_shared<storage_qualifier_writeonly_t>(
+      WRITEONLY_0_
     );
   }
 
@@ -412,21 +472,25 @@ class storage_qualifier_subroutine_t: public storage_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> subroutine_0;
+  std::shared_ptr<ast_token_t> subroutine_0;
 
   storage_qualifier_subroutine_t(
-    std::unique_ptr<token_t> &&subroutine_0_
-  ): subroutine_0(std::move(subroutine_0_)) {}
+    std::shared_ptr<ast_token_t> subroutine_0_
+  ): subroutine_0(subroutine_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_subroutine_t> make(
-    const token_t *SUBROUTINE_0_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_subroutine_t> make(
+    std::shared_ptr<ast_token_t> SUBROUTINE_0_
   ) {
-    return std::make_unique<storage_qualifier_subroutine_t>(
-      std::make_unique<token_t>(*SUBROUTINE_0_)
+    return std::make_shared<storage_qualifier_subroutine_t>(
+      SUBROUTINE_0_
     );
   }
 
@@ -436,39 +500,43 @@ class storage_qualifier_subroutine_left_paren_type_name_list_right_paren_t: publ
 
 public:
 
-  std::unique_ptr<token_t> subroutine_0;
+  std::shared_ptr<ast_token_t> subroutine_0;
 
-  std::unique_ptr<token_t> left_paren_1;
+  std::shared_ptr<ast_token_t> left_paren_1;
 
-  std::unique_ptr<type_name_list_t> type_name_list_2;
+  std::shared_ptr<type_name_list_t> type_name_list_2;
 
-  std::unique_ptr<token_t> right_paren_3;
+  std::shared_ptr<ast_token_t> right_paren_3;
 
   storage_qualifier_subroutine_left_paren_type_name_list_right_paren_t(
-    std::unique_ptr<token_t> &&subroutine_0_,
-    std::unique_ptr<token_t> &&left_paren_1_,
-    std::unique_ptr<type_name_list_t> &&type_name_list_2_,
-    std::unique_ptr<token_t> &&right_paren_3_
-  ): subroutine_0(std::move(subroutine_0_)),
-     left_paren_1(std::move(left_paren_1_)),
-     type_name_list_2(std::move(type_name_list_2_)),
-     right_paren_3(std::move(right_paren_3_)) {}
+    std::shared_ptr<ast_token_t> subroutine_0_,
+    std::shared_ptr<ast_token_t> left_paren_1_,
+    std::shared_ptr<type_name_list_t> type_name_list_2_,
+    std::shared_ptr<ast_token_t> right_paren_3_
+  ): subroutine_0(subroutine_0_),
+     left_paren_1(left_paren_1_),
+     type_name_list_2(type_name_list_2_),
+     right_paren_3(right_paren_3_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<storage_qualifier_subroutine_left_paren_type_name_list_right_paren_t> make(
-    const token_t *SUBROUTINE_0_,
-    const token_t *LEFT_PAREN_1_,
-    std::unique_ptr<type_name_list_t> &&type_name_list_2_,
-    const token_t *RIGHT_PAREN_3_
+  virtual int get_id() const override {
+    return 261;
+  }
+
+  static std::shared_ptr<storage_qualifier_subroutine_left_paren_type_name_list_right_paren_t> make(
+    std::shared_ptr<ast_token_t> SUBROUTINE_0_,
+    std::shared_ptr<ast_token_t> LEFT_PAREN_1_,
+    std::shared_ptr<type_name_list_t> type_name_list_2_,
+    std::shared_ptr<ast_token_t> RIGHT_PAREN_3_
   ) {
-    return std::make_unique<storage_qualifier_subroutine_left_paren_type_name_list_right_paren_t>(
-      std::make_unique<token_t>(*SUBROUTINE_0_),
-      std::make_unique<token_t>(*LEFT_PAREN_1_),
-      std::move(type_name_list_2_),
-      std::make_unique<token_t>(*RIGHT_PAREN_3_)
+    return std::make_shared<storage_qualifier_subroutine_left_paren_type_name_list_right_paren_t>(
+      SUBROUTINE_0_,
+      LEFT_PAREN_1_,
+      type_name_list_2_,
+      RIGHT_PAREN_3_
     );
   }
 

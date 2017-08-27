@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 231;
+  static constexpr int id = 232;
 
   virtual ~inclusive_or_expression_t() = default;
 
@@ -37,21 +37,25 @@ class inclusive_or_expression_exclusive_or_expression_t: public inclusive_or_exp
 
 public:
 
-  std::unique_ptr<exclusive_or_expression_t> exclusive_or_expression_0;
+  std::shared_ptr<exclusive_or_expression_t> exclusive_or_expression_0;
 
   inclusive_or_expression_exclusive_or_expression_t(
-    std::unique_ptr<exclusive_or_expression_t> &&exclusive_or_expression_0_
-  ): exclusive_or_expression_0(std::move(exclusive_or_expression_0_)) {}
+    std::shared_ptr<exclusive_or_expression_t> exclusive_or_expression_0_
+  ): exclusive_or_expression_0(exclusive_or_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<inclusive_or_expression_exclusive_or_expression_t> make(
-    std::unique_ptr<exclusive_or_expression_t> &&exclusive_or_expression_0_
+  virtual int get_id() const override {
+    return 232;
+  }
+
+  static std::shared_ptr<inclusive_or_expression_exclusive_or_expression_t> make(
+    std::shared_ptr<exclusive_or_expression_t> exclusive_or_expression_0_
   ) {
-    return std::make_unique<inclusive_or_expression_exclusive_or_expression_t>(
-      std::move(exclusive_or_expression_0_)
+    return std::make_shared<inclusive_or_expression_exclusive_or_expression_t>(
+      exclusive_or_expression_0_
     );
   }
 
@@ -61,33 +65,37 @@ class inclusive_or_expression_inclusive_or_expression_vertical_bar_exclusive_or_
 
 public:
 
-  std::unique_ptr<inclusive_or_expression_t> inclusive_or_expression_0;
+  std::shared_ptr<inclusive_or_expression_t> inclusive_or_expression_0;
 
-  std::unique_ptr<token_t> vertical_bar_1;
+  std::shared_ptr<ast_token_t> vertical_bar_1;
 
-  std::unique_ptr<exclusive_or_expression_t> exclusive_or_expression_2;
+  std::shared_ptr<exclusive_or_expression_t> exclusive_or_expression_2;
 
   inclusive_or_expression_inclusive_or_expression_vertical_bar_exclusive_or_expression_t(
-    std::unique_ptr<inclusive_or_expression_t> &&inclusive_or_expression_0_,
-    std::unique_ptr<token_t> &&vertical_bar_1_,
-    std::unique_ptr<exclusive_or_expression_t> &&exclusive_or_expression_2_
-  ): inclusive_or_expression_0(std::move(inclusive_or_expression_0_)),
-     vertical_bar_1(std::move(vertical_bar_1_)),
-     exclusive_or_expression_2(std::move(exclusive_or_expression_2_)) {}
+    std::shared_ptr<inclusive_or_expression_t> inclusive_or_expression_0_,
+    std::shared_ptr<ast_token_t> vertical_bar_1_,
+    std::shared_ptr<exclusive_or_expression_t> exclusive_or_expression_2_
+  ): inclusive_or_expression_0(inclusive_or_expression_0_),
+     vertical_bar_1(vertical_bar_1_),
+     exclusive_or_expression_2(exclusive_or_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<inclusive_or_expression_inclusive_or_expression_vertical_bar_exclusive_or_expression_t> make(
-    std::unique_ptr<inclusive_or_expression_t> &&inclusive_or_expression_0_,
-    const token_t *VERTICAL_BAR_1_,
-    std::unique_ptr<exclusive_or_expression_t> &&exclusive_or_expression_2_
+  virtual int get_id() const override {
+    return 232;
+  }
+
+  static std::shared_ptr<inclusive_or_expression_inclusive_or_expression_vertical_bar_exclusive_or_expression_t> make(
+    std::shared_ptr<inclusive_or_expression_t> inclusive_or_expression_0_,
+    std::shared_ptr<ast_token_t> VERTICAL_BAR_1_,
+    std::shared_ptr<exclusive_or_expression_t> exclusive_or_expression_2_
   ) {
-    return std::make_unique<inclusive_or_expression_inclusive_or_expression_vertical_bar_exclusive_or_expression_t>(
-      std::move(inclusive_or_expression_0_),
-      std::make_unique<token_t>(*VERTICAL_BAR_1_),
-      std::move(exclusive_or_expression_2_)
+    return std::make_shared<inclusive_or_expression_inclusive_or_expression_vertical_bar_exclusive_or_expression_t>(
+      inclusive_or_expression_0_,
+      VERTICAL_BAR_1_,
+      exclusive_or_expression_2_
     );
   }
 

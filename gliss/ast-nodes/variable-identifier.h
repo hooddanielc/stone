@@ -23,7 +23,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 211;
+  static constexpr int id = 212;
 
   virtual ~variable_identifier_t() = default;
 
@@ -33,21 +33,25 @@ class variable_identifier_identifier_t: public variable_identifier_t {
 
 public:
 
-  std::unique_ptr<token_t> identifier_0;
+  std::shared_ptr<ast_token_t> identifier_0;
 
   variable_identifier_identifier_t(
-    std::unique_ptr<token_t> &&identifier_0_
-  ): identifier_0(std::move(identifier_0_)) {}
+    std::shared_ptr<ast_token_t> identifier_0_
+  ): identifier_0(identifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<variable_identifier_identifier_t> make(
-    const token_t *IDENTIFIER_0_
+  virtual int get_id() const override {
+    return 212;
+  }
+
+  static std::shared_ptr<variable_identifier_identifier_t> make(
+    std::shared_ptr<ast_token_t> IDENTIFIER_0_
   ) {
-    return std::make_unique<variable_identifier_identifier_t>(
-      std::make_unique<token_t>(*IDENTIFIER_0_)
+    return std::make_shared<variable_identifier_identifier_t>(
+      IDENTIFIER_0_
     );
   }
 

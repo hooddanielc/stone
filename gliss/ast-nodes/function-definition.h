@@ -28,7 +28,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 294;
+  static constexpr int id = 295;
 
   virtual ~function_definition_t() = default;
 
@@ -38,27 +38,31 @@ class function_definition_function_prototype_compound_statement_no_new_scope_t: 
 
 public:
 
-  std::unique_ptr<function_prototype_t> function_prototype_0;
+  std::shared_ptr<function_prototype_t> function_prototype_0;
 
-  std::unique_ptr<compound_statement_no_new_scope_t> compound_statement_no_new_scope_1;
+  std::shared_ptr<compound_statement_no_new_scope_t> compound_statement_no_new_scope_1;
 
   function_definition_function_prototype_compound_statement_no_new_scope_t(
-    std::unique_ptr<function_prototype_t> &&function_prototype_0_,
-    std::unique_ptr<compound_statement_no_new_scope_t> &&compound_statement_no_new_scope_1_
-  ): function_prototype_0(std::move(function_prototype_0_)),
-     compound_statement_no_new_scope_1(std::move(compound_statement_no_new_scope_1_)) {}
+    std::shared_ptr<function_prototype_t> function_prototype_0_,
+    std::shared_ptr<compound_statement_no_new_scope_t> compound_statement_no_new_scope_1_
+  ): function_prototype_0(function_prototype_0_),
+     compound_statement_no_new_scope_1(compound_statement_no_new_scope_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_definition_function_prototype_compound_statement_no_new_scope_t> make(
-    std::unique_ptr<function_prototype_t> &&function_prototype_0_,
-    std::unique_ptr<compound_statement_no_new_scope_t> &&compound_statement_no_new_scope_1_
+  virtual int get_id() const override {
+    return 295;
+  }
+
+  static std::shared_ptr<function_definition_function_prototype_compound_statement_no_new_scope_t> make(
+    std::shared_ptr<function_prototype_t> function_prototype_0_,
+    std::shared_ptr<compound_statement_no_new_scope_t> compound_statement_no_new_scope_1_
   ) {
-    return std::make_unique<function_definition_function_prototype_compound_statement_no_new_scope_t>(
-      std::move(function_prototype_0_),
-      std::move(compound_statement_no_new_scope_1_)
+    return std::make_shared<function_definition_function_prototype_compound_statement_no_new_scope_t>(
+      function_prototype_0_,
+      compound_statement_no_new_scope_1_
     );
   }
 

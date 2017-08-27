@@ -18,16 +18,30 @@ public:
 
   virtual void accept(const visitor_t &visitor) const = 0;
 
+  virtual int get_id() const = 0;
+
 };  // ast_t
 
 /* an ast node holding a single token */
-class ast_token_t {
+class ast_token_t: public ast_t {
 
 public:
 
   token_t token;
 
   ast_token_t(const token_t &token_): token(token_) {}
+
+  virtual void accept(const visitor_t &visitor) const override {
+    visitor(this);
+  }
+
+  virtual int get_id() const override {
+    return token.get_kind();
+  }
+
+  static std::shared_ptr<ast_token_t> make(const token_t &token) {
+    return std::make_shared<ast_token_t>(token);
+  }
 
 };  // ast_token_t
 

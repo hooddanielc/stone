@@ -31,7 +31,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 268;
+  static constexpr int id = 269;
 
   virtual ~struct_declaration_t() = default;
 
@@ -41,33 +41,37 @@ class struct_declaration_type_specifier_struct_declarator_list_semicolon_t: publ
 
 public:
 
-  std::unique_ptr<type_specifier_t> type_specifier_0;
+  std::shared_ptr<type_specifier_t> type_specifier_0;
 
-  std::unique_ptr<struct_declarator_list_t> struct_declarator_list_1;
+  std::shared_ptr<struct_declarator_list_t> struct_declarator_list_1;
 
-  std::unique_ptr<token_t> semicolon_2;
+  std::shared_ptr<ast_token_t> semicolon_2;
 
   struct_declaration_type_specifier_struct_declarator_list_semicolon_t(
-    std::unique_ptr<type_specifier_t> &&type_specifier_0_,
-    std::unique_ptr<struct_declarator_list_t> &&struct_declarator_list_1_,
-    std::unique_ptr<token_t> &&semicolon_2_
-  ): type_specifier_0(std::move(type_specifier_0_)),
-     struct_declarator_list_1(std::move(struct_declarator_list_1_)),
-     semicolon_2(std::move(semicolon_2_)) {}
+    std::shared_ptr<type_specifier_t> type_specifier_0_,
+    std::shared_ptr<struct_declarator_list_t> struct_declarator_list_1_,
+    std::shared_ptr<ast_token_t> semicolon_2_
+  ): type_specifier_0(type_specifier_0_),
+     struct_declarator_list_1(struct_declarator_list_1_),
+     semicolon_2(semicolon_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<struct_declaration_type_specifier_struct_declarator_list_semicolon_t> make(
-    std::unique_ptr<type_specifier_t> &&type_specifier_0_,
-    std::unique_ptr<struct_declarator_list_t> &&struct_declarator_list_1_,
-    const token_t *SEMICOLON_2_
+  virtual int get_id() const override {
+    return 269;
+  }
+
+  static std::shared_ptr<struct_declaration_type_specifier_struct_declarator_list_semicolon_t> make(
+    std::shared_ptr<type_specifier_t> type_specifier_0_,
+    std::shared_ptr<struct_declarator_list_t> struct_declarator_list_1_,
+    std::shared_ptr<ast_token_t> SEMICOLON_2_
   ) {
-    return std::make_unique<struct_declaration_type_specifier_struct_declarator_list_semicolon_t>(
-      std::move(type_specifier_0_),
-      std::move(struct_declarator_list_1_),
-      std::make_unique<token_t>(*SEMICOLON_2_)
+    return std::make_shared<struct_declaration_type_specifier_struct_declarator_list_semicolon_t>(
+      type_specifier_0_,
+      struct_declarator_list_1_,
+      SEMICOLON_2_
     );
   }
 
@@ -77,39 +81,43 @@ class struct_declaration_type_qualifier_type_specifier_struct_declarator_list_se
 
 public:
 
-  std::unique_ptr<type_qualifier_t> type_qualifier_0;
+  std::shared_ptr<type_qualifier_t> type_qualifier_0;
 
-  std::unique_ptr<type_specifier_t> type_specifier_1;
+  std::shared_ptr<type_specifier_t> type_specifier_1;
 
-  std::unique_ptr<struct_declarator_list_t> struct_declarator_list_2;
+  std::shared_ptr<struct_declarator_list_t> struct_declarator_list_2;
 
-  std::unique_ptr<token_t> semicolon_3;
+  std::shared_ptr<ast_token_t> semicolon_3;
 
   struct_declaration_type_qualifier_type_specifier_struct_declarator_list_semicolon_t(
-    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
-    std::unique_ptr<type_specifier_t> &&type_specifier_1_,
-    std::unique_ptr<struct_declarator_list_t> &&struct_declarator_list_2_,
-    std::unique_ptr<token_t> &&semicolon_3_
-  ): type_qualifier_0(std::move(type_qualifier_0_)),
-     type_specifier_1(std::move(type_specifier_1_)),
-     struct_declarator_list_2(std::move(struct_declarator_list_2_)),
-     semicolon_3(std::move(semicolon_3_)) {}
+    std::shared_ptr<type_qualifier_t> type_qualifier_0_,
+    std::shared_ptr<type_specifier_t> type_specifier_1_,
+    std::shared_ptr<struct_declarator_list_t> struct_declarator_list_2_,
+    std::shared_ptr<ast_token_t> semicolon_3_
+  ): type_qualifier_0(type_qualifier_0_),
+     type_specifier_1(type_specifier_1_),
+     struct_declarator_list_2(struct_declarator_list_2_),
+     semicolon_3(semicolon_3_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<struct_declaration_type_qualifier_type_specifier_struct_declarator_list_semicolon_t> make(
-    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
-    std::unique_ptr<type_specifier_t> &&type_specifier_1_,
-    std::unique_ptr<struct_declarator_list_t> &&struct_declarator_list_2_,
-    const token_t *SEMICOLON_3_
+  virtual int get_id() const override {
+    return 269;
+  }
+
+  static std::shared_ptr<struct_declaration_type_qualifier_type_specifier_struct_declarator_list_semicolon_t> make(
+    std::shared_ptr<type_qualifier_t> type_qualifier_0_,
+    std::shared_ptr<type_specifier_t> type_specifier_1_,
+    std::shared_ptr<struct_declarator_list_t> struct_declarator_list_2_,
+    std::shared_ptr<ast_token_t> SEMICOLON_3_
   ) {
-    return std::make_unique<struct_declaration_type_qualifier_type_specifier_struct_declarator_list_semicolon_t>(
-      std::move(type_qualifier_0_),
-      std::move(type_specifier_1_),
-      std::move(struct_declarator_list_2_),
-      std::make_unique<token_t>(*SEMICOLON_3_)
+    return std::make_shared<struct_declaration_type_qualifier_type_specifier_struct_declarator_list_semicolon_t>(
+      type_qualifier_0_,
+      type_specifier_1_,
+      struct_declarator_list_2_,
+      SEMICOLON_3_
     );
   }
 

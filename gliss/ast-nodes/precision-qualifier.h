@@ -25,7 +25,7 @@ public:
 
   static constexpr int rules = 3;
 
-  static constexpr int id = 265;
+  static constexpr int id = 266;
 
   virtual ~precision_qualifier_t() = default;
 
@@ -35,21 +35,25 @@ class precision_qualifier_high_precision_t: public precision_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> high_precision_0;
+  std::shared_ptr<ast_token_t> high_precision_0;
 
   precision_qualifier_high_precision_t(
-    std::unique_ptr<token_t> &&high_precision_0_
-  ): high_precision_0(std::move(high_precision_0_)) {}
+    std::shared_ptr<ast_token_t> high_precision_0_
+  ): high_precision_0(high_precision_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<precision_qualifier_high_precision_t> make(
-    const token_t *HIGH_PRECISION_0_
+  virtual int get_id() const override {
+    return 266;
+  }
+
+  static std::shared_ptr<precision_qualifier_high_precision_t> make(
+    std::shared_ptr<ast_token_t> HIGH_PRECISION_0_
   ) {
-    return std::make_unique<precision_qualifier_high_precision_t>(
-      std::make_unique<token_t>(*HIGH_PRECISION_0_)
+    return std::make_shared<precision_qualifier_high_precision_t>(
+      HIGH_PRECISION_0_
     );
   }
 
@@ -59,21 +63,25 @@ class precision_qualifier_medium_precision_t: public precision_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> medium_precision_0;
+  std::shared_ptr<ast_token_t> medium_precision_0;
 
   precision_qualifier_medium_precision_t(
-    std::unique_ptr<token_t> &&medium_precision_0_
-  ): medium_precision_0(std::move(medium_precision_0_)) {}
+    std::shared_ptr<ast_token_t> medium_precision_0_
+  ): medium_precision_0(medium_precision_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<precision_qualifier_medium_precision_t> make(
-    const token_t *MEDIUM_PRECISION_0_
+  virtual int get_id() const override {
+    return 266;
+  }
+
+  static std::shared_ptr<precision_qualifier_medium_precision_t> make(
+    std::shared_ptr<ast_token_t> MEDIUM_PRECISION_0_
   ) {
-    return std::make_unique<precision_qualifier_medium_precision_t>(
-      std::make_unique<token_t>(*MEDIUM_PRECISION_0_)
+    return std::make_shared<precision_qualifier_medium_precision_t>(
+      MEDIUM_PRECISION_0_
     );
   }
 
@@ -83,21 +91,25 @@ class precision_qualifier_low_precision_t: public precision_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> low_precision_0;
+  std::shared_ptr<ast_token_t> low_precision_0;
 
   precision_qualifier_low_precision_t(
-    std::unique_ptr<token_t> &&low_precision_0_
-  ): low_precision_0(std::move(low_precision_0_)) {}
+    std::shared_ptr<ast_token_t> low_precision_0_
+  ): low_precision_0(low_precision_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<precision_qualifier_low_precision_t> make(
-    const token_t *LOW_PRECISION_0_
+  virtual int get_id() const override {
+    return 266;
+  }
+
+  static std::shared_ptr<precision_qualifier_low_precision_t> make(
+    std::shared_ptr<ast_token_t> LOW_PRECISION_0_
   ) {
-    return std::make_unique<precision_qualifier_low_precision_t>(
-      std::make_unique<token_t>(*LOW_PRECISION_0_)
+    return std::make_shared<precision_qualifier_low_precision_t>(
+      LOW_PRECISION_0_
     );
   }
 

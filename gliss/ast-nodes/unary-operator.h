@@ -26,7 +26,7 @@ public:
 
   static constexpr int rules = 4;
 
-  static constexpr int id = 223;
+  static constexpr int id = 224;
 
   virtual ~unary_operator_t() = default;
 
@@ -36,21 +36,25 @@ class unary_operator_plus_t: public unary_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> plus_0;
+  std::shared_ptr<ast_token_t> plus_0;
 
   unary_operator_plus_t(
-    std::unique_ptr<token_t> &&plus_0_
-  ): plus_0(std::move(plus_0_)) {}
+    std::shared_ptr<ast_token_t> plus_0_
+  ): plus_0(plus_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<unary_operator_plus_t> make(
-    const token_t *PLUS_0_
+  virtual int get_id() const override {
+    return 224;
+  }
+
+  static std::shared_ptr<unary_operator_plus_t> make(
+    std::shared_ptr<ast_token_t> PLUS_0_
   ) {
-    return std::make_unique<unary_operator_plus_t>(
-      std::make_unique<token_t>(*PLUS_0_)
+    return std::make_shared<unary_operator_plus_t>(
+      PLUS_0_
     );
   }
 
@@ -60,21 +64,25 @@ class unary_operator_dash_t: public unary_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> dash_0;
+  std::shared_ptr<ast_token_t> dash_0;
 
   unary_operator_dash_t(
-    std::unique_ptr<token_t> &&dash_0_
-  ): dash_0(std::move(dash_0_)) {}
+    std::shared_ptr<ast_token_t> dash_0_
+  ): dash_0(dash_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<unary_operator_dash_t> make(
-    const token_t *DASH_0_
+  virtual int get_id() const override {
+    return 224;
+  }
+
+  static std::shared_ptr<unary_operator_dash_t> make(
+    std::shared_ptr<ast_token_t> DASH_0_
   ) {
-    return std::make_unique<unary_operator_dash_t>(
-      std::make_unique<token_t>(*DASH_0_)
+    return std::make_shared<unary_operator_dash_t>(
+      DASH_0_
     );
   }
 
@@ -84,21 +92,25 @@ class unary_operator_bang_t: public unary_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> bang_0;
+  std::shared_ptr<ast_token_t> bang_0;
 
   unary_operator_bang_t(
-    std::unique_ptr<token_t> &&bang_0_
-  ): bang_0(std::move(bang_0_)) {}
+    std::shared_ptr<ast_token_t> bang_0_
+  ): bang_0(bang_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<unary_operator_bang_t> make(
-    const token_t *BANG_0_
+  virtual int get_id() const override {
+    return 224;
+  }
+
+  static std::shared_ptr<unary_operator_bang_t> make(
+    std::shared_ptr<ast_token_t> BANG_0_
   ) {
-    return std::make_unique<unary_operator_bang_t>(
-      std::make_unique<token_t>(*BANG_0_)
+    return std::make_shared<unary_operator_bang_t>(
+      BANG_0_
     );
   }
 
@@ -108,21 +120,25 @@ class unary_operator_tilde_t: public unary_operator_t {
 
 public:
 
-  std::unique_ptr<token_t> tilde_0;
+  std::shared_ptr<ast_token_t> tilde_0;
 
   unary_operator_tilde_t(
-    std::unique_ptr<token_t> &&tilde_0_
-  ): tilde_0(std::move(tilde_0_)) {}
+    std::shared_ptr<ast_token_t> tilde_0_
+  ): tilde_0(tilde_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<unary_operator_tilde_t> make(
-    const token_t *TILDE_0_
+  virtual int get_id() const override {
+    return 224;
+  }
+
+  static std::shared_ptr<unary_operator_tilde_t> make(
+    std::shared_ptr<ast_token_t> TILDE_0_
   ) {
-    return std::make_unique<unary_operator_tilde_t>(
-      std::make_unique<token_t>(*TILDE_0_)
+    return std::make_shared<unary_operator_tilde_t>(
+      TILDE_0_
     );
   }
 

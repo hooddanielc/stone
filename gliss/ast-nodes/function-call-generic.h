@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 217;
+  static constexpr int id = 218;
 
   virtual ~function_call_generic_t() = default;
 
@@ -39,27 +39,31 @@ class function_call_generic_function_call_header_with_parameters_right_paren_t: 
 
 public:
 
-  std::unique_ptr<function_call_header_with_parameters_t> function_call_header_with_parameters_0;
+  std::shared_ptr<function_call_header_with_parameters_t> function_call_header_with_parameters_0;
 
-  std::unique_ptr<token_t> right_paren_1;
+  std::shared_ptr<ast_token_t> right_paren_1;
 
   function_call_generic_function_call_header_with_parameters_right_paren_t(
-    std::unique_ptr<function_call_header_with_parameters_t> &&function_call_header_with_parameters_0_,
-    std::unique_ptr<token_t> &&right_paren_1_
-  ): function_call_header_with_parameters_0(std::move(function_call_header_with_parameters_0_)),
-     right_paren_1(std::move(right_paren_1_)) {}
+    std::shared_ptr<function_call_header_with_parameters_t> function_call_header_with_parameters_0_,
+    std::shared_ptr<ast_token_t> right_paren_1_
+  ): function_call_header_with_parameters_0(function_call_header_with_parameters_0_),
+     right_paren_1(right_paren_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_call_generic_function_call_header_with_parameters_right_paren_t> make(
-    std::unique_ptr<function_call_header_with_parameters_t> &&function_call_header_with_parameters_0_,
-    const token_t *RIGHT_PAREN_1_
+  virtual int get_id() const override {
+    return 218;
+  }
+
+  static std::shared_ptr<function_call_generic_function_call_header_with_parameters_right_paren_t> make(
+    std::shared_ptr<function_call_header_with_parameters_t> function_call_header_with_parameters_0_,
+    std::shared_ptr<ast_token_t> RIGHT_PAREN_1_
   ) {
-    return std::make_unique<function_call_generic_function_call_header_with_parameters_right_paren_t>(
-      std::move(function_call_header_with_parameters_0_),
-      std::make_unique<token_t>(*RIGHT_PAREN_1_)
+    return std::make_shared<function_call_generic_function_call_header_with_parameters_right_paren_t>(
+      function_call_header_with_parameters_0_,
+      RIGHT_PAREN_1_
     );
   }
 
@@ -69,27 +73,31 @@ class function_call_generic_function_call_header_no_parameters_right_paren_t: pu
 
 public:
 
-  std::unique_ptr<function_call_header_no_parameters_t> function_call_header_no_parameters_0;
+  std::shared_ptr<function_call_header_no_parameters_t> function_call_header_no_parameters_0;
 
-  std::unique_ptr<token_t> right_paren_1;
+  std::shared_ptr<ast_token_t> right_paren_1;
 
   function_call_generic_function_call_header_no_parameters_right_paren_t(
-    std::unique_ptr<function_call_header_no_parameters_t> &&function_call_header_no_parameters_0_,
-    std::unique_ptr<token_t> &&right_paren_1_
-  ): function_call_header_no_parameters_0(std::move(function_call_header_no_parameters_0_)),
-     right_paren_1(std::move(right_paren_1_)) {}
+    std::shared_ptr<function_call_header_no_parameters_t> function_call_header_no_parameters_0_,
+    std::shared_ptr<ast_token_t> right_paren_1_
+  ): function_call_header_no_parameters_0(function_call_header_no_parameters_0_),
+     right_paren_1(right_paren_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_call_generic_function_call_header_no_parameters_right_paren_t> make(
-    std::unique_ptr<function_call_header_no_parameters_t> &&function_call_header_no_parameters_0_,
-    const token_t *RIGHT_PAREN_1_
+  virtual int get_id() const override {
+    return 218;
+  }
+
+  static std::shared_ptr<function_call_generic_function_call_header_no_parameters_right_paren_t> make(
+    std::shared_ptr<function_call_header_no_parameters_t> function_call_header_no_parameters_0_,
+    std::shared_ptr<ast_token_t> RIGHT_PAREN_1_
   ) {
-    return std::make_unique<function_call_generic_function_call_header_no_parameters_right_paren_t>(
-      std::move(function_call_header_no_parameters_0_),
-      std::make_unique<token_t>(*RIGHT_PAREN_1_)
+    return std::make_shared<function_call_generic_function_call_header_no_parameters_right_paren_t>(
+      function_call_header_no_parameters_0_,
+      RIGHT_PAREN_1_
     );
   }
 

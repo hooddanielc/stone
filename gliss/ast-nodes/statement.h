@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 274;
+  static constexpr int id = 275;
 
   virtual ~statement_t() = default;
 
@@ -39,21 +39,25 @@ class statement_compound_statement_t: public statement_t {
 
 public:
 
-  std::unique_ptr<compound_statement_t> compound_statement_0;
+  std::shared_ptr<compound_statement_t> compound_statement_0;
 
   statement_compound_statement_t(
-    std::unique_ptr<compound_statement_t> &&compound_statement_0_
-  ): compound_statement_0(std::move(compound_statement_0_)) {}
+    std::shared_ptr<compound_statement_t> compound_statement_0_
+  ): compound_statement_0(compound_statement_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<statement_compound_statement_t> make(
-    std::unique_ptr<compound_statement_t> &&compound_statement_0_
+  virtual int get_id() const override {
+    return 275;
+  }
+
+  static std::shared_ptr<statement_compound_statement_t> make(
+    std::shared_ptr<compound_statement_t> compound_statement_0_
   ) {
-    return std::make_unique<statement_compound_statement_t>(
-      std::move(compound_statement_0_)
+    return std::make_shared<statement_compound_statement_t>(
+      compound_statement_0_
     );
   }
 
@@ -63,21 +67,25 @@ class statement_simple_statement_t: public statement_t {
 
 public:
 
-  std::unique_ptr<simple_statement_t> simple_statement_0;
+  std::shared_ptr<simple_statement_t> simple_statement_0;
 
   statement_simple_statement_t(
-    std::unique_ptr<simple_statement_t> &&simple_statement_0_
-  ): simple_statement_0(std::move(simple_statement_0_)) {}
+    std::shared_ptr<simple_statement_t> simple_statement_0_
+  ): simple_statement_0(simple_statement_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<statement_simple_statement_t> make(
-    std::unique_ptr<simple_statement_t> &&simple_statement_0_
+  virtual int get_id() const override {
+    return 275;
+  }
+
+  static std::shared_ptr<statement_simple_statement_t> make(
+    std::shared_ptr<simple_statement_t> simple_statement_0_
   ) {
-    return std::make_unique<statement_simple_statement_t>(
-      std::move(simple_statement_0_)
+    return std::make_shared<statement_simple_statement_t>(
+      simple_statement_0_
     );
   }
 

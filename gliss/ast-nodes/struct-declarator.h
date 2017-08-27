@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 270;
+  static constexpr int id = 271;
 
   virtual ~struct_declarator_t() = default;
 
@@ -37,21 +37,25 @@ class struct_declarator_identifier_t: public struct_declarator_t {
 
 public:
 
-  std::unique_ptr<token_t> identifier_0;
+  std::shared_ptr<ast_token_t> identifier_0;
 
   struct_declarator_identifier_t(
-    std::unique_ptr<token_t> &&identifier_0_
-  ): identifier_0(std::move(identifier_0_)) {}
+    std::shared_ptr<ast_token_t> identifier_0_
+  ): identifier_0(identifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<struct_declarator_identifier_t> make(
-    const token_t *IDENTIFIER_0_
+  virtual int get_id() const override {
+    return 271;
+  }
+
+  static std::shared_ptr<struct_declarator_identifier_t> make(
+    std::shared_ptr<ast_token_t> IDENTIFIER_0_
   ) {
-    return std::make_unique<struct_declarator_identifier_t>(
-      std::make_unique<token_t>(*IDENTIFIER_0_)
+    return std::make_shared<struct_declarator_identifier_t>(
+      IDENTIFIER_0_
     );
   }
 
@@ -61,27 +65,31 @@ class struct_declarator_identifier_array_specifier_t: public struct_declarator_t
 
 public:
 
-  std::unique_ptr<token_t> identifier_0;
+  std::shared_ptr<ast_token_t> identifier_0;
 
-  std::unique_ptr<array_specifier_t> array_specifier_1;
+  std::shared_ptr<array_specifier_t> array_specifier_1;
 
   struct_declarator_identifier_array_specifier_t(
-    std::unique_ptr<token_t> &&identifier_0_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_1_
-  ): identifier_0(std::move(identifier_0_)),
-     array_specifier_1(std::move(array_specifier_1_)) {}
+    std::shared_ptr<ast_token_t> identifier_0_,
+    std::shared_ptr<array_specifier_t> array_specifier_1_
+  ): identifier_0(identifier_0_),
+     array_specifier_1(array_specifier_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<struct_declarator_identifier_array_specifier_t> make(
-    const token_t *IDENTIFIER_0_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_1_
+  virtual int get_id() const override {
+    return 271;
+  }
+
+  static std::shared_ptr<struct_declarator_identifier_array_specifier_t> make(
+    std::shared_ptr<ast_token_t> IDENTIFIER_0_,
+    std::shared_ptr<array_specifier_t> array_specifier_1_
   ) {
-    return std::make_unique<struct_declarator_identifier_array_specifier_t>(
-      std::make_unique<token_t>(*IDENTIFIER_0_),
-      std::move(array_specifier_1_)
+    return std::make_shared<struct_declarator_identifier_array_specifier_t>(
+      IDENTIFIER_0_,
+      array_specifier_1_
     );
   }
 

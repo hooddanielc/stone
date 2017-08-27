@@ -41,7 +41,7 @@ public:
 
   static constexpr int rules = 6;
 
-  static constexpr int id = 259;
+  static constexpr int id = 260;
 
   virtual ~single_type_qualifier_t() = default;
 
@@ -51,21 +51,25 @@ class single_type_qualifier_storage_qualifier_t: public single_type_qualifier_t 
 
 public:
 
-  std::unique_ptr<storage_qualifier_t> storage_qualifier_0;
+  std::shared_ptr<storage_qualifier_t> storage_qualifier_0;
 
   single_type_qualifier_storage_qualifier_t(
-    std::unique_ptr<storage_qualifier_t> &&storage_qualifier_0_
-  ): storage_qualifier_0(std::move(storage_qualifier_0_)) {}
+    std::shared_ptr<storage_qualifier_t> storage_qualifier_0_
+  ): storage_qualifier_0(storage_qualifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<single_type_qualifier_storage_qualifier_t> make(
-    std::unique_ptr<storage_qualifier_t> &&storage_qualifier_0_
+  virtual int get_id() const override {
+    return 260;
+  }
+
+  static std::shared_ptr<single_type_qualifier_storage_qualifier_t> make(
+    std::shared_ptr<storage_qualifier_t> storage_qualifier_0_
   ) {
-    return std::make_unique<single_type_qualifier_storage_qualifier_t>(
-      std::move(storage_qualifier_0_)
+    return std::make_shared<single_type_qualifier_storage_qualifier_t>(
+      storage_qualifier_0_
     );
   }
 
@@ -75,21 +79,25 @@ class single_type_qualifier_layout_qualifier_t: public single_type_qualifier_t {
 
 public:
 
-  std::unique_ptr<layout_qualifier_t> layout_qualifier_0;
+  std::shared_ptr<layout_qualifier_t> layout_qualifier_0;
 
   single_type_qualifier_layout_qualifier_t(
-    std::unique_ptr<layout_qualifier_t> &&layout_qualifier_0_
-  ): layout_qualifier_0(std::move(layout_qualifier_0_)) {}
+    std::shared_ptr<layout_qualifier_t> layout_qualifier_0_
+  ): layout_qualifier_0(layout_qualifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<single_type_qualifier_layout_qualifier_t> make(
-    std::unique_ptr<layout_qualifier_t> &&layout_qualifier_0_
+  virtual int get_id() const override {
+    return 260;
+  }
+
+  static std::shared_ptr<single_type_qualifier_layout_qualifier_t> make(
+    std::shared_ptr<layout_qualifier_t> layout_qualifier_0_
   ) {
-    return std::make_unique<single_type_qualifier_layout_qualifier_t>(
-      std::move(layout_qualifier_0_)
+    return std::make_shared<single_type_qualifier_layout_qualifier_t>(
+      layout_qualifier_0_
     );
   }
 
@@ -99,21 +107,25 @@ class single_type_qualifier_precision_qualifier_t: public single_type_qualifier_
 
 public:
 
-  std::unique_ptr<precision_qualifier_t> precision_qualifier_0;
+  std::shared_ptr<precision_qualifier_t> precision_qualifier_0;
 
   single_type_qualifier_precision_qualifier_t(
-    std::unique_ptr<precision_qualifier_t> &&precision_qualifier_0_
-  ): precision_qualifier_0(std::move(precision_qualifier_0_)) {}
+    std::shared_ptr<precision_qualifier_t> precision_qualifier_0_
+  ): precision_qualifier_0(precision_qualifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<single_type_qualifier_precision_qualifier_t> make(
-    std::unique_ptr<precision_qualifier_t> &&precision_qualifier_0_
+  virtual int get_id() const override {
+    return 260;
+  }
+
+  static std::shared_ptr<single_type_qualifier_precision_qualifier_t> make(
+    std::shared_ptr<precision_qualifier_t> precision_qualifier_0_
   ) {
-    return std::make_unique<single_type_qualifier_precision_qualifier_t>(
-      std::move(precision_qualifier_0_)
+    return std::make_shared<single_type_qualifier_precision_qualifier_t>(
+      precision_qualifier_0_
     );
   }
 
@@ -123,21 +135,25 @@ class single_type_qualifier_interpolation_qualifier_t: public single_type_qualif
 
 public:
 
-  std::unique_ptr<interpolation_qualifier_t> interpolation_qualifier_0;
+  std::shared_ptr<interpolation_qualifier_t> interpolation_qualifier_0;
 
   single_type_qualifier_interpolation_qualifier_t(
-    std::unique_ptr<interpolation_qualifier_t> &&interpolation_qualifier_0_
-  ): interpolation_qualifier_0(std::move(interpolation_qualifier_0_)) {}
+    std::shared_ptr<interpolation_qualifier_t> interpolation_qualifier_0_
+  ): interpolation_qualifier_0(interpolation_qualifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<single_type_qualifier_interpolation_qualifier_t> make(
-    std::unique_ptr<interpolation_qualifier_t> &&interpolation_qualifier_0_
+  virtual int get_id() const override {
+    return 260;
+  }
+
+  static std::shared_ptr<single_type_qualifier_interpolation_qualifier_t> make(
+    std::shared_ptr<interpolation_qualifier_t> interpolation_qualifier_0_
   ) {
-    return std::make_unique<single_type_qualifier_interpolation_qualifier_t>(
-      std::move(interpolation_qualifier_0_)
+    return std::make_shared<single_type_qualifier_interpolation_qualifier_t>(
+      interpolation_qualifier_0_
     );
   }
 
@@ -147,21 +163,25 @@ class single_type_qualifier_invariant_qualifier_t: public single_type_qualifier_
 
 public:
 
-  std::unique_ptr<invariant_qualifier_t> invariant_qualifier_0;
+  std::shared_ptr<invariant_qualifier_t> invariant_qualifier_0;
 
   single_type_qualifier_invariant_qualifier_t(
-    std::unique_ptr<invariant_qualifier_t> &&invariant_qualifier_0_
-  ): invariant_qualifier_0(std::move(invariant_qualifier_0_)) {}
+    std::shared_ptr<invariant_qualifier_t> invariant_qualifier_0_
+  ): invariant_qualifier_0(invariant_qualifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<single_type_qualifier_invariant_qualifier_t> make(
-    std::unique_ptr<invariant_qualifier_t> &&invariant_qualifier_0_
+  virtual int get_id() const override {
+    return 260;
+  }
+
+  static std::shared_ptr<single_type_qualifier_invariant_qualifier_t> make(
+    std::shared_ptr<invariant_qualifier_t> invariant_qualifier_0_
   ) {
-    return std::make_unique<single_type_qualifier_invariant_qualifier_t>(
-      std::move(invariant_qualifier_0_)
+    return std::make_shared<single_type_qualifier_invariant_qualifier_t>(
+      invariant_qualifier_0_
     );
   }
 
@@ -171,21 +191,25 @@ class single_type_qualifier_precise_qualifier_t: public single_type_qualifier_t 
 
 public:
 
-  std::unique_ptr<precise_qualifier_t> precise_qualifier_0;
+  std::shared_ptr<precise_qualifier_t> precise_qualifier_0;
 
   single_type_qualifier_precise_qualifier_t(
-    std::unique_ptr<precise_qualifier_t> &&precise_qualifier_0_
-  ): precise_qualifier_0(std::move(precise_qualifier_0_)) {}
+    std::shared_ptr<precise_qualifier_t> precise_qualifier_0_
+  ): precise_qualifier_0(precise_qualifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<single_type_qualifier_precise_qualifier_t> make(
-    std::unique_ptr<precise_qualifier_t> &&precise_qualifier_0_
+  virtual int get_id() const override {
+    return 260;
+  }
+
+  static std::shared_ptr<single_type_qualifier_precise_qualifier_t> make(
+    std::shared_ptr<precise_qualifier_t> precise_qualifier_0_
   ) {
-    return std::make_unique<single_type_qualifier_precise_qualifier_t>(
-      std::move(precise_qualifier_0_)
+    return std::make_shared<single_type_qualifier_precise_qualifier_t>(
+      precise_qualifier_0_
     );
   }
 

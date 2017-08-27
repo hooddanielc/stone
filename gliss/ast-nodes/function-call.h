@@ -26,7 +26,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 215;
+  static constexpr int id = 216;
 
   virtual ~function_call_t() = default;
 
@@ -36,21 +36,25 @@ class function_call_function_call_or_method_t: public function_call_t {
 
 public:
 
-  std::unique_ptr<function_call_or_method_t> function_call_or_method_0;
+  std::shared_ptr<function_call_or_method_t> function_call_or_method_0;
 
   function_call_function_call_or_method_t(
-    std::unique_ptr<function_call_or_method_t> &&function_call_or_method_0_
-  ): function_call_or_method_0(std::move(function_call_or_method_0_)) {}
+    std::shared_ptr<function_call_or_method_t> function_call_or_method_0_
+  ): function_call_or_method_0(function_call_or_method_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_call_function_call_or_method_t> make(
-    std::unique_ptr<function_call_or_method_t> &&function_call_or_method_0_
+  virtual int get_id() const override {
+    return 216;
+  }
+
+  static std::shared_ptr<function_call_function_call_or_method_t> make(
+    std::shared_ptr<function_call_or_method_t> function_call_or_method_0_
   ) {
-    return std::make_unique<function_call_function_call_or_method_t>(
-      std::move(function_call_or_method_0_)
+    return std::make_shared<function_call_function_call_or_method_t>(
+      function_call_or_method_0_
     );
   }
 

@@ -38,7 +38,7 @@ public:
 
   static constexpr int rules = 3;
 
-  static constexpr int id = 287;
+  static constexpr int id = 288;
 
   virtual ~iteration_statement_t() = default;
 
@@ -48,45 +48,49 @@ class iteration_statement_while_left_paren_condition_right_paren_statement_no_ne
 
 public:
 
-  std::unique_ptr<token_t> while_0;
+  std::shared_ptr<ast_token_t> while_0;
 
-  std::unique_ptr<token_t> left_paren_1;
+  std::shared_ptr<ast_token_t> left_paren_1;
 
-  std::unique_ptr<condition_t> condition_2;
+  std::shared_ptr<condition_t> condition_2;
 
-  std::unique_ptr<token_t> right_paren_3;
+  std::shared_ptr<ast_token_t> right_paren_3;
 
-  std::unique_ptr<statement_no_new_scope_t> statement_no_new_scope_4;
+  std::shared_ptr<statement_no_new_scope_t> statement_no_new_scope_4;
 
   iteration_statement_while_left_paren_condition_right_paren_statement_no_new_scope_t(
-    std::unique_ptr<token_t> &&while_0_,
-    std::unique_ptr<token_t> &&left_paren_1_,
-    std::unique_ptr<condition_t> &&condition_2_,
-    std::unique_ptr<token_t> &&right_paren_3_,
-    std::unique_ptr<statement_no_new_scope_t> &&statement_no_new_scope_4_
-  ): while_0(std::move(while_0_)),
-     left_paren_1(std::move(left_paren_1_)),
-     condition_2(std::move(condition_2_)),
-     right_paren_3(std::move(right_paren_3_)),
-     statement_no_new_scope_4(std::move(statement_no_new_scope_4_)) {}
+    std::shared_ptr<ast_token_t> while_0_,
+    std::shared_ptr<ast_token_t> left_paren_1_,
+    std::shared_ptr<condition_t> condition_2_,
+    std::shared_ptr<ast_token_t> right_paren_3_,
+    std::shared_ptr<statement_no_new_scope_t> statement_no_new_scope_4_
+  ): while_0(while_0_),
+     left_paren_1(left_paren_1_),
+     condition_2(condition_2_),
+     right_paren_3(right_paren_3_),
+     statement_no_new_scope_4(statement_no_new_scope_4_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<iteration_statement_while_left_paren_condition_right_paren_statement_no_new_scope_t> make(
-    const token_t *WHILE_0_,
-    const token_t *LEFT_PAREN_1_,
-    std::unique_ptr<condition_t> &&condition_2_,
-    const token_t *RIGHT_PAREN_3_,
-    std::unique_ptr<statement_no_new_scope_t> &&statement_no_new_scope_4_
+  virtual int get_id() const override {
+    return 288;
+  }
+
+  static std::shared_ptr<iteration_statement_while_left_paren_condition_right_paren_statement_no_new_scope_t> make(
+    std::shared_ptr<ast_token_t> WHILE_0_,
+    std::shared_ptr<ast_token_t> LEFT_PAREN_1_,
+    std::shared_ptr<condition_t> condition_2_,
+    std::shared_ptr<ast_token_t> RIGHT_PAREN_3_,
+    std::shared_ptr<statement_no_new_scope_t> statement_no_new_scope_4_
   ) {
-    return std::make_unique<iteration_statement_while_left_paren_condition_right_paren_statement_no_new_scope_t>(
-      std::make_unique<token_t>(*WHILE_0_),
-      std::make_unique<token_t>(*LEFT_PAREN_1_),
-      std::move(condition_2_),
-      std::make_unique<token_t>(*RIGHT_PAREN_3_),
-      std::move(statement_no_new_scope_4_)
+    return std::make_shared<iteration_statement_while_left_paren_condition_right_paren_statement_no_new_scope_t>(
+      WHILE_0_,
+      LEFT_PAREN_1_,
+      condition_2_,
+      RIGHT_PAREN_3_,
+      statement_no_new_scope_4_
     );
   }
 
@@ -96,57 +100,61 @@ class iteration_statement_do_statement_while_left_paren_expression_right_paren_s
 
 public:
 
-  std::unique_ptr<token_t> do_0;
+  std::shared_ptr<ast_token_t> do_0;
 
-  std::unique_ptr<statement_t> statement_1;
+  std::shared_ptr<statement_t> statement_1;
 
-  std::unique_ptr<token_t> while_2;
+  std::shared_ptr<ast_token_t> while_2;
 
-  std::unique_ptr<token_t> left_paren_3;
+  std::shared_ptr<ast_token_t> left_paren_3;
 
-  std::unique_ptr<expression_t> expression_4;
+  std::shared_ptr<expression_t> expression_4;
 
-  std::unique_ptr<token_t> right_paren_5;
+  std::shared_ptr<ast_token_t> right_paren_5;
 
-  std::unique_ptr<token_t> semicolon_6;
+  std::shared_ptr<ast_token_t> semicolon_6;
 
   iteration_statement_do_statement_while_left_paren_expression_right_paren_semicolon_t(
-    std::unique_ptr<token_t> &&do_0_,
-    std::unique_ptr<statement_t> &&statement_1_,
-    std::unique_ptr<token_t> &&while_2_,
-    std::unique_ptr<token_t> &&left_paren_3_,
-    std::unique_ptr<expression_t> &&expression_4_,
-    std::unique_ptr<token_t> &&right_paren_5_,
-    std::unique_ptr<token_t> &&semicolon_6_
-  ): do_0(std::move(do_0_)),
-     statement_1(std::move(statement_1_)),
-     while_2(std::move(while_2_)),
-     left_paren_3(std::move(left_paren_3_)),
-     expression_4(std::move(expression_4_)),
-     right_paren_5(std::move(right_paren_5_)),
-     semicolon_6(std::move(semicolon_6_)) {}
+    std::shared_ptr<ast_token_t> do_0_,
+    std::shared_ptr<statement_t> statement_1_,
+    std::shared_ptr<ast_token_t> while_2_,
+    std::shared_ptr<ast_token_t> left_paren_3_,
+    std::shared_ptr<expression_t> expression_4_,
+    std::shared_ptr<ast_token_t> right_paren_5_,
+    std::shared_ptr<ast_token_t> semicolon_6_
+  ): do_0(do_0_),
+     statement_1(statement_1_),
+     while_2(while_2_),
+     left_paren_3(left_paren_3_),
+     expression_4(expression_4_),
+     right_paren_5(right_paren_5_),
+     semicolon_6(semicolon_6_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<iteration_statement_do_statement_while_left_paren_expression_right_paren_semicolon_t> make(
-    const token_t *DO_0_,
-    std::unique_ptr<statement_t> &&statement_1_,
-    const token_t *WHILE_2_,
-    const token_t *LEFT_PAREN_3_,
-    std::unique_ptr<expression_t> &&expression_4_,
-    const token_t *RIGHT_PAREN_5_,
-    const token_t *SEMICOLON_6_
+  virtual int get_id() const override {
+    return 288;
+  }
+
+  static std::shared_ptr<iteration_statement_do_statement_while_left_paren_expression_right_paren_semicolon_t> make(
+    std::shared_ptr<ast_token_t> DO_0_,
+    std::shared_ptr<statement_t> statement_1_,
+    std::shared_ptr<ast_token_t> WHILE_2_,
+    std::shared_ptr<ast_token_t> LEFT_PAREN_3_,
+    std::shared_ptr<expression_t> expression_4_,
+    std::shared_ptr<ast_token_t> RIGHT_PAREN_5_,
+    std::shared_ptr<ast_token_t> SEMICOLON_6_
   ) {
-    return std::make_unique<iteration_statement_do_statement_while_left_paren_expression_right_paren_semicolon_t>(
-      std::make_unique<token_t>(*DO_0_),
-      std::move(statement_1_),
-      std::make_unique<token_t>(*WHILE_2_),
-      std::make_unique<token_t>(*LEFT_PAREN_3_),
-      std::move(expression_4_),
-      std::make_unique<token_t>(*RIGHT_PAREN_5_),
-      std::make_unique<token_t>(*SEMICOLON_6_)
+    return std::make_shared<iteration_statement_do_statement_while_left_paren_expression_right_paren_semicolon_t>(
+      DO_0_,
+      statement_1_,
+      WHILE_2_,
+      LEFT_PAREN_3_,
+      expression_4_,
+      RIGHT_PAREN_5_,
+      SEMICOLON_6_
     );
   }
 
@@ -156,51 +164,55 @@ class iteration_statement_for_left_paren_for_init_statement_for_rest_statement_r
 
 public:
 
-  std::unique_ptr<token_t> for_0;
+  std::shared_ptr<ast_token_t> for_0;
 
-  std::unique_ptr<token_t> left_paren_1;
+  std::shared_ptr<ast_token_t> left_paren_1;
 
-  std::unique_ptr<for_init_statement_t> for_init_statement_2;
+  std::shared_ptr<for_init_statement_t> for_init_statement_2;
 
-  std::unique_ptr<for_rest_statement_t> for_rest_statement_3;
+  std::shared_ptr<for_rest_statement_t> for_rest_statement_3;
 
-  std::unique_ptr<token_t> right_paren_4;
+  std::shared_ptr<ast_token_t> right_paren_4;
 
-  std::unique_ptr<statement_no_new_scope_t> statement_no_new_scope_5;
+  std::shared_ptr<statement_no_new_scope_t> statement_no_new_scope_5;
 
   iteration_statement_for_left_paren_for_init_statement_for_rest_statement_right_paren_statement_no_new_scope_t(
-    std::unique_ptr<token_t> &&for_0_,
-    std::unique_ptr<token_t> &&left_paren_1_,
-    std::unique_ptr<for_init_statement_t> &&for_init_statement_2_,
-    std::unique_ptr<for_rest_statement_t> &&for_rest_statement_3_,
-    std::unique_ptr<token_t> &&right_paren_4_,
-    std::unique_ptr<statement_no_new_scope_t> &&statement_no_new_scope_5_
-  ): for_0(std::move(for_0_)),
-     left_paren_1(std::move(left_paren_1_)),
-     for_init_statement_2(std::move(for_init_statement_2_)),
-     for_rest_statement_3(std::move(for_rest_statement_3_)),
-     right_paren_4(std::move(right_paren_4_)),
-     statement_no_new_scope_5(std::move(statement_no_new_scope_5_)) {}
+    std::shared_ptr<ast_token_t> for_0_,
+    std::shared_ptr<ast_token_t> left_paren_1_,
+    std::shared_ptr<for_init_statement_t> for_init_statement_2_,
+    std::shared_ptr<for_rest_statement_t> for_rest_statement_3_,
+    std::shared_ptr<ast_token_t> right_paren_4_,
+    std::shared_ptr<statement_no_new_scope_t> statement_no_new_scope_5_
+  ): for_0(for_0_),
+     left_paren_1(left_paren_1_),
+     for_init_statement_2(for_init_statement_2_),
+     for_rest_statement_3(for_rest_statement_3_),
+     right_paren_4(right_paren_4_),
+     statement_no_new_scope_5(statement_no_new_scope_5_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<iteration_statement_for_left_paren_for_init_statement_for_rest_statement_right_paren_statement_no_new_scope_t> make(
-    const token_t *FOR_0_,
-    const token_t *LEFT_PAREN_1_,
-    std::unique_ptr<for_init_statement_t> &&for_init_statement_2_,
-    std::unique_ptr<for_rest_statement_t> &&for_rest_statement_3_,
-    const token_t *RIGHT_PAREN_4_,
-    std::unique_ptr<statement_no_new_scope_t> &&statement_no_new_scope_5_
+  virtual int get_id() const override {
+    return 288;
+  }
+
+  static std::shared_ptr<iteration_statement_for_left_paren_for_init_statement_for_rest_statement_right_paren_statement_no_new_scope_t> make(
+    std::shared_ptr<ast_token_t> FOR_0_,
+    std::shared_ptr<ast_token_t> LEFT_PAREN_1_,
+    std::shared_ptr<for_init_statement_t> for_init_statement_2_,
+    std::shared_ptr<for_rest_statement_t> for_rest_statement_3_,
+    std::shared_ptr<ast_token_t> RIGHT_PAREN_4_,
+    std::shared_ptr<statement_no_new_scope_t> statement_no_new_scope_5_
   ) {
-    return std::make_unique<iteration_statement_for_left_paren_for_init_statement_for_rest_statement_right_paren_statement_no_new_scope_t>(
-      std::make_unique<token_t>(*FOR_0_),
-      std::make_unique<token_t>(*LEFT_PAREN_1_),
-      std::move(for_init_statement_2_),
-      std::move(for_rest_statement_3_),
-      std::make_unique<token_t>(*RIGHT_PAREN_4_),
-      std::move(statement_no_new_scope_5_)
+    return std::make_shared<iteration_statement_for_left_paren_for_init_statement_for_rest_statement_right_paren_statement_no_new_scope_t>(
+      FOR_0_,
+      LEFT_PAREN_1_,
+      for_init_statement_2_,
+      for_rest_statement_3_,
+      RIGHT_PAREN_4_,
+      statement_no_new_scope_5_
     );
   }
 

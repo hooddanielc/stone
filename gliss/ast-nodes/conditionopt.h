@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 289;
+  static constexpr int id = 290;
 
   virtual ~conditionopt_t() = default;
 
@@ -39,21 +39,25 @@ class conditionopt_condition_t: public conditionopt_t {
 
 public:
 
-  std::unique_ptr<condition_t> condition_0;
+  std::shared_ptr<condition_t> condition_0;
 
   conditionopt_condition_t(
-    std::unique_ptr<condition_t> &&condition_0_
-  ): condition_0(std::move(condition_0_)) {}
+    std::shared_ptr<condition_t> condition_0_
+  ): condition_0(condition_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<conditionopt_condition_t> make(
-    std::unique_ptr<condition_t> &&condition_0_
+  virtual int get_id() const override {
+    return 290;
+  }
+
+  static std::shared_ptr<conditionopt_condition_t> make(
+    std::shared_ptr<condition_t> condition_0_
   ) {
-    return std::make_unique<conditionopt_condition_t>(
-      std::move(condition_0_)
+    return std::make_shared<conditionopt_condition_t>(
+      condition_0_
     );
   }
 
@@ -63,21 +67,25 @@ class conditionopt_nothing_t: public conditionopt_t {
 
 public:
 
-  std::unique_ptr<nothing_t> nothing_0;
+  std::shared_ptr<nothing_t> nothing_0;
 
   conditionopt_nothing_t(
-    std::unique_ptr<nothing_t> &&nothing_0_
-  ): nothing_0(std::move(nothing_0_)) {}
+    std::shared_ptr<nothing_t> nothing_0_
+  ): nothing_0(nothing_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<conditionopt_nothing_t> make(
-    std::unique_ptr<nothing_t> &&nothing_0_
+  virtual int get_id() const override {
+    return 290;
+  }
+
+  static std::shared_ptr<conditionopt_nothing_t> make(
+    std::shared_ptr<nothing_t> nothing_0_
   ) {
-    return std::make_unique<conditionopt_nothing_t>(
-      std::move(nothing_0_)
+    return std::make_shared<conditionopt_nothing_t>(
+      nothing_0_
     );
   }
 

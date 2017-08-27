@@ -30,7 +30,7 @@ public:
 
   static constexpr int rules = 3;
 
-  static constexpr int id = 293;
+  static constexpr int id = 294;
 
   virtual ~external_declaration_t() = default;
 
@@ -40,21 +40,25 @@ class external_declaration_function_definition_t: public external_declaration_t 
 
 public:
 
-  std::unique_ptr<function_definition_t> function_definition_0;
+  std::shared_ptr<function_definition_t> function_definition_0;
 
   external_declaration_function_definition_t(
-    std::unique_ptr<function_definition_t> &&function_definition_0_
-  ): function_definition_0(std::move(function_definition_0_)) {}
+    std::shared_ptr<function_definition_t> function_definition_0_
+  ): function_definition_0(function_definition_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<external_declaration_function_definition_t> make(
-    std::unique_ptr<function_definition_t> &&function_definition_0_
+  virtual int get_id() const override {
+    return 294;
+  }
+
+  static std::shared_ptr<external_declaration_function_definition_t> make(
+    std::shared_ptr<function_definition_t> function_definition_0_
   ) {
-    return std::make_unique<external_declaration_function_definition_t>(
-      std::move(function_definition_0_)
+    return std::make_shared<external_declaration_function_definition_t>(
+      function_definition_0_
     );
   }
 
@@ -64,21 +68,25 @@ class external_declaration_declaration_t: public external_declaration_t {
 
 public:
 
-  std::unique_ptr<declaration_t> declaration_0;
+  std::shared_ptr<declaration_t> declaration_0;
 
   external_declaration_declaration_t(
-    std::unique_ptr<declaration_t> &&declaration_0_
-  ): declaration_0(std::move(declaration_0_)) {}
+    std::shared_ptr<declaration_t> declaration_0_
+  ): declaration_0(declaration_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<external_declaration_declaration_t> make(
-    std::unique_ptr<declaration_t> &&declaration_0_
+  virtual int get_id() const override {
+    return 294;
+  }
+
+  static std::shared_ptr<external_declaration_declaration_t> make(
+    std::shared_ptr<declaration_t> declaration_0_
   ) {
-    return std::make_unique<external_declaration_declaration_t>(
-      std::move(declaration_0_)
+    return std::make_shared<external_declaration_declaration_t>(
+      declaration_0_
     );
   }
 
@@ -88,21 +96,25 @@ class external_declaration_semicolon_t: public external_declaration_t {
 
 public:
 
-  std::unique_ptr<token_t> semicolon_0;
+  std::shared_ptr<ast_token_t> semicolon_0;
 
   external_declaration_semicolon_t(
-    std::unique_ptr<token_t> &&semicolon_0_
-  ): semicolon_0(std::move(semicolon_0_)) {}
+    std::shared_ptr<ast_token_t> semicolon_0_
+  ): semicolon_0(semicolon_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<external_declaration_semicolon_t> make(
-    const token_t *SEMICOLON_0_
+  virtual int get_id() const override {
+    return 294;
+  }
+
+  static std::shared_ptr<external_declaration_semicolon_t> make(
+    std::shared_ptr<ast_token_t> SEMICOLON_0_
   ) {
-    return std::make_unique<external_declaration_semicolon_t>(
-      std::make_unique<token_t>(*SEMICOLON_0_)
+    return std::make_shared<external_declaration_semicolon_t>(
+      SEMICOLON_0_
     );
   }
 

@@ -26,7 +26,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 239;
+  static constexpr int id = 240;
 
   virtual ~constant_expression_t() = default;
 
@@ -36,21 +36,25 @@ class constant_expression_conditional_expression_t: public constant_expression_t
 
 public:
 
-  std::unique_ptr<conditional_expression_t> conditional_expression_0;
+  std::shared_ptr<conditional_expression_t> conditional_expression_0;
 
   constant_expression_conditional_expression_t(
-    std::unique_ptr<conditional_expression_t> &&conditional_expression_0_
-  ): conditional_expression_0(std::move(conditional_expression_0_)) {}
+    std::shared_ptr<conditional_expression_t> conditional_expression_0_
+  ): conditional_expression_0(conditional_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<constant_expression_conditional_expression_t> make(
-    std::unique_ptr<conditional_expression_t> &&conditional_expression_0_
+  virtual int get_id() const override {
+    return 240;
+  }
+
+  static std::shared_ptr<constant_expression_conditional_expression_t> make(
+    std::shared_ptr<conditional_expression_t> conditional_expression_0_
   ) {
-    return std::make_unique<constant_expression_conditional_expression_t>(
-      std::move(conditional_expression_0_)
+    return std::make_shared<constant_expression_conditional_expression_t>(
+      conditional_expression_0_
     );
   }
 

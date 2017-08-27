@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 221;
+  static constexpr int id = 222;
 
   virtual ~function_identifier_t() = default;
 
@@ -39,21 +39,25 @@ class function_identifier_type_specifier_t: public function_identifier_t {
 
 public:
 
-  std::unique_ptr<type_specifier_t> type_specifier_0;
+  std::shared_ptr<type_specifier_t> type_specifier_0;
 
   function_identifier_type_specifier_t(
-    std::unique_ptr<type_specifier_t> &&type_specifier_0_
-  ): type_specifier_0(std::move(type_specifier_0_)) {}
+    std::shared_ptr<type_specifier_t> type_specifier_0_
+  ): type_specifier_0(type_specifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_identifier_type_specifier_t> make(
-    std::unique_ptr<type_specifier_t> &&type_specifier_0_
+  virtual int get_id() const override {
+    return 222;
+  }
+
+  static std::shared_ptr<function_identifier_type_specifier_t> make(
+    std::shared_ptr<type_specifier_t> type_specifier_0_
   ) {
-    return std::make_unique<function_identifier_type_specifier_t>(
-      std::move(type_specifier_0_)
+    return std::make_shared<function_identifier_type_specifier_t>(
+      type_specifier_0_
     );
   }
 
@@ -63,21 +67,25 @@ class function_identifier_postfix_expression_t: public function_identifier_t {
 
 public:
 
-  std::unique_ptr<postfix_expression_t> postfix_expression_0;
+  std::shared_ptr<postfix_expression_t> postfix_expression_0;
 
   function_identifier_postfix_expression_t(
-    std::unique_ptr<postfix_expression_t> &&postfix_expression_0_
-  ): postfix_expression_0(std::move(postfix_expression_0_)) {}
+    std::shared_ptr<postfix_expression_t> postfix_expression_0_
+  ): postfix_expression_0(postfix_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_identifier_postfix_expression_t> make(
-    std::unique_ptr<postfix_expression_t> &&postfix_expression_0_
+  virtual int get_id() const override {
+    return 222;
+  }
+
+  static std::shared_ptr<function_identifier_postfix_expression_t> make(
+    std::shared_ptr<postfix_expression_t> postfix_expression_0_
   ) {
-    return std::make_unique<function_identifier_postfix_expression_t>(
-      std::move(postfix_expression_0_)
+    return std::make_shared<function_identifier_postfix_expression_t>(
+      postfix_expression_0_
     );
   }
 

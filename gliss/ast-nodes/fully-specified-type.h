@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 251;
+  static constexpr int id = 252;
 
   virtual ~fully_specified_type_t() = default;
 
@@ -39,21 +39,25 @@ class fully_specified_type_type_specifier_t: public fully_specified_type_t {
 
 public:
 
-  std::unique_ptr<type_specifier_t> type_specifier_0;
+  std::shared_ptr<type_specifier_t> type_specifier_0;
 
   fully_specified_type_type_specifier_t(
-    std::unique_ptr<type_specifier_t> &&type_specifier_0_
-  ): type_specifier_0(std::move(type_specifier_0_)) {}
+    std::shared_ptr<type_specifier_t> type_specifier_0_
+  ): type_specifier_0(type_specifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<fully_specified_type_type_specifier_t> make(
-    std::unique_ptr<type_specifier_t> &&type_specifier_0_
+  virtual int get_id() const override {
+    return 252;
+  }
+
+  static std::shared_ptr<fully_specified_type_type_specifier_t> make(
+    std::shared_ptr<type_specifier_t> type_specifier_0_
   ) {
-    return std::make_unique<fully_specified_type_type_specifier_t>(
-      std::move(type_specifier_0_)
+    return std::make_shared<fully_specified_type_type_specifier_t>(
+      type_specifier_0_
     );
   }
 
@@ -63,27 +67,31 @@ class fully_specified_type_type_qualifier_type_specifier_t: public fully_specifi
 
 public:
 
-  std::unique_ptr<type_qualifier_t> type_qualifier_0;
+  std::shared_ptr<type_qualifier_t> type_qualifier_0;
 
-  std::unique_ptr<type_specifier_t> type_specifier_1;
+  std::shared_ptr<type_specifier_t> type_specifier_1;
 
   fully_specified_type_type_qualifier_type_specifier_t(
-    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
-    std::unique_ptr<type_specifier_t> &&type_specifier_1_
-  ): type_qualifier_0(std::move(type_qualifier_0_)),
-     type_specifier_1(std::move(type_specifier_1_)) {}
+    std::shared_ptr<type_qualifier_t> type_qualifier_0_,
+    std::shared_ptr<type_specifier_t> type_specifier_1_
+  ): type_qualifier_0(type_qualifier_0_),
+     type_specifier_1(type_specifier_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<fully_specified_type_type_qualifier_type_specifier_t> make(
-    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
-    std::unique_ptr<type_specifier_t> &&type_specifier_1_
+  virtual int get_id() const override {
+    return 252;
+  }
+
+  static std::shared_ptr<fully_specified_type_type_qualifier_type_specifier_t> make(
+    std::shared_ptr<type_qualifier_t> type_qualifier_0_,
+    std::shared_ptr<type_specifier_t> type_specifier_1_
   ) {
-    return std::make_unique<fully_specified_type_type_qualifier_type_specifier_t>(
-      std::move(type_qualifier_0_),
-      std::move(type_specifier_1_)
+    return std::make_shared<fully_specified_type_type_qualifier_type_specifier_t>(
+      type_qualifier_0_,
+      type_specifier_1_
     );
   }
 

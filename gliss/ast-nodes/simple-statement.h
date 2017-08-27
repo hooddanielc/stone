@@ -44,7 +44,7 @@ public:
 
   static constexpr int rules = 7;
 
-  static constexpr int id = 275;
+  static constexpr int id = 276;
 
   virtual ~simple_statement_t() = default;
 
@@ -54,21 +54,25 @@ class simple_statement_declaration_statement_t: public simple_statement_t {
 
 public:
 
-  std::unique_ptr<declaration_statement_t> declaration_statement_0;
+  std::shared_ptr<declaration_statement_t> declaration_statement_0;
 
   simple_statement_declaration_statement_t(
-    std::unique_ptr<declaration_statement_t> &&declaration_statement_0_
-  ): declaration_statement_0(std::move(declaration_statement_0_)) {}
+    std::shared_ptr<declaration_statement_t> declaration_statement_0_
+  ): declaration_statement_0(declaration_statement_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<simple_statement_declaration_statement_t> make(
-    std::unique_ptr<declaration_statement_t> &&declaration_statement_0_
+  virtual int get_id() const override {
+    return 276;
+  }
+
+  static std::shared_ptr<simple_statement_declaration_statement_t> make(
+    std::shared_ptr<declaration_statement_t> declaration_statement_0_
   ) {
-    return std::make_unique<simple_statement_declaration_statement_t>(
-      std::move(declaration_statement_0_)
+    return std::make_shared<simple_statement_declaration_statement_t>(
+      declaration_statement_0_
     );
   }
 
@@ -78,21 +82,25 @@ class simple_statement_expression_statement_t: public simple_statement_t {
 
 public:
 
-  std::unique_ptr<expression_statement_t> expression_statement_0;
+  std::shared_ptr<expression_statement_t> expression_statement_0;
 
   simple_statement_expression_statement_t(
-    std::unique_ptr<expression_statement_t> &&expression_statement_0_
-  ): expression_statement_0(std::move(expression_statement_0_)) {}
+    std::shared_ptr<expression_statement_t> expression_statement_0_
+  ): expression_statement_0(expression_statement_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<simple_statement_expression_statement_t> make(
-    std::unique_ptr<expression_statement_t> &&expression_statement_0_
+  virtual int get_id() const override {
+    return 276;
+  }
+
+  static std::shared_ptr<simple_statement_expression_statement_t> make(
+    std::shared_ptr<expression_statement_t> expression_statement_0_
   ) {
-    return std::make_unique<simple_statement_expression_statement_t>(
-      std::move(expression_statement_0_)
+    return std::make_shared<simple_statement_expression_statement_t>(
+      expression_statement_0_
     );
   }
 
@@ -102,21 +110,25 @@ class simple_statement_selection_statement_t: public simple_statement_t {
 
 public:
 
-  std::unique_ptr<selection_statement_t> selection_statement_0;
+  std::shared_ptr<selection_statement_t> selection_statement_0;
 
   simple_statement_selection_statement_t(
-    std::unique_ptr<selection_statement_t> &&selection_statement_0_
-  ): selection_statement_0(std::move(selection_statement_0_)) {}
+    std::shared_ptr<selection_statement_t> selection_statement_0_
+  ): selection_statement_0(selection_statement_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<simple_statement_selection_statement_t> make(
-    std::unique_ptr<selection_statement_t> &&selection_statement_0_
+  virtual int get_id() const override {
+    return 276;
+  }
+
+  static std::shared_ptr<simple_statement_selection_statement_t> make(
+    std::shared_ptr<selection_statement_t> selection_statement_0_
   ) {
-    return std::make_unique<simple_statement_selection_statement_t>(
-      std::move(selection_statement_0_)
+    return std::make_shared<simple_statement_selection_statement_t>(
+      selection_statement_0_
     );
   }
 
@@ -126,21 +138,25 @@ class simple_statement_switch_statement_t: public simple_statement_t {
 
 public:
 
-  std::unique_ptr<switch_statement_t> switch_statement_0;
+  std::shared_ptr<switch_statement_t> switch_statement_0;
 
   simple_statement_switch_statement_t(
-    std::unique_ptr<switch_statement_t> &&switch_statement_0_
-  ): switch_statement_0(std::move(switch_statement_0_)) {}
+    std::shared_ptr<switch_statement_t> switch_statement_0_
+  ): switch_statement_0(switch_statement_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<simple_statement_switch_statement_t> make(
-    std::unique_ptr<switch_statement_t> &&switch_statement_0_
+  virtual int get_id() const override {
+    return 276;
+  }
+
+  static std::shared_ptr<simple_statement_switch_statement_t> make(
+    std::shared_ptr<switch_statement_t> switch_statement_0_
   ) {
-    return std::make_unique<simple_statement_switch_statement_t>(
-      std::move(switch_statement_0_)
+    return std::make_shared<simple_statement_switch_statement_t>(
+      switch_statement_0_
     );
   }
 
@@ -150,21 +166,25 @@ class simple_statement_case_label_t: public simple_statement_t {
 
 public:
 
-  std::unique_ptr<case_label_t> case_label_0;
+  std::shared_ptr<case_label_t> case_label_0;
 
   simple_statement_case_label_t(
-    std::unique_ptr<case_label_t> &&case_label_0_
-  ): case_label_0(std::move(case_label_0_)) {}
+    std::shared_ptr<case_label_t> case_label_0_
+  ): case_label_0(case_label_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<simple_statement_case_label_t> make(
-    std::unique_ptr<case_label_t> &&case_label_0_
+  virtual int get_id() const override {
+    return 276;
+  }
+
+  static std::shared_ptr<simple_statement_case_label_t> make(
+    std::shared_ptr<case_label_t> case_label_0_
   ) {
-    return std::make_unique<simple_statement_case_label_t>(
-      std::move(case_label_0_)
+    return std::make_shared<simple_statement_case_label_t>(
+      case_label_0_
     );
   }
 
@@ -174,21 +194,25 @@ class simple_statement_iteration_statement_t: public simple_statement_t {
 
 public:
 
-  std::unique_ptr<iteration_statement_t> iteration_statement_0;
+  std::shared_ptr<iteration_statement_t> iteration_statement_0;
 
   simple_statement_iteration_statement_t(
-    std::unique_ptr<iteration_statement_t> &&iteration_statement_0_
-  ): iteration_statement_0(std::move(iteration_statement_0_)) {}
+    std::shared_ptr<iteration_statement_t> iteration_statement_0_
+  ): iteration_statement_0(iteration_statement_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<simple_statement_iteration_statement_t> make(
-    std::unique_ptr<iteration_statement_t> &&iteration_statement_0_
+  virtual int get_id() const override {
+    return 276;
+  }
+
+  static std::shared_ptr<simple_statement_iteration_statement_t> make(
+    std::shared_ptr<iteration_statement_t> iteration_statement_0_
   ) {
-    return std::make_unique<simple_statement_iteration_statement_t>(
-      std::move(iteration_statement_0_)
+    return std::make_shared<simple_statement_iteration_statement_t>(
+      iteration_statement_0_
     );
   }
 
@@ -198,21 +222,25 @@ class simple_statement_jump_statement_t: public simple_statement_t {
 
 public:
 
-  std::unique_ptr<jump_statement_t> jump_statement_0;
+  std::shared_ptr<jump_statement_t> jump_statement_0;
 
   simple_statement_jump_statement_t(
-    std::unique_ptr<jump_statement_t> &&jump_statement_0_
-  ): jump_statement_0(std::move(jump_statement_0_)) {}
+    std::shared_ptr<jump_statement_t> jump_statement_0_
+  ): jump_statement_0(jump_statement_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<simple_statement_jump_statement_t> make(
-    std::unique_ptr<jump_statement_t> &&jump_statement_0_
+  virtual int get_id() const override {
+    return 276;
+  }
+
+  static std::shared_ptr<simple_statement_jump_statement_t> make(
+    std::shared_ptr<jump_statement_t> jump_statement_0_
   ) {
-    return std::make_unique<simple_statement_jump_statement_t>(
-      std::move(jump_statement_0_)
+    return std::make_shared<simple_statement_jump_statement_t>(
+      jump_statement_0_
     );
   }
 

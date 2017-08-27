@@ -31,7 +31,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 235;
+  static constexpr int id = 236;
 
   virtual ~conditional_expression_t() = default;
 
@@ -41,21 +41,25 @@ class conditional_expression_logical_or_expression_t: public conditional_express
 
 public:
 
-  std::unique_ptr<logical_or_expression_t> logical_or_expression_0;
+  std::shared_ptr<logical_or_expression_t> logical_or_expression_0;
 
   conditional_expression_logical_or_expression_t(
-    std::unique_ptr<logical_or_expression_t> &&logical_or_expression_0_
-  ): logical_or_expression_0(std::move(logical_or_expression_0_)) {}
+    std::shared_ptr<logical_or_expression_t> logical_or_expression_0_
+  ): logical_or_expression_0(logical_or_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<conditional_expression_logical_or_expression_t> make(
-    std::unique_ptr<logical_or_expression_t> &&logical_or_expression_0_
+  virtual int get_id() const override {
+    return 236;
+  }
+
+  static std::shared_ptr<conditional_expression_logical_or_expression_t> make(
+    std::shared_ptr<logical_or_expression_t> logical_or_expression_0_
   ) {
-    return std::make_unique<conditional_expression_logical_or_expression_t>(
-      std::move(logical_or_expression_0_)
+    return std::make_shared<conditional_expression_logical_or_expression_t>(
+      logical_or_expression_0_
     );
   }
 
@@ -65,45 +69,49 @@ class conditional_expression_logical_or_expression_question_expression_colon_ass
 
 public:
 
-  std::unique_ptr<logical_or_expression_t> logical_or_expression_0;
+  std::shared_ptr<logical_or_expression_t> logical_or_expression_0;
 
-  std::unique_ptr<token_t> question_1;
+  std::shared_ptr<ast_token_t> question_1;
 
-  std::unique_ptr<expression_t> expression_2;
+  std::shared_ptr<expression_t> expression_2;
 
-  std::unique_ptr<token_t> colon_3;
+  std::shared_ptr<ast_token_t> colon_3;
 
-  std::unique_ptr<assignment_expression_t> assignment_expression_4;
+  std::shared_ptr<assignment_expression_t> assignment_expression_4;
 
   conditional_expression_logical_or_expression_question_expression_colon_assignment_expression_t(
-    std::unique_ptr<logical_or_expression_t> &&logical_or_expression_0_,
-    std::unique_ptr<token_t> &&question_1_,
-    std::unique_ptr<expression_t> &&expression_2_,
-    std::unique_ptr<token_t> &&colon_3_,
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_4_
-  ): logical_or_expression_0(std::move(logical_or_expression_0_)),
-     question_1(std::move(question_1_)),
-     expression_2(std::move(expression_2_)),
-     colon_3(std::move(colon_3_)),
-     assignment_expression_4(std::move(assignment_expression_4_)) {}
+    std::shared_ptr<logical_or_expression_t> logical_or_expression_0_,
+    std::shared_ptr<ast_token_t> question_1_,
+    std::shared_ptr<expression_t> expression_2_,
+    std::shared_ptr<ast_token_t> colon_3_,
+    std::shared_ptr<assignment_expression_t> assignment_expression_4_
+  ): logical_or_expression_0(logical_or_expression_0_),
+     question_1(question_1_),
+     expression_2(expression_2_),
+     colon_3(colon_3_),
+     assignment_expression_4(assignment_expression_4_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<conditional_expression_logical_or_expression_question_expression_colon_assignment_expression_t> make(
-    std::unique_ptr<logical_or_expression_t> &&logical_or_expression_0_,
-    const token_t *QUESTION_1_,
-    std::unique_ptr<expression_t> &&expression_2_,
-    const token_t *COLON_3_,
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_4_
+  virtual int get_id() const override {
+    return 236;
+  }
+
+  static std::shared_ptr<conditional_expression_logical_or_expression_question_expression_colon_assignment_expression_t> make(
+    std::shared_ptr<logical_or_expression_t> logical_or_expression_0_,
+    std::shared_ptr<ast_token_t> QUESTION_1_,
+    std::shared_ptr<expression_t> expression_2_,
+    std::shared_ptr<ast_token_t> COLON_3_,
+    std::shared_ptr<assignment_expression_t> assignment_expression_4_
   ) {
-    return std::make_unique<conditional_expression_logical_or_expression_question_expression_colon_assignment_expression_t>(
-      std::move(logical_or_expression_0_),
-      std::make_unique<token_t>(*QUESTION_1_),
-      std::move(expression_2_),
-      std::make_unique<token_t>(*COLON_3_),
-      std::move(assignment_expression_4_)
+    return std::make_shared<conditional_expression_logical_or_expression_question_expression_colon_assignment_expression_t>(
+      logical_or_expression_0_,
+      QUESTION_1_,
+      expression_2_,
+      COLON_3_,
+      assignment_expression_4_
     );
   }
 

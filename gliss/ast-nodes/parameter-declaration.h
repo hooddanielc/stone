@@ -33,7 +33,7 @@ public:
 
   static constexpr int rules = 4;
 
-  static constexpr int id = 247;
+  static constexpr int id = 248;
 
   virtual ~parameter_declaration_t() = default;
 
@@ -43,27 +43,31 @@ class parameter_declaration_type_qualifier_parameter_declarator_t: public parame
 
 public:
 
-  std::unique_ptr<type_qualifier_t> type_qualifier_0;
+  std::shared_ptr<type_qualifier_t> type_qualifier_0;
 
-  std::unique_ptr<parameter_declarator_t> parameter_declarator_1;
+  std::shared_ptr<parameter_declarator_t> parameter_declarator_1;
 
   parameter_declaration_type_qualifier_parameter_declarator_t(
-    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
-    std::unique_ptr<parameter_declarator_t> &&parameter_declarator_1_
-  ): type_qualifier_0(std::move(type_qualifier_0_)),
-     parameter_declarator_1(std::move(parameter_declarator_1_)) {}
+    std::shared_ptr<type_qualifier_t> type_qualifier_0_,
+    std::shared_ptr<parameter_declarator_t> parameter_declarator_1_
+  ): type_qualifier_0(type_qualifier_0_),
+     parameter_declarator_1(parameter_declarator_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<parameter_declaration_type_qualifier_parameter_declarator_t> make(
-    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
-    std::unique_ptr<parameter_declarator_t> &&parameter_declarator_1_
+  virtual int get_id() const override {
+    return 248;
+  }
+
+  static std::shared_ptr<parameter_declaration_type_qualifier_parameter_declarator_t> make(
+    std::shared_ptr<type_qualifier_t> type_qualifier_0_,
+    std::shared_ptr<parameter_declarator_t> parameter_declarator_1_
   ) {
-    return std::make_unique<parameter_declaration_type_qualifier_parameter_declarator_t>(
-      std::move(type_qualifier_0_),
-      std::move(parameter_declarator_1_)
+    return std::make_shared<parameter_declaration_type_qualifier_parameter_declarator_t>(
+      type_qualifier_0_,
+      parameter_declarator_1_
     );
   }
 
@@ -73,21 +77,25 @@ class parameter_declaration_parameter_declarator_t: public parameter_declaration
 
 public:
 
-  std::unique_ptr<parameter_declarator_t> parameter_declarator_0;
+  std::shared_ptr<parameter_declarator_t> parameter_declarator_0;
 
   parameter_declaration_parameter_declarator_t(
-    std::unique_ptr<parameter_declarator_t> &&parameter_declarator_0_
-  ): parameter_declarator_0(std::move(parameter_declarator_0_)) {}
+    std::shared_ptr<parameter_declarator_t> parameter_declarator_0_
+  ): parameter_declarator_0(parameter_declarator_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<parameter_declaration_parameter_declarator_t> make(
-    std::unique_ptr<parameter_declarator_t> &&parameter_declarator_0_
+  virtual int get_id() const override {
+    return 248;
+  }
+
+  static std::shared_ptr<parameter_declaration_parameter_declarator_t> make(
+    std::shared_ptr<parameter_declarator_t> parameter_declarator_0_
   ) {
-    return std::make_unique<parameter_declaration_parameter_declarator_t>(
-      std::move(parameter_declarator_0_)
+    return std::make_shared<parameter_declaration_parameter_declarator_t>(
+      parameter_declarator_0_
     );
   }
 
@@ -97,27 +105,31 @@ class parameter_declaration_type_qualifier_parameter_type_specifier_t: public pa
 
 public:
 
-  std::unique_ptr<type_qualifier_t> type_qualifier_0;
+  std::shared_ptr<type_qualifier_t> type_qualifier_0;
 
-  std::unique_ptr<parameter_type_specifier_t> parameter_type_specifier_1;
+  std::shared_ptr<parameter_type_specifier_t> parameter_type_specifier_1;
 
   parameter_declaration_type_qualifier_parameter_type_specifier_t(
-    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
-    std::unique_ptr<parameter_type_specifier_t> &&parameter_type_specifier_1_
-  ): type_qualifier_0(std::move(type_qualifier_0_)),
-     parameter_type_specifier_1(std::move(parameter_type_specifier_1_)) {}
+    std::shared_ptr<type_qualifier_t> type_qualifier_0_,
+    std::shared_ptr<parameter_type_specifier_t> parameter_type_specifier_1_
+  ): type_qualifier_0(type_qualifier_0_),
+     parameter_type_specifier_1(parameter_type_specifier_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<parameter_declaration_type_qualifier_parameter_type_specifier_t> make(
-    std::unique_ptr<type_qualifier_t> &&type_qualifier_0_,
-    std::unique_ptr<parameter_type_specifier_t> &&parameter_type_specifier_1_
+  virtual int get_id() const override {
+    return 248;
+  }
+
+  static std::shared_ptr<parameter_declaration_type_qualifier_parameter_type_specifier_t> make(
+    std::shared_ptr<type_qualifier_t> type_qualifier_0_,
+    std::shared_ptr<parameter_type_specifier_t> parameter_type_specifier_1_
   ) {
-    return std::make_unique<parameter_declaration_type_qualifier_parameter_type_specifier_t>(
-      std::move(type_qualifier_0_),
-      std::move(parameter_type_specifier_1_)
+    return std::make_shared<parameter_declaration_type_qualifier_parameter_type_specifier_t>(
+      type_qualifier_0_,
+      parameter_type_specifier_1_
     );
   }
 
@@ -127,21 +139,25 @@ class parameter_declaration_parameter_type_specifier_t: public parameter_declara
 
 public:
 
-  std::unique_ptr<parameter_type_specifier_t> parameter_type_specifier_0;
+  std::shared_ptr<parameter_type_specifier_t> parameter_type_specifier_0;
 
   parameter_declaration_parameter_type_specifier_t(
-    std::unique_ptr<parameter_type_specifier_t> &&parameter_type_specifier_0_
-  ): parameter_type_specifier_0(std::move(parameter_type_specifier_0_)) {}
+    std::shared_ptr<parameter_type_specifier_t> parameter_type_specifier_0_
+  ): parameter_type_specifier_0(parameter_type_specifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<parameter_declaration_parameter_type_specifier_t> make(
-    std::unique_ptr<parameter_type_specifier_t> &&parameter_type_specifier_0_
+  virtual int get_id() const override {
+    return 248;
+  }
+
+  static std::shared_ptr<parameter_declaration_parameter_type_specifier_t> make(
+    std::shared_ptr<parameter_type_specifier_t> parameter_type_specifier_0_
   ) {
-    return std::make_unique<parameter_declaration_parameter_type_specifier_t>(
-      std::move(parameter_type_specifier_0_)
+    return std::make_shared<parameter_declaration_parameter_type_specifier_t>(
+      parameter_type_specifier_0_
     );
   }
 

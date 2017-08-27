@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 276;
+  static constexpr int id = 277;
 
   virtual ~compound_statement_t() = default;
 
@@ -37,27 +37,31 @@ class compound_statement_left_brace_right_brace_t: public compound_statement_t {
 
 public:
 
-  std::unique_ptr<token_t> left_brace_0;
+  std::shared_ptr<ast_token_t> left_brace_0;
 
-  std::unique_ptr<token_t> right_brace_1;
+  std::shared_ptr<ast_token_t> right_brace_1;
 
   compound_statement_left_brace_right_brace_t(
-    std::unique_ptr<token_t> &&left_brace_0_,
-    std::unique_ptr<token_t> &&right_brace_1_
-  ): left_brace_0(std::move(left_brace_0_)),
-     right_brace_1(std::move(right_brace_1_)) {}
+    std::shared_ptr<ast_token_t> left_brace_0_,
+    std::shared_ptr<ast_token_t> right_brace_1_
+  ): left_brace_0(left_brace_0_),
+     right_brace_1(right_brace_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<compound_statement_left_brace_right_brace_t> make(
-    const token_t *LEFT_BRACE_0_,
-    const token_t *RIGHT_BRACE_1_
+  virtual int get_id() const override {
+    return 277;
+  }
+
+  static std::shared_ptr<compound_statement_left_brace_right_brace_t> make(
+    std::shared_ptr<ast_token_t> LEFT_BRACE_0_,
+    std::shared_ptr<ast_token_t> RIGHT_BRACE_1_
   ) {
-    return std::make_unique<compound_statement_left_brace_right_brace_t>(
-      std::make_unique<token_t>(*LEFT_BRACE_0_),
-      std::make_unique<token_t>(*RIGHT_BRACE_1_)
+    return std::make_shared<compound_statement_left_brace_right_brace_t>(
+      LEFT_BRACE_0_,
+      RIGHT_BRACE_1_
     );
   }
 
@@ -67,33 +71,37 @@ class compound_statement_left_brace_statement_list_right_brace_t: public compoun
 
 public:
 
-  std::unique_ptr<token_t> left_brace_0;
+  std::shared_ptr<ast_token_t> left_brace_0;
 
-  std::unique_ptr<statement_list_t> statement_list_1;
+  std::shared_ptr<statement_list_t> statement_list_1;
 
-  std::unique_ptr<token_t> right_brace_2;
+  std::shared_ptr<ast_token_t> right_brace_2;
 
   compound_statement_left_brace_statement_list_right_brace_t(
-    std::unique_ptr<token_t> &&left_brace_0_,
-    std::unique_ptr<statement_list_t> &&statement_list_1_,
-    std::unique_ptr<token_t> &&right_brace_2_
-  ): left_brace_0(std::move(left_brace_0_)),
-     statement_list_1(std::move(statement_list_1_)),
-     right_brace_2(std::move(right_brace_2_)) {}
+    std::shared_ptr<ast_token_t> left_brace_0_,
+    std::shared_ptr<statement_list_t> statement_list_1_,
+    std::shared_ptr<ast_token_t> right_brace_2_
+  ): left_brace_0(left_brace_0_),
+     statement_list_1(statement_list_1_),
+     right_brace_2(right_brace_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<compound_statement_left_brace_statement_list_right_brace_t> make(
-    const token_t *LEFT_BRACE_0_,
-    std::unique_ptr<statement_list_t> &&statement_list_1_,
-    const token_t *RIGHT_BRACE_2_
+  virtual int get_id() const override {
+    return 277;
+  }
+
+  static std::shared_ptr<compound_statement_left_brace_statement_list_right_brace_t> make(
+    std::shared_ptr<ast_token_t> LEFT_BRACE_0_,
+    std::shared_ptr<statement_list_t> statement_list_1_,
+    std::shared_ptr<ast_token_t> RIGHT_BRACE_2_
   ) {
-    return std::make_unique<compound_statement_left_brace_statement_list_right_brace_t>(
-      std::make_unique<token_t>(*LEFT_BRACE_0_),
-      std::move(statement_list_1_),
-      std::make_unique<token_t>(*RIGHT_BRACE_2_)
+    return std::make_shared<compound_statement_left_brace_statement_list_right_brace_t>(
+      LEFT_BRACE_0_,
+      statement_list_1_,
+      RIGHT_BRACE_2_
     );
   }
 

@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 285;
+  static constexpr int id = 286;
 
   virtual ~switch_statement_list_t() = default;
 
@@ -39,21 +39,25 @@ class switch_statement_list_nothing_t: public switch_statement_list_t {
 
 public:
 
-  std::unique_ptr<nothing_t> nothing_0;
+  std::shared_ptr<nothing_t> nothing_0;
 
   switch_statement_list_nothing_t(
-    std::unique_ptr<nothing_t> &&nothing_0_
-  ): nothing_0(std::move(nothing_0_)) {}
+    std::shared_ptr<nothing_t> nothing_0_
+  ): nothing_0(nothing_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<switch_statement_list_nothing_t> make(
-    std::unique_ptr<nothing_t> &&nothing_0_
+  virtual int get_id() const override {
+    return 286;
+  }
+
+  static std::shared_ptr<switch_statement_list_nothing_t> make(
+    std::shared_ptr<nothing_t> nothing_0_
   ) {
-    return std::make_unique<switch_statement_list_nothing_t>(
-      std::move(nothing_0_)
+    return std::make_shared<switch_statement_list_nothing_t>(
+      nothing_0_
     );
   }
 
@@ -63,21 +67,25 @@ class switch_statement_list_statement_list_t: public switch_statement_list_t {
 
 public:
 
-  std::unique_ptr<statement_list_t> statement_list_0;
+  std::shared_ptr<statement_list_t> statement_list_0;
 
   switch_statement_list_statement_list_t(
-    std::unique_ptr<statement_list_t> &&statement_list_0_
-  ): statement_list_0(std::move(statement_list_0_)) {}
+    std::shared_ptr<statement_list_t> statement_list_0_
+  ): statement_list_0(statement_list_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<switch_statement_list_statement_list_t> make(
-    std::unique_ptr<statement_list_t> &&statement_list_0_
+  virtual int get_id() const override {
+    return 286;
+  }
+
+  static std::shared_ptr<switch_statement_list_statement_list_t> make(
+    std::shared_ptr<statement_list_t> statement_list_0_
   ) {
-    return std::make_unique<switch_statement_list_statement_list_t>(
-      std::move(statement_list_0_)
+    return std::make_shared<switch_statement_list_statement_list_t>(
+      statement_list_0_
     );
   }
 

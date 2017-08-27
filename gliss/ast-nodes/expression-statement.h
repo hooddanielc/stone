@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 280;
+  static constexpr int id = 281;
 
   virtual ~expression_statement_t() = default;
 
@@ -37,21 +37,25 @@ class expression_statement_semicolon_t: public expression_statement_t {
 
 public:
 
-  std::unique_ptr<token_t> semicolon_0;
+  std::shared_ptr<ast_token_t> semicolon_0;
 
   expression_statement_semicolon_t(
-    std::unique_ptr<token_t> &&semicolon_0_
-  ): semicolon_0(std::move(semicolon_0_)) {}
+    std::shared_ptr<ast_token_t> semicolon_0_
+  ): semicolon_0(semicolon_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<expression_statement_semicolon_t> make(
-    const token_t *SEMICOLON_0_
+  virtual int get_id() const override {
+    return 281;
+  }
+
+  static std::shared_ptr<expression_statement_semicolon_t> make(
+    std::shared_ptr<ast_token_t> SEMICOLON_0_
   ) {
-    return std::make_unique<expression_statement_semicolon_t>(
-      std::make_unique<token_t>(*SEMICOLON_0_)
+    return std::make_shared<expression_statement_semicolon_t>(
+      SEMICOLON_0_
     );
   }
 
@@ -61,27 +65,31 @@ class expression_statement_expression_semicolon_t: public expression_statement_t
 
 public:
 
-  std::unique_ptr<expression_t> expression_0;
+  std::shared_ptr<expression_t> expression_0;
 
-  std::unique_ptr<token_t> semicolon_1;
+  std::shared_ptr<ast_token_t> semicolon_1;
 
   expression_statement_expression_semicolon_t(
-    std::unique_ptr<expression_t> &&expression_0_,
-    std::unique_ptr<token_t> &&semicolon_1_
-  ): expression_0(std::move(expression_0_)),
-     semicolon_1(std::move(semicolon_1_)) {}
+    std::shared_ptr<expression_t> expression_0_,
+    std::shared_ptr<ast_token_t> semicolon_1_
+  ): expression_0(expression_0_),
+     semicolon_1(semicolon_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<expression_statement_expression_semicolon_t> make(
-    std::unique_ptr<expression_t> &&expression_0_,
-    const token_t *SEMICOLON_1_
+  virtual int get_id() const override {
+    return 281;
+  }
+
+  static std::shared_ptr<expression_statement_expression_semicolon_t> make(
+    std::shared_ptr<expression_t> expression_0_,
+    std::shared_ptr<ast_token_t> SEMICOLON_1_
   ) {
-    return std::make_unique<expression_statement_expression_semicolon_t>(
-      std::move(expression_0_),
-      std::make_unique<token_t>(*SEMICOLON_1_)
+    return std::make_shared<expression_statement_expression_semicolon_t>(
+      expression_0_,
+      SEMICOLON_1_
     );
   }
 

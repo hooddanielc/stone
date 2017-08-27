@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 4;
 
-  static constexpr int id = 224;
+  static constexpr int id = 225;
 
   virtual ~multiplicative_expression_t() = default;
 
@@ -39,21 +39,25 @@ class multiplicative_expression_unary_expression_t: public multiplicative_expres
 
 public:
 
-  std::unique_ptr<unary_expression_t> unary_expression_0;
+  std::shared_ptr<unary_expression_t> unary_expression_0;
 
   multiplicative_expression_unary_expression_t(
-    std::unique_ptr<unary_expression_t> &&unary_expression_0_
-  ): unary_expression_0(std::move(unary_expression_0_)) {}
+    std::shared_ptr<unary_expression_t> unary_expression_0_
+  ): unary_expression_0(unary_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<multiplicative_expression_unary_expression_t> make(
-    std::unique_ptr<unary_expression_t> &&unary_expression_0_
+  virtual int get_id() const override {
+    return 225;
+  }
+
+  static std::shared_ptr<multiplicative_expression_unary_expression_t> make(
+    std::shared_ptr<unary_expression_t> unary_expression_0_
   ) {
-    return std::make_unique<multiplicative_expression_unary_expression_t>(
-      std::move(unary_expression_0_)
+    return std::make_shared<multiplicative_expression_unary_expression_t>(
+      unary_expression_0_
     );
   }
 
@@ -63,33 +67,37 @@ class multiplicative_expression_multiplicative_expression_star_unary_expression_
 
 public:
 
-  std::unique_ptr<multiplicative_expression_t> multiplicative_expression_0;
+  std::shared_ptr<multiplicative_expression_t> multiplicative_expression_0;
 
-  std::unique_ptr<token_t> star_1;
+  std::shared_ptr<ast_token_t> star_1;
 
-  std::unique_ptr<unary_expression_t> unary_expression_2;
+  std::shared_ptr<unary_expression_t> unary_expression_2;
 
   multiplicative_expression_multiplicative_expression_star_unary_expression_t(
-    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_0_,
-    std::unique_ptr<token_t> &&star_1_,
-    std::unique_ptr<unary_expression_t> &&unary_expression_2_
-  ): multiplicative_expression_0(std::move(multiplicative_expression_0_)),
-     star_1(std::move(star_1_)),
-     unary_expression_2(std::move(unary_expression_2_)) {}
+    std::shared_ptr<multiplicative_expression_t> multiplicative_expression_0_,
+    std::shared_ptr<ast_token_t> star_1_,
+    std::shared_ptr<unary_expression_t> unary_expression_2_
+  ): multiplicative_expression_0(multiplicative_expression_0_),
+     star_1(star_1_),
+     unary_expression_2(unary_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<multiplicative_expression_multiplicative_expression_star_unary_expression_t> make(
-    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_0_,
-    const token_t *STAR_1_,
-    std::unique_ptr<unary_expression_t> &&unary_expression_2_
+  virtual int get_id() const override {
+    return 225;
+  }
+
+  static std::shared_ptr<multiplicative_expression_multiplicative_expression_star_unary_expression_t> make(
+    std::shared_ptr<multiplicative_expression_t> multiplicative_expression_0_,
+    std::shared_ptr<ast_token_t> STAR_1_,
+    std::shared_ptr<unary_expression_t> unary_expression_2_
   ) {
-    return std::make_unique<multiplicative_expression_multiplicative_expression_star_unary_expression_t>(
-      std::move(multiplicative_expression_0_),
-      std::make_unique<token_t>(*STAR_1_),
-      std::move(unary_expression_2_)
+    return std::make_shared<multiplicative_expression_multiplicative_expression_star_unary_expression_t>(
+      multiplicative_expression_0_,
+      STAR_1_,
+      unary_expression_2_
     );
   }
 
@@ -99,33 +107,37 @@ class multiplicative_expression_multiplicative_expression_slash_unary_expression
 
 public:
 
-  std::unique_ptr<multiplicative_expression_t> multiplicative_expression_0;
+  std::shared_ptr<multiplicative_expression_t> multiplicative_expression_0;
 
-  std::unique_ptr<token_t> slash_1;
+  std::shared_ptr<ast_token_t> slash_1;
 
-  std::unique_ptr<unary_expression_t> unary_expression_2;
+  std::shared_ptr<unary_expression_t> unary_expression_2;
 
   multiplicative_expression_multiplicative_expression_slash_unary_expression_t(
-    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_0_,
-    std::unique_ptr<token_t> &&slash_1_,
-    std::unique_ptr<unary_expression_t> &&unary_expression_2_
-  ): multiplicative_expression_0(std::move(multiplicative_expression_0_)),
-     slash_1(std::move(slash_1_)),
-     unary_expression_2(std::move(unary_expression_2_)) {}
+    std::shared_ptr<multiplicative_expression_t> multiplicative_expression_0_,
+    std::shared_ptr<ast_token_t> slash_1_,
+    std::shared_ptr<unary_expression_t> unary_expression_2_
+  ): multiplicative_expression_0(multiplicative_expression_0_),
+     slash_1(slash_1_),
+     unary_expression_2(unary_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<multiplicative_expression_multiplicative_expression_slash_unary_expression_t> make(
-    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_0_,
-    const token_t *SLASH_1_,
-    std::unique_ptr<unary_expression_t> &&unary_expression_2_
+  virtual int get_id() const override {
+    return 225;
+  }
+
+  static std::shared_ptr<multiplicative_expression_multiplicative_expression_slash_unary_expression_t> make(
+    std::shared_ptr<multiplicative_expression_t> multiplicative_expression_0_,
+    std::shared_ptr<ast_token_t> SLASH_1_,
+    std::shared_ptr<unary_expression_t> unary_expression_2_
   ) {
-    return std::make_unique<multiplicative_expression_multiplicative_expression_slash_unary_expression_t>(
-      std::move(multiplicative_expression_0_),
-      std::make_unique<token_t>(*SLASH_1_),
-      std::move(unary_expression_2_)
+    return std::make_shared<multiplicative_expression_multiplicative_expression_slash_unary_expression_t>(
+      multiplicative_expression_0_,
+      SLASH_1_,
+      unary_expression_2_
     );
   }
 
@@ -135,33 +147,37 @@ class multiplicative_expression_multiplicative_expression_percent_unary_expressi
 
 public:
 
-  std::unique_ptr<multiplicative_expression_t> multiplicative_expression_0;
+  std::shared_ptr<multiplicative_expression_t> multiplicative_expression_0;
 
-  std::unique_ptr<token_t> percent_1;
+  std::shared_ptr<ast_token_t> percent_1;
 
-  std::unique_ptr<unary_expression_t> unary_expression_2;
+  std::shared_ptr<unary_expression_t> unary_expression_2;
 
   multiplicative_expression_multiplicative_expression_percent_unary_expression_t(
-    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_0_,
-    std::unique_ptr<token_t> &&percent_1_,
-    std::unique_ptr<unary_expression_t> &&unary_expression_2_
-  ): multiplicative_expression_0(std::move(multiplicative_expression_0_)),
-     percent_1(std::move(percent_1_)),
-     unary_expression_2(std::move(unary_expression_2_)) {}
+    std::shared_ptr<multiplicative_expression_t> multiplicative_expression_0_,
+    std::shared_ptr<ast_token_t> percent_1_,
+    std::shared_ptr<unary_expression_t> unary_expression_2_
+  ): multiplicative_expression_0(multiplicative_expression_0_),
+     percent_1(percent_1_),
+     unary_expression_2(unary_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<multiplicative_expression_multiplicative_expression_percent_unary_expression_t> make(
-    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_0_,
-    const token_t *PERCENT_1_,
-    std::unique_ptr<unary_expression_t> &&unary_expression_2_
+  virtual int get_id() const override {
+    return 225;
+  }
+
+  static std::shared_ptr<multiplicative_expression_multiplicative_expression_percent_unary_expression_t> make(
+    std::shared_ptr<multiplicative_expression_t> multiplicative_expression_0_,
+    std::shared_ptr<ast_token_t> PERCENT_1_,
+    std::shared_ptr<unary_expression_t> unary_expression_2_
   ) {
-    return std::make_unique<multiplicative_expression_multiplicative_expression_percent_unary_expression_t>(
-      std::move(multiplicative_expression_0_),
-      std::make_unique<token_t>(*PERCENT_1_),
-      std::move(unary_expression_2_)
+    return std::make_shared<multiplicative_expression_multiplicative_expression_percent_unary_expression_t>(
+      multiplicative_expression_0_,
+      PERCENT_1_,
+      unary_expression_2_
     );
   }
 

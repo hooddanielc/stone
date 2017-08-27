@@ -26,7 +26,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 248;
+  static constexpr int id = 249;
 
   virtual ~parameter_type_specifier_t() = default;
 
@@ -36,21 +36,25 @@ class parameter_type_specifier_type_specifier_t: public parameter_type_specifier
 
 public:
 
-  std::unique_ptr<type_specifier_t> type_specifier_0;
+  std::shared_ptr<type_specifier_t> type_specifier_0;
 
   parameter_type_specifier_type_specifier_t(
-    std::unique_ptr<type_specifier_t> &&type_specifier_0_
-  ): type_specifier_0(std::move(type_specifier_0_)) {}
+    std::shared_ptr<type_specifier_t> type_specifier_0_
+  ): type_specifier_0(type_specifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<parameter_type_specifier_type_specifier_t> make(
-    std::unique_ptr<type_specifier_t> &&type_specifier_0_
+  virtual int get_id() const override {
+    return 249;
+  }
+
+  static std::shared_ptr<parameter_type_specifier_type_specifier_t> make(
+    std::shared_ptr<type_specifier_t> type_specifier_0_
   ) {
-    return std::make_unique<parameter_type_specifier_type_specifier_t>(
-      std::move(type_specifier_0_)
+    return std::make_shared<parameter_type_specifier_type_specifier_t>(
+      type_specifier_0_
     );
   }
 

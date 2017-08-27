@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 269;
+  static constexpr int id = 270;
 
   virtual ~struct_declarator_list_t() = default;
 
@@ -37,21 +37,25 @@ class struct_declarator_list_struct_declarator_t: public struct_declarator_list_
 
 public:
 
-  std::unique_ptr<struct_declarator_t> struct_declarator_0;
+  std::shared_ptr<struct_declarator_t> struct_declarator_0;
 
   struct_declarator_list_struct_declarator_t(
-    std::unique_ptr<struct_declarator_t> &&struct_declarator_0_
-  ): struct_declarator_0(std::move(struct_declarator_0_)) {}
+    std::shared_ptr<struct_declarator_t> struct_declarator_0_
+  ): struct_declarator_0(struct_declarator_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<struct_declarator_list_struct_declarator_t> make(
-    std::unique_ptr<struct_declarator_t> &&struct_declarator_0_
+  virtual int get_id() const override {
+    return 270;
+  }
+
+  static std::shared_ptr<struct_declarator_list_struct_declarator_t> make(
+    std::shared_ptr<struct_declarator_t> struct_declarator_0_
   ) {
-    return std::make_unique<struct_declarator_list_struct_declarator_t>(
-      std::move(struct_declarator_0_)
+    return std::make_shared<struct_declarator_list_struct_declarator_t>(
+      struct_declarator_0_
     );
   }
 
@@ -61,33 +65,37 @@ class struct_declarator_list_struct_declarator_list_comma_struct_declarator_t: p
 
 public:
 
-  std::unique_ptr<struct_declarator_list_t> struct_declarator_list_0;
+  std::shared_ptr<struct_declarator_list_t> struct_declarator_list_0;
 
-  std::unique_ptr<token_t> comma_1;
+  std::shared_ptr<ast_token_t> comma_1;
 
-  std::unique_ptr<struct_declarator_t> struct_declarator_2;
+  std::shared_ptr<struct_declarator_t> struct_declarator_2;
 
   struct_declarator_list_struct_declarator_list_comma_struct_declarator_t(
-    std::unique_ptr<struct_declarator_list_t> &&struct_declarator_list_0_,
-    std::unique_ptr<token_t> &&comma_1_,
-    std::unique_ptr<struct_declarator_t> &&struct_declarator_2_
-  ): struct_declarator_list_0(std::move(struct_declarator_list_0_)),
-     comma_1(std::move(comma_1_)),
-     struct_declarator_2(std::move(struct_declarator_2_)) {}
+    std::shared_ptr<struct_declarator_list_t> struct_declarator_list_0_,
+    std::shared_ptr<ast_token_t> comma_1_,
+    std::shared_ptr<struct_declarator_t> struct_declarator_2_
+  ): struct_declarator_list_0(struct_declarator_list_0_),
+     comma_1(comma_1_),
+     struct_declarator_2(struct_declarator_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<struct_declarator_list_struct_declarator_list_comma_struct_declarator_t> make(
-    std::unique_ptr<struct_declarator_list_t> &&struct_declarator_list_0_,
-    const token_t *COMMA_1_,
-    std::unique_ptr<struct_declarator_t> &&struct_declarator_2_
+  virtual int get_id() const override {
+    return 270;
+  }
+
+  static std::shared_ptr<struct_declarator_list_struct_declarator_list_comma_struct_declarator_t> make(
+    std::shared_ptr<struct_declarator_list_t> struct_declarator_list_0_,
+    std::shared_ptr<ast_token_t> COMMA_1_,
+    std::shared_ptr<struct_declarator_t> struct_declarator_2_
   ) {
-    return std::make_unique<struct_declarator_list_struct_declarator_list_comma_struct_declarator_t>(
-      std::move(struct_declarator_list_0_),
-      std::make_unique<token_t>(*COMMA_1_),
-      std::move(struct_declarator_2_)
+    return std::make_shared<struct_declarator_list_struct_declarator_list_comma_struct_declarator_t>(
+      struct_declarator_list_0_,
+      COMMA_1_,
+      struct_declarator_2_
     );
   }
 

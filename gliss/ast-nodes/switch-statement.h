@@ -28,7 +28,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 284;
+  static constexpr int id = 285;
 
   virtual ~switch_statement_t() = default;
 
@@ -38,57 +38,61 @@ class switch_statement_switch_left_paren_expression_right_paren_left_brace_switc
 
 public:
 
-  std::unique_ptr<token_t> switch_0;
+  std::shared_ptr<ast_token_t> switch_0;
 
-  std::unique_ptr<token_t> left_paren_1;
+  std::shared_ptr<ast_token_t> left_paren_1;
 
-  std::unique_ptr<expression_t> expression_2;
+  std::shared_ptr<expression_t> expression_2;
 
-  std::unique_ptr<token_t> right_paren_3;
+  std::shared_ptr<ast_token_t> right_paren_3;
 
-  std::unique_ptr<token_t> left_brace_4;
+  std::shared_ptr<ast_token_t> left_brace_4;
 
-  std::unique_ptr<switch_statement_list_t> switch_statement_list_5;
+  std::shared_ptr<switch_statement_list_t> switch_statement_list_5;
 
-  std::unique_ptr<token_t> right_brace_6;
+  std::shared_ptr<ast_token_t> right_brace_6;
 
   switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t(
-    std::unique_ptr<token_t> &&switch_0_,
-    std::unique_ptr<token_t> &&left_paren_1_,
-    std::unique_ptr<expression_t> &&expression_2_,
-    std::unique_ptr<token_t> &&right_paren_3_,
-    std::unique_ptr<token_t> &&left_brace_4_,
-    std::unique_ptr<switch_statement_list_t> &&switch_statement_list_5_,
-    std::unique_ptr<token_t> &&right_brace_6_
-  ): switch_0(std::move(switch_0_)),
-     left_paren_1(std::move(left_paren_1_)),
-     expression_2(std::move(expression_2_)),
-     right_paren_3(std::move(right_paren_3_)),
-     left_brace_4(std::move(left_brace_4_)),
-     switch_statement_list_5(std::move(switch_statement_list_5_)),
-     right_brace_6(std::move(right_brace_6_)) {}
+    std::shared_ptr<ast_token_t> switch_0_,
+    std::shared_ptr<ast_token_t> left_paren_1_,
+    std::shared_ptr<expression_t> expression_2_,
+    std::shared_ptr<ast_token_t> right_paren_3_,
+    std::shared_ptr<ast_token_t> left_brace_4_,
+    std::shared_ptr<switch_statement_list_t> switch_statement_list_5_,
+    std::shared_ptr<ast_token_t> right_brace_6_
+  ): switch_0(switch_0_),
+     left_paren_1(left_paren_1_),
+     expression_2(expression_2_),
+     right_paren_3(right_paren_3_),
+     left_brace_4(left_brace_4_),
+     switch_statement_list_5(switch_statement_list_5_),
+     right_brace_6(right_brace_6_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t> make(
-    const token_t *SWITCH_0_,
-    const token_t *LEFT_PAREN_1_,
-    std::unique_ptr<expression_t> &&expression_2_,
-    const token_t *RIGHT_PAREN_3_,
-    const token_t *LEFT_BRACE_4_,
-    std::unique_ptr<switch_statement_list_t> &&switch_statement_list_5_,
-    const token_t *RIGHT_BRACE_6_
+  virtual int get_id() const override {
+    return 285;
+  }
+
+  static std::shared_ptr<switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t> make(
+    std::shared_ptr<ast_token_t> SWITCH_0_,
+    std::shared_ptr<ast_token_t> LEFT_PAREN_1_,
+    std::shared_ptr<expression_t> expression_2_,
+    std::shared_ptr<ast_token_t> RIGHT_PAREN_3_,
+    std::shared_ptr<ast_token_t> LEFT_BRACE_4_,
+    std::shared_ptr<switch_statement_list_t> switch_statement_list_5_,
+    std::shared_ptr<ast_token_t> RIGHT_BRACE_6_
   ) {
-    return std::make_unique<switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t>(
-      std::make_unique<token_t>(*SWITCH_0_),
-      std::make_unique<token_t>(*LEFT_PAREN_1_),
-      std::move(expression_2_),
-      std::make_unique<token_t>(*RIGHT_PAREN_3_),
-      std::make_unique<token_t>(*LEFT_BRACE_4_),
-      std::move(switch_statement_list_5_),
-      std::make_unique<token_t>(*RIGHT_BRACE_6_)
+    return std::make_shared<switch_statement_switch_left_paren_expression_right_paren_left_brace_switch_statement_list_right_brace_t>(
+      SWITCH_0_,
+      LEFT_PAREN_1_,
+      expression_2_,
+      RIGHT_PAREN_3_,
+      LEFT_BRACE_4_,
+      switch_statement_list_5_,
+      RIGHT_BRACE_6_
     );
   }
 

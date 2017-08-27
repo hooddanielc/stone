@@ -14,12 +14,16 @@ std::ostream &operator<<(std::ostream &strm, const ast_t *ast) {
     pretty_printer_t(std::ostream &strm_)
         : strm(strm_) {}
 
-    virtual void operator()(const variable_identifier_identifier_t *) const override {
-      strm << "variable_identifier_identifier_t unknown";
+    virtual void operator()(const ast_token_t *tok) const override {
+      strm << "ast_token_t(" << tok->token << ")";
     }
 
-    virtual void operator()(const primary_expression_variable_identifier_t *) const override {
-      strm << "primary_expression_variable_identifier_t unknown";
+    virtual void operator()(const variable_identifier_identifier_t *tok) const override {
+      strm << "variable_identifier_identifier_t(" << tok->identifier_0 << ")";
+    }
+
+    virtual void operator()(const primary_expression_variable_identifier_t *tok) const override {
+      strm << "primary_expression_variable_identifier_t(" << tok->variable_identifier_0 << ")";
     }
 
     virtual void operator()(const primary_expression_intconstant_t *) const override {
@@ -46,8 +50,8 @@ std::ostream &operator<<(std::ostream &strm, const ast_t *ast) {
       strm << "primary_expression_left_paren_expression_right_paren_t unknown";
     }
 
-    virtual void operator()(const postfix_expression_primary_expression_t *) const override {
-      strm << "postfix_expression_primary_expression_t unknown";
+    virtual void operator()(const postfix_expression_primary_expression_t *tok) const override {
+      strm << "postfix_expression_primary_expression_t(" << tok->primary_expression_0 << ")";
     }
 
     virtual void operator()(const postfix_expression_postfix_expression_left_bracket_integer_expression_right_bracket_t *) const override {
@@ -114,8 +118,8 @@ std::ostream &operator<<(std::ostream &strm, const ast_t *ast) {
       strm << "function_identifier_type_specifier_t unknown";
     }
 
-    virtual void operator()(const function_identifier_postfix_expression_t *) const override {
-      strm << "function_identifier_postfix_expression_t unknown";
+    virtual void operator()(const function_identifier_postfix_expression_t *tok) const override {
+      strm << "function_identifier_postfix_expression_t("<< tok->postfix_expression_0 << ")";
     }
 
     virtual void operator()(const unary_expression_postfix_expression_t *) const override {

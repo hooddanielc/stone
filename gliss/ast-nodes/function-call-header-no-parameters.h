@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 218;
+  static constexpr int id = 219;
 
   virtual ~function_call_header_no_parameters_t() = default;
 
@@ -37,27 +37,31 @@ class function_call_header_no_parameters_function_call_header_void_t: public fun
 
 public:
 
-  std::unique_ptr<function_call_header_t> function_call_header_0;
+  std::shared_ptr<function_call_header_t> function_call_header_0;
 
-  std::unique_ptr<token_t> void_1;
+  std::shared_ptr<ast_token_t> void_1;
 
   function_call_header_no_parameters_function_call_header_void_t(
-    std::unique_ptr<function_call_header_t> &&function_call_header_0_,
-    std::unique_ptr<token_t> &&void_1_
-  ): function_call_header_0(std::move(function_call_header_0_)),
-     void_1(std::move(void_1_)) {}
+    std::shared_ptr<function_call_header_t> function_call_header_0_,
+    std::shared_ptr<ast_token_t> void_1_
+  ): function_call_header_0(function_call_header_0_),
+     void_1(void_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_call_header_no_parameters_function_call_header_void_t> make(
-    std::unique_ptr<function_call_header_t> &&function_call_header_0_,
-    const token_t *VOID_1_
+  virtual int get_id() const override {
+    return 219;
+  }
+
+  static std::shared_ptr<function_call_header_no_parameters_function_call_header_void_t> make(
+    std::shared_ptr<function_call_header_t> function_call_header_0_,
+    std::shared_ptr<ast_token_t> VOID_1_
   ) {
-    return std::make_unique<function_call_header_no_parameters_function_call_header_void_t>(
-      std::move(function_call_header_0_),
-      std::make_unique<token_t>(*VOID_1_)
+    return std::make_shared<function_call_header_no_parameters_function_call_header_void_t>(
+      function_call_header_0_,
+      VOID_1_
     );
   }
 
@@ -67,21 +71,25 @@ class function_call_header_no_parameters_function_call_header_t: public function
 
 public:
 
-  std::unique_ptr<function_call_header_t> function_call_header_0;
+  std::shared_ptr<function_call_header_t> function_call_header_0;
 
   function_call_header_no_parameters_function_call_header_t(
-    std::unique_ptr<function_call_header_t> &&function_call_header_0_
-  ): function_call_header_0(std::move(function_call_header_0_)) {}
+    std::shared_ptr<function_call_header_t> function_call_header_0_
+  ): function_call_header_0(function_call_header_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_call_header_no_parameters_function_call_header_t> make(
-    std::unique_ptr<function_call_header_t> &&function_call_header_0_
+  virtual int get_id() const override {
+    return 219;
+  }
+
+  static std::shared_ptr<function_call_header_no_parameters_function_call_header_t> make(
+    std::shared_ptr<function_call_header_t> function_call_header_0_
   ) {
-    return std::make_unique<function_call_header_no_parameters_function_call_header_t>(
-      std::move(function_call_header_0_)
+    return std::make_shared<function_call_header_no_parameters_function_call_header_t>(
+      function_call_header_0_
     );
   }
 

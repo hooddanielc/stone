@@ -26,7 +26,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 273;
+  static constexpr int id = 274;
 
   virtual ~declaration_statement_t() = default;
 
@@ -36,21 +36,25 @@ class declaration_statement_declaration_t: public declaration_statement_t {
 
 public:
 
-  std::unique_ptr<declaration_t> declaration_0;
+  std::shared_ptr<declaration_t> declaration_0;
 
   declaration_statement_declaration_t(
-    std::unique_ptr<declaration_t> &&declaration_0_
-  ): declaration_0(std::move(declaration_0_)) {}
+    std::shared_ptr<declaration_t> declaration_0_
+  ): declaration_0(declaration_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<declaration_statement_declaration_t> make(
-    std::unique_ptr<declaration_t> &&declaration_0_
+  virtual int get_id() const override {
+    return 274;
+  }
+
+  static std::shared_ptr<declaration_statement_declaration_t> make(
+    std::shared_ptr<declaration_t> declaration_0_
   ) {
-    return std::make_unique<declaration_statement_declaration_t>(
-      std::move(declaration_0_)
+    return std::make_shared<declaration_statement_declaration_t>(
+      declaration_0_
     );
   }
 

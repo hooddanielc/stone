@@ -28,7 +28,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 281;
+  static constexpr int id = 282;
 
   virtual ~selection_statement_t() = default;
 
@@ -38,45 +38,49 @@ class selection_statement_if_left_paren_expression_right_paren_selection_rest_st
 
 public:
 
-  std::unique_ptr<token_t> if_0;
+  std::shared_ptr<ast_token_t> if_0;
 
-  std::unique_ptr<token_t> left_paren_1;
+  std::shared_ptr<ast_token_t> left_paren_1;
 
-  std::unique_ptr<expression_t> expression_2;
+  std::shared_ptr<expression_t> expression_2;
 
-  std::unique_ptr<token_t> right_paren_3;
+  std::shared_ptr<ast_token_t> right_paren_3;
 
-  std::unique_ptr<selection_rest_statement_t> selection_rest_statement_4;
+  std::shared_ptr<selection_rest_statement_t> selection_rest_statement_4;
 
   selection_statement_if_left_paren_expression_right_paren_selection_rest_statement_t(
-    std::unique_ptr<token_t> &&if_0_,
-    std::unique_ptr<token_t> &&left_paren_1_,
-    std::unique_ptr<expression_t> &&expression_2_,
-    std::unique_ptr<token_t> &&right_paren_3_,
-    std::unique_ptr<selection_rest_statement_t> &&selection_rest_statement_4_
-  ): if_0(std::move(if_0_)),
-     left_paren_1(std::move(left_paren_1_)),
-     expression_2(std::move(expression_2_)),
-     right_paren_3(std::move(right_paren_3_)),
-     selection_rest_statement_4(std::move(selection_rest_statement_4_)) {}
+    std::shared_ptr<ast_token_t> if_0_,
+    std::shared_ptr<ast_token_t> left_paren_1_,
+    std::shared_ptr<expression_t> expression_2_,
+    std::shared_ptr<ast_token_t> right_paren_3_,
+    std::shared_ptr<selection_rest_statement_t> selection_rest_statement_4_
+  ): if_0(if_0_),
+     left_paren_1(left_paren_1_),
+     expression_2(expression_2_),
+     right_paren_3(right_paren_3_),
+     selection_rest_statement_4(selection_rest_statement_4_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<selection_statement_if_left_paren_expression_right_paren_selection_rest_statement_t> make(
-    const token_t *IF_0_,
-    const token_t *LEFT_PAREN_1_,
-    std::unique_ptr<expression_t> &&expression_2_,
-    const token_t *RIGHT_PAREN_3_,
-    std::unique_ptr<selection_rest_statement_t> &&selection_rest_statement_4_
+  virtual int get_id() const override {
+    return 282;
+  }
+
+  static std::shared_ptr<selection_statement_if_left_paren_expression_right_paren_selection_rest_statement_t> make(
+    std::shared_ptr<ast_token_t> IF_0_,
+    std::shared_ptr<ast_token_t> LEFT_PAREN_1_,
+    std::shared_ptr<expression_t> expression_2_,
+    std::shared_ptr<ast_token_t> RIGHT_PAREN_3_,
+    std::shared_ptr<selection_rest_statement_t> selection_rest_statement_4_
   ) {
-    return std::make_unique<selection_statement_if_left_paren_expression_right_paren_selection_rest_statement_t>(
-      std::make_unique<token_t>(*IF_0_),
-      std::make_unique<token_t>(*LEFT_PAREN_1_),
-      std::move(expression_2_),
-      std::make_unique<token_t>(*RIGHT_PAREN_3_),
-      std::move(selection_rest_statement_4_)
+    return std::make_shared<selection_statement_if_left_paren_expression_right_paren_selection_rest_statement_t>(
+      IF_0_,
+      LEFT_PAREN_1_,
+      expression_2_,
+      RIGHT_PAREN_3_,
+      selection_rest_statement_4_
     );
   }
 

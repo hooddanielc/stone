@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 238;
+  static constexpr int id = 239;
 
   virtual ~expression_t() = default;
 
@@ -37,21 +37,25 @@ class expression_assignment_expression_t: public expression_t {
 
 public:
 
-  std::unique_ptr<assignment_expression_t> assignment_expression_0;
+  std::shared_ptr<assignment_expression_t> assignment_expression_0;
 
   expression_assignment_expression_t(
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_0_
-  ): assignment_expression_0(std::move(assignment_expression_0_)) {}
+    std::shared_ptr<assignment_expression_t> assignment_expression_0_
+  ): assignment_expression_0(assignment_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<expression_assignment_expression_t> make(
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_0_
+  virtual int get_id() const override {
+    return 239;
+  }
+
+  static std::shared_ptr<expression_assignment_expression_t> make(
+    std::shared_ptr<assignment_expression_t> assignment_expression_0_
   ) {
-    return std::make_unique<expression_assignment_expression_t>(
-      std::move(assignment_expression_0_)
+    return std::make_shared<expression_assignment_expression_t>(
+      assignment_expression_0_
     );
   }
 
@@ -61,33 +65,37 @@ class expression_expression_comma_assignment_expression_t: public expression_t {
 
 public:
 
-  std::unique_ptr<expression_t> expression_0;
+  std::shared_ptr<expression_t> expression_0;
 
-  std::unique_ptr<token_t> comma_1;
+  std::shared_ptr<ast_token_t> comma_1;
 
-  std::unique_ptr<assignment_expression_t> assignment_expression_2;
+  std::shared_ptr<assignment_expression_t> assignment_expression_2;
 
   expression_expression_comma_assignment_expression_t(
-    std::unique_ptr<expression_t> &&expression_0_,
-    std::unique_ptr<token_t> &&comma_1_,
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_2_
-  ): expression_0(std::move(expression_0_)),
-     comma_1(std::move(comma_1_)),
-     assignment_expression_2(std::move(assignment_expression_2_)) {}
+    std::shared_ptr<expression_t> expression_0_,
+    std::shared_ptr<ast_token_t> comma_1_,
+    std::shared_ptr<assignment_expression_t> assignment_expression_2_
+  ): expression_0(expression_0_),
+     comma_1(comma_1_),
+     assignment_expression_2(assignment_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<expression_expression_comma_assignment_expression_t> make(
-    std::unique_ptr<expression_t> &&expression_0_,
-    const token_t *COMMA_1_,
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_2_
+  virtual int get_id() const override {
+    return 239;
+  }
+
+  static std::shared_ptr<expression_expression_comma_assignment_expression_t> make(
+    std::shared_ptr<expression_t> expression_0_,
+    std::shared_ptr<ast_token_t> COMMA_1_,
+    std::shared_ptr<assignment_expression_t> assignment_expression_2_
   ) {
-    return std::make_unique<expression_expression_comma_assignment_expression_t>(
-      std::move(expression_0_),
-      std::make_unique<token_t>(*COMMA_1_),
-      std::move(assignment_expression_2_)
+    return std::make_shared<expression_expression_comma_assignment_expression_t>(
+      expression_0_,
+      COMMA_1_,
+      assignment_expression_2_
     );
   }
 

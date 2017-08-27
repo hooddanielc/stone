@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 286;
+  static constexpr int id = 287;
 
   virtual ~case_label_t() = default;
 
@@ -37,33 +37,37 @@ class case_label_case_expression_colon_t: public case_label_t {
 
 public:
 
-  std::unique_ptr<token_t> case_0;
+  std::shared_ptr<ast_token_t> case_0;
 
-  std::unique_ptr<expression_t> expression_1;
+  std::shared_ptr<expression_t> expression_1;
 
-  std::unique_ptr<token_t> colon_2;
+  std::shared_ptr<ast_token_t> colon_2;
 
   case_label_case_expression_colon_t(
-    std::unique_ptr<token_t> &&case_0_,
-    std::unique_ptr<expression_t> &&expression_1_,
-    std::unique_ptr<token_t> &&colon_2_
-  ): case_0(std::move(case_0_)),
-     expression_1(std::move(expression_1_)),
-     colon_2(std::move(colon_2_)) {}
+    std::shared_ptr<ast_token_t> case_0_,
+    std::shared_ptr<expression_t> expression_1_,
+    std::shared_ptr<ast_token_t> colon_2_
+  ): case_0(case_0_),
+     expression_1(expression_1_),
+     colon_2(colon_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<case_label_case_expression_colon_t> make(
-    const token_t *CASE_0_,
-    std::unique_ptr<expression_t> &&expression_1_,
-    const token_t *COLON_2_
+  virtual int get_id() const override {
+    return 287;
+  }
+
+  static std::shared_ptr<case_label_case_expression_colon_t> make(
+    std::shared_ptr<ast_token_t> CASE_0_,
+    std::shared_ptr<expression_t> expression_1_,
+    std::shared_ptr<ast_token_t> COLON_2_
   ) {
-    return std::make_unique<case_label_case_expression_colon_t>(
-      std::make_unique<token_t>(*CASE_0_),
-      std::move(expression_1_),
-      std::make_unique<token_t>(*COLON_2_)
+    return std::make_shared<case_label_case_expression_colon_t>(
+      CASE_0_,
+      expression_1_,
+      COLON_2_
     );
   }
 
@@ -73,27 +77,31 @@ class case_label_default_colon_t: public case_label_t {
 
 public:
 
-  std::unique_ptr<token_t> default_0;
+  std::shared_ptr<ast_token_t> default_0;
 
-  std::unique_ptr<token_t> colon_1;
+  std::shared_ptr<ast_token_t> colon_1;
 
   case_label_default_colon_t(
-    std::unique_ptr<token_t> &&default_0_,
-    std::unique_ptr<token_t> &&colon_1_
-  ): default_0(std::move(default_0_)),
-     colon_1(std::move(colon_1_)) {}
+    std::shared_ptr<ast_token_t> default_0_,
+    std::shared_ptr<ast_token_t> colon_1_
+  ): default_0(default_0_),
+     colon_1(colon_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<case_label_default_colon_t> make(
-    const token_t *DEFAULT_0_,
-    const token_t *COLON_1_
+  virtual int get_id() const override {
+    return 287;
+  }
+
+  static std::shared_ptr<case_label_default_colon_t> make(
+    std::shared_ptr<ast_token_t> DEFAULT_0_,
+    std::shared_ptr<ast_token_t> COLON_1_
   ) {
-    return std::make_unique<case_label_default_colon_t>(
-      std::make_unique<token_t>(*DEFAULT_0_),
-      std::make_unique<token_t>(*COLON_1_)
+    return std::make_shared<case_label_default_colon_t>(
+      DEFAULT_0_,
+      COLON_1_
     );
   }
 

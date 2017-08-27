@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 246;
+  static constexpr int id = 247;
 
   virtual ~parameter_declarator_t() = default;
 
@@ -39,27 +39,31 @@ class parameter_declarator_type_specifier_identifier_t: public parameter_declara
 
 public:
 
-  std::unique_ptr<type_specifier_t> type_specifier_0;
+  std::shared_ptr<type_specifier_t> type_specifier_0;
 
-  std::unique_ptr<token_t> identifier_1;
+  std::shared_ptr<ast_token_t> identifier_1;
 
   parameter_declarator_type_specifier_identifier_t(
-    std::unique_ptr<type_specifier_t> &&type_specifier_0_,
-    std::unique_ptr<token_t> &&identifier_1_
-  ): type_specifier_0(std::move(type_specifier_0_)),
-     identifier_1(std::move(identifier_1_)) {}
+    std::shared_ptr<type_specifier_t> type_specifier_0_,
+    std::shared_ptr<ast_token_t> identifier_1_
+  ): type_specifier_0(type_specifier_0_),
+     identifier_1(identifier_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<parameter_declarator_type_specifier_identifier_t> make(
-    std::unique_ptr<type_specifier_t> &&type_specifier_0_,
-    const token_t *IDENTIFIER_1_
+  virtual int get_id() const override {
+    return 247;
+  }
+
+  static std::shared_ptr<parameter_declarator_type_specifier_identifier_t> make(
+    std::shared_ptr<type_specifier_t> type_specifier_0_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_1_
   ) {
-    return std::make_unique<parameter_declarator_type_specifier_identifier_t>(
-      std::move(type_specifier_0_),
-      std::make_unique<token_t>(*IDENTIFIER_1_)
+    return std::make_shared<parameter_declarator_type_specifier_identifier_t>(
+      type_specifier_0_,
+      IDENTIFIER_1_
     );
   }
 
@@ -69,33 +73,37 @@ class parameter_declarator_type_specifier_identifier_array_specifier_t: public p
 
 public:
 
-  std::unique_ptr<type_specifier_t> type_specifier_0;
+  std::shared_ptr<type_specifier_t> type_specifier_0;
 
-  std::unique_ptr<token_t> identifier_1;
+  std::shared_ptr<ast_token_t> identifier_1;
 
-  std::unique_ptr<array_specifier_t> array_specifier_2;
+  std::shared_ptr<array_specifier_t> array_specifier_2;
 
   parameter_declarator_type_specifier_identifier_array_specifier_t(
-    std::unique_ptr<type_specifier_t> &&type_specifier_0_,
-    std::unique_ptr<token_t> &&identifier_1_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_2_
-  ): type_specifier_0(std::move(type_specifier_0_)),
-     identifier_1(std::move(identifier_1_)),
-     array_specifier_2(std::move(array_specifier_2_)) {}
+    std::shared_ptr<type_specifier_t> type_specifier_0_,
+    std::shared_ptr<ast_token_t> identifier_1_,
+    std::shared_ptr<array_specifier_t> array_specifier_2_
+  ): type_specifier_0(type_specifier_0_),
+     identifier_1(identifier_1_),
+     array_specifier_2(array_specifier_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<parameter_declarator_type_specifier_identifier_array_specifier_t> make(
-    std::unique_ptr<type_specifier_t> &&type_specifier_0_,
-    const token_t *IDENTIFIER_1_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_2_
+  virtual int get_id() const override {
+    return 247;
+  }
+
+  static std::shared_ptr<parameter_declarator_type_specifier_identifier_array_specifier_t> make(
+    std::shared_ptr<type_specifier_t> type_specifier_0_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_1_,
+    std::shared_ptr<array_specifier_t> array_specifier_2_
   ) {
-    return std::make_unique<parameter_declarator_type_specifier_identifier_array_specifier_t>(
-      std::move(type_specifier_0_),
-      std::make_unique<token_t>(*IDENTIFIER_1_),
-      std::move(array_specifier_2_)
+    return std::make_shared<parameter_declarator_type_specifier_identifier_array_specifier_t>(
+      type_specifier_0_,
+      IDENTIFIER_1_,
+      array_specifier_2_
     );
   }
 

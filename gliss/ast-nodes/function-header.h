@@ -26,7 +26,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 245;
+  static constexpr int id = 246;
 
   virtual ~function_header_t() = default;
 
@@ -36,33 +36,37 @@ class function_header_fully_specified_type_identifier_left_paren_t: public funct
 
 public:
 
-  std::unique_ptr<fully_specified_type_t> fully_specified_type_0;
+  std::shared_ptr<fully_specified_type_t> fully_specified_type_0;
 
-  std::unique_ptr<token_t> identifier_1;
+  std::shared_ptr<ast_token_t> identifier_1;
 
-  std::unique_ptr<token_t> left_paren_2;
+  std::shared_ptr<ast_token_t> left_paren_2;
 
   function_header_fully_specified_type_identifier_left_paren_t(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
-    std::unique_ptr<token_t> &&identifier_1_,
-    std::unique_ptr<token_t> &&left_paren_2_
-  ): fully_specified_type_0(std::move(fully_specified_type_0_)),
-     identifier_1(std::move(identifier_1_)),
-     left_paren_2(std::move(left_paren_2_)) {}
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_,
+    std::shared_ptr<ast_token_t> identifier_1_,
+    std::shared_ptr<ast_token_t> left_paren_2_
+  ): fully_specified_type_0(fully_specified_type_0_),
+     identifier_1(identifier_1_),
+     left_paren_2(left_paren_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_header_fully_specified_type_identifier_left_paren_t> make(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
-    const token_t *IDENTIFIER_1_,
-    const token_t *LEFT_PAREN_2_
+  virtual int get_id() const override {
+    return 246;
+  }
+
+  static std::shared_ptr<function_header_fully_specified_type_identifier_left_paren_t> make(
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_1_,
+    std::shared_ptr<ast_token_t> LEFT_PAREN_2_
   ) {
-    return std::make_unique<function_header_fully_specified_type_identifier_left_paren_t>(
-      std::move(fully_specified_type_0_),
-      std::make_unique<token_t>(*IDENTIFIER_1_),
-      std::make_unique<token_t>(*LEFT_PAREN_2_)
+    return std::make_shared<function_header_fully_specified_type_identifier_left_paren_t>(
+      fully_specified_type_0_,
+      IDENTIFIER_1_,
+      LEFT_PAREN_2_
     );
   }
 

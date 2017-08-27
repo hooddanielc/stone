@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 255;
+  static constexpr int id = 256;
 
   virtual ~layout_qualifier_id_list_t() = default;
 
@@ -37,21 +37,25 @@ class layout_qualifier_id_list_layout_qualifier_id_t: public layout_qualifier_id
 
 public:
 
-  std::unique_ptr<layout_qualifier_id_t> layout_qualifier_id_0;
+  std::shared_ptr<layout_qualifier_id_t> layout_qualifier_id_0;
 
   layout_qualifier_id_list_layout_qualifier_id_t(
-    std::unique_ptr<layout_qualifier_id_t> &&layout_qualifier_id_0_
-  ): layout_qualifier_id_0(std::move(layout_qualifier_id_0_)) {}
+    std::shared_ptr<layout_qualifier_id_t> layout_qualifier_id_0_
+  ): layout_qualifier_id_0(layout_qualifier_id_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<layout_qualifier_id_list_layout_qualifier_id_t> make(
-    std::unique_ptr<layout_qualifier_id_t> &&layout_qualifier_id_0_
+  virtual int get_id() const override {
+    return 256;
+  }
+
+  static std::shared_ptr<layout_qualifier_id_list_layout_qualifier_id_t> make(
+    std::shared_ptr<layout_qualifier_id_t> layout_qualifier_id_0_
   ) {
-    return std::make_unique<layout_qualifier_id_list_layout_qualifier_id_t>(
-      std::move(layout_qualifier_id_0_)
+    return std::make_shared<layout_qualifier_id_list_layout_qualifier_id_t>(
+      layout_qualifier_id_0_
     );
   }
 
@@ -61,33 +65,37 @@ class layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_i
 
 public:
 
-  std::unique_ptr<layout_qualifier_id_list_t> layout_qualifier_id_list_0;
+  std::shared_ptr<layout_qualifier_id_list_t> layout_qualifier_id_list_0;
 
-  std::unique_ptr<token_t> comma_1;
+  std::shared_ptr<ast_token_t> comma_1;
 
-  std::unique_ptr<layout_qualifier_id_t> layout_qualifier_id_2;
+  std::shared_ptr<layout_qualifier_id_t> layout_qualifier_id_2;
 
   layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_id_t(
-    std::unique_ptr<layout_qualifier_id_list_t> &&layout_qualifier_id_list_0_,
-    std::unique_ptr<token_t> &&comma_1_,
-    std::unique_ptr<layout_qualifier_id_t> &&layout_qualifier_id_2_
-  ): layout_qualifier_id_list_0(std::move(layout_qualifier_id_list_0_)),
-     comma_1(std::move(comma_1_)),
-     layout_qualifier_id_2(std::move(layout_qualifier_id_2_)) {}
+    std::shared_ptr<layout_qualifier_id_list_t> layout_qualifier_id_list_0_,
+    std::shared_ptr<ast_token_t> comma_1_,
+    std::shared_ptr<layout_qualifier_id_t> layout_qualifier_id_2_
+  ): layout_qualifier_id_list_0(layout_qualifier_id_list_0_),
+     comma_1(comma_1_),
+     layout_qualifier_id_2(layout_qualifier_id_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_id_t> make(
-    std::unique_ptr<layout_qualifier_id_list_t> &&layout_qualifier_id_list_0_,
-    const token_t *COMMA_1_,
-    std::unique_ptr<layout_qualifier_id_t> &&layout_qualifier_id_2_
+  virtual int get_id() const override {
+    return 256;
+  }
+
+  static std::shared_ptr<layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_id_t> make(
+    std::shared_ptr<layout_qualifier_id_list_t> layout_qualifier_id_list_0_,
+    std::shared_ptr<ast_token_t> COMMA_1_,
+    std::shared_ptr<layout_qualifier_id_t> layout_qualifier_id_2_
   ) {
-    return std::make_unique<layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_id_t>(
-      std::move(layout_qualifier_id_list_0_),
-      std::make_unique<token_t>(*COMMA_1_),
-      std::move(layout_qualifier_id_2_)
+    return std::make_shared<layout_qualifier_id_list_layout_qualifier_id_list_comma_layout_qualifier_id_t>(
+      layout_qualifier_id_list_0_,
+      COMMA_1_,
+      layout_qualifier_id_2_
     );
   }
 

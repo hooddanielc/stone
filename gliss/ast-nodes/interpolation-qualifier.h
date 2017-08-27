@@ -25,7 +25,7 @@ public:
 
   static constexpr int rules = 3;
 
-  static constexpr int id = 253;
+  static constexpr int id = 254;
 
   virtual ~interpolation_qualifier_t() = default;
 
@@ -35,21 +35,25 @@ class interpolation_qualifier_smooth_t: public interpolation_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> smooth_0;
+  std::shared_ptr<ast_token_t> smooth_0;
 
   interpolation_qualifier_smooth_t(
-    std::unique_ptr<token_t> &&smooth_0_
-  ): smooth_0(std::move(smooth_0_)) {}
+    std::shared_ptr<ast_token_t> smooth_0_
+  ): smooth_0(smooth_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<interpolation_qualifier_smooth_t> make(
-    const token_t *SMOOTH_0_
+  virtual int get_id() const override {
+    return 254;
+  }
+
+  static std::shared_ptr<interpolation_qualifier_smooth_t> make(
+    std::shared_ptr<ast_token_t> SMOOTH_0_
   ) {
-    return std::make_unique<interpolation_qualifier_smooth_t>(
-      std::make_unique<token_t>(*SMOOTH_0_)
+    return std::make_shared<interpolation_qualifier_smooth_t>(
+      SMOOTH_0_
     );
   }
 
@@ -59,21 +63,25 @@ class interpolation_qualifier_flat_t: public interpolation_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> flat_0;
+  std::shared_ptr<ast_token_t> flat_0;
 
   interpolation_qualifier_flat_t(
-    std::unique_ptr<token_t> &&flat_0_
-  ): flat_0(std::move(flat_0_)) {}
+    std::shared_ptr<ast_token_t> flat_0_
+  ): flat_0(flat_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<interpolation_qualifier_flat_t> make(
-    const token_t *FLAT_0_
+  virtual int get_id() const override {
+    return 254;
+  }
+
+  static std::shared_ptr<interpolation_qualifier_flat_t> make(
+    std::shared_ptr<ast_token_t> FLAT_0_
   ) {
-    return std::make_unique<interpolation_qualifier_flat_t>(
-      std::make_unique<token_t>(*FLAT_0_)
+    return std::make_shared<interpolation_qualifier_flat_t>(
+      FLAT_0_
     );
   }
 
@@ -83,21 +91,25 @@ class interpolation_qualifier_noperspective_t: public interpolation_qualifier_t 
 
 public:
 
-  std::unique_ptr<token_t> noperspective_0;
+  std::shared_ptr<ast_token_t> noperspective_0;
 
   interpolation_qualifier_noperspective_t(
-    std::unique_ptr<token_t> &&noperspective_0_
-  ): noperspective_0(std::move(noperspective_0_)) {}
+    std::shared_ptr<ast_token_t> noperspective_0_
+  ): noperspective_0(noperspective_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<interpolation_qualifier_noperspective_t> make(
-    const token_t *NOPERSPECTIVE_0_
+  virtual int get_id() const override {
+    return 254;
+  }
+
+  static std::shared_ptr<interpolation_qualifier_noperspective_t> make(
+    std::shared_ptr<ast_token_t> NOPERSPECTIVE_0_
   ) {
-    return std::make_unique<interpolation_qualifier_noperspective_t>(
-      std::make_unique<token_t>(*NOPERSPECTIVE_0_)
+    return std::make_shared<interpolation_qualifier_noperspective_t>(
+      NOPERSPECTIVE_0_
     );
   }
 

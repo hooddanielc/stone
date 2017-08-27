@@ -31,7 +31,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 236;
+  static constexpr int id = 237;
 
   virtual ~assignment_expression_t() = default;
 
@@ -41,21 +41,25 @@ class assignment_expression_conditional_expression_t: public assignment_expressi
 
 public:
 
-  std::unique_ptr<conditional_expression_t> conditional_expression_0;
+  std::shared_ptr<conditional_expression_t> conditional_expression_0;
 
   assignment_expression_conditional_expression_t(
-    std::unique_ptr<conditional_expression_t> &&conditional_expression_0_
-  ): conditional_expression_0(std::move(conditional_expression_0_)) {}
+    std::shared_ptr<conditional_expression_t> conditional_expression_0_
+  ): conditional_expression_0(conditional_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<assignment_expression_conditional_expression_t> make(
-    std::unique_ptr<conditional_expression_t> &&conditional_expression_0_
+  virtual int get_id() const override {
+    return 237;
+  }
+
+  static std::shared_ptr<assignment_expression_conditional_expression_t> make(
+    std::shared_ptr<conditional_expression_t> conditional_expression_0_
   ) {
-    return std::make_unique<assignment_expression_conditional_expression_t>(
-      std::move(conditional_expression_0_)
+    return std::make_shared<assignment_expression_conditional_expression_t>(
+      conditional_expression_0_
     );
   }
 
@@ -65,33 +69,37 @@ class assignment_expression_unary_expression_assignment_operator_assignment_expr
 
 public:
 
-  std::unique_ptr<unary_expression_t> unary_expression_0;
+  std::shared_ptr<unary_expression_t> unary_expression_0;
 
-  std::unique_ptr<assignment_operator_t> assignment_operator_1;
+  std::shared_ptr<assignment_operator_t> assignment_operator_1;
 
-  std::unique_ptr<assignment_expression_t> assignment_expression_2;
+  std::shared_ptr<assignment_expression_t> assignment_expression_2;
 
   assignment_expression_unary_expression_assignment_operator_assignment_expression_t(
-    std::unique_ptr<unary_expression_t> &&unary_expression_0_,
-    std::unique_ptr<assignment_operator_t> &&assignment_operator_1_,
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_2_
-  ): unary_expression_0(std::move(unary_expression_0_)),
-     assignment_operator_1(std::move(assignment_operator_1_)),
-     assignment_expression_2(std::move(assignment_expression_2_)) {}
+    std::shared_ptr<unary_expression_t> unary_expression_0_,
+    std::shared_ptr<assignment_operator_t> assignment_operator_1_,
+    std::shared_ptr<assignment_expression_t> assignment_expression_2_
+  ): unary_expression_0(unary_expression_0_),
+     assignment_operator_1(assignment_operator_1_),
+     assignment_expression_2(assignment_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<assignment_expression_unary_expression_assignment_operator_assignment_expression_t> make(
-    std::unique_ptr<unary_expression_t> &&unary_expression_0_,
-    std::unique_ptr<assignment_operator_t> &&assignment_operator_1_,
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_2_
+  virtual int get_id() const override {
+    return 237;
+  }
+
+  static std::shared_ptr<assignment_expression_unary_expression_assignment_operator_assignment_expression_t> make(
+    std::shared_ptr<unary_expression_t> unary_expression_0_,
+    std::shared_ptr<assignment_operator_t> assignment_operator_1_,
+    std::shared_ptr<assignment_expression_t> assignment_expression_2_
   ) {
-    return std::make_unique<assignment_expression_unary_expression_assignment_operator_assignment_expression_t>(
-      std::move(unary_expression_0_),
-      std::move(assignment_operator_1_),
-      std::move(assignment_expression_2_)
+    return std::make_shared<assignment_expression_unary_expression_assignment_operator_assignment_expression_t>(
+      unary_expression_0_,
+      assignment_operator_1_,
+      assignment_expression_2_
     );
   }
 

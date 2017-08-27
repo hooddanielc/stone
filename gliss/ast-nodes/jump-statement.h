@@ -30,7 +30,7 @@ public:
 
   static constexpr int rules = 5;
 
-  static constexpr int id = 291;
+  static constexpr int id = 292;
 
   virtual ~jump_statement_t() = default;
 
@@ -40,27 +40,31 @@ class jump_statement_continue_semicolon_t: public jump_statement_t {
 
 public:
 
-  std::unique_ptr<token_t> continue_0;
+  std::shared_ptr<ast_token_t> continue_0;
 
-  std::unique_ptr<token_t> semicolon_1;
+  std::shared_ptr<ast_token_t> semicolon_1;
 
   jump_statement_continue_semicolon_t(
-    std::unique_ptr<token_t> &&continue_0_,
-    std::unique_ptr<token_t> &&semicolon_1_
-  ): continue_0(std::move(continue_0_)),
-     semicolon_1(std::move(semicolon_1_)) {}
+    std::shared_ptr<ast_token_t> continue_0_,
+    std::shared_ptr<ast_token_t> semicolon_1_
+  ): continue_0(continue_0_),
+     semicolon_1(semicolon_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<jump_statement_continue_semicolon_t> make(
-    const token_t *CONTINUE_0_,
-    const token_t *SEMICOLON_1_
+  virtual int get_id() const override {
+    return 292;
+  }
+
+  static std::shared_ptr<jump_statement_continue_semicolon_t> make(
+    std::shared_ptr<ast_token_t> CONTINUE_0_,
+    std::shared_ptr<ast_token_t> SEMICOLON_1_
   ) {
-    return std::make_unique<jump_statement_continue_semicolon_t>(
-      std::make_unique<token_t>(*CONTINUE_0_),
-      std::make_unique<token_t>(*SEMICOLON_1_)
+    return std::make_shared<jump_statement_continue_semicolon_t>(
+      CONTINUE_0_,
+      SEMICOLON_1_
     );
   }
 
@@ -70,27 +74,31 @@ class jump_statement_break_semicolon_t: public jump_statement_t {
 
 public:
 
-  std::unique_ptr<token_t> break_0;
+  std::shared_ptr<ast_token_t> break_0;
 
-  std::unique_ptr<token_t> semicolon_1;
+  std::shared_ptr<ast_token_t> semicolon_1;
 
   jump_statement_break_semicolon_t(
-    std::unique_ptr<token_t> &&break_0_,
-    std::unique_ptr<token_t> &&semicolon_1_
-  ): break_0(std::move(break_0_)),
-     semicolon_1(std::move(semicolon_1_)) {}
+    std::shared_ptr<ast_token_t> break_0_,
+    std::shared_ptr<ast_token_t> semicolon_1_
+  ): break_0(break_0_),
+     semicolon_1(semicolon_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<jump_statement_break_semicolon_t> make(
-    const token_t *BREAK_0_,
-    const token_t *SEMICOLON_1_
+  virtual int get_id() const override {
+    return 292;
+  }
+
+  static std::shared_ptr<jump_statement_break_semicolon_t> make(
+    std::shared_ptr<ast_token_t> BREAK_0_,
+    std::shared_ptr<ast_token_t> SEMICOLON_1_
   ) {
-    return std::make_unique<jump_statement_break_semicolon_t>(
-      std::make_unique<token_t>(*BREAK_0_),
-      std::make_unique<token_t>(*SEMICOLON_1_)
+    return std::make_shared<jump_statement_break_semicolon_t>(
+      BREAK_0_,
+      SEMICOLON_1_
     );
   }
 
@@ -100,27 +108,31 @@ class jump_statement_return_semicolon_t: public jump_statement_t {
 
 public:
 
-  std::unique_ptr<token_t> return_0;
+  std::shared_ptr<ast_token_t> return_0;
 
-  std::unique_ptr<token_t> semicolon_1;
+  std::shared_ptr<ast_token_t> semicolon_1;
 
   jump_statement_return_semicolon_t(
-    std::unique_ptr<token_t> &&return_0_,
-    std::unique_ptr<token_t> &&semicolon_1_
-  ): return_0(std::move(return_0_)),
-     semicolon_1(std::move(semicolon_1_)) {}
+    std::shared_ptr<ast_token_t> return_0_,
+    std::shared_ptr<ast_token_t> semicolon_1_
+  ): return_0(return_0_),
+     semicolon_1(semicolon_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<jump_statement_return_semicolon_t> make(
-    const token_t *RETURN_0_,
-    const token_t *SEMICOLON_1_
+  virtual int get_id() const override {
+    return 292;
+  }
+
+  static std::shared_ptr<jump_statement_return_semicolon_t> make(
+    std::shared_ptr<ast_token_t> RETURN_0_,
+    std::shared_ptr<ast_token_t> SEMICOLON_1_
   ) {
-    return std::make_unique<jump_statement_return_semicolon_t>(
-      std::make_unique<token_t>(*RETURN_0_),
-      std::make_unique<token_t>(*SEMICOLON_1_)
+    return std::make_shared<jump_statement_return_semicolon_t>(
+      RETURN_0_,
+      SEMICOLON_1_
     );
   }
 
@@ -130,33 +142,37 @@ class jump_statement_return_expression_semicolon_t: public jump_statement_t {
 
 public:
 
-  std::unique_ptr<token_t> return_0;
+  std::shared_ptr<ast_token_t> return_0;
 
-  std::unique_ptr<expression_t> expression_1;
+  std::shared_ptr<expression_t> expression_1;
 
-  std::unique_ptr<token_t> semicolon_2;
+  std::shared_ptr<ast_token_t> semicolon_2;
 
   jump_statement_return_expression_semicolon_t(
-    std::unique_ptr<token_t> &&return_0_,
-    std::unique_ptr<expression_t> &&expression_1_,
-    std::unique_ptr<token_t> &&semicolon_2_
-  ): return_0(std::move(return_0_)),
-     expression_1(std::move(expression_1_)),
-     semicolon_2(std::move(semicolon_2_)) {}
+    std::shared_ptr<ast_token_t> return_0_,
+    std::shared_ptr<expression_t> expression_1_,
+    std::shared_ptr<ast_token_t> semicolon_2_
+  ): return_0(return_0_),
+     expression_1(expression_1_),
+     semicolon_2(semicolon_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<jump_statement_return_expression_semicolon_t> make(
-    const token_t *RETURN_0_,
-    std::unique_ptr<expression_t> &&expression_1_,
-    const token_t *SEMICOLON_2_
+  virtual int get_id() const override {
+    return 292;
+  }
+
+  static std::shared_ptr<jump_statement_return_expression_semicolon_t> make(
+    std::shared_ptr<ast_token_t> RETURN_0_,
+    std::shared_ptr<expression_t> expression_1_,
+    std::shared_ptr<ast_token_t> SEMICOLON_2_
   ) {
-    return std::make_unique<jump_statement_return_expression_semicolon_t>(
-      std::make_unique<token_t>(*RETURN_0_),
-      std::move(expression_1_),
-      std::make_unique<token_t>(*SEMICOLON_2_)
+    return std::make_shared<jump_statement_return_expression_semicolon_t>(
+      RETURN_0_,
+      expression_1_,
+      SEMICOLON_2_
     );
   }
 
@@ -166,27 +182,31 @@ class jump_statement_discard_semicolon_t: public jump_statement_t {
 
 public:
 
-  std::unique_ptr<token_t> discard_0;
+  std::shared_ptr<ast_token_t> discard_0;
 
-  std::unique_ptr<token_t> semicolon_1;
+  std::shared_ptr<ast_token_t> semicolon_1;
 
   jump_statement_discard_semicolon_t(
-    std::unique_ptr<token_t> &&discard_0_,
-    std::unique_ptr<token_t> &&semicolon_1_
-  ): discard_0(std::move(discard_0_)),
-     semicolon_1(std::move(semicolon_1_)) {}
+    std::shared_ptr<ast_token_t> discard_0_,
+    std::shared_ptr<ast_token_t> semicolon_1_
+  ): discard_0(discard_0_),
+     semicolon_1(semicolon_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<jump_statement_discard_semicolon_t> make(
-    const token_t *DISCARD_0_,
-    const token_t *SEMICOLON_1_
+  virtual int get_id() const override {
+    return 292;
+  }
+
+  static std::shared_ptr<jump_statement_discard_semicolon_t> make(
+    std::shared_ptr<ast_token_t> DISCARD_0_,
+    std::shared_ptr<ast_token_t> SEMICOLON_1_
   ) {
-    return std::make_unique<jump_statement_discard_semicolon_t>(
-      std::make_unique<token_t>(*DISCARD_0_),
-      std::make_unique<token_t>(*SEMICOLON_1_)
+    return std::make_shared<jump_statement_discard_semicolon_t>(
+      DISCARD_0_,
+      SEMICOLON_1_
     );
   }
 

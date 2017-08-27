@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 288;
+  static constexpr int id = 289;
 
   virtual ~for_init_statement_t() = default;
 
@@ -39,21 +39,25 @@ class for_init_statement_expression_statement_t: public for_init_statement_t {
 
 public:
 
-  std::unique_ptr<expression_statement_t> expression_statement_0;
+  std::shared_ptr<expression_statement_t> expression_statement_0;
 
   for_init_statement_expression_statement_t(
-    std::unique_ptr<expression_statement_t> &&expression_statement_0_
-  ): expression_statement_0(std::move(expression_statement_0_)) {}
+    std::shared_ptr<expression_statement_t> expression_statement_0_
+  ): expression_statement_0(expression_statement_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<for_init_statement_expression_statement_t> make(
-    std::unique_ptr<expression_statement_t> &&expression_statement_0_
+  virtual int get_id() const override {
+    return 289;
+  }
+
+  static std::shared_ptr<for_init_statement_expression_statement_t> make(
+    std::shared_ptr<expression_statement_t> expression_statement_0_
   ) {
-    return std::make_unique<for_init_statement_expression_statement_t>(
-      std::move(expression_statement_0_)
+    return std::make_shared<for_init_statement_expression_statement_t>(
+      expression_statement_0_
     );
   }
 
@@ -63,21 +67,25 @@ class for_init_statement_declaration_statement_t: public for_init_statement_t {
 
 public:
 
-  std::unique_ptr<declaration_statement_t> declaration_statement_0;
+  std::shared_ptr<declaration_statement_t> declaration_statement_0;
 
   for_init_statement_declaration_statement_t(
-    std::unique_ptr<declaration_statement_t> &&declaration_statement_0_
-  ): declaration_statement_0(std::move(declaration_statement_0_)) {}
+    std::shared_ptr<declaration_statement_t> declaration_statement_0_
+  ): declaration_statement_0(declaration_statement_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<for_init_statement_declaration_statement_t> make(
-    std::unique_ptr<declaration_statement_t> &&declaration_statement_0_
+  virtual int get_id() const override {
+    return 289;
+  }
+
+  static std::shared_ptr<for_init_statement_declaration_statement_t> make(
+    std::shared_ptr<declaration_statement_t> declaration_statement_0_
   ) {
-    return std::make_unique<for_init_statement_declaration_statement_t>(
-      std::move(declaration_statement_0_)
+    return std::make_shared<for_init_statement_declaration_statement_t>(
+      declaration_statement_0_
     );
   }
 

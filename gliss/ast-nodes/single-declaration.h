@@ -34,7 +34,7 @@ public:
 
   static constexpr int rules = 5;
 
-  static constexpr int id = 250;
+  static constexpr int id = 251;
 
   virtual ~single_declaration_t() = default;
 
@@ -44,21 +44,25 @@ class single_declaration_fully_specified_type_t: public single_declaration_t {
 
 public:
 
-  std::unique_ptr<fully_specified_type_t> fully_specified_type_0;
+  std::shared_ptr<fully_specified_type_t> fully_specified_type_0;
 
   single_declaration_fully_specified_type_t(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_
-  ): fully_specified_type_0(std::move(fully_specified_type_0_)) {}
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_
+  ): fully_specified_type_0(fully_specified_type_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<single_declaration_fully_specified_type_t> make(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_
+  virtual int get_id() const override {
+    return 251;
+  }
+
+  static std::shared_ptr<single_declaration_fully_specified_type_t> make(
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_
   ) {
-    return std::make_unique<single_declaration_fully_specified_type_t>(
-      std::move(fully_specified_type_0_)
+    return std::make_shared<single_declaration_fully_specified_type_t>(
+      fully_specified_type_0_
     );
   }
 
@@ -68,27 +72,31 @@ class single_declaration_fully_specified_type_identifier_t: public single_declar
 
 public:
 
-  std::unique_ptr<fully_specified_type_t> fully_specified_type_0;
+  std::shared_ptr<fully_specified_type_t> fully_specified_type_0;
 
-  std::unique_ptr<token_t> identifier_1;
+  std::shared_ptr<ast_token_t> identifier_1;
 
   single_declaration_fully_specified_type_identifier_t(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
-    std::unique_ptr<token_t> &&identifier_1_
-  ): fully_specified_type_0(std::move(fully_specified_type_0_)),
-     identifier_1(std::move(identifier_1_)) {}
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_,
+    std::shared_ptr<ast_token_t> identifier_1_
+  ): fully_specified_type_0(fully_specified_type_0_),
+     identifier_1(identifier_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<single_declaration_fully_specified_type_identifier_t> make(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
-    const token_t *IDENTIFIER_1_
+  virtual int get_id() const override {
+    return 251;
+  }
+
+  static std::shared_ptr<single_declaration_fully_specified_type_identifier_t> make(
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_1_
   ) {
-    return std::make_unique<single_declaration_fully_specified_type_identifier_t>(
-      std::move(fully_specified_type_0_),
-      std::make_unique<token_t>(*IDENTIFIER_1_)
+    return std::make_shared<single_declaration_fully_specified_type_identifier_t>(
+      fully_specified_type_0_,
+      IDENTIFIER_1_
     );
   }
 
@@ -98,33 +106,37 @@ class single_declaration_fully_specified_type_identifier_array_specifier_t: publ
 
 public:
 
-  std::unique_ptr<fully_specified_type_t> fully_specified_type_0;
+  std::shared_ptr<fully_specified_type_t> fully_specified_type_0;
 
-  std::unique_ptr<token_t> identifier_1;
+  std::shared_ptr<ast_token_t> identifier_1;
 
-  std::unique_ptr<array_specifier_t> array_specifier_2;
+  std::shared_ptr<array_specifier_t> array_specifier_2;
 
   single_declaration_fully_specified_type_identifier_array_specifier_t(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
-    std::unique_ptr<token_t> &&identifier_1_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_2_
-  ): fully_specified_type_0(std::move(fully_specified_type_0_)),
-     identifier_1(std::move(identifier_1_)),
-     array_specifier_2(std::move(array_specifier_2_)) {}
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_,
+    std::shared_ptr<ast_token_t> identifier_1_,
+    std::shared_ptr<array_specifier_t> array_specifier_2_
+  ): fully_specified_type_0(fully_specified_type_0_),
+     identifier_1(identifier_1_),
+     array_specifier_2(array_specifier_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<single_declaration_fully_specified_type_identifier_array_specifier_t> make(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
-    const token_t *IDENTIFIER_1_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_2_
+  virtual int get_id() const override {
+    return 251;
+  }
+
+  static std::shared_ptr<single_declaration_fully_specified_type_identifier_array_specifier_t> make(
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_1_,
+    std::shared_ptr<array_specifier_t> array_specifier_2_
   ) {
-    return std::make_unique<single_declaration_fully_specified_type_identifier_array_specifier_t>(
-      std::move(fully_specified_type_0_),
-      std::make_unique<token_t>(*IDENTIFIER_1_),
-      std::move(array_specifier_2_)
+    return std::make_shared<single_declaration_fully_specified_type_identifier_array_specifier_t>(
+      fully_specified_type_0_,
+      IDENTIFIER_1_,
+      array_specifier_2_
     );
   }
 
@@ -134,45 +146,49 @@ class single_declaration_fully_specified_type_identifier_array_specifier_equal_i
 
 public:
 
-  std::unique_ptr<fully_specified_type_t> fully_specified_type_0;
+  std::shared_ptr<fully_specified_type_t> fully_specified_type_0;
 
-  std::unique_ptr<token_t> identifier_1;
+  std::shared_ptr<ast_token_t> identifier_1;
 
-  std::unique_ptr<array_specifier_t> array_specifier_2;
+  std::shared_ptr<array_specifier_t> array_specifier_2;
 
-  std::unique_ptr<token_t> equal_3;
+  std::shared_ptr<ast_token_t> equal_3;
 
-  std::unique_ptr<initializer_t> initializer_4;
+  std::shared_ptr<initializer_t> initializer_4;
 
   single_declaration_fully_specified_type_identifier_array_specifier_equal_initializer_t(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
-    std::unique_ptr<token_t> &&identifier_1_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_2_,
-    std::unique_ptr<token_t> &&equal_3_,
-    std::unique_ptr<initializer_t> &&initializer_4_
-  ): fully_specified_type_0(std::move(fully_specified_type_0_)),
-     identifier_1(std::move(identifier_1_)),
-     array_specifier_2(std::move(array_specifier_2_)),
-     equal_3(std::move(equal_3_)),
-     initializer_4(std::move(initializer_4_)) {}
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_,
+    std::shared_ptr<ast_token_t> identifier_1_,
+    std::shared_ptr<array_specifier_t> array_specifier_2_,
+    std::shared_ptr<ast_token_t> equal_3_,
+    std::shared_ptr<initializer_t> initializer_4_
+  ): fully_specified_type_0(fully_specified_type_0_),
+     identifier_1(identifier_1_),
+     array_specifier_2(array_specifier_2_),
+     equal_3(equal_3_),
+     initializer_4(initializer_4_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<single_declaration_fully_specified_type_identifier_array_specifier_equal_initializer_t> make(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
-    const token_t *IDENTIFIER_1_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_2_,
-    const token_t *EQUAL_3_,
-    std::unique_ptr<initializer_t> &&initializer_4_
+  virtual int get_id() const override {
+    return 251;
+  }
+
+  static std::shared_ptr<single_declaration_fully_specified_type_identifier_array_specifier_equal_initializer_t> make(
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_1_,
+    std::shared_ptr<array_specifier_t> array_specifier_2_,
+    std::shared_ptr<ast_token_t> EQUAL_3_,
+    std::shared_ptr<initializer_t> initializer_4_
   ) {
-    return std::make_unique<single_declaration_fully_specified_type_identifier_array_specifier_equal_initializer_t>(
-      std::move(fully_specified_type_0_),
-      std::make_unique<token_t>(*IDENTIFIER_1_),
-      std::move(array_specifier_2_),
-      std::make_unique<token_t>(*EQUAL_3_),
-      std::move(initializer_4_)
+    return std::make_shared<single_declaration_fully_specified_type_identifier_array_specifier_equal_initializer_t>(
+      fully_specified_type_0_,
+      IDENTIFIER_1_,
+      array_specifier_2_,
+      EQUAL_3_,
+      initializer_4_
     );
   }
 
@@ -182,39 +198,43 @@ class single_declaration_fully_specified_type_identifier_equal_initializer_t: pu
 
 public:
 
-  std::unique_ptr<fully_specified_type_t> fully_specified_type_0;
+  std::shared_ptr<fully_specified_type_t> fully_specified_type_0;
 
-  std::unique_ptr<token_t> identifier_1;
+  std::shared_ptr<ast_token_t> identifier_1;
 
-  std::unique_ptr<token_t> equal_2;
+  std::shared_ptr<ast_token_t> equal_2;
 
-  std::unique_ptr<initializer_t> initializer_3;
+  std::shared_ptr<initializer_t> initializer_3;
 
   single_declaration_fully_specified_type_identifier_equal_initializer_t(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
-    std::unique_ptr<token_t> &&identifier_1_,
-    std::unique_ptr<token_t> &&equal_2_,
-    std::unique_ptr<initializer_t> &&initializer_3_
-  ): fully_specified_type_0(std::move(fully_specified_type_0_)),
-     identifier_1(std::move(identifier_1_)),
-     equal_2(std::move(equal_2_)),
-     initializer_3(std::move(initializer_3_)) {}
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_,
+    std::shared_ptr<ast_token_t> identifier_1_,
+    std::shared_ptr<ast_token_t> equal_2_,
+    std::shared_ptr<initializer_t> initializer_3_
+  ): fully_specified_type_0(fully_specified_type_0_),
+     identifier_1(identifier_1_),
+     equal_2(equal_2_),
+     initializer_3(initializer_3_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<single_declaration_fully_specified_type_identifier_equal_initializer_t> make(
-    std::unique_ptr<fully_specified_type_t> &&fully_specified_type_0_,
-    const token_t *IDENTIFIER_1_,
-    const token_t *EQUAL_2_,
-    std::unique_ptr<initializer_t> &&initializer_3_
+  virtual int get_id() const override {
+    return 251;
+  }
+
+  static std::shared_ptr<single_declaration_fully_specified_type_identifier_equal_initializer_t> make(
+    std::shared_ptr<fully_specified_type_t> fully_specified_type_0_,
+    std::shared_ptr<ast_token_t> IDENTIFIER_1_,
+    std::shared_ptr<ast_token_t> EQUAL_2_,
+    std::shared_ptr<initializer_t> initializer_3_
   ) {
-    return std::make_unique<single_declaration_fully_specified_type_identifier_equal_initializer_t>(
-      std::move(fully_specified_type_0_),
-      std::make_unique<token_t>(*IDENTIFIER_1_),
-      std::make_unique<token_t>(*EQUAL_2_),
-      std::move(initializer_3_)
+    return std::make_shared<single_declaration_fully_specified_type_identifier_equal_initializer_t>(
+      fully_specified_type_0_,
+      IDENTIFIER_1_,
+      EQUAL_2_,
+      initializer_3_
     );
   }
 

@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 282;
+  static constexpr int id = 283;
 
   virtual ~selection_rest_statement_t() = default;
 
@@ -37,33 +37,37 @@ class selection_rest_statement_statement_else_statement_t: public selection_rest
 
 public:
 
-  std::unique_ptr<statement_t> statement_0;
+  std::shared_ptr<statement_t> statement_0;
 
-  std::unique_ptr<token_t> else_1;
+  std::shared_ptr<ast_token_t> else_1;
 
-  std::unique_ptr<statement_t> statement_2;
+  std::shared_ptr<statement_t> statement_2;
 
   selection_rest_statement_statement_else_statement_t(
-    std::unique_ptr<statement_t> &&statement_0_,
-    std::unique_ptr<token_t> &&else_1_,
-    std::unique_ptr<statement_t> &&statement_2_
-  ): statement_0(std::move(statement_0_)),
-     else_1(std::move(else_1_)),
-     statement_2(std::move(statement_2_)) {}
+    std::shared_ptr<statement_t> statement_0_,
+    std::shared_ptr<ast_token_t> else_1_,
+    std::shared_ptr<statement_t> statement_2_
+  ): statement_0(statement_0_),
+     else_1(else_1_),
+     statement_2(statement_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<selection_rest_statement_statement_else_statement_t> make(
-    std::unique_ptr<statement_t> &&statement_0_,
-    const token_t *ELSE_1_,
-    std::unique_ptr<statement_t> &&statement_2_
+  virtual int get_id() const override {
+    return 283;
+  }
+
+  static std::shared_ptr<selection_rest_statement_statement_else_statement_t> make(
+    std::shared_ptr<statement_t> statement_0_,
+    std::shared_ptr<ast_token_t> ELSE_1_,
+    std::shared_ptr<statement_t> statement_2_
   ) {
-    return std::make_unique<selection_rest_statement_statement_else_statement_t>(
-      std::move(statement_0_),
-      std::make_unique<token_t>(*ELSE_1_),
-      std::move(statement_2_)
+    return std::make_shared<selection_rest_statement_statement_else_statement_t>(
+      statement_0_,
+      ELSE_1_,
+      statement_2_
     );
   }
 
@@ -73,21 +77,25 @@ class selection_rest_statement_statement_t: public selection_rest_statement_t {
 
 public:
 
-  std::unique_ptr<statement_t> statement_0;
+  std::shared_ptr<statement_t> statement_0;
 
   selection_rest_statement_statement_t(
-    std::unique_ptr<statement_t> &&statement_0_
-  ): statement_0(std::move(statement_0_)) {}
+    std::shared_ptr<statement_t> statement_0_
+  ): statement_0(statement_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<selection_rest_statement_statement_t> make(
-    std::unique_ptr<statement_t> &&statement_0_
+  virtual int get_id() const override {
+    return 283;
+  }
+
+  static std::shared_ptr<selection_rest_statement_statement_t> make(
+    std::shared_ptr<statement_t> statement_0_
   ) {
-    return std::make_unique<selection_rest_statement_statement_t>(
-      std::move(statement_0_)
+    return std::make_shared<selection_rest_statement_statement_t>(
+      statement_0_
     );
   }
 

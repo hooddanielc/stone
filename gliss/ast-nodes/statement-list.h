@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 279;
+  static constexpr int id = 280;
 
   virtual ~statement_list_t() = default;
 
@@ -37,21 +37,25 @@ class statement_list_statement_t: public statement_list_t {
 
 public:
 
-  std::unique_ptr<statement_t> statement_0;
+  std::shared_ptr<statement_t> statement_0;
 
   statement_list_statement_t(
-    std::unique_ptr<statement_t> &&statement_0_
-  ): statement_0(std::move(statement_0_)) {}
+    std::shared_ptr<statement_t> statement_0_
+  ): statement_0(statement_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<statement_list_statement_t> make(
-    std::unique_ptr<statement_t> &&statement_0_
+  virtual int get_id() const override {
+    return 280;
+  }
+
+  static std::shared_ptr<statement_list_statement_t> make(
+    std::shared_ptr<statement_t> statement_0_
   ) {
-    return std::make_unique<statement_list_statement_t>(
-      std::move(statement_0_)
+    return std::make_shared<statement_list_statement_t>(
+      statement_0_
     );
   }
 
@@ -61,27 +65,31 @@ class statement_list_statement_list_statement_t: public statement_list_t {
 
 public:
 
-  std::unique_ptr<statement_list_t> statement_list_0;
+  std::shared_ptr<statement_list_t> statement_list_0;
 
-  std::unique_ptr<statement_t> statement_1;
+  std::shared_ptr<statement_t> statement_1;
 
   statement_list_statement_list_statement_t(
-    std::unique_ptr<statement_list_t> &&statement_list_0_,
-    std::unique_ptr<statement_t> &&statement_1_
-  ): statement_list_0(std::move(statement_list_0_)),
-     statement_1(std::move(statement_1_)) {}
+    std::shared_ptr<statement_list_t> statement_list_0_,
+    std::shared_ptr<statement_t> statement_1_
+  ): statement_list_0(statement_list_0_),
+     statement_1(statement_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<statement_list_statement_list_statement_t> make(
-    std::unique_ptr<statement_list_t> &&statement_list_0_,
-    std::unique_ptr<statement_t> &&statement_1_
+  virtual int get_id() const override {
+    return 280;
+  }
+
+  static std::shared_ptr<statement_list_statement_list_statement_t> make(
+    std::shared_ptr<statement_list_t> statement_list_0_,
+    std::shared_ptr<statement_t> statement_1_
   ) {
-    return std::make_unique<statement_list_statement_list_statement_t>(
-      std::move(statement_list_0_),
-      std::move(statement_1_)
+    return std::make_shared<statement_list_statement_list_statement_t>(
+      statement_list_0_,
+      statement_1_
     );
   }
 

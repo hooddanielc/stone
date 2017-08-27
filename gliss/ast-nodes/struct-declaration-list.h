@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 267;
+  static constexpr int id = 268;
 
   virtual ~struct_declaration_list_t() = default;
 
@@ -37,21 +37,25 @@ class struct_declaration_list_struct_declaration_t: public struct_declaration_li
 
 public:
 
-  std::unique_ptr<struct_declaration_t> struct_declaration_0;
+  std::shared_ptr<struct_declaration_t> struct_declaration_0;
 
   struct_declaration_list_struct_declaration_t(
-    std::unique_ptr<struct_declaration_t> &&struct_declaration_0_
-  ): struct_declaration_0(std::move(struct_declaration_0_)) {}
+    std::shared_ptr<struct_declaration_t> struct_declaration_0_
+  ): struct_declaration_0(struct_declaration_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<struct_declaration_list_struct_declaration_t> make(
-    std::unique_ptr<struct_declaration_t> &&struct_declaration_0_
+  virtual int get_id() const override {
+    return 268;
+  }
+
+  static std::shared_ptr<struct_declaration_list_struct_declaration_t> make(
+    std::shared_ptr<struct_declaration_t> struct_declaration_0_
   ) {
-    return std::make_unique<struct_declaration_list_struct_declaration_t>(
-      std::move(struct_declaration_0_)
+    return std::make_shared<struct_declaration_list_struct_declaration_t>(
+      struct_declaration_0_
     );
   }
 
@@ -61,27 +65,31 @@ class struct_declaration_list_struct_declaration_list_struct_declaration_t: publ
 
 public:
 
-  std::unique_ptr<struct_declaration_list_t> struct_declaration_list_0;
+  std::shared_ptr<struct_declaration_list_t> struct_declaration_list_0;
 
-  std::unique_ptr<struct_declaration_t> struct_declaration_1;
+  std::shared_ptr<struct_declaration_t> struct_declaration_1;
 
   struct_declaration_list_struct_declaration_list_struct_declaration_t(
-    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_0_,
-    std::unique_ptr<struct_declaration_t> &&struct_declaration_1_
-  ): struct_declaration_list_0(std::move(struct_declaration_list_0_)),
-     struct_declaration_1(std::move(struct_declaration_1_)) {}
+    std::shared_ptr<struct_declaration_list_t> struct_declaration_list_0_,
+    std::shared_ptr<struct_declaration_t> struct_declaration_1_
+  ): struct_declaration_list_0(struct_declaration_list_0_),
+     struct_declaration_1(struct_declaration_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<struct_declaration_list_struct_declaration_list_struct_declaration_t> make(
-    std::unique_ptr<struct_declaration_list_t> &&struct_declaration_list_0_,
-    std::unique_ptr<struct_declaration_t> &&struct_declaration_1_
+  virtual int get_id() const override {
+    return 268;
+  }
+
+  static std::shared_ptr<struct_declaration_list_struct_declaration_list_struct_declaration_t> make(
+    std::shared_ptr<struct_declaration_list_t> struct_declaration_list_0_,
+    std::shared_ptr<struct_declaration_t> struct_declaration_1_
   ) {
-    return std::make_unique<struct_declaration_list_struct_declaration_list_struct_declaration_t>(
-      std::move(struct_declaration_list_0_),
-      std::move(struct_declaration_1_)
+    return std::make_shared<struct_declaration_list_struct_declaration_list_struct_declaration_t>(
+      struct_declaration_list_0_,
+      struct_declaration_1_
     );
   }
 

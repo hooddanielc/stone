@@ -34,7 +34,7 @@ public:
 
   static constexpr int rules = 7;
 
-  static constexpr int id = 212;
+  static constexpr int id = 213;
 
   virtual ~primary_expression_t() = default;
 
@@ -44,21 +44,25 @@ class primary_expression_variable_identifier_t: public primary_expression_t {
 
 public:
 
-  std::unique_ptr<variable_identifier_t> variable_identifier_0;
+  std::shared_ptr<variable_identifier_t> variable_identifier_0;
 
   primary_expression_variable_identifier_t(
-    std::unique_ptr<variable_identifier_t> &&variable_identifier_0_
-  ): variable_identifier_0(std::move(variable_identifier_0_)) {}
+    std::shared_ptr<variable_identifier_t> variable_identifier_0_
+  ): variable_identifier_0(variable_identifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<primary_expression_variable_identifier_t> make(
-    std::unique_ptr<variable_identifier_t> &&variable_identifier_0_
+  virtual int get_id() const override {
+    return 213;
+  }
+
+  static std::shared_ptr<primary_expression_variable_identifier_t> make(
+    std::shared_ptr<variable_identifier_t> variable_identifier_0_
   ) {
-    return std::make_unique<primary_expression_variable_identifier_t>(
-      std::move(variable_identifier_0_)
+    return std::make_shared<primary_expression_variable_identifier_t>(
+      variable_identifier_0_
     );
   }
 
@@ -68,21 +72,25 @@ class primary_expression_intconstant_t: public primary_expression_t {
 
 public:
 
-  std::unique_ptr<token_t> intconstant_0;
+  std::shared_ptr<ast_token_t> intconstant_0;
 
   primary_expression_intconstant_t(
-    std::unique_ptr<token_t> &&intconstant_0_
-  ): intconstant_0(std::move(intconstant_0_)) {}
+    std::shared_ptr<ast_token_t> intconstant_0_
+  ): intconstant_0(intconstant_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<primary_expression_intconstant_t> make(
-    const token_t *INTCONSTANT_0_
+  virtual int get_id() const override {
+    return 213;
+  }
+
+  static std::shared_ptr<primary_expression_intconstant_t> make(
+    std::shared_ptr<ast_token_t> INTCONSTANT_0_
   ) {
-    return std::make_unique<primary_expression_intconstant_t>(
-      std::make_unique<token_t>(*INTCONSTANT_0_)
+    return std::make_shared<primary_expression_intconstant_t>(
+      INTCONSTANT_0_
     );
   }
 
@@ -92,21 +100,25 @@ class primary_expression_uintconstant_t: public primary_expression_t {
 
 public:
 
-  std::unique_ptr<token_t> uintconstant_0;
+  std::shared_ptr<ast_token_t> uintconstant_0;
 
   primary_expression_uintconstant_t(
-    std::unique_ptr<token_t> &&uintconstant_0_
-  ): uintconstant_0(std::move(uintconstant_0_)) {}
+    std::shared_ptr<ast_token_t> uintconstant_0_
+  ): uintconstant_0(uintconstant_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<primary_expression_uintconstant_t> make(
-    const token_t *UINTCONSTANT_0_
+  virtual int get_id() const override {
+    return 213;
+  }
+
+  static std::shared_ptr<primary_expression_uintconstant_t> make(
+    std::shared_ptr<ast_token_t> UINTCONSTANT_0_
   ) {
-    return std::make_unique<primary_expression_uintconstant_t>(
-      std::make_unique<token_t>(*UINTCONSTANT_0_)
+    return std::make_shared<primary_expression_uintconstant_t>(
+      UINTCONSTANT_0_
     );
   }
 
@@ -116,21 +128,25 @@ class primary_expression_floatconstant_t: public primary_expression_t {
 
 public:
 
-  std::unique_ptr<token_t> floatconstant_0;
+  std::shared_ptr<ast_token_t> floatconstant_0;
 
   primary_expression_floatconstant_t(
-    std::unique_ptr<token_t> &&floatconstant_0_
-  ): floatconstant_0(std::move(floatconstant_0_)) {}
+    std::shared_ptr<ast_token_t> floatconstant_0_
+  ): floatconstant_0(floatconstant_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<primary_expression_floatconstant_t> make(
-    const token_t *FLOATCONSTANT_0_
+  virtual int get_id() const override {
+    return 213;
+  }
+
+  static std::shared_ptr<primary_expression_floatconstant_t> make(
+    std::shared_ptr<ast_token_t> FLOATCONSTANT_0_
   ) {
-    return std::make_unique<primary_expression_floatconstant_t>(
-      std::make_unique<token_t>(*FLOATCONSTANT_0_)
+    return std::make_shared<primary_expression_floatconstant_t>(
+      FLOATCONSTANT_0_
     );
   }
 
@@ -140,21 +156,25 @@ class primary_expression_boolconstant_t: public primary_expression_t {
 
 public:
 
-  std::unique_ptr<token_t> boolconstant_0;
+  std::shared_ptr<ast_token_t> boolconstant_0;
 
   primary_expression_boolconstant_t(
-    std::unique_ptr<token_t> &&boolconstant_0_
-  ): boolconstant_0(std::move(boolconstant_0_)) {}
+    std::shared_ptr<ast_token_t> boolconstant_0_
+  ): boolconstant_0(boolconstant_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<primary_expression_boolconstant_t> make(
-    const token_t *BOOLCONSTANT_0_
+  virtual int get_id() const override {
+    return 213;
+  }
+
+  static std::shared_ptr<primary_expression_boolconstant_t> make(
+    std::shared_ptr<ast_token_t> BOOLCONSTANT_0_
   ) {
-    return std::make_unique<primary_expression_boolconstant_t>(
-      std::make_unique<token_t>(*BOOLCONSTANT_0_)
+    return std::make_shared<primary_expression_boolconstant_t>(
+      BOOLCONSTANT_0_
     );
   }
 
@@ -164,21 +184,25 @@ class primary_expression_doubleconstant_t: public primary_expression_t {
 
 public:
 
-  std::unique_ptr<token_t> doubleconstant_0;
+  std::shared_ptr<ast_token_t> doubleconstant_0;
 
   primary_expression_doubleconstant_t(
-    std::unique_ptr<token_t> &&doubleconstant_0_
-  ): doubleconstant_0(std::move(doubleconstant_0_)) {}
+    std::shared_ptr<ast_token_t> doubleconstant_0_
+  ): doubleconstant_0(doubleconstant_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<primary_expression_doubleconstant_t> make(
-    const token_t *DOUBLECONSTANT_0_
+  virtual int get_id() const override {
+    return 213;
+  }
+
+  static std::shared_ptr<primary_expression_doubleconstant_t> make(
+    std::shared_ptr<ast_token_t> DOUBLECONSTANT_0_
   ) {
-    return std::make_unique<primary_expression_doubleconstant_t>(
-      std::make_unique<token_t>(*DOUBLECONSTANT_0_)
+    return std::make_shared<primary_expression_doubleconstant_t>(
+      DOUBLECONSTANT_0_
     );
   }
 
@@ -188,33 +212,37 @@ class primary_expression_left_paren_expression_right_paren_t: public primary_exp
 
 public:
 
-  std::unique_ptr<token_t> left_paren_0;
+  std::shared_ptr<ast_token_t> left_paren_0;
 
-  std::unique_ptr<expression_t> expression_1;
+  std::shared_ptr<expression_t> expression_1;
 
-  std::unique_ptr<token_t> right_paren_2;
+  std::shared_ptr<ast_token_t> right_paren_2;
 
   primary_expression_left_paren_expression_right_paren_t(
-    std::unique_ptr<token_t> &&left_paren_0_,
-    std::unique_ptr<expression_t> &&expression_1_,
-    std::unique_ptr<token_t> &&right_paren_2_
-  ): left_paren_0(std::move(left_paren_0_)),
-     expression_1(std::move(expression_1_)),
-     right_paren_2(std::move(right_paren_2_)) {}
+    std::shared_ptr<ast_token_t> left_paren_0_,
+    std::shared_ptr<expression_t> expression_1_,
+    std::shared_ptr<ast_token_t> right_paren_2_
+  ): left_paren_0(left_paren_0_),
+     expression_1(expression_1_),
+     right_paren_2(right_paren_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<primary_expression_left_paren_expression_right_paren_t> make(
-    const token_t *LEFT_PAREN_0_,
-    std::unique_ptr<expression_t> &&expression_1_,
-    const token_t *RIGHT_PAREN_2_
+  virtual int get_id() const override {
+    return 213;
+  }
+
+  static std::shared_ptr<primary_expression_left_paren_expression_right_paren_t> make(
+    std::shared_ptr<ast_token_t> LEFT_PAREN_0_,
+    std::shared_ptr<expression_t> expression_1_,
+    std::shared_ptr<ast_token_t> RIGHT_PAREN_2_
   ) {
-    return std::make_unique<primary_expression_left_paren_expression_right_paren_t>(
-      std::make_unique<token_t>(*LEFT_PAREN_0_),
-      std::move(expression_1_),
-      std::make_unique<token_t>(*RIGHT_PAREN_2_)
+    return std::make_shared<primary_expression_left_paren_expression_right_paren_t>(
+      LEFT_PAREN_0_,
+      expression_1_,
+      RIGHT_PAREN_2_
     );
   }
 

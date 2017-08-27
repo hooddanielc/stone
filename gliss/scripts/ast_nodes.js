@@ -2,8 +2,8 @@ const grammar = require('./grammar');
 const tokens = require('./tokens');
 const nice_token_names = require('./nice_token_names');
 
-let idx = 0;
-let importance = 0;
+let idx = 1;
+let importance = 1;
 const id_map = {};
 const group_ids = {};
 const terminal_symbols = [];
@@ -21,6 +21,7 @@ tokens.forEach((terminal) => {
     name: terminal,
     nice_name: nice_token_names[terminal],
     group_id: group_ids[terminal],
+    group_name: 'ast_token',
     rule_id: importance++,
     terminal: true,
     rule_def: [terminal],
@@ -115,10 +116,22 @@ reduced_symbols.forEach(({group_id, nice_name}) => {
   symbol_enum_values[nice_name] = group_id;
 });
 
+const symbols_by_group = () => {
+  const result = {};
+  const syms = Object.keys(id_map).map((key) => id_map[key]);
+  syms.forEach((sym) => {
+    result[sym.group_id] = result[sym.group_id] || {};
+    result[sym.group_id].group_name = sym.group_name;
+    result[sym.group_id].terminal = sym.terminal;
+  });
+  return result;
+}
+
 module.exports = {
   symbols: id_map,
   terminal_symbols: terminal_symbols,
   reduced_symbols: reduced_symbols,
   symbol_enum_values: symbol_enum_values,
-  symbol_to_reductions
+  symbol_to_reductions,
+  symbols_by_group: symbols_by_group()
 };

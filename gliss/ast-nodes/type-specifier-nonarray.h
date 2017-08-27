@@ -146,7 +146,7 @@ public:
 
   static constexpr int rules = 121;
 
-  static constexpr int id = 264;
+  static constexpr int id = 265;
 
   virtual ~type_specifier_nonarray_t() = default;
 
@@ -156,21 +156,25 @@ class type_specifier_nonarray_void_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> void_0;
+  std::shared_ptr<ast_token_t> void_0;
 
   type_specifier_nonarray_void_t(
-    std::unique_ptr<token_t> &&void_0_
-  ): void_0(std::move(void_0_)) {}
+    std::shared_ptr<ast_token_t> void_0_
+  ): void_0(void_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_void_t> make(
-    const token_t *VOID_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_void_t> make(
+    std::shared_ptr<ast_token_t> VOID_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_void_t>(
-      std::make_unique<token_t>(*VOID_0_)
+    return std::make_shared<type_specifier_nonarray_void_t>(
+      VOID_0_
     );
   }
 
@@ -180,21 +184,25 @@ class type_specifier_nonarray_float_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> float_0;
+  std::shared_ptr<ast_token_t> float_0;
 
   type_specifier_nonarray_float_t(
-    std::unique_ptr<token_t> &&float_0_
-  ): float_0(std::move(float_0_)) {}
+    std::shared_ptr<ast_token_t> float_0_
+  ): float_0(float_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_float_t> make(
-    const token_t *FLOAT_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_float_t> make(
+    std::shared_ptr<ast_token_t> FLOAT_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_float_t>(
-      std::make_unique<token_t>(*FLOAT_0_)
+    return std::make_shared<type_specifier_nonarray_float_t>(
+      FLOAT_0_
     );
   }
 
@@ -204,21 +212,25 @@ class type_specifier_nonarray_double_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> double_0;
+  std::shared_ptr<ast_token_t> double_0;
 
   type_specifier_nonarray_double_t(
-    std::unique_ptr<token_t> &&double_0_
-  ): double_0(std::move(double_0_)) {}
+    std::shared_ptr<ast_token_t> double_0_
+  ): double_0(double_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_double_t> make(
-    const token_t *DOUBLE_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_double_t> make(
+    std::shared_ptr<ast_token_t> DOUBLE_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_double_t>(
-      std::make_unique<token_t>(*DOUBLE_0_)
+    return std::make_shared<type_specifier_nonarray_double_t>(
+      DOUBLE_0_
     );
   }
 
@@ -228,21 +240,25 @@ class type_specifier_nonarray_int_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> int_0;
+  std::shared_ptr<ast_token_t> int_0;
 
   type_specifier_nonarray_int_t(
-    std::unique_ptr<token_t> &&int_0_
-  ): int_0(std::move(int_0_)) {}
+    std::shared_ptr<ast_token_t> int_0_
+  ): int_0(int_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_int_t> make(
-    const token_t *INT_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_int_t> make(
+    std::shared_ptr<ast_token_t> INT_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_int_t>(
-      std::make_unique<token_t>(*INT_0_)
+    return std::make_shared<type_specifier_nonarray_int_t>(
+      INT_0_
     );
   }
 
@@ -252,21 +268,25 @@ class type_specifier_nonarray_uint_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> uint_0;
+  std::shared_ptr<ast_token_t> uint_0;
 
   type_specifier_nonarray_uint_t(
-    std::unique_ptr<token_t> &&uint_0_
-  ): uint_0(std::move(uint_0_)) {}
+    std::shared_ptr<ast_token_t> uint_0_
+  ): uint_0(uint_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uint_t> make(
-    const token_t *UINT_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uint_t> make(
+    std::shared_ptr<ast_token_t> UINT_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uint_t>(
-      std::make_unique<token_t>(*UINT_0_)
+    return std::make_shared<type_specifier_nonarray_uint_t>(
+      UINT_0_
     );
   }
 
@@ -276,21 +296,25 @@ class type_specifier_nonarray_bool_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> bool_0;
+  std::shared_ptr<ast_token_t> bool_0;
 
   type_specifier_nonarray_bool_t(
-    std::unique_ptr<token_t> &&bool_0_
-  ): bool_0(std::move(bool_0_)) {}
+    std::shared_ptr<ast_token_t> bool_0_
+  ): bool_0(bool_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_bool_t> make(
-    const token_t *BOOL_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_bool_t> make(
+    std::shared_ptr<ast_token_t> BOOL_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_bool_t>(
-      std::make_unique<token_t>(*BOOL_0_)
+    return std::make_shared<type_specifier_nonarray_bool_t>(
+      BOOL_0_
     );
   }
 
@@ -300,21 +324,25 @@ class type_specifier_nonarray_vec2_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> vec2_0;
+  std::shared_ptr<ast_token_t> vec2_0;
 
   type_specifier_nonarray_vec2_t(
-    std::unique_ptr<token_t> &&vec2_0_
-  ): vec2_0(std::move(vec2_0_)) {}
+    std::shared_ptr<ast_token_t> vec2_0_
+  ): vec2_0(vec2_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_vec2_t> make(
-    const token_t *VEC2_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_vec2_t> make(
+    std::shared_ptr<ast_token_t> VEC2_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_vec2_t>(
-      std::make_unique<token_t>(*VEC2_0_)
+    return std::make_shared<type_specifier_nonarray_vec2_t>(
+      VEC2_0_
     );
   }
 
@@ -324,21 +352,25 @@ class type_specifier_nonarray_vec3_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> vec3_0;
+  std::shared_ptr<ast_token_t> vec3_0;
 
   type_specifier_nonarray_vec3_t(
-    std::unique_ptr<token_t> &&vec3_0_
-  ): vec3_0(std::move(vec3_0_)) {}
+    std::shared_ptr<ast_token_t> vec3_0_
+  ): vec3_0(vec3_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_vec3_t> make(
-    const token_t *VEC3_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_vec3_t> make(
+    std::shared_ptr<ast_token_t> VEC3_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_vec3_t>(
-      std::make_unique<token_t>(*VEC3_0_)
+    return std::make_shared<type_specifier_nonarray_vec3_t>(
+      VEC3_0_
     );
   }
 
@@ -348,21 +380,25 @@ class type_specifier_nonarray_vec4_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> vec4_0;
+  std::shared_ptr<ast_token_t> vec4_0;
 
   type_specifier_nonarray_vec4_t(
-    std::unique_ptr<token_t> &&vec4_0_
-  ): vec4_0(std::move(vec4_0_)) {}
+    std::shared_ptr<ast_token_t> vec4_0_
+  ): vec4_0(vec4_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_vec4_t> make(
-    const token_t *VEC4_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_vec4_t> make(
+    std::shared_ptr<ast_token_t> VEC4_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_vec4_t>(
-      std::make_unique<token_t>(*VEC4_0_)
+    return std::make_shared<type_specifier_nonarray_vec4_t>(
+      VEC4_0_
     );
   }
 
@@ -372,21 +408,25 @@ class type_specifier_nonarray_dvec2_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dvec2_0;
+  std::shared_ptr<ast_token_t> dvec2_0;
 
   type_specifier_nonarray_dvec2_t(
-    std::unique_ptr<token_t> &&dvec2_0_
-  ): dvec2_0(std::move(dvec2_0_)) {}
+    std::shared_ptr<ast_token_t> dvec2_0_
+  ): dvec2_0(dvec2_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dvec2_t> make(
-    const token_t *DVEC2_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dvec2_t> make(
+    std::shared_ptr<ast_token_t> DVEC2_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dvec2_t>(
-      std::make_unique<token_t>(*DVEC2_0_)
+    return std::make_shared<type_specifier_nonarray_dvec2_t>(
+      DVEC2_0_
     );
   }
 
@@ -396,21 +436,25 @@ class type_specifier_nonarray_dvec3_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dvec3_0;
+  std::shared_ptr<ast_token_t> dvec3_0;
 
   type_specifier_nonarray_dvec3_t(
-    std::unique_ptr<token_t> &&dvec3_0_
-  ): dvec3_0(std::move(dvec3_0_)) {}
+    std::shared_ptr<ast_token_t> dvec3_0_
+  ): dvec3_0(dvec3_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dvec3_t> make(
-    const token_t *DVEC3_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dvec3_t> make(
+    std::shared_ptr<ast_token_t> DVEC3_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dvec3_t>(
-      std::make_unique<token_t>(*DVEC3_0_)
+    return std::make_shared<type_specifier_nonarray_dvec3_t>(
+      DVEC3_0_
     );
   }
 
@@ -420,21 +464,25 @@ class type_specifier_nonarray_dvec4_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dvec4_0;
+  std::shared_ptr<ast_token_t> dvec4_0;
 
   type_specifier_nonarray_dvec4_t(
-    std::unique_ptr<token_t> &&dvec4_0_
-  ): dvec4_0(std::move(dvec4_0_)) {}
+    std::shared_ptr<ast_token_t> dvec4_0_
+  ): dvec4_0(dvec4_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dvec4_t> make(
-    const token_t *DVEC4_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dvec4_t> make(
+    std::shared_ptr<ast_token_t> DVEC4_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dvec4_t>(
-      std::make_unique<token_t>(*DVEC4_0_)
+    return std::make_shared<type_specifier_nonarray_dvec4_t>(
+      DVEC4_0_
     );
   }
 
@@ -444,21 +492,25 @@ class type_specifier_nonarray_bvec2_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> bvec2_0;
+  std::shared_ptr<ast_token_t> bvec2_0;
 
   type_specifier_nonarray_bvec2_t(
-    std::unique_ptr<token_t> &&bvec2_0_
-  ): bvec2_0(std::move(bvec2_0_)) {}
+    std::shared_ptr<ast_token_t> bvec2_0_
+  ): bvec2_0(bvec2_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_bvec2_t> make(
-    const token_t *BVEC2_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_bvec2_t> make(
+    std::shared_ptr<ast_token_t> BVEC2_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_bvec2_t>(
-      std::make_unique<token_t>(*BVEC2_0_)
+    return std::make_shared<type_specifier_nonarray_bvec2_t>(
+      BVEC2_0_
     );
   }
 
@@ -468,21 +520,25 @@ class type_specifier_nonarray_bvec3_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> bvec3_0;
+  std::shared_ptr<ast_token_t> bvec3_0;
 
   type_specifier_nonarray_bvec3_t(
-    std::unique_ptr<token_t> &&bvec3_0_
-  ): bvec3_0(std::move(bvec3_0_)) {}
+    std::shared_ptr<ast_token_t> bvec3_0_
+  ): bvec3_0(bvec3_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_bvec3_t> make(
-    const token_t *BVEC3_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_bvec3_t> make(
+    std::shared_ptr<ast_token_t> BVEC3_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_bvec3_t>(
-      std::make_unique<token_t>(*BVEC3_0_)
+    return std::make_shared<type_specifier_nonarray_bvec3_t>(
+      BVEC3_0_
     );
   }
 
@@ -492,21 +548,25 @@ class type_specifier_nonarray_bvec4_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> bvec4_0;
+  std::shared_ptr<ast_token_t> bvec4_0;
 
   type_specifier_nonarray_bvec4_t(
-    std::unique_ptr<token_t> &&bvec4_0_
-  ): bvec4_0(std::move(bvec4_0_)) {}
+    std::shared_ptr<ast_token_t> bvec4_0_
+  ): bvec4_0(bvec4_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_bvec4_t> make(
-    const token_t *BVEC4_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_bvec4_t> make(
+    std::shared_ptr<ast_token_t> BVEC4_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_bvec4_t>(
-      std::make_unique<token_t>(*BVEC4_0_)
+    return std::make_shared<type_specifier_nonarray_bvec4_t>(
+      BVEC4_0_
     );
   }
 
@@ -516,21 +576,25 @@ class type_specifier_nonarray_ivec2_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> ivec2_0;
+  std::shared_ptr<ast_token_t> ivec2_0;
 
   type_specifier_nonarray_ivec2_t(
-    std::unique_ptr<token_t> &&ivec2_0_
-  ): ivec2_0(std::move(ivec2_0_)) {}
+    std::shared_ptr<ast_token_t> ivec2_0_
+  ): ivec2_0(ivec2_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_ivec2_t> make(
-    const token_t *IVEC2_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_ivec2_t> make(
+    std::shared_ptr<ast_token_t> IVEC2_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_ivec2_t>(
-      std::make_unique<token_t>(*IVEC2_0_)
+    return std::make_shared<type_specifier_nonarray_ivec2_t>(
+      IVEC2_0_
     );
   }
 
@@ -540,21 +604,25 @@ class type_specifier_nonarray_ivec3_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> ivec3_0;
+  std::shared_ptr<ast_token_t> ivec3_0;
 
   type_specifier_nonarray_ivec3_t(
-    std::unique_ptr<token_t> &&ivec3_0_
-  ): ivec3_0(std::move(ivec3_0_)) {}
+    std::shared_ptr<ast_token_t> ivec3_0_
+  ): ivec3_0(ivec3_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_ivec3_t> make(
-    const token_t *IVEC3_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_ivec3_t> make(
+    std::shared_ptr<ast_token_t> IVEC3_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_ivec3_t>(
-      std::make_unique<token_t>(*IVEC3_0_)
+    return std::make_shared<type_specifier_nonarray_ivec3_t>(
+      IVEC3_0_
     );
   }
 
@@ -564,21 +632,25 @@ class type_specifier_nonarray_ivec4_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> ivec4_0;
+  std::shared_ptr<ast_token_t> ivec4_0;
 
   type_specifier_nonarray_ivec4_t(
-    std::unique_ptr<token_t> &&ivec4_0_
-  ): ivec4_0(std::move(ivec4_0_)) {}
+    std::shared_ptr<ast_token_t> ivec4_0_
+  ): ivec4_0(ivec4_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_ivec4_t> make(
-    const token_t *IVEC4_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_ivec4_t> make(
+    std::shared_ptr<ast_token_t> IVEC4_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_ivec4_t>(
-      std::make_unique<token_t>(*IVEC4_0_)
+    return std::make_shared<type_specifier_nonarray_ivec4_t>(
+      IVEC4_0_
     );
   }
 
@@ -588,21 +660,25 @@ class type_specifier_nonarray_uvec2_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> uvec2_0;
+  std::shared_ptr<ast_token_t> uvec2_0;
 
   type_specifier_nonarray_uvec2_t(
-    std::unique_ptr<token_t> &&uvec2_0_
-  ): uvec2_0(std::move(uvec2_0_)) {}
+    std::shared_ptr<ast_token_t> uvec2_0_
+  ): uvec2_0(uvec2_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uvec2_t> make(
-    const token_t *UVEC2_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uvec2_t> make(
+    std::shared_ptr<ast_token_t> UVEC2_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uvec2_t>(
-      std::make_unique<token_t>(*UVEC2_0_)
+    return std::make_shared<type_specifier_nonarray_uvec2_t>(
+      UVEC2_0_
     );
   }
 
@@ -612,21 +688,25 @@ class type_specifier_nonarray_uvec3_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> uvec3_0;
+  std::shared_ptr<ast_token_t> uvec3_0;
 
   type_specifier_nonarray_uvec3_t(
-    std::unique_ptr<token_t> &&uvec3_0_
-  ): uvec3_0(std::move(uvec3_0_)) {}
+    std::shared_ptr<ast_token_t> uvec3_0_
+  ): uvec3_0(uvec3_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uvec3_t> make(
-    const token_t *UVEC3_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uvec3_t> make(
+    std::shared_ptr<ast_token_t> UVEC3_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uvec3_t>(
-      std::make_unique<token_t>(*UVEC3_0_)
+    return std::make_shared<type_specifier_nonarray_uvec3_t>(
+      UVEC3_0_
     );
   }
 
@@ -636,21 +716,25 @@ class type_specifier_nonarray_uvec4_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> uvec4_0;
+  std::shared_ptr<ast_token_t> uvec4_0;
 
   type_specifier_nonarray_uvec4_t(
-    std::unique_ptr<token_t> &&uvec4_0_
-  ): uvec4_0(std::move(uvec4_0_)) {}
+    std::shared_ptr<ast_token_t> uvec4_0_
+  ): uvec4_0(uvec4_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uvec4_t> make(
-    const token_t *UVEC4_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uvec4_t> make(
+    std::shared_ptr<ast_token_t> UVEC4_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uvec4_t>(
-      std::make_unique<token_t>(*UVEC4_0_)
+    return std::make_shared<type_specifier_nonarray_uvec4_t>(
+      UVEC4_0_
     );
   }
 
@@ -660,21 +744,25 @@ class type_specifier_nonarray_mat2_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> mat2_0;
+  std::shared_ptr<ast_token_t> mat2_0;
 
   type_specifier_nonarray_mat2_t(
-    std::unique_ptr<token_t> &&mat2_0_
-  ): mat2_0(std::move(mat2_0_)) {}
+    std::shared_ptr<ast_token_t> mat2_0_
+  ): mat2_0(mat2_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_mat2_t> make(
-    const token_t *MAT2_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_mat2_t> make(
+    std::shared_ptr<ast_token_t> MAT2_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_mat2_t>(
-      std::make_unique<token_t>(*MAT2_0_)
+    return std::make_shared<type_specifier_nonarray_mat2_t>(
+      MAT2_0_
     );
   }
 
@@ -684,21 +772,25 @@ class type_specifier_nonarray_mat3_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> mat3_0;
+  std::shared_ptr<ast_token_t> mat3_0;
 
   type_specifier_nonarray_mat3_t(
-    std::unique_ptr<token_t> &&mat3_0_
-  ): mat3_0(std::move(mat3_0_)) {}
+    std::shared_ptr<ast_token_t> mat3_0_
+  ): mat3_0(mat3_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_mat3_t> make(
-    const token_t *MAT3_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_mat3_t> make(
+    std::shared_ptr<ast_token_t> MAT3_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_mat3_t>(
-      std::make_unique<token_t>(*MAT3_0_)
+    return std::make_shared<type_specifier_nonarray_mat3_t>(
+      MAT3_0_
     );
   }
 
@@ -708,21 +800,25 @@ class type_specifier_nonarray_mat4_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> mat4_0;
+  std::shared_ptr<ast_token_t> mat4_0;
 
   type_specifier_nonarray_mat4_t(
-    std::unique_ptr<token_t> &&mat4_0_
-  ): mat4_0(std::move(mat4_0_)) {}
+    std::shared_ptr<ast_token_t> mat4_0_
+  ): mat4_0(mat4_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_mat4_t> make(
-    const token_t *MAT4_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_mat4_t> make(
+    std::shared_ptr<ast_token_t> MAT4_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_mat4_t>(
-      std::make_unique<token_t>(*MAT4_0_)
+    return std::make_shared<type_specifier_nonarray_mat4_t>(
+      MAT4_0_
     );
   }
 
@@ -732,21 +828,25 @@ class type_specifier_nonarray_mat2x2_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> mat2x2_0;
+  std::shared_ptr<ast_token_t> mat2x2_0;
 
   type_specifier_nonarray_mat2x2_t(
-    std::unique_ptr<token_t> &&mat2x2_0_
-  ): mat2x2_0(std::move(mat2x2_0_)) {}
+    std::shared_ptr<ast_token_t> mat2x2_0_
+  ): mat2x2_0(mat2x2_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_mat2x2_t> make(
-    const token_t *MAT2X2_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_mat2x2_t> make(
+    std::shared_ptr<ast_token_t> MAT2X2_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_mat2x2_t>(
-      std::make_unique<token_t>(*MAT2X2_0_)
+    return std::make_shared<type_specifier_nonarray_mat2x2_t>(
+      MAT2X2_0_
     );
   }
 
@@ -756,21 +856,25 @@ class type_specifier_nonarray_mat2x3_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> mat2x3_0;
+  std::shared_ptr<ast_token_t> mat2x3_0;
 
   type_specifier_nonarray_mat2x3_t(
-    std::unique_ptr<token_t> &&mat2x3_0_
-  ): mat2x3_0(std::move(mat2x3_0_)) {}
+    std::shared_ptr<ast_token_t> mat2x3_0_
+  ): mat2x3_0(mat2x3_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_mat2x3_t> make(
-    const token_t *MAT2X3_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_mat2x3_t> make(
+    std::shared_ptr<ast_token_t> MAT2X3_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_mat2x3_t>(
-      std::make_unique<token_t>(*MAT2X3_0_)
+    return std::make_shared<type_specifier_nonarray_mat2x3_t>(
+      MAT2X3_0_
     );
   }
 
@@ -780,21 +884,25 @@ class type_specifier_nonarray_mat2x4_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> mat2x4_0;
+  std::shared_ptr<ast_token_t> mat2x4_0;
 
   type_specifier_nonarray_mat2x4_t(
-    std::unique_ptr<token_t> &&mat2x4_0_
-  ): mat2x4_0(std::move(mat2x4_0_)) {}
+    std::shared_ptr<ast_token_t> mat2x4_0_
+  ): mat2x4_0(mat2x4_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_mat2x4_t> make(
-    const token_t *MAT2X4_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_mat2x4_t> make(
+    std::shared_ptr<ast_token_t> MAT2X4_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_mat2x4_t>(
-      std::make_unique<token_t>(*MAT2X4_0_)
+    return std::make_shared<type_specifier_nonarray_mat2x4_t>(
+      MAT2X4_0_
     );
   }
 
@@ -804,21 +912,25 @@ class type_specifier_nonarray_mat3x2_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> mat3x2_0;
+  std::shared_ptr<ast_token_t> mat3x2_0;
 
   type_specifier_nonarray_mat3x2_t(
-    std::unique_ptr<token_t> &&mat3x2_0_
-  ): mat3x2_0(std::move(mat3x2_0_)) {}
+    std::shared_ptr<ast_token_t> mat3x2_0_
+  ): mat3x2_0(mat3x2_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_mat3x2_t> make(
-    const token_t *MAT3X2_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_mat3x2_t> make(
+    std::shared_ptr<ast_token_t> MAT3X2_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_mat3x2_t>(
-      std::make_unique<token_t>(*MAT3X2_0_)
+    return std::make_shared<type_specifier_nonarray_mat3x2_t>(
+      MAT3X2_0_
     );
   }
 
@@ -828,21 +940,25 @@ class type_specifier_nonarray_mat3x3_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> mat3x3_0;
+  std::shared_ptr<ast_token_t> mat3x3_0;
 
   type_specifier_nonarray_mat3x3_t(
-    std::unique_ptr<token_t> &&mat3x3_0_
-  ): mat3x3_0(std::move(mat3x3_0_)) {}
+    std::shared_ptr<ast_token_t> mat3x3_0_
+  ): mat3x3_0(mat3x3_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_mat3x3_t> make(
-    const token_t *MAT3X3_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_mat3x3_t> make(
+    std::shared_ptr<ast_token_t> MAT3X3_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_mat3x3_t>(
-      std::make_unique<token_t>(*MAT3X3_0_)
+    return std::make_shared<type_specifier_nonarray_mat3x3_t>(
+      MAT3X3_0_
     );
   }
 
@@ -852,21 +968,25 @@ class type_specifier_nonarray_mat3x4_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> mat3x4_0;
+  std::shared_ptr<ast_token_t> mat3x4_0;
 
   type_specifier_nonarray_mat3x4_t(
-    std::unique_ptr<token_t> &&mat3x4_0_
-  ): mat3x4_0(std::move(mat3x4_0_)) {}
+    std::shared_ptr<ast_token_t> mat3x4_0_
+  ): mat3x4_0(mat3x4_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_mat3x4_t> make(
-    const token_t *MAT3X4_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_mat3x4_t> make(
+    std::shared_ptr<ast_token_t> MAT3X4_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_mat3x4_t>(
-      std::make_unique<token_t>(*MAT3X4_0_)
+    return std::make_shared<type_specifier_nonarray_mat3x4_t>(
+      MAT3X4_0_
     );
   }
 
@@ -876,21 +996,25 @@ class type_specifier_nonarray_mat4x2_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> mat4x2_0;
+  std::shared_ptr<ast_token_t> mat4x2_0;
 
   type_specifier_nonarray_mat4x2_t(
-    std::unique_ptr<token_t> &&mat4x2_0_
-  ): mat4x2_0(std::move(mat4x2_0_)) {}
+    std::shared_ptr<ast_token_t> mat4x2_0_
+  ): mat4x2_0(mat4x2_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_mat4x2_t> make(
-    const token_t *MAT4X2_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_mat4x2_t> make(
+    std::shared_ptr<ast_token_t> MAT4X2_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_mat4x2_t>(
-      std::make_unique<token_t>(*MAT4X2_0_)
+    return std::make_shared<type_specifier_nonarray_mat4x2_t>(
+      MAT4X2_0_
     );
   }
 
@@ -900,21 +1024,25 @@ class type_specifier_nonarray_mat4x3_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> mat4x3_0;
+  std::shared_ptr<ast_token_t> mat4x3_0;
 
   type_specifier_nonarray_mat4x3_t(
-    std::unique_ptr<token_t> &&mat4x3_0_
-  ): mat4x3_0(std::move(mat4x3_0_)) {}
+    std::shared_ptr<ast_token_t> mat4x3_0_
+  ): mat4x3_0(mat4x3_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_mat4x3_t> make(
-    const token_t *MAT4X3_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_mat4x3_t> make(
+    std::shared_ptr<ast_token_t> MAT4X3_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_mat4x3_t>(
-      std::make_unique<token_t>(*MAT4X3_0_)
+    return std::make_shared<type_specifier_nonarray_mat4x3_t>(
+      MAT4X3_0_
     );
   }
 
@@ -924,21 +1052,25 @@ class type_specifier_nonarray_mat4x4_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> mat4x4_0;
+  std::shared_ptr<ast_token_t> mat4x4_0;
 
   type_specifier_nonarray_mat4x4_t(
-    std::unique_ptr<token_t> &&mat4x4_0_
-  ): mat4x4_0(std::move(mat4x4_0_)) {}
+    std::shared_ptr<ast_token_t> mat4x4_0_
+  ): mat4x4_0(mat4x4_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_mat4x4_t> make(
-    const token_t *MAT4X4_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_mat4x4_t> make(
+    std::shared_ptr<ast_token_t> MAT4X4_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_mat4x4_t>(
-      std::make_unique<token_t>(*MAT4X4_0_)
+    return std::make_shared<type_specifier_nonarray_mat4x4_t>(
+      MAT4X4_0_
     );
   }
 
@@ -948,21 +1080,25 @@ class type_specifier_nonarray_dmat2_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dmat2_0;
+  std::shared_ptr<ast_token_t> dmat2_0;
 
   type_specifier_nonarray_dmat2_t(
-    std::unique_ptr<token_t> &&dmat2_0_
-  ): dmat2_0(std::move(dmat2_0_)) {}
+    std::shared_ptr<ast_token_t> dmat2_0_
+  ): dmat2_0(dmat2_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dmat2_t> make(
-    const token_t *DMAT2_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dmat2_t> make(
+    std::shared_ptr<ast_token_t> DMAT2_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dmat2_t>(
-      std::make_unique<token_t>(*DMAT2_0_)
+    return std::make_shared<type_specifier_nonarray_dmat2_t>(
+      DMAT2_0_
     );
   }
 
@@ -972,21 +1108,25 @@ class type_specifier_nonarray_dmat3_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dmat3_0;
+  std::shared_ptr<ast_token_t> dmat3_0;
 
   type_specifier_nonarray_dmat3_t(
-    std::unique_ptr<token_t> &&dmat3_0_
-  ): dmat3_0(std::move(dmat3_0_)) {}
+    std::shared_ptr<ast_token_t> dmat3_0_
+  ): dmat3_0(dmat3_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dmat3_t> make(
-    const token_t *DMAT3_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dmat3_t> make(
+    std::shared_ptr<ast_token_t> DMAT3_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dmat3_t>(
-      std::make_unique<token_t>(*DMAT3_0_)
+    return std::make_shared<type_specifier_nonarray_dmat3_t>(
+      DMAT3_0_
     );
   }
 
@@ -996,21 +1136,25 @@ class type_specifier_nonarray_dmat4_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dmat4_0;
+  std::shared_ptr<ast_token_t> dmat4_0;
 
   type_specifier_nonarray_dmat4_t(
-    std::unique_ptr<token_t> &&dmat4_0_
-  ): dmat4_0(std::move(dmat4_0_)) {}
+    std::shared_ptr<ast_token_t> dmat4_0_
+  ): dmat4_0(dmat4_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dmat4_t> make(
-    const token_t *DMAT4_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dmat4_t> make(
+    std::shared_ptr<ast_token_t> DMAT4_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dmat4_t>(
-      std::make_unique<token_t>(*DMAT4_0_)
+    return std::make_shared<type_specifier_nonarray_dmat4_t>(
+      DMAT4_0_
     );
   }
 
@@ -1020,21 +1164,25 @@ class type_specifier_nonarray_dmat2x2_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dmat2x2_0;
+  std::shared_ptr<ast_token_t> dmat2x2_0;
 
   type_specifier_nonarray_dmat2x2_t(
-    std::unique_ptr<token_t> &&dmat2x2_0_
-  ): dmat2x2_0(std::move(dmat2x2_0_)) {}
+    std::shared_ptr<ast_token_t> dmat2x2_0_
+  ): dmat2x2_0(dmat2x2_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dmat2x2_t> make(
-    const token_t *DMAT2X2_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dmat2x2_t> make(
+    std::shared_ptr<ast_token_t> DMAT2X2_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dmat2x2_t>(
-      std::make_unique<token_t>(*DMAT2X2_0_)
+    return std::make_shared<type_specifier_nonarray_dmat2x2_t>(
+      DMAT2X2_0_
     );
   }
 
@@ -1044,21 +1192,25 @@ class type_specifier_nonarray_dmat2x3_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dmat2x3_0;
+  std::shared_ptr<ast_token_t> dmat2x3_0;
 
   type_specifier_nonarray_dmat2x3_t(
-    std::unique_ptr<token_t> &&dmat2x3_0_
-  ): dmat2x3_0(std::move(dmat2x3_0_)) {}
+    std::shared_ptr<ast_token_t> dmat2x3_0_
+  ): dmat2x3_0(dmat2x3_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dmat2x3_t> make(
-    const token_t *DMAT2X3_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dmat2x3_t> make(
+    std::shared_ptr<ast_token_t> DMAT2X3_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dmat2x3_t>(
-      std::make_unique<token_t>(*DMAT2X3_0_)
+    return std::make_shared<type_specifier_nonarray_dmat2x3_t>(
+      DMAT2X3_0_
     );
   }
 
@@ -1068,21 +1220,25 @@ class type_specifier_nonarray_dmat2x4_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dmat2x4_0;
+  std::shared_ptr<ast_token_t> dmat2x4_0;
 
   type_specifier_nonarray_dmat2x4_t(
-    std::unique_ptr<token_t> &&dmat2x4_0_
-  ): dmat2x4_0(std::move(dmat2x4_0_)) {}
+    std::shared_ptr<ast_token_t> dmat2x4_0_
+  ): dmat2x4_0(dmat2x4_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dmat2x4_t> make(
-    const token_t *DMAT2X4_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dmat2x4_t> make(
+    std::shared_ptr<ast_token_t> DMAT2X4_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dmat2x4_t>(
-      std::make_unique<token_t>(*DMAT2X4_0_)
+    return std::make_shared<type_specifier_nonarray_dmat2x4_t>(
+      DMAT2X4_0_
     );
   }
 
@@ -1092,21 +1248,25 @@ class type_specifier_nonarray_dmat3x2_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dmat3x2_0;
+  std::shared_ptr<ast_token_t> dmat3x2_0;
 
   type_specifier_nonarray_dmat3x2_t(
-    std::unique_ptr<token_t> &&dmat3x2_0_
-  ): dmat3x2_0(std::move(dmat3x2_0_)) {}
+    std::shared_ptr<ast_token_t> dmat3x2_0_
+  ): dmat3x2_0(dmat3x2_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dmat3x2_t> make(
-    const token_t *DMAT3X2_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dmat3x2_t> make(
+    std::shared_ptr<ast_token_t> DMAT3X2_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dmat3x2_t>(
-      std::make_unique<token_t>(*DMAT3X2_0_)
+    return std::make_shared<type_specifier_nonarray_dmat3x2_t>(
+      DMAT3X2_0_
     );
   }
 
@@ -1116,21 +1276,25 @@ class type_specifier_nonarray_dmat3x3_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dmat3x3_0;
+  std::shared_ptr<ast_token_t> dmat3x3_0;
 
   type_specifier_nonarray_dmat3x3_t(
-    std::unique_ptr<token_t> &&dmat3x3_0_
-  ): dmat3x3_0(std::move(dmat3x3_0_)) {}
+    std::shared_ptr<ast_token_t> dmat3x3_0_
+  ): dmat3x3_0(dmat3x3_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dmat3x3_t> make(
-    const token_t *DMAT3X3_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dmat3x3_t> make(
+    std::shared_ptr<ast_token_t> DMAT3X3_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dmat3x3_t>(
-      std::make_unique<token_t>(*DMAT3X3_0_)
+    return std::make_shared<type_specifier_nonarray_dmat3x3_t>(
+      DMAT3X3_0_
     );
   }
 
@@ -1140,21 +1304,25 @@ class type_specifier_nonarray_dmat3x4_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dmat3x4_0;
+  std::shared_ptr<ast_token_t> dmat3x4_0;
 
   type_specifier_nonarray_dmat3x4_t(
-    std::unique_ptr<token_t> &&dmat3x4_0_
-  ): dmat3x4_0(std::move(dmat3x4_0_)) {}
+    std::shared_ptr<ast_token_t> dmat3x4_0_
+  ): dmat3x4_0(dmat3x4_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dmat3x4_t> make(
-    const token_t *DMAT3X4_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dmat3x4_t> make(
+    std::shared_ptr<ast_token_t> DMAT3X4_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dmat3x4_t>(
-      std::make_unique<token_t>(*DMAT3X4_0_)
+    return std::make_shared<type_specifier_nonarray_dmat3x4_t>(
+      DMAT3X4_0_
     );
   }
 
@@ -1164,21 +1332,25 @@ class type_specifier_nonarray_dmat4x2_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dmat4x2_0;
+  std::shared_ptr<ast_token_t> dmat4x2_0;
 
   type_specifier_nonarray_dmat4x2_t(
-    std::unique_ptr<token_t> &&dmat4x2_0_
-  ): dmat4x2_0(std::move(dmat4x2_0_)) {}
+    std::shared_ptr<ast_token_t> dmat4x2_0_
+  ): dmat4x2_0(dmat4x2_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dmat4x2_t> make(
-    const token_t *DMAT4X2_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dmat4x2_t> make(
+    std::shared_ptr<ast_token_t> DMAT4X2_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dmat4x2_t>(
-      std::make_unique<token_t>(*DMAT4X2_0_)
+    return std::make_shared<type_specifier_nonarray_dmat4x2_t>(
+      DMAT4X2_0_
     );
   }
 
@@ -1188,21 +1360,25 @@ class type_specifier_nonarray_dmat4x3_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dmat4x3_0;
+  std::shared_ptr<ast_token_t> dmat4x3_0;
 
   type_specifier_nonarray_dmat4x3_t(
-    std::unique_ptr<token_t> &&dmat4x3_0_
-  ): dmat4x3_0(std::move(dmat4x3_0_)) {}
+    std::shared_ptr<ast_token_t> dmat4x3_0_
+  ): dmat4x3_0(dmat4x3_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dmat4x3_t> make(
-    const token_t *DMAT4X3_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dmat4x3_t> make(
+    std::shared_ptr<ast_token_t> DMAT4X3_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dmat4x3_t>(
-      std::make_unique<token_t>(*DMAT4X3_0_)
+    return std::make_shared<type_specifier_nonarray_dmat4x3_t>(
+      DMAT4X3_0_
     );
   }
 
@@ -1212,21 +1388,25 @@ class type_specifier_nonarray_dmat4x4_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> dmat4x4_0;
+  std::shared_ptr<ast_token_t> dmat4x4_0;
 
   type_specifier_nonarray_dmat4x4_t(
-    std::unique_ptr<token_t> &&dmat4x4_0_
-  ): dmat4x4_0(std::move(dmat4x4_0_)) {}
+    std::shared_ptr<ast_token_t> dmat4x4_0_
+  ): dmat4x4_0(dmat4x4_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_dmat4x4_t> make(
-    const token_t *DMAT4X4_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_dmat4x4_t> make(
+    std::shared_ptr<ast_token_t> DMAT4X4_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_dmat4x4_t>(
-      std::make_unique<token_t>(*DMAT4X4_0_)
+    return std::make_shared<type_specifier_nonarray_dmat4x4_t>(
+      DMAT4X4_0_
     );
   }
 
@@ -1236,21 +1416,25 @@ class type_specifier_nonarray_atomic_uint_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> atomic_uint_0;
+  std::shared_ptr<ast_token_t> atomic_uint_0;
 
   type_specifier_nonarray_atomic_uint_t(
-    std::unique_ptr<token_t> &&atomic_uint_0_
-  ): atomic_uint_0(std::move(atomic_uint_0_)) {}
+    std::shared_ptr<ast_token_t> atomic_uint_0_
+  ): atomic_uint_0(atomic_uint_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_atomic_uint_t> make(
-    const token_t *ATOMIC_UINT_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_atomic_uint_t> make(
+    std::shared_ptr<ast_token_t> ATOMIC_UINT_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_atomic_uint_t>(
-      std::make_unique<token_t>(*ATOMIC_UINT_0_)
+    return std::make_shared<type_specifier_nonarray_atomic_uint_t>(
+      ATOMIC_UINT_0_
     );
   }
 
@@ -1260,21 +1444,25 @@ class type_specifier_nonarray_sampler1d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> sampler1d_0;
+  std::shared_ptr<ast_token_t> sampler1d_0;
 
   type_specifier_nonarray_sampler1d_t(
-    std::unique_ptr<token_t> &&sampler1d_0_
-  ): sampler1d_0(std::move(sampler1d_0_)) {}
+    std::shared_ptr<ast_token_t> sampler1d_0_
+  ): sampler1d_0(sampler1d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_sampler1d_t> make(
-    const token_t *SAMPLER1D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_sampler1d_t> make(
+    std::shared_ptr<ast_token_t> SAMPLER1D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_sampler1d_t>(
-      std::make_unique<token_t>(*SAMPLER1D_0_)
+    return std::make_shared<type_specifier_nonarray_sampler1d_t>(
+      SAMPLER1D_0_
     );
   }
 
@@ -1284,21 +1472,25 @@ class type_specifier_nonarray_sampler2d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> sampler2d_0;
+  std::shared_ptr<ast_token_t> sampler2d_0;
 
   type_specifier_nonarray_sampler2d_t(
-    std::unique_ptr<token_t> &&sampler2d_0_
-  ): sampler2d_0(std::move(sampler2d_0_)) {}
+    std::shared_ptr<ast_token_t> sampler2d_0_
+  ): sampler2d_0(sampler2d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_sampler2d_t> make(
-    const token_t *SAMPLER2D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_sampler2d_t> make(
+    std::shared_ptr<ast_token_t> SAMPLER2D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_sampler2d_t>(
-      std::make_unique<token_t>(*SAMPLER2D_0_)
+    return std::make_shared<type_specifier_nonarray_sampler2d_t>(
+      SAMPLER2D_0_
     );
   }
 
@@ -1308,21 +1500,25 @@ class type_specifier_nonarray_sampler3d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> sampler3d_0;
+  std::shared_ptr<ast_token_t> sampler3d_0;
 
   type_specifier_nonarray_sampler3d_t(
-    std::unique_ptr<token_t> &&sampler3d_0_
-  ): sampler3d_0(std::move(sampler3d_0_)) {}
+    std::shared_ptr<ast_token_t> sampler3d_0_
+  ): sampler3d_0(sampler3d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_sampler3d_t> make(
-    const token_t *SAMPLER3D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_sampler3d_t> make(
+    std::shared_ptr<ast_token_t> SAMPLER3D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_sampler3d_t>(
-      std::make_unique<token_t>(*SAMPLER3D_0_)
+    return std::make_shared<type_specifier_nonarray_sampler3d_t>(
+      SAMPLER3D_0_
     );
   }
 
@@ -1332,21 +1528,25 @@ class type_specifier_nonarray_samplercube_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> samplercube_0;
+  std::shared_ptr<ast_token_t> samplercube_0;
 
   type_specifier_nonarray_samplercube_t(
-    std::unique_ptr<token_t> &&samplercube_0_
-  ): samplercube_0(std::move(samplercube_0_)) {}
+    std::shared_ptr<ast_token_t> samplercube_0_
+  ): samplercube_0(samplercube_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_samplercube_t> make(
-    const token_t *SAMPLERCUBE_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_samplercube_t> make(
+    std::shared_ptr<ast_token_t> SAMPLERCUBE_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_samplercube_t>(
-      std::make_unique<token_t>(*SAMPLERCUBE_0_)
+    return std::make_shared<type_specifier_nonarray_samplercube_t>(
+      SAMPLERCUBE_0_
     );
   }
 
@@ -1356,21 +1556,25 @@ class type_specifier_nonarray_sampler1dshadow_t: public type_specifier_nonarray_
 
 public:
 
-  std::unique_ptr<token_t> sampler1dshadow_0;
+  std::shared_ptr<ast_token_t> sampler1dshadow_0;
 
   type_specifier_nonarray_sampler1dshadow_t(
-    std::unique_ptr<token_t> &&sampler1dshadow_0_
-  ): sampler1dshadow_0(std::move(sampler1dshadow_0_)) {}
+    std::shared_ptr<ast_token_t> sampler1dshadow_0_
+  ): sampler1dshadow_0(sampler1dshadow_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_sampler1dshadow_t> make(
-    const token_t *SAMPLER1DSHADOW_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_sampler1dshadow_t> make(
+    std::shared_ptr<ast_token_t> SAMPLER1DSHADOW_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_sampler1dshadow_t>(
-      std::make_unique<token_t>(*SAMPLER1DSHADOW_0_)
+    return std::make_shared<type_specifier_nonarray_sampler1dshadow_t>(
+      SAMPLER1DSHADOW_0_
     );
   }
 
@@ -1380,21 +1584,25 @@ class type_specifier_nonarray_sampler2dshadow_t: public type_specifier_nonarray_
 
 public:
 
-  std::unique_ptr<token_t> sampler2dshadow_0;
+  std::shared_ptr<ast_token_t> sampler2dshadow_0;
 
   type_specifier_nonarray_sampler2dshadow_t(
-    std::unique_ptr<token_t> &&sampler2dshadow_0_
-  ): sampler2dshadow_0(std::move(sampler2dshadow_0_)) {}
+    std::shared_ptr<ast_token_t> sampler2dshadow_0_
+  ): sampler2dshadow_0(sampler2dshadow_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_sampler2dshadow_t> make(
-    const token_t *SAMPLER2DSHADOW_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_sampler2dshadow_t> make(
+    std::shared_ptr<ast_token_t> SAMPLER2DSHADOW_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_sampler2dshadow_t>(
-      std::make_unique<token_t>(*SAMPLER2DSHADOW_0_)
+    return std::make_shared<type_specifier_nonarray_sampler2dshadow_t>(
+      SAMPLER2DSHADOW_0_
     );
   }
 
@@ -1404,21 +1612,25 @@ class type_specifier_nonarray_samplercubeshadow_t: public type_specifier_nonarra
 
 public:
 
-  std::unique_ptr<token_t> samplercubeshadow_0;
+  std::shared_ptr<ast_token_t> samplercubeshadow_0;
 
   type_specifier_nonarray_samplercubeshadow_t(
-    std::unique_ptr<token_t> &&samplercubeshadow_0_
-  ): samplercubeshadow_0(std::move(samplercubeshadow_0_)) {}
+    std::shared_ptr<ast_token_t> samplercubeshadow_0_
+  ): samplercubeshadow_0(samplercubeshadow_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_samplercubeshadow_t> make(
-    const token_t *SAMPLERCUBESHADOW_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_samplercubeshadow_t> make(
+    std::shared_ptr<ast_token_t> SAMPLERCUBESHADOW_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_samplercubeshadow_t>(
-      std::make_unique<token_t>(*SAMPLERCUBESHADOW_0_)
+    return std::make_shared<type_specifier_nonarray_samplercubeshadow_t>(
+      SAMPLERCUBESHADOW_0_
     );
   }
 
@@ -1428,21 +1640,25 @@ class type_specifier_nonarray_sampler1darray_t: public type_specifier_nonarray_t
 
 public:
 
-  std::unique_ptr<token_t> sampler1darray_0;
+  std::shared_ptr<ast_token_t> sampler1darray_0;
 
   type_specifier_nonarray_sampler1darray_t(
-    std::unique_ptr<token_t> &&sampler1darray_0_
-  ): sampler1darray_0(std::move(sampler1darray_0_)) {}
+    std::shared_ptr<ast_token_t> sampler1darray_0_
+  ): sampler1darray_0(sampler1darray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_sampler1darray_t> make(
-    const token_t *SAMPLER1DARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_sampler1darray_t> make(
+    std::shared_ptr<ast_token_t> SAMPLER1DARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_sampler1darray_t>(
-      std::make_unique<token_t>(*SAMPLER1DARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_sampler1darray_t>(
+      SAMPLER1DARRAY_0_
     );
   }
 
@@ -1452,21 +1668,25 @@ class type_specifier_nonarray_sampler2darray_t: public type_specifier_nonarray_t
 
 public:
 
-  std::unique_ptr<token_t> sampler2darray_0;
+  std::shared_ptr<ast_token_t> sampler2darray_0;
 
   type_specifier_nonarray_sampler2darray_t(
-    std::unique_ptr<token_t> &&sampler2darray_0_
-  ): sampler2darray_0(std::move(sampler2darray_0_)) {}
+    std::shared_ptr<ast_token_t> sampler2darray_0_
+  ): sampler2darray_0(sampler2darray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_sampler2darray_t> make(
-    const token_t *SAMPLER2DARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_sampler2darray_t> make(
+    std::shared_ptr<ast_token_t> SAMPLER2DARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_sampler2darray_t>(
-      std::make_unique<token_t>(*SAMPLER2DARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_sampler2darray_t>(
+      SAMPLER2DARRAY_0_
     );
   }
 
@@ -1476,21 +1696,25 @@ class type_specifier_nonarray_sampler1darrayshadow_t: public type_specifier_nona
 
 public:
 
-  std::unique_ptr<token_t> sampler1darrayshadow_0;
+  std::shared_ptr<ast_token_t> sampler1darrayshadow_0;
 
   type_specifier_nonarray_sampler1darrayshadow_t(
-    std::unique_ptr<token_t> &&sampler1darrayshadow_0_
-  ): sampler1darrayshadow_0(std::move(sampler1darrayshadow_0_)) {}
+    std::shared_ptr<ast_token_t> sampler1darrayshadow_0_
+  ): sampler1darrayshadow_0(sampler1darrayshadow_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_sampler1darrayshadow_t> make(
-    const token_t *SAMPLER1DARRAYSHADOW_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_sampler1darrayshadow_t> make(
+    std::shared_ptr<ast_token_t> SAMPLER1DARRAYSHADOW_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_sampler1darrayshadow_t>(
-      std::make_unique<token_t>(*SAMPLER1DARRAYSHADOW_0_)
+    return std::make_shared<type_specifier_nonarray_sampler1darrayshadow_t>(
+      SAMPLER1DARRAYSHADOW_0_
     );
   }
 
@@ -1500,21 +1724,25 @@ class type_specifier_nonarray_sampler2darrayshadow_t: public type_specifier_nona
 
 public:
 
-  std::unique_ptr<token_t> sampler2darrayshadow_0;
+  std::shared_ptr<ast_token_t> sampler2darrayshadow_0;
 
   type_specifier_nonarray_sampler2darrayshadow_t(
-    std::unique_ptr<token_t> &&sampler2darrayshadow_0_
-  ): sampler2darrayshadow_0(std::move(sampler2darrayshadow_0_)) {}
+    std::shared_ptr<ast_token_t> sampler2darrayshadow_0_
+  ): sampler2darrayshadow_0(sampler2darrayshadow_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_sampler2darrayshadow_t> make(
-    const token_t *SAMPLER2DARRAYSHADOW_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_sampler2darrayshadow_t> make(
+    std::shared_ptr<ast_token_t> SAMPLER2DARRAYSHADOW_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_sampler2darrayshadow_t>(
-      std::make_unique<token_t>(*SAMPLER2DARRAYSHADOW_0_)
+    return std::make_shared<type_specifier_nonarray_sampler2darrayshadow_t>(
+      SAMPLER2DARRAYSHADOW_0_
     );
   }
 
@@ -1524,21 +1752,25 @@ class type_specifier_nonarray_samplercubearray_t: public type_specifier_nonarray
 
 public:
 
-  std::unique_ptr<token_t> samplercubearray_0;
+  std::shared_ptr<ast_token_t> samplercubearray_0;
 
   type_specifier_nonarray_samplercubearray_t(
-    std::unique_ptr<token_t> &&samplercubearray_0_
-  ): samplercubearray_0(std::move(samplercubearray_0_)) {}
+    std::shared_ptr<ast_token_t> samplercubearray_0_
+  ): samplercubearray_0(samplercubearray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_samplercubearray_t> make(
-    const token_t *SAMPLERCUBEARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_samplercubearray_t> make(
+    std::shared_ptr<ast_token_t> SAMPLERCUBEARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_samplercubearray_t>(
-      std::make_unique<token_t>(*SAMPLERCUBEARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_samplercubearray_t>(
+      SAMPLERCUBEARRAY_0_
     );
   }
 
@@ -1548,21 +1780,25 @@ class type_specifier_nonarray_samplercubearrayshadow_t: public type_specifier_no
 
 public:
 
-  std::unique_ptr<token_t> samplercubearrayshadow_0;
+  std::shared_ptr<ast_token_t> samplercubearrayshadow_0;
 
   type_specifier_nonarray_samplercubearrayshadow_t(
-    std::unique_ptr<token_t> &&samplercubearrayshadow_0_
-  ): samplercubearrayshadow_0(std::move(samplercubearrayshadow_0_)) {}
+    std::shared_ptr<ast_token_t> samplercubearrayshadow_0_
+  ): samplercubearrayshadow_0(samplercubearrayshadow_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_samplercubearrayshadow_t> make(
-    const token_t *SAMPLERCUBEARRAYSHADOW_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_samplercubearrayshadow_t> make(
+    std::shared_ptr<ast_token_t> SAMPLERCUBEARRAYSHADOW_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_samplercubearrayshadow_t>(
-      std::make_unique<token_t>(*SAMPLERCUBEARRAYSHADOW_0_)
+    return std::make_shared<type_specifier_nonarray_samplercubearrayshadow_t>(
+      SAMPLERCUBEARRAYSHADOW_0_
     );
   }
 
@@ -1572,21 +1808,25 @@ class type_specifier_nonarray_isampler1d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> isampler1d_0;
+  std::shared_ptr<ast_token_t> isampler1d_0;
 
   type_specifier_nonarray_isampler1d_t(
-    std::unique_ptr<token_t> &&isampler1d_0_
-  ): isampler1d_0(std::move(isampler1d_0_)) {}
+    std::shared_ptr<ast_token_t> isampler1d_0_
+  ): isampler1d_0(isampler1d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_isampler1d_t> make(
-    const token_t *ISAMPLER1D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_isampler1d_t> make(
+    std::shared_ptr<ast_token_t> ISAMPLER1D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_isampler1d_t>(
-      std::make_unique<token_t>(*ISAMPLER1D_0_)
+    return std::make_shared<type_specifier_nonarray_isampler1d_t>(
+      ISAMPLER1D_0_
     );
   }
 
@@ -1596,21 +1836,25 @@ class type_specifier_nonarray_isampler2d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> isampler2d_0;
+  std::shared_ptr<ast_token_t> isampler2d_0;
 
   type_specifier_nonarray_isampler2d_t(
-    std::unique_ptr<token_t> &&isampler2d_0_
-  ): isampler2d_0(std::move(isampler2d_0_)) {}
+    std::shared_ptr<ast_token_t> isampler2d_0_
+  ): isampler2d_0(isampler2d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_isampler2d_t> make(
-    const token_t *ISAMPLER2D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_isampler2d_t> make(
+    std::shared_ptr<ast_token_t> ISAMPLER2D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_isampler2d_t>(
-      std::make_unique<token_t>(*ISAMPLER2D_0_)
+    return std::make_shared<type_specifier_nonarray_isampler2d_t>(
+      ISAMPLER2D_0_
     );
   }
 
@@ -1620,21 +1864,25 @@ class type_specifier_nonarray_isampler3d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> isampler3d_0;
+  std::shared_ptr<ast_token_t> isampler3d_0;
 
   type_specifier_nonarray_isampler3d_t(
-    std::unique_ptr<token_t> &&isampler3d_0_
-  ): isampler3d_0(std::move(isampler3d_0_)) {}
+    std::shared_ptr<ast_token_t> isampler3d_0_
+  ): isampler3d_0(isampler3d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_isampler3d_t> make(
-    const token_t *ISAMPLER3D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_isampler3d_t> make(
+    std::shared_ptr<ast_token_t> ISAMPLER3D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_isampler3d_t>(
-      std::make_unique<token_t>(*ISAMPLER3D_0_)
+    return std::make_shared<type_specifier_nonarray_isampler3d_t>(
+      ISAMPLER3D_0_
     );
   }
 
@@ -1644,21 +1892,25 @@ class type_specifier_nonarray_isamplercube_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> isamplercube_0;
+  std::shared_ptr<ast_token_t> isamplercube_0;
 
   type_specifier_nonarray_isamplercube_t(
-    std::unique_ptr<token_t> &&isamplercube_0_
-  ): isamplercube_0(std::move(isamplercube_0_)) {}
+    std::shared_ptr<ast_token_t> isamplercube_0_
+  ): isamplercube_0(isamplercube_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_isamplercube_t> make(
-    const token_t *ISAMPLERCUBE_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_isamplercube_t> make(
+    std::shared_ptr<ast_token_t> ISAMPLERCUBE_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_isamplercube_t>(
-      std::make_unique<token_t>(*ISAMPLERCUBE_0_)
+    return std::make_shared<type_specifier_nonarray_isamplercube_t>(
+      ISAMPLERCUBE_0_
     );
   }
 
@@ -1668,21 +1920,25 @@ class type_specifier_nonarray_isampler1darray_t: public type_specifier_nonarray_
 
 public:
 
-  std::unique_ptr<token_t> isampler1darray_0;
+  std::shared_ptr<ast_token_t> isampler1darray_0;
 
   type_specifier_nonarray_isampler1darray_t(
-    std::unique_ptr<token_t> &&isampler1darray_0_
-  ): isampler1darray_0(std::move(isampler1darray_0_)) {}
+    std::shared_ptr<ast_token_t> isampler1darray_0_
+  ): isampler1darray_0(isampler1darray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_isampler1darray_t> make(
-    const token_t *ISAMPLER1DARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_isampler1darray_t> make(
+    std::shared_ptr<ast_token_t> ISAMPLER1DARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_isampler1darray_t>(
-      std::make_unique<token_t>(*ISAMPLER1DARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_isampler1darray_t>(
+      ISAMPLER1DARRAY_0_
     );
   }
 
@@ -1692,21 +1948,25 @@ class type_specifier_nonarray_isampler2darray_t: public type_specifier_nonarray_
 
 public:
 
-  std::unique_ptr<token_t> isampler2darray_0;
+  std::shared_ptr<ast_token_t> isampler2darray_0;
 
   type_specifier_nonarray_isampler2darray_t(
-    std::unique_ptr<token_t> &&isampler2darray_0_
-  ): isampler2darray_0(std::move(isampler2darray_0_)) {}
+    std::shared_ptr<ast_token_t> isampler2darray_0_
+  ): isampler2darray_0(isampler2darray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_isampler2darray_t> make(
-    const token_t *ISAMPLER2DARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_isampler2darray_t> make(
+    std::shared_ptr<ast_token_t> ISAMPLER2DARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_isampler2darray_t>(
-      std::make_unique<token_t>(*ISAMPLER2DARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_isampler2darray_t>(
+      ISAMPLER2DARRAY_0_
     );
   }
 
@@ -1716,21 +1976,25 @@ class type_specifier_nonarray_isamplercubearray_t: public type_specifier_nonarra
 
 public:
 
-  std::unique_ptr<token_t> isamplercubearray_0;
+  std::shared_ptr<ast_token_t> isamplercubearray_0;
 
   type_specifier_nonarray_isamplercubearray_t(
-    std::unique_ptr<token_t> &&isamplercubearray_0_
-  ): isamplercubearray_0(std::move(isamplercubearray_0_)) {}
+    std::shared_ptr<ast_token_t> isamplercubearray_0_
+  ): isamplercubearray_0(isamplercubearray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_isamplercubearray_t> make(
-    const token_t *ISAMPLERCUBEARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_isamplercubearray_t> make(
+    std::shared_ptr<ast_token_t> ISAMPLERCUBEARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_isamplercubearray_t>(
-      std::make_unique<token_t>(*ISAMPLERCUBEARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_isamplercubearray_t>(
+      ISAMPLERCUBEARRAY_0_
     );
   }
 
@@ -1740,21 +2004,25 @@ class type_specifier_nonarray_usampler1d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> usampler1d_0;
+  std::shared_ptr<ast_token_t> usampler1d_0;
 
   type_specifier_nonarray_usampler1d_t(
-    std::unique_ptr<token_t> &&usampler1d_0_
-  ): usampler1d_0(std::move(usampler1d_0_)) {}
+    std::shared_ptr<ast_token_t> usampler1d_0_
+  ): usampler1d_0(usampler1d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_usampler1d_t> make(
-    const token_t *USAMPLER1D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_usampler1d_t> make(
+    std::shared_ptr<ast_token_t> USAMPLER1D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_usampler1d_t>(
-      std::make_unique<token_t>(*USAMPLER1D_0_)
+    return std::make_shared<type_specifier_nonarray_usampler1d_t>(
+      USAMPLER1D_0_
     );
   }
 
@@ -1764,21 +2032,25 @@ class type_specifier_nonarray_usampler2d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> usampler2d_0;
+  std::shared_ptr<ast_token_t> usampler2d_0;
 
   type_specifier_nonarray_usampler2d_t(
-    std::unique_ptr<token_t> &&usampler2d_0_
-  ): usampler2d_0(std::move(usampler2d_0_)) {}
+    std::shared_ptr<ast_token_t> usampler2d_0_
+  ): usampler2d_0(usampler2d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_usampler2d_t> make(
-    const token_t *USAMPLER2D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_usampler2d_t> make(
+    std::shared_ptr<ast_token_t> USAMPLER2D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_usampler2d_t>(
-      std::make_unique<token_t>(*USAMPLER2D_0_)
+    return std::make_shared<type_specifier_nonarray_usampler2d_t>(
+      USAMPLER2D_0_
     );
   }
 
@@ -1788,21 +2060,25 @@ class type_specifier_nonarray_usampler3d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> usampler3d_0;
+  std::shared_ptr<ast_token_t> usampler3d_0;
 
   type_specifier_nonarray_usampler3d_t(
-    std::unique_ptr<token_t> &&usampler3d_0_
-  ): usampler3d_0(std::move(usampler3d_0_)) {}
+    std::shared_ptr<ast_token_t> usampler3d_0_
+  ): usampler3d_0(usampler3d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_usampler3d_t> make(
-    const token_t *USAMPLER3D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_usampler3d_t> make(
+    std::shared_ptr<ast_token_t> USAMPLER3D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_usampler3d_t>(
-      std::make_unique<token_t>(*USAMPLER3D_0_)
+    return std::make_shared<type_specifier_nonarray_usampler3d_t>(
+      USAMPLER3D_0_
     );
   }
 
@@ -1812,21 +2088,25 @@ class type_specifier_nonarray_usamplercube_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> usamplercube_0;
+  std::shared_ptr<ast_token_t> usamplercube_0;
 
   type_specifier_nonarray_usamplercube_t(
-    std::unique_ptr<token_t> &&usamplercube_0_
-  ): usamplercube_0(std::move(usamplercube_0_)) {}
+    std::shared_ptr<ast_token_t> usamplercube_0_
+  ): usamplercube_0(usamplercube_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_usamplercube_t> make(
-    const token_t *USAMPLERCUBE_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_usamplercube_t> make(
+    std::shared_ptr<ast_token_t> USAMPLERCUBE_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_usamplercube_t>(
-      std::make_unique<token_t>(*USAMPLERCUBE_0_)
+    return std::make_shared<type_specifier_nonarray_usamplercube_t>(
+      USAMPLERCUBE_0_
     );
   }
 
@@ -1836,21 +2116,25 @@ class type_specifier_nonarray_usampler1darray_t: public type_specifier_nonarray_
 
 public:
 
-  std::unique_ptr<token_t> usampler1darray_0;
+  std::shared_ptr<ast_token_t> usampler1darray_0;
 
   type_specifier_nonarray_usampler1darray_t(
-    std::unique_ptr<token_t> &&usampler1darray_0_
-  ): usampler1darray_0(std::move(usampler1darray_0_)) {}
+    std::shared_ptr<ast_token_t> usampler1darray_0_
+  ): usampler1darray_0(usampler1darray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_usampler1darray_t> make(
-    const token_t *USAMPLER1DARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_usampler1darray_t> make(
+    std::shared_ptr<ast_token_t> USAMPLER1DARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_usampler1darray_t>(
-      std::make_unique<token_t>(*USAMPLER1DARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_usampler1darray_t>(
+      USAMPLER1DARRAY_0_
     );
   }
 
@@ -1860,21 +2144,25 @@ class type_specifier_nonarray_usampler2darray_t: public type_specifier_nonarray_
 
 public:
 
-  std::unique_ptr<token_t> usampler2darray_0;
+  std::shared_ptr<ast_token_t> usampler2darray_0;
 
   type_specifier_nonarray_usampler2darray_t(
-    std::unique_ptr<token_t> &&usampler2darray_0_
-  ): usampler2darray_0(std::move(usampler2darray_0_)) {}
+    std::shared_ptr<ast_token_t> usampler2darray_0_
+  ): usampler2darray_0(usampler2darray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_usampler2darray_t> make(
-    const token_t *USAMPLER2DARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_usampler2darray_t> make(
+    std::shared_ptr<ast_token_t> USAMPLER2DARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_usampler2darray_t>(
-      std::make_unique<token_t>(*USAMPLER2DARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_usampler2darray_t>(
+      USAMPLER2DARRAY_0_
     );
   }
 
@@ -1884,21 +2172,25 @@ class type_specifier_nonarray_usamplercubearray_t: public type_specifier_nonarra
 
 public:
 
-  std::unique_ptr<token_t> usamplercubearray_0;
+  std::shared_ptr<ast_token_t> usamplercubearray_0;
 
   type_specifier_nonarray_usamplercubearray_t(
-    std::unique_ptr<token_t> &&usamplercubearray_0_
-  ): usamplercubearray_0(std::move(usamplercubearray_0_)) {}
+    std::shared_ptr<ast_token_t> usamplercubearray_0_
+  ): usamplercubearray_0(usamplercubearray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_usamplercubearray_t> make(
-    const token_t *USAMPLERCUBEARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_usamplercubearray_t> make(
+    std::shared_ptr<ast_token_t> USAMPLERCUBEARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_usamplercubearray_t>(
-      std::make_unique<token_t>(*USAMPLERCUBEARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_usamplercubearray_t>(
+      USAMPLERCUBEARRAY_0_
     );
   }
 
@@ -1908,21 +2200,25 @@ class type_specifier_nonarray_sampler2drect_t: public type_specifier_nonarray_t 
 
 public:
 
-  std::unique_ptr<token_t> sampler2drect_0;
+  std::shared_ptr<ast_token_t> sampler2drect_0;
 
   type_specifier_nonarray_sampler2drect_t(
-    std::unique_ptr<token_t> &&sampler2drect_0_
-  ): sampler2drect_0(std::move(sampler2drect_0_)) {}
+    std::shared_ptr<ast_token_t> sampler2drect_0_
+  ): sampler2drect_0(sampler2drect_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_sampler2drect_t> make(
-    const token_t *SAMPLER2DRECT_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_sampler2drect_t> make(
+    std::shared_ptr<ast_token_t> SAMPLER2DRECT_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_sampler2drect_t>(
-      std::make_unique<token_t>(*SAMPLER2DRECT_0_)
+    return std::make_shared<type_specifier_nonarray_sampler2drect_t>(
+      SAMPLER2DRECT_0_
     );
   }
 
@@ -1932,21 +2228,25 @@ class type_specifier_nonarray_sampler2drectshadow_t: public type_specifier_nonar
 
 public:
 
-  std::unique_ptr<token_t> sampler2drectshadow_0;
+  std::shared_ptr<ast_token_t> sampler2drectshadow_0;
 
   type_specifier_nonarray_sampler2drectshadow_t(
-    std::unique_ptr<token_t> &&sampler2drectshadow_0_
-  ): sampler2drectshadow_0(std::move(sampler2drectshadow_0_)) {}
+    std::shared_ptr<ast_token_t> sampler2drectshadow_0_
+  ): sampler2drectshadow_0(sampler2drectshadow_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_sampler2drectshadow_t> make(
-    const token_t *SAMPLER2DRECTSHADOW_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_sampler2drectshadow_t> make(
+    std::shared_ptr<ast_token_t> SAMPLER2DRECTSHADOW_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_sampler2drectshadow_t>(
-      std::make_unique<token_t>(*SAMPLER2DRECTSHADOW_0_)
+    return std::make_shared<type_specifier_nonarray_sampler2drectshadow_t>(
+      SAMPLER2DRECTSHADOW_0_
     );
   }
 
@@ -1956,21 +2256,25 @@ class type_specifier_nonarray_isampler2drect_t: public type_specifier_nonarray_t
 
 public:
 
-  std::unique_ptr<token_t> isampler2drect_0;
+  std::shared_ptr<ast_token_t> isampler2drect_0;
 
   type_specifier_nonarray_isampler2drect_t(
-    std::unique_ptr<token_t> &&isampler2drect_0_
-  ): isampler2drect_0(std::move(isampler2drect_0_)) {}
+    std::shared_ptr<ast_token_t> isampler2drect_0_
+  ): isampler2drect_0(isampler2drect_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_isampler2drect_t> make(
-    const token_t *ISAMPLER2DRECT_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_isampler2drect_t> make(
+    std::shared_ptr<ast_token_t> ISAMPLER2DRECT_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_isampler2drect_t>(
-      std::make_unique<token_t>(*ISAMPLER2DRECT_0_)
+    return std::make_shared<type_specifier_nonarray_isampler2drect_t>(
+      ISAMPLER2DRECT_0_
     );
   }
 
@@ -1980,21 +2284,25 @@ class type_specifier_nonarray_usampler2drect_t: public type_specifier_nonarray_t
 
 public:
 
-  std::unique_ptr<token_t> usampler2drect_0;
+  std::shared_ptr<ast_token_t> usampler2drect_0;
 
   type_specifier_nonarray_usampler2drect_t(
-    std::unique_ptr<token_t> &&usampler2drect_0_
-  ): usampler2drect_0(std::move(usampler2drect_0_)) {}
+    std::shared_ptr<ast_token_t> usampler2drect_0_
+  ): usampler2drect_0(usampler2drect_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_usampler2drect_t> make(
-    const token_t *USAMPLER2DRECT_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_usampler2drect_t> make(
+    std::shared_ptr<ast_token_t> USAMPLER2DRECT_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_usampler2drect_t>(
-      std::make_unique<token_t>(*USAMPLER2DRECT_0_)
+    return std::make_shared<type_specifier_nonarray_usampler2drect_t>(
+      USAMPLER2DRECT_0_
     );
   }
 
@@ -2004,21 +2312,25 @@ class type_specifier_nonarray_samplerbuffer_t: public type_specifier_nonarray_t 
 
 public:
 
-  std::unique_ptr<token_t> samplerbuffer_0;
+  std::shared_ptr<ast_token_t> samplerbuffer_0;
 
   type_specifier_nonarray_samplerbuffer_t(
-    std::unique_ptr<token_t> &&samplerbuffer_0_
-  ): samplerbuffer_0(std::move(samplerbuffer_0_)) {}
+    std::shared_ptr<ast_token_t> samplerbuffer_0_
+  ): samplerbuffer_0(samplerbuffer_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_samplerbuffer_t> make(
-    const token_t *SAMPLERBUFFER_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_samplerbuffer_t> make(
+    std::shared_ptr<ast_token_t> SAMPLERBUFFER_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_samplerbuffer_t>(
-      std::make_unique<token_t>(*SAMPLERBUFFER_0_)
+    return std::make_shared<type_specifier_nonarray_samplerbuffer_t>(
+      SAMPLERBUFFER_0_
     );
   }
 
@@ -2028,21 +2340,25 @@ class type_specifier_nonarray_isamplerbuffer_t: public type_specifier_nonarray_t
 
 public:
 
-  std::unique_ptr<token_t> isamplerbuffer_0;
+  std::shared_ptr<ast_token_t> isamplerbuffer_0;
 
   type_specifier_nonarray_isamplerbuffer_t(
-    std::unique_ptr<token_t> &&isamplerbuffer_0_
-  ): isamplerbuffer_0(std::move(isamplerbuffer_0_)) {}
+    std::shared_ptr<ast_token_t> isamplerbuffer_0_
+  ): isamplerbuffer_0(isamplerbuffer_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_isamplerbuffer_t> make(
-    const token_t *ISAMPLERBUFFER_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_isamplerbuffer_t> make(
+    std::shared_ptr<ast_token_t> ISAMPLERBUFFER_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_isamplerbuffer_t>(
-      std::make_unique<token_t>(*ISAMPLERBUFFER_0_)
+    return std::make_shared<type_specifier_nonarray_isamplerbuffer_t>(
+      ISAMPLERBUFFER_0_
     );
   }
 
@@ -2052,21 +2368,25 @@ class type_specifier_nonarray_usamplerbuffer_t: public type_specifier_nonarray_t
 
 public:
 
-  std::unique_ptr<token_t> usamplerbuffer_0;
+  std::shared_ptr<ast_token_t> usamplerbuffer_0;
 
   type_specifier_nonarray_usamplerbuffer_t(
-    std::unique_ptr<token_t> &&usamplerbuffer_0_
-  ): usamplerbuffer_0(std::move(usamplerbuffer_0_)) {}
+    std::shared_ptr<ast_token_t> usamplerbuffer_0_
+  ): usamplerbuffer_0(usamplerbuffer_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_usamplerbuffer_t> make(
-    const token_t *USAMPLERBUFFER_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_usamplerbuffer_t> make(
+    std::shared_ptr<ast_token_t> USAMPLERBUFFER_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_usamplerbuffer_t>(
-      std::make_unique<token_t>(*USAMPLERBUFFER_0_)
+    return std::make_shared<type_specifier_nonarray_usamplerbuffer_t>(
+      USAMPLERBUFFER_0_
     );
   }
 
@@ -2076,21 +2396,25 @@ class type_specifier_nonarray_sampler2dms_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> sampler2dms_0;
+  std::shared_ptr<ast_token_t> sampler2dms_0;
 
   type_specifier_nonarray_sampler2dms_t(
-    std::unique_ptr<token_t> &&sampler2dms_0_
-  ): sampler2dms_0(std::move(sampler2dms_0_)) {}
+    std::shared_ptr<ast_token_t> sampler2dms_0_
+  ): sampler2dms_0(sampler2dms_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_sampler2dms_t> make(
-    const token_t *SAMPLER2DMS_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_sampler2dms_t> make(
+    std::shared_ptr<ast_token_t> SAMPLER2DMS_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_sampler2dms_t>(
-      std::make_unique<token_t>(*SAMPLER2DMS_0_)
+    return std::make_shared<type_specifier_nonarray_sampler2dms_t>(
+      SAMPLER2DMS_0_
     );
   }
 
@@ -2100,21 +2424,25 @@ class type_specifier_nonarray_isampler2dms_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> isampler2dms_0;
+  std::shared_ptr<ast_token_t> isampler2dms_0;
 
   type_specifier_nonarray_isampler2dms_t(
-    std::unique_ptr<token_t> &&isampler2dms_0_
-  ): isampler2dms_0(std::move(isampler2dms_0_)) {}
+    std::shared_ptr<ast_token_t> isampler2dms_0_
+  ): isampler2dms_0(isampler2dms_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_isampler2dms_t> make(
-    const token_t *ISAMPLER2DMS_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_isampler2dms_t> make(
+    std::shared_ptr<ast_token_t> ISAMPLER2DMS_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_isampler2dms_t>(
-      std::make_unique<token_t>(*ISAMPLER2DMS_0_)
+    return std::make_shared<type_specifier_nonarray_isampler2dms_t>(
+      ISAMPLER2DMS_0_
     );
   }
 
@@ -2124,21 +2452,25 @@ class type_specifier_nonarray_usampler2dms_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> usampler2dms_0;
+  std::shared_ptr<ast_token_t> usampler2dms_0;
 
   type_specifier_nonarray_usampler2dms_t(
-    std::unique_ptr<token_t> &&usampler2dms_0_
-  ): usampler2dms_0(std::move(usampler2dms_0_)) {}
+    std::shared_ptr<ast_token_t> usampler2dms_0_
+  ): usampler2dms_0(usampler2dms_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_usampler2dms_t> make(
-    const token_t *USAMPLER2DMS_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_usampler2dms_t> make(
+    std::shared_ptr<ast_token_t> USAMPLER2DMS_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_usampler2dms_t>(
-      std::make_unique<token_t>(*USAMPLER2DMS_0_)
+    return std::make_shared<type_specifier_nonarray_usampler2dms_t>(
+      USAMPLER2DMS_0_
     );
   }
 
@@ -2148,21 +2480,25 @@ class type_specifier_nonarray_sampler2dmsarray_t: public type_specifier_nonarray
 
 public:
 
-  std::unique_ptr<token_t> sampler2dmsarray_0;
+  std::shared_ptr<ast_token_t> sampler2dmsarray_0;
 
   type_specifier_nonarray_sampler2dmsarray_t(
-    std::unique_ptr<token_t> &&sampler2dmsarray_0_
-  ): sampler2dmsarray_0(std::move(sampler2dmsarray_0_)) {}
+    std::shared_ptr<ast_token_t> sampler2dmsarray_0_
+  ): sampler2dmsarray_0(sampler2dmsarray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_sampler2dmsarray_t> make(
-    const token_t *SAMPLER2DMSARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_sampler2dmsarray_t> make(
+    std::shared_ptr<ast_token_t> SAMPLER2DMSARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_sampler2dmsarray_t>(
-      std::make_unique<token_t>(*SAMPLER2DMSARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_sampler2dmsarray_t>(
+      SAMPLER2DMSARRAY_0_
     );
   }
 
@@ -2172,21 +2508,25 @@ class type_specifier_nonarray_isampler2dmsarray_t: public type_specifier_nonarra
 
 public:
 
-  std::unique_ptr<token_t> isampler2dmsarray_0;
+  std::shared_ptr<ast_token_t> isampler2dmsarray_0;
 
   type_specifier_nonarray_isampler2dmsarray_t(
-    std::unique_ptr<token_t> &&isampler2dmsarray_0_
-  ): isampler2dmsarray_0(std::move(isampler2dmsarray_0_)) {}
+    std::shared_ptr<ast_token_t> isampler2dmsarray_0_
+  ): isampler2dmsarray_0(isampler2dmsarray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_isampler2dmsarray_t> make(
-    const token_t *ISAMPLER2DMSARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_isampler2dmsarray_t> make(
+    std::shared_ptr<ast_token_t> ISAMPLER2DMSARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_isampler2dmsarray_t>(
-      std::make_unique<token_t>(*ISAMPLER2DMSARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_isampler2dmsarray_t>(
+      ISAMPLER2DMSARRAY_0_
     );
   }
 
@@ -2196,21 +2536,25 @@ class type_specifier_nonarray_usampler2dmsarray_t: public type_specifier_nonarra
 
 public:
 
-  std::unique_ptr<token_t> usampler2dmsarray_0;
+  std::shared_ptr<ast_token_t> usampler2dmsarray_0;
 
   type_specifier_nonarray_usampler2dmsarray_t(
-    std::unique_ptr<token_t> &&usampler2dmsarray_0_
-  ): usampler2dmsarray_0(std::move(usampler2dmsarray_0_)) {}
+    std::shared_ptr<ast_token_t> usampler2dmsarray_0_
+  ): usampler2dmsarray_0(usampler2dmsarray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_usampler2dmsarray_t> make(
-    const token_t *USAMPLER2DMSARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_usampler2dmsarray_t> make(
+    std::shared_ptr<ast_token_t> USAMPLER2DMSARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_usampler2dmsarray_t>(
-      std::make_unique<token_t>(*USAMPLER2DMSARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_usampler2dmsarray_t>(
+      USAMPLER2DMSARRAY_0_
     );
   }
 
@@ -2220,21 +2564,25 @@ class type_specifier_nonarray_image1d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> image1d_0;
+  std::shared_ptr<ast_token_t> image1d_0;
 
   type_specifier_nonarray_image1d_t(
-    std::unique_ptr<token_t> &&image1d_0_
-  ): image1d_0(std::move(image1d_0_)) {}
+    std::shared_ptr<ast_token_t> image1d_0_
+  ): image1d_0(image1d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_image1d_t> make(
-    const token_t *IMAGE1D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_image1d_t> make(
+    std::shared_ptr<ast_token_t> IMAGE1D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_image1d_t>(
-      std::make_unique<token_t>(*IMAGE1D_0_)
+    return std::make_shared<type_specifier_nonarray_image1d_t>(
+      IMAGE1D_0_
     );
   }
 
@@ -2244,21 +2592,25 @@ class type_specifier_nonarray_iimage1d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> iimage1d_0;
+  std::shared_ptr<ast_token_t> iimage1d_0;
 
   type_specifier_nonarray_iimage1d_t(
-    std::unique_ptr<token_t> &&iimage1d_0_
-  ): iimage1d_0(std::move(iimage1d_0_)) {}
+    std::shared_ptr<ast_token_t> iimage1d_0_
+  ): iimage1d_0(iimage1d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_iimage1d_t> make(
-    const token_t *IIMAGE1D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_iimage1d_t> make(
+    std::shared_ptr<ast_token_t> IIMAGE1D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_iimage1d_t>(
-      std::make_unique<token_t>(*IIMAGE1D_0_)
+    return std::make_shared<type_specifier_nonarray_iimage1d_t>(
+      IIMAGE1D_0_
     );
   }
 
@@ -2268,21 +2620,25 @@ class type_specifier_nonarray_uimage1d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> uimage1d_0;
+  std::shared_ptr<ast_token_t> uimage1d_0;
 
   type_specifier_nonarray_uimage1d_t(
-    std::unique_ptr<token_t> &&uimage1d_0_
-  ): uimage1d_0(std::move(uimage1d_0_)) {}
+    std::shared_ptr<ast_token_t> uimage1d_0_
+  ): uimage1d_0(uimage1d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uimage1d_t> make(
-    const token_t *UIMAGE1D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uimage1d_t> make(
+    std::shared_ptr<ast_token_t> UIMAGE1D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uimage1d_t>(
-      std::make_unique<token_t>(*UIMAGE1D_0_)
+    return std::make_shared<type_specifier_nonarray_uimage1d_t>(
+      UIMAGE1D_0_
     );
   }
 
@@ -2292,21 +2648,25 @@ class type_specifier_nonarray_image2d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> image2d_0;
+  std::shared_ptr<ast_token_t> image2d_0;
 
   type_specifier_nonarray_image2d_t(
-    std::unique_ptr<token_t> &&image2d_0_
-  ): image2d_0(std::move(image2d_0_)) {}
+    std::shared_ptr<ast_token_t> image2d_0_
+  ): image2d_0(image2d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_image2d_t> make(
-    const token_t *IMAGE2D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_image2d_t> make(
+    std::shared_ptr<ast_token_t> IMAGE2D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_image2d_t>(
-      std::make_unique<token_t>(*IMAGE2D_0_)
+    return std::make_shared<type_specifier_nonarray_image2d_t>(
+      IMAGE2D_0_
     );
   }
 
@@ -2316,21 +2676,25 @@ class type_specifier_nonarray_iimage2d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> iimage2d_0;
+  std::shared_ptr<ast_token_t> iimage2d_0;
 
   type_specifier_nonarray_iimage2d_t(
-    std::unique_ptr<token_t> &&iimage2d_0_
-  ): iimage2d_0(std::move(iimage2d_0_)) {}
+    std::shared_ptr<ast_token_t> iimage2d_0_
+  ): iimage2d_0(iimage2d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_iimage2d_t> make(
-    const token_t *IIMAGE2D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_iimage2d_t> make(
+    std::shared_ptr<ast_token_t> IIMAGE2D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_iimage2d_t>(
-      std::make_unique<token_t>(*IIMAGE2D_0_)
+    return std::make_shared<type_specifier_nonarray_iimage2d_t>(
+      IIMAGE2D_0_
     );
   }
 
@@ -2340,21 +2704,25 @@ class type_specifier_nonarray_uimage2d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> uimage2d_0;
+  std::shared_ptr<ast_token_t> uimage2d_0;
 
   type_specifier_nonarray_uimage2d_t(
-    std::unique_ptr<token_t> &&uimage2d_0_
-  ): uimage2d_0(std::move(uimage2d_0_)) {}
+    std::shared_ptr<ast_token_t> uimage2d_0_
+  ): uimage2d_0(uimage2d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uimage2d_t> make(
-    const token_t *UIMAGE2D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uimage2d_t> make(
+    std::shared_ptr<ast_token_t> UIMAGE2D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uimage2d_t>(
-      std::make_unique<token_t>(*UIMAGE2D_0_)
+    return std::make_shared<type_specifier_nonarray_uimage2d_t>(
+      UIMAGE2D_0_
     );
   }
 
@@ -2364,21 +2732,25 @@ class type_specifier_nonarray_image3d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> image3d_0;
+  std::shared_ptr<ast_token_t> image3d_0;
 
   type_specifier_nonarray_image3d_t(
-    std::unique_ptr<token_t> &&image3d_0_
-  ): image3d_0(std::move(image3d_0_)) {}
+    std::shared_ptr<ast_token_t> image3d_0_
+  ): image3d_0(image3d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_image3d_t> make(
-    const token_t *IMAGE3D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_image3d_t> make(
+    std::shared_ptr<ast_token_t> IMAGE3D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_image3d_t>(
-      std::make_unique<token_t>(*IMAGE3D_0_)
+    return std::make_shared<type_specifier_nonarray_image3d_t>(
+      IMAGE3D_0_
     );
   }
 
@@ -2388,21 +2760,25 @@ class type_specifier_nonarray_iimage3d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> iimage3d_0;
+  std::shared_ptr<ast_token_t> iimage3d_0;
 
   type_specifier_nonarray_iimage3d_t(
-    std::unique_ptr<token_t> &&iimage3d_0_
-  ): iimage3d_0(std::move(iimage3d_0_)) {}
+    std::shared_ptr<ast_token_t> iimage3d_0_
+  ): iimage3d_0(iimage3d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_iimage3d_t> make(
-    const token_t *IIMAGE3D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_iimage3d_t> make(
+    std::shared_ptr<ast_token_t> IIMAGE3D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_iimage3d_t>(
-      std::make_unique<token_t>(*IIMAGE3D_0_)
+    return std::make_shared<type_specifier_nonarray_iimage3d_t>(
+      IIMAGE3D_0_
     );
   }
 
@@ -2412,21 +2788,25 @@ class type_specifier_nonarray_uimage3d_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> uimage3d_0;
+  std::shared_ptr<ast_token_t> uimage3d_0;
 
   type_specifier_nonarray_uimage3d_t(
-    std::unique_ptr<token_t> &&uimage3d_0_
-  ): uimage3d_0(std::move(uimage3d_0_)) {}
+    std::shared_ptr<ast_token_t> uimage3d_0_
+  ): uimage3d_0(uimage3d_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uimage3d_t> make(
-    const token_t *UIMAGE3D_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uimage3d_t> make(
+    std::shared_ptr<ast_token_t> UIMAGE3D_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uimage3d_t>(
-      std::make_unique<token_t>(*UIMAGE3D_0_)
+    return std::make_shared<type_specifier_nonarray_uimage3d_t>(
+      UIMAGE3D_0_
     );
   }
 
@@ -2436,21 +2816,25 @@ class type_specifier_nonarray_image2drect_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> image2drect_0;
+  std::shared_ptr<ast_token_t> image2drect_0;
 
   type_specifier_nonarray_image2drect_t(
-    std::unique_ptr<token_t> &&image2drect_0_
-  ): image2drect_0(std::move(image2drect_0_)) {}
+    std::shared_ptr<ast_token_t> image2drect_0_
+  ): image2drect_0(image2drect_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_image2drect_t> make(
-    const token_t *IMAGE2DRECT_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_image2drect_t> make(
+    std::shared_ptr<ast_token_t> IMAGE2DRECT_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_image2drect_t>(
-      std::make_unique<token_t>(*IMAGE2DRECT_0_)
+    return std::make_shared<type_specifier_nonarray_image2drect_t>(
+      IMAGE2DRECT_0_
     );
   }
 
@@ -2460,21 +2844,25 @@ class type_specifier_nonarray_iimage2drect_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> iimage2drect_0;
+  std::shared_ptr<ast_token_t> iimage2drect_0;
 
   type_specifier_nonarray_iimage2drect_t(
-    std::unique_ptr<token_t> &&iimage2drect_0_
-  ): iimage2drect_0(std::move(iimage2drect_0_)) {}
+    std::shared_ptr<ast_token_t> iimage2drect_0_
+  ): iimage2drect_0(iimage2drect_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_iimage2drect_t> make(
-    const token_t *IIMAGE2DRECT_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_iimage2drect_t> make(
+    std::shared_ptr<ast_token_t> IIMAGE2DRECT_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_iimage2drect_t>(
-      std::make_unique<token_t>(*IIMAGE2DRECT_0_)
+    return std::make_shared<type_specifier_nonarray_iimage2drect_t>(
+      IIMAGE2DRECT_0_
     );
   }
 
@@ -2484,21 +2872,25 @@ class type_specifier_nonarray_uimage2drect_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> uimage2drect_0;
+  std::shared_ptr<ast_token_t> uimage2drect_0;
 
   type_specifier_nonarray_uimage2drect_t(
-    std::unique_ptr<token_t> &&uimage2drect_0_
-  ): uimage2drect_0(std::move(uimage2drect_0_)) {}
+    std::shared_ptr<ast_token_t> uimage2drect_0_
+  ): uimage2drect_0(uimage2drect_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uimage2drect_t> make(
-    const token_t *UIMAGE2DRECT_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uimage2drect_t> make(
+    std::shared_ptr<ast_token_t> UIMAGE2DRECT_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uimage2drect_t>(
-      std::make_unique<token_t>(*UIMAGE2DRECT_0_)
+    return std::make_shared<type_specifier_nonarray_uimage2drect_t>(
+      UIMAGE2DRECT_0_
     );
   }
 
@@ -2508,21 +2900,25 @@ class type_specifier_nonarray_imagecube_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> imagecube_0;
+  std::shared_ptr<ast_token_t> imagecube_0;
 
   type_specifier_nonarray_imagecube_t(
-    std::unique_ptr<token_t> &&imagecube_0_
-  ): imagecube_0(std::move(imagecube_0_)) {}
+    std::shared_ptr<ast_token_t> imagecube_0_
+  ): imagecube_0(imagecube_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_imagecube_t> make(
-    const token_t *IMAGECUBE_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_imagecube_t> make(
+    std::shared_ptr<ast_token_t> IMAGECUBE_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_imagecube_t>(
-      std::make_unique<token_t>(*IMAGECUBE_0_)
+    return std::make_shared<type_specifier_nonarray_imagecube_t>(
+      IMAGECUBE_0_
     );
   }
 
@@ -2532,21 +2928,25 @@ class type_specifier_nonarray_iimagecube_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> iimagecube_0;
+  std::shared_ptr<ast_token_t> iimagecube_0;
 
   type_specifier_nonarray_iimagecube_t(
-    std::unique_ptr<token_t> &&iimagecube_0_
-  ): iimagecube_0(std::move(iimagecube_0_)) {}
+    std::shared_ptr<ast_token_t> iimagecube_0_
+  ): iimagecube_0(iimagecube_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_iimagecube_t> make(
-    const token_t *IIMAGECUBE_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_iimagecube_t> make(
+    std::shared_ptr<ast_token_t> IIMAGECUBE_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_iimagecube_t>(
-      std::make_unique<token_t>(*IIMAGECUBE_0_)
+    return std::make_shared<type_specifier_nonarray_iimagecube_t>(
+      IIMAGECUBE_0_
     );
   }
 
@@ -2556,21 +2956,25 @@ class type_specifier_nonarray_uimagecube_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> uimagecube_0;
+  std::shared_ptr<ast_token_t> uimagecube_0;
 
   type_specifier_nonarray_uimagecube_t(
-    std::unique_ptr<token_t> &&uimagecube_0_
-  ): uimagecube_0(std::move(uimagecube_0_)) {}
+    std::shared_ptr<ast_token_t> uimagecube_0_
+  ): uimagecube_0(uimagecube_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uimagecube_t> make(
-    const token_t *UIMAGECUBE_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uimagecube_t> make(
+    std::shared_ptr<ast_token_t> UIMAGECUBE_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uimagecube_t>(
-      std::make_unique<token_t>(*UIMAGECUBE_0_)
+    return std::make_shared<type_specifier_nonarray_uimagecube_t>(
+      UIMAGECUBE_0_
     );
   }
 
@@ -2580,21 +2984,25 @@ class type_specifier_nonarray_imagebuffer_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> imagebuffer_0;
+  std::shared_ptr<ast_token_t> imagebuffer_0;
 
   type_specifier_nonarray_imagebuffer_t(
-    std::unique_ptr<token_t> &&imagebuffer_0_
-  ): imagebuffer_0(std::move(imagebuffer_0_)) {}
+    std::shared_ptr<ast_token_t> imagebuffer_0_
+  ): imagebuffer_0(imagebuffer_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_imagebuffer_t> make(
-    const token_t *IMAGEBUFFER_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_imagebuffer_t> make(
+    std::shared_ptr<ast_token_t> IMAGEBUFFER_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_imagebuffer_t>(
-      std::make_unique<token_t>(*IMAGEBUFFER_0_)
+    return std::make_shared<type_specifier_nonarray_imagebuffer_t>(
+      IMAGEBUFFER_0_
     );
   }
 
@@ -2604,21 +3012,25 @@ class type_specifier_nonarray_iimagebuffer_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> iimagebuffer_0;
+  std::shared_ptr<ast_token_t> iimagebuffer_0;
 
   type_specifier_nonarray_iimagebuffer_t(
-    std::unique_ptr<token_t> &&iimagebuffer_0_
-  ): iimagebuffer_0(std::move(iimagebuffer_0_)) {}
+    std::shared_ptr<ast_token_t> iimagebuffer_0_
+  ): iimagebuffer_0(iimagebuffer_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_iimagebuffer_t> make(
-    const token_t *IIMAGEBUFFER_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_iimagebuffer_t> make(
+    std::shared_ptr<ast_token_t> IIMAGEBUFFER_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_iimagebuffer_t>(
-      std::make_unique<token_t>(*IIMAGEBUFFER_0_)
+    return std::make_shared<type_specifier_nonarray_iimagebuffer_t>(
+      IIMAGEBUFFER_0_
     );
   }
 
@@ -2628,21 +3040,25 @@ class type_specifier_nonarray_uimagebuffer_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> uimagebuffer_0;
+  std::shared_ptr<ast_token_t> uimagebuffer_0;
 
   type_specifier_nonarray_uimagebuffer_t(
-    std::unique_ptr<token_t> &&uimagebuffer_0_
-  ): uimagebuffer_0(std::move(uimagebuffer_0_)) {}
+    std::shared_ptr<ast_token_t> uimagebuffer_0_
+  ): uimagebuffer_0(uimagebuffer_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uimagebuffer_t> make(
-    const token_t *UIMAGEBUFFER_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uimagebuffer_t> make(
+    std::shared_ptr<ast_token_t> UIMAGEBUFFER_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uimagebuffer_t>(
-      std::make_unique<token_t>(*UIMAGEBUFFER_0_)
+    return std::make_shared<type_specifier_nonarray_uimagebuffer_t>(
+      UIMAGEBUFFER_0_
     );
   }
 
@@ -2652,21 +3068,25 @@ class type_specifier_nonarray_image1darray_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> image1darray_0;
+  std::shared_ptr<ast_token_t> image1darray_0;
 
   type_specifier_nonarray_image1darray_t(
-    std::unique_ptr<token_t> &&image1darray_0_
-  ): image1darray_0(std::move(image1darray_0_)) {}
+    std::shared_ptr<ast_token_t> image1darray_0_
+  ): image1darray_0(image1darray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_image1darray_t> make(
-    const token_t *IMAGE1DARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_image1darray_t> make(
+    std::shared_ptr<ast_token_t> IMAGE1DARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_image1darray_t>(
-      std::make_unique<token_t>(*IMAGE1DARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_image1darray_t>(
+      IMAGE1DARRAY_0_
     );
   }
 
@@ -2676,21 +3096,25 @@ class type_specifier_nonarray_iimage1darray_t: public type_specifier_nonarray_t 
 
 public:
 
-  std::unique_ptr<token_t> iimage1darray_0;
+  std::shared_ptr<ast_token_t> iimage1darray_0;
 
   type_specifier_nonarray_iimage1darray_t(
-    std::unique_ptr<token_t> &&iimage1darray_0_
-  ): iimage1darray_0(std::move(iimage1darray_0_)) {}
+    std::shared_ptr<ast_token_t> iimage1darray_0_
+  ): iimage1darray_0(iimage1darray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_iimage1darray_t> make(
-    const token_t *IIMAGE1DARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_iimage1darray_t> make(
+    std::shared_ptr<ast_token_t> IIMAGE1DARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_iimage1darray_t>(
-      std::make_unique<token_t>(*IIMAGE1DARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_iimage1darray_t>(
+      IIMAGE1DARRAY_0_
     );
   }
 
@@ -2700,21 +3124,25 @@ class type_specifier_nonarray_uimage1darray_t: public type_specifier_nonarray_t 
 
 public:
 
-  std::unique_ptr<token_t> uimage1darray_0;
+  std::shared_ptr<ast_token_t> uimage1darray_0;
 
   type_specifier_nonarray_uimage1darray_t(
-    std::unique_ptr<token_t> &&uimage1darray_0_
-  ): uimage1darray_0(std::move(uimage1darray_0_)) {}
+    std::shared_ptr<ast_token_t> uimage1darray_0_
+  ): uimage1darray_0(uimage1darray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uimage1darray_t> make(
-    const token_t *UIMAGE1DARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uimage1darray_t> make(
+    std::shared_ptr<ast_token_t> UIMAGE1DARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uimage1darray_t>(
-      std::make_unique<token_t>(*UIMAGE1DARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_uimage1darray_t>(
+      UIMAGE1DARRAY_0_
     );
   }
 
@@ -2724,21 +3152,25 @@ class type_specifier_nonarray_image2darray_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> image2darray_0;
+  std::shared_ptr<ast_token_t> image2darray_0;
 
   type_specifier_nonarray_image2darray_t(
-    std::unique_ptr<token_t> &&image2darray_0_
-  ): image2darray_0(std::move(image2darray_0_)) {}
+    std::shared_ptr<ast_token_t> image2darray_0_
+  ): image2darray_0(image2darray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_image2darray_t> make(
-    const token_t *IMAGE2DARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_image2darray_t> make(
+    std::shared_ptr<ast_token_t> IMAGE2DARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_image2darray_t>(
-      std::make_unique<token_t>(*IMAGE2DARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_image2darray_t>(
+      IMAGE2DARRAY_0_
     );
   }
 
@@ -2748,21 +3180,25 @@ class type_specifier_nonarray_iimage2darray_t: public type_specifier_nonarray_t 
 
 public:
 
-  std::unique_ptr<token_t> iimage2darray_0;
+  std::shared_ptr<ast_token_t> iimage2darray_0;
 
   type_specifier_nonarray_iimage2darray_t(
-    std::unique_ptr<token_t> &&iimage2darray_0_
-  ): iimage2darray_0(std::move(iimage2darray_0_)) {}
+    std::shared_ptr<ast_token_t> iimage2darray_0_
+  ): iimage2darray_0(iimage2darray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_iimage2darray_t> make(
-    const token_t *IIMAGE2DARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_iimage2darray_t> make(
+    std::shared_ptr<ast_token_t> IIMAGE2DARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_iimage2darray_t>(
-      std::make_unique<token_t>(*IIMAGE2DARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_iimage2darray_t>(
+      IIMAGE2DARRAY_0_
     );
   }
 
@@ -2772,21 +3208,25 @@ class type_specifier_nonarray_uimage2darray_t: public type_specifier_nonarray_t 
 
 public:
 
-  std::unique_ptr<token_t> uimage2darray_0;
+  std::shared_ptr<ast_token_t> uimage2darray_0;
 
   type_specifier_nonarray_uimage2darray_t(
-    std::unique_ptr<token_t> &&uimage2darray_0_
-  ): uimage2darray_0(std::move(uimage2darray_0_)) {}
+    std::shared_ptr<ast_token_t> uimage2darray_0_
+  ): uimage2darray_0(uimage2darray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uimage2darray_t> make(
-    const token_t *UIMAGE2DARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uimage2darray_t> make(
+    std::shared_ptr<ast_token_t> UIMAGE2DARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uimage2darray_t>(
-      std::make_unique<token_t>(*UIMAGE2DARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_uimage2darray_t>(
+      UIMAGE2DARRAY_0_
     );
   }
 
@@ -2796,21 +3236,25 @@ class type_specifier_nonarray_imagecubearray_t: public type_specifier_nonarray_t
 
 public:
 
-  std::unique_ptr<token_t> imagecubearray_0;
+  std::shared_ptr<ast_token_t> imagecubearray_0;
 
   type_specifier_nonarray_imagecubearray_t(
-    std::unique_ptr<token_t> &&imagecubearray_0_
-  ): imagecubearray_0(std::move(imagecubearray_0_)) {}
+    std::shared_ptr<ast_token_t> imagecubearray_0_
+  ): imagecubearray_0(imagecubearray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_imagecubearray_t> make(
-    const token_t *IMAGECUBEARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_imagecubearray_t> make(
+    std::shared_ptr<ast_token_t> IMAGECUBEARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_imagecubearray_t>(
-      std::make_unique<token_t>(*IMAGECUBEARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_imagecubearray_t>(
+      IMAGECUBEARRAY_0_
     );
   }
 
@@ -2820,21 +3264,25 @@ class type_specifier_nonarray_iimagecubearray_t: public type_specifier_nonarray_
 
 public:
 
-  std::unique_ptr<token_t> iimagecubearray_0;
+  std::shared_ptr<ast_token_t> iimagecubearray_0;
 
   type_specifier_nonarray_iimagecubearray_t(
-    std::unique_ptr<token_t> &&iimagecubearray_0_
-  ): iimagecubearray_0(std::move(iimagecubearray_0_)) {}
+    std::shared_ptr<ast_token_t> iimagecubearray_0_
+  ): iimagecubearray_0(iimagecubearray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_iimagecubearray_t> make(
-    const token_t *IIMAGECUBEARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_iimagecubearray_t> make(
+    std::shared_ptr<ast_token_t> IIMAGECUBEARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_iimagecubearray_t>(
-      std::make_unique<token_t>(*IIMAGECUBEARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_iimagecubearray_t>(
+      IIMAGECUBEARRAY_0_
     );
   }
 
@@ -2844,21 +3292,25 @@ class type_specifier_nonarray_uimagecubearray_t: public type_specifier_nonarray_
 
 public:
 
-  std::unique_ptr<token_t> uimagecubearray_0;
+  std::shared_ptr<ast_token_t> uimagecubearray_0;
 
   type_specifier_nonarray_uimagecubearray_t(
-    std::unique_ptr<token_t> &&uimagecubearray_0_
-  ): uimagecubearray_0(std::move(uimagecubearray_0_)) {}
+    std::shared_ptr<ast_token_t> uimagecubearray_0_
+  ): uimagecubearray_0(uimagecubearray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uimagecubearray_t> make(
-    const token_t *UIMAGECUBEARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uimagecubearray_t> make(
+    std::shared_ptr<ast_token_t> UIMAGECUBEARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uimagecubearray_t>(
-      std::make_unique<token_t>(*UIMAGECUBEARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_uimagecubearray_t>(
+      UIMAGECUBEARRAY_0_
     );
   }
 
@@ -2868,21 +3320,25 @@ class type_specifier_nonarray_image2dms_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> image2dms_0;
+  std::shared_ptr<ast_token_t> image2dms_0;
 
   type_specifier_nonarray_image2dms_t(
-    std::unique_ptr<token_t> &&image2dms_0_
-  ): image2dms_0(std::move(image2dms_0_)) {}
+    std::shared_ptr<ast_token_t> image2dms_0_
+  ): image2dms_0(image2dms_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_image2dms_t> make(
-    const token_t *IMAGE2DMS_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_image2dms_t> make(
+    std::shared_ptr<ast_token_t> IMAGE2DMS_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_image2dms_t>(
-      std::make_unique<token_t>(*IMAGE2DMS_0_)
+    return std::make_shared<type_specifier_nonarray_image2dms_t>(
+      IMAGE2DMS_0_
     );
   }
 
@@ -2892,21 +3348,25 @@ class type_specifier_nonarray_iimage2dms_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> iimage2dms_0;
+  std::shared_ptr<ast_token_t> iimage2dms_0;
 
   type_specifier_nonarray_iimage2dms_t(
-    std::unique_ptr<token_t> &&iimage2dms_0_
-  ): iimage2dms_0(std::move(iimage2dms_0_)) {}
+    std::shared_ptr<ast_token_t> iimage2dms_0_
+  ): iimage2dms_0(iimage2dms_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_iimage2dms_t> make(
-    const token_t *IIMAGE2DMS_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_iimage2dms_t> make(
+    std::shared_ptr<ast_token_t> IIMAGE2DMS_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_iimage2dms_t>(
-      std::make_unique<token_t>(*IIMAGE2DMS_0_)
+    return std::make_shared<type_specifier_nonarray_iimage2dms_t>(
+      IIMAGE2DMS_0_
     );
   }
 
@@ -2916,21 +3376,25 @@ class type_specifier_nonarray_uimage2dms_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> uimage2dms_0;
+  std::shared_ptr<ast_token_t> uimage2dms_0;
 
   type_specifier_nonarray_uimage2dms_t(
-    std::unique_ptr<token_t> &&uimage2dms_0_
-  ): uimage2dms_0(std::move(uimage2dms_0_)) {}
+    std::shared_ptr<ast_token_t> uimage2dms_0_
+  ): uimage2dms_0(uimage2dms_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uimage2dms_t> make(
-    const token_t *UIMAGE2DMS_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uimage2dms_t> make(
+    std::shared_ptr<ast_token_t> UIMAGE2DMS_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uimage2dms_t>(
-      std::make_unique<token_t>(*UIMAGE2DMS_0_)
+    return std::make_shared<type_specifier_nonarray_uimage2dms_t>(
+      UIMAGE2DMS_0_
     );
   }
 
@@ -2940,21 +3404,25 @@ class type_specifier_nonarray_image2dmsarray_t: public type_specifier_nonarray_t
 
 public:
 
-  std::unique_ptr<token_t> image2dmsarray_0;
+  std::shared_ptr<ast_token_t> image2dmsarray_0;
 
   type_specifier_nonarray_image2dmsarray_t(
-    std::unique_ptr<token_t> &&image2dmsarray_0_
-  ): image2dmsarray_0(std::move(image2dmsarray_0_)) {}
+    std::shared_ptr<ast_token_t> image2dmsarray_0_
+  ): image2dmsarray_0(image2dmsarray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_image2dmsarray_t> make(
-    const token_t *IMAGE2DMSARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_image2dmsarray_t> make(
+    std::shared_ptr<ast_token_t> IMAGE2DMSARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_image2dmsarray_t>(
-      std::make_unique<token_t>(*IMAGE2DMSARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_image2dmsarray_t>(
+      IMAGE2DMSARRAY_0_
     );
   }
 
@@ -2964,21 +3432,25 @@ class type_specifier_nonarray_iimage2dmsarray_t: public type_specifier_nonarray_
 
 public:
 
-  std::unique_ptr<token_t> iimage2dmsarray_0;
+  std::shared_ptr<ast_token_t> iimage2dmsarray_0;
 
   type_specifier_nonarray_iimage2dmsarray_t(
-    std::unique_ptr<token_t> &&iimage2dmsarray_0_
-  ): iimage2dmsarray_0(std::move(iimage2dmsarray_0_)) {}
+    std::shared_ptr<ast_token_t> iimage2dmsarray_0_
+  ): iimage2dmsarray_0(iimage2dmsarray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_iimage2dmsarray_t> make(
-    const token_t *IIMAGE2DMSARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_iimage2dmsarray_t> make(
+    std::shared_ptr<ast_token_t> IIMAGE2DMSARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_iimage2dmsarray_t>(
-      std::make_unique<token_t>(*IIMAGE2DMSARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_iimage2dmsarray_t>(
+      IIMAGE2DMSARRAY_0_
     );
   }
 
@@ -2988,21 +3460,25 @@ class type_specifier_nonarray_uimage2dmsarray_t: public type_specifier_nonarray_
 
 public:
 
-  std::unique_ptr<token_t> uimage2dmsarray_0;
+  std::shared_ptr<ast_token_t> uimage2dmsarray_0;
 
   type_specifier_nonarray_uimage2dmsarray_t(
-    std::unique_ptr<token_t> &&uimage2dmsarray_0_
-  ): uimage2dmsarray_0(std::move(uimage2dmsarray_0_)) {}
+    std::shared_ptr<ast_token_t> uimage2dmsarray_0_
+  ): uimage2dmsarray_0(uimage2dmsarray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_uimage2dmsarray_t> make(
-    const token_t *UIMAGE2DMSARRAY_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_uimage2dmsarray_t> make(
+    std::shared_ptr<ast_token_t> UIMAGE2DMSARRAY_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_uimage2dmsarray_t>(
-      std::make_unique<token_t>(*UIMAGE2DMSARRAY_0_)
+    return std::make_shared<type_specifier_nonarray_uimage2dmsarray_t>(
+      UIMAGE2DMSARRAY_0_
     );
   }
 
@@ -3012,21 +3488,25 @@ class type_specifier_nonarray_struct_specifier_t: public type_specifier_nonarray
 
 public:
 
-  std::unique_ptr<struct_specifier_t> struct_specifier_0;
+  std::shared_ptr<struct_specifier_t> struct_specifier_0;
 
   type_specifier_nonarray_struct_specifier_t(
-    std::unique_ptr<struct_specifier_t> &&struct_specifier_0_
-  ): struct_specifier_0(std::move(struct_specifier_0_)) {}
+    std::shared_ptr<struct_specifier_t> struct_specifier_0_
+  ): struct_specifier_0(struct_specifier_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_struct_specifier_t> make(
-    std::unique_ptr<struct_specifier_t> &&struct_specifier_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_struct_specifier_t> make(
+    std::shared_ptr<struct_specifier_t> struct_specifier_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_struct_specifier_t>(
-      std::move(struct_specifier_0_)
+    return std::make_shared<type_specifier_nonarray_struct_specifier_t>(
+      struct_specifier_0_
     );
   }
 
@@ -3036,21 +3516,25 @@ class type_specifier_nonarray_type_name_t: public type_specifier_nonarray_t {
 
 public:
 
-  std::unique_ptr<token_t> type_name_0;
+  std::shared_ptr<ast_token_t> type_name_0;
 
   type_specifier_nonarray_type_name_t(
-    std::unique_ptr<token_t> &&type_name_0_
-  ): type_name_0(std::move(type_name_0_)) {}
+    std::shared_ptr<ast_token_t> type_name_0_
+  ): type_name_0(type_name_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_nonarray_type_name_t> make(
-    const token_t *TYPE_NAME_0_
+  virtual int get_id() const override {
+    return 265;
+  }
+
+  static std::shared_ptr<type_specifier_nonarray_type_name_t> make(
+    std::shared_ptr<ast_token_t> TYPE_NAME_0_
   ) {
-    return std::make_unique<type_specifier_nonarray_type_name_t>(
-      std::make_unique<token_t>(*TYPE_NAME_0_)
+    return std::make_shared<type_specifier_nonarray_type_name_t>(
+      TYPE_NAME_0_
     );
   }
 

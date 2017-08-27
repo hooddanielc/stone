@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 4;
 
-  static constexpr int id = 263;
+  static constexpr int id = 264;
 
   virtual ~array_specifier_t() = default;
 
@@ -39,27 +39,31 @@ class array_specifier_left_bracket_right_bracket_t: public array_specifier_t {
 
 public:
 
-  std::unique_ptr<token_t> left_bracket_0;
+  std::shared_ptr<ast_token_t> left_bracket_0;
 
-  std::unique_ptr<token_t> right_bracket_1;
+  std::shared_ptr<ast_token_t> right_bracket_1;
 
   array_specifier_left_bracket_right_bracket_t(
-    std::unique_ptr<token_t> &&left_bracket_0_,
-    std::unique_ptr<token_t> &&right_bracket_1_
-  ): left_bracket_0(std::move(left_bracket_0_)),
-     right_bracket_1(std::move(right_bracket_1_)) {}
+    std::shared_ptr<ast_token_t> left_bracket_0_,
+    std::shared_ptr<ast_token_t> right_bracket_1_
+  ): left_bracket_0(left_bracket_0_),
+     right_bracket_1(right_bracket_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<array_specifier_left_bracket_right_bracket_t> make(
-    const token_t *LEFT_BRACKET_0_,
-    const token_t *RIGHT_BRACKET_1_
+  virtual int get_id() const override {
+    return 264;
+  }
+
+  static std::shared_ptr<array_specifier_left_bracket_right_bracket_t> make(
+    std::shared_ptr<ast_token_t> LEFT_BRACKET_0_,
+    std::shared_ptr<ast_token_t> RIGHT_BRACKET_1_
   ) {
-    return std::make_unique<array_specifier_left_bracket_right_bracket_t>(
-      std::make_unique<token_t>(*LEFT_BRACKET_0_),
-      std::make_unique<token_t>(*RIGHT_BRACKET_1_)
+    return std::make_shared<array_specifier_left_bracket_right_bracket_t>(
+      LEFT_BRACKET_0_,
+      RIGHT_BRACKET_1_
     );
   }
 
@@ -69,33 +73,37 @@ class array_specifier_left_bracket_conditional_expression_right_bracket_t: publi
 
 public:
 
-  std::unique_ptr<token_t> left_bracket_0;
+  std::shared_ptr<ast_token_t> left_bracket_0;
 
-  std::unique_ptr<conditional_expression_t> conditional_expression_1;
+  std::shared_ptr<conditional_expression_t> conditional_expression_1;
 
-  std::unique_ptr<token_t> right_bracket_2;
+  std::shared_ptr<ast_token_t> right_bracket_2;
 
   array_specifier_left_bracket_conditional_expression_right_bracket_t(
-    std::unique_ptr<token_t> &&left_bracket_0_,
-    std::unique_ptr<conditional_expression_t> &&conditional_expression_1_,
-    std::unique_ptr<token_t> &&right_bracket_2_
-  ): left_bracket_0(std::move(left_bracket_0_)),
-     conditional_expression_1(std::move(conditional_expression_1_)),
-     right_bracket_2(std::move(right_bracket_2_)) {}
+    std::shared_ptr<ast_token_t> left_bracket_0_,
+    std::shared_ptr<conditional_expression_t> conditional_expression_1_,
+    std::shared_ptr<ast_token_t> right_bracket_2_
+  ): left_bracket_0(left_bracket_0_),
+     conditional_expression_1(conditional_expression_1_),
+     right_bracket_2(right_bracket_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<array_specifier_left_bracket_conditional_expression_right_bracket_t> make(
-    const token_t *LEFT_BRACKET_0_,
-    std::unique_ptr<conditional_expression_t> &&conditional_expression_1_,
-    const token_t *RIGHT_BRACKET_2_
+  virtual int get_id() const override {
+    return 264;
+  }
+
+  static std::shared_ptr<array_specifier_left_bracket_conditional_expression_right_bracket_t> make(
+    std::shared_ptr<ast_token_t> LEFT_BRACKET_0_,
+    std::shared_ptr<conditional_expression_t> conditional_expression_1_,
+    std::shared_ptr<ast_token_t> RIGHT_BRACKET_2_
   ) {
-    return std::make_unique<array_specifier_left_bracket_conditional_expression_right_bracket_t>(
-      std::make_unique<token_t>(*LEFT_BRACKET_0_),
-      std::move(conditional_expression_1_),
-      std::make_unique<token_t>(*RIGHT_BRACKET_2_)
+    return std::make_shared<array_specifier_left_bracket_conditional_expression_right_bracket_t>(
+      LEFT_BRACKET_0_,
+      conditional_expression_1_,
+      RIGHT_BRACKET_2_
     );
   }
 
@@ -105,33 +113,37 @@ class array_specifier_array_specifier_left_bracket_right_bracket_t: public array
 
 public:
 
-  std::unique_ptr<array_specifier_t> array_specifier_0;
+  std::shared_ptr<array_specifier_t> array_specifier_0;
 
-  std::unique_ptr<token_t> left_bracket_1;
+  std::shared_ptr<ast_token_t> left_bracket_1;
 
-  std::unique_ptr<token_t> right_bracket_2;
+  std::shared_ptr<ast_token_t> right_bracket_2;
 
   array_specifier_array_specifier_left_bracket_right_bracket_t(
-    std::unique_ptr<array_specifier_t> &&array_specifier_0_,
-    std::unique_ptr<token_t> &&left_bracket_1_,
-    std::unique_ptr<token_t> &&right_bracket_2_
-  ): array_specifier_0(std::move(array_specifier_0_)),
-     left_bracket_1(std::move(left_bracket_1_)),
-     right_bracket_2(std::move(right_bracket_2_)) {}
+    std::shared_ptr<array_specifier_t> array_specifier_0_,
+    std::shared_ptr<ast_token_t> left_bracket_1_,
+    std::shared_ptr<ast_token_t> right_bracket_2_
+  ): array_specifier_0(array_specifier_0_),
+     left_bracket_1(left_bracket_1_),
+     right_bracket_2(right_bracket_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<array_specifier_array_specifier_left_bracket_right_bracket_t> make(
-    std::unique_ptr<array_specifier_t> &&array_specifier_0_,
-    const token_t *LEFT_BRACKET_1_,
-    const token_t *RIGHT_BRACKET_2_
+  virtual int get_id() const override {
+    return 264;
+  }
+
+  static std::shared_ptr<array_specifier_array_specifier_left_bracket_right_bracket_t> make(
+    std::shared_ptr<array_specifier_t> array_specifier_0_,
+    std::shared_ptr<ast_token_t> LEFT_BRACKET_1_,
+    std::shared_ptr<ast_token_t> RIGHT_BRACKET_2_
   ) {
-    return std::make_unique<array_specifier_array_specifier_left_bracket_right_bracket_t>(
-      std::move(array_specifier_0_),
-      std::make_unique<token_t>(*LEFT_BRACKET_1_),
-      std::make_unique<token_t>(*RIGHT_BRACKET_2_)
+    return std::make_shared<array_specifier_array_specifier_left_bracket_right_bracket_t>(
+      array_specifier_0_,
+      LEFT_BRACKET_1_,
+      RIGHT_BRACKET_2_
     );
   }
 
@@ -141,39 +153,43 @@ class array_specifier_array_specifier_left_bracket_conditional_expression_right_
 
 public:
 
-  std::unique_ptr<array_specifier_t> array_specifier_0;
+  std::shared_ptr<array_specifier_t> array_specifier_0;
 
-  std::unique_ptr<token_t> left_bracket_1;
+  std::shared_ptr<ast_token_t> left_bracket_1;
 
-  std::unique_ptr<conditional_expression_t> conditional_expression_2;
+  std::shared_ptr<conditional_expression_t> conditional_expression_2;
 
-  std::unique_ptr<token_t> right_bracket_3;
+  std::shared_ptr<ast_token_t> right_bracket_3;
 
   array_specifier_array_specifier_left_bracket_conditional_expression_right_bracket_t(
-    std::unique_ptr<array_specifier_t> &&array_specifier_0_,
-    std::unique_ptr<token_t> &&left_bracket_1_,
-    std::unique_ptr<conditional_expression_t> &&conditional_expression_2_,
-    std::unique_ptr<token_t> &&right_bracket_3_
-  ): array_specifier_0(std::move(array_specifier_0_)),
-     left_bracket_1(std::move(left_bracket_1_)),
-     conditional_expression_2(std::move(conditional_expression_2_)),
-     right_bracket_3(std::move(right_bracket_3_)) {}
+    std::shared_ptr<array_specifier_t> array_specifier_0_,
+    std::shared_ptr<ast_token_t> left_bracket_1_,
+    std::shared_ptr<conditional_expression_t> conditional_expression_2_,
+    std::shared_ptr<ast_token_t> right_bracket_3_
+  ): array_specifier_0(array_specifier_0_),
+     left_bracket_1(left_bracket_1_),
+     conditional_expression_2(conditional_expression_2_),
+     right_bracket_3(right_bracket_3_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<array_specifier_array_specifier_left_bracket_conditional_expression_right_bracket_t> make(
-    std::unique_ptr<array_specifier_t> &&array_specifier_0_,
-    const token_t *LEFT_BRACKET_1_,
-    std::unique_ptr<conditional_expression_t> &&conditional_expression_2_,
-    const token_t *RIGHT_BRACKET_3_
+  virtual int get_id() const override {
+    return 264;
+  }
+
+  static std::shared_ptr<array_specifier_array_specifier_left_bracket_conditional_expression_right_bracket_t> make(
+    std::shared_ptr<array_specifier_t> array_specifier_0_,
+    std::shared_ptr<ast_token_t> LEFT_BRACKET_1_,
+    std::shared_ptr<conditional_expression_t> conditional_expression_2_,
+    std::shared_ptr<ast_token_t> RIGHT_BRACKET_3_
   ) {
-    return std::make_unique<array_specifier_array_specifier_left_bracket_conditional_expression_right_bracket_t>(
-      std::move(array_specifier_0_),
-      std::make_unique<token_t>(*LEFT_BRACKET_1_),
-      std::move(conditional_expression_2_),
-      std::make_unique<token_t>(*RIGHT_BRACKET_3_)
+    return std::make_shared<array_specifier_array_specifier_left_bracket_conditional_expression_right_bracket_t>(
+      array_specifier_0_,
+      LEFT_BRACKET_1_,
+      conditional_expression_2_,
+      RIGHT_BRACKET_3_
     );
   }
 

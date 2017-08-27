@@ -24,7 +24,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 261;
+  static constexpr int id = 262;
 
   virtual ~type_name_list_t() = default;
 
@@ -34,21 +34,25 @@ class type_name_list_type_name_t: public type_name_list_t {
 
 public:
 
-  std::unique_ptr<token_t> type_name_0;
+  std::shared_ptr<ast_token_t> type_name_0;
 
   type_name_list_type_name_t(
-    std::unique_ptr<token_t> &&type_name_0_
-  ): type_name_0(std::move(type_name_0_)) {}
+    std::shared_ptr<ast_token_t> type_name_0_
+  ): type_name_0(type_name_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_name_list_type_name_t> make(
-    const token_t *TYPE_NAME_0_
+  virtual int get_id() const override {
+    return 262;
+  }
+
+  static std::shared_ptr<type_name_list_type_name_t> make(
+    std::shared_ptr<ast_token_t> TYPE_NAME_0_
   ) {
-    return std::make_unique<type_name_list_type_name_t>(
-      std::make_unique<token_t>(*TYPE_NAME_0_)
+    return std::make_shared<type_name_list_type_name_t>(
+      TYPE_NAME_0_
     );
   }
 
@@ -58,33 +62,37 @@ class type_name_list_type_name_list_comma_type_name_t: public type_name_list_t {
 
 public:
 
-  std::unique_ptr<type_name_list_t> type_name_list_0;
+  std::shared_ptr<type_name_list_t> type_name_list_0;
 
-  std::unique_ptr<token_t> comma_1;
+  std::shared_ptr<ast_token_t> comma_1;
 
-  std::unique_ptr<token_t> type_name_2;
+  std::shared_ptr<ast_token_t> type_name_2;
 
   type_name_list_type_name_list_comma_type_name_t(
-    std::unique_ptr<type_name_list_t> &&type_name_list_0_,
-    std::unique_ptr<token_t> &&comma_1_,
-    std::unique_ptr<token_t> &&type_name_2_
-  ): type_name_list_0(std::move(type_name_list_0_)),
-     comma_1(std::move(comma_1_)),
-     type_name_2(std::move(type_name_2_)) {}
+    std::shared_ptr<type_name_list_t> type_name_list_0_,
+    std::shared_ptr<ast_token_t> comma_1_,
+    std::shared_ptr<ast_token_t> type_name_2_
+  ): type_name_list_0(type_name_list_0_),
+     comma_1(comma_1_),
+     type_name_2(type_name_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_name_list_type_name_list_comma_type_name_t> make(
-    std::unique_ptr<type_name_list_t> &&type_name_list_0_,
-    const token_t *COMMA_1_,
-    const token_t *TYPE_NAME_2_
+  virtual int get_id() const override {
+    return 262;
+  }
+
+  static std::shared_ptr<type_name_list_type_name_list_comma_type_name_t> make(
+    std::shared_ptr<type_name_list_t> type_name_list_0_,
+    std::shared_ptr<ast_token_t> COMMA_1_,
+    std::shared_ptr<ast_token_t> TYPE_NAME_2_
   ) {
-    return std::make_unique<type_name_list_type_name_list_comma_type_name_t>(
-      std::move(type_name_list_0_),
-      std::make_unique<token_t>(*COMMA_1_),
-      std::make_unique<token_t>(*TYPE_NAME_2_)
+    return std::make_shared<type_name_list_type_name_list_comma_type_name_t>(
+      type_name_list_0_,
+      COMMA_1_,
+      TYPE_NAME_2_
     );
   }
 

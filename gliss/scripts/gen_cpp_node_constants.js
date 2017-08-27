@@ -27,7 +27,7 @@ const get_base_class_name = (symbol) => {
     return `${symbol}_t`;
   }
 
-  return `token_t`;
+  return `ast_token_t`;
 }
 
 const get_derived_class_name = (group_name, pattern) => {
@@ -41,6 +41,10 @@ const get_derived_class_name = (group_name, pattern) => {
 
 const get_node_header_file_name = (group_name) => {
   return `${group_name.split('_').join('-')}.h`;
+}
+
+const get_ast_reducer_header_file_path = () => {
+  return path.resolve(__dirname, '..', 'ast-reducer.h');
 }
 
 const get_node_header_file_path = (group_name) => {
@@ -147,7 +151,7 @@ const get_class_prop_names = (pattern) => {
 
 const get_class_prop_types = (pattern) => {
   return pattern.map((symbol) => {
-    return `std::unique_ptr<${get_base_class_name(symbol)}>`;
+    return `${get_base_class_name(symbol)}`;
   });
 }
 
@@ -156,7 +160,7 @@ const get_constructor_params = (pattern) => {
   const names = get_class_prop_names(pattern);
   return types.map((type, idx) => {
     const name = names[idx];
-    return `${type} &&${name}_`;
+    return `std::shared_ptr<${type}> ${name}_`;
   }).join(',\n        ');
 }
 
@@ -165,11 +169,11 @@ const get_factory_func = (group_name, pattern) => {
   const params = pattern.map((symbol, idx) => {
     if (is_non_terminal(symbol)) {
       return `
-        std::unique_ptr<${get_base_class_name(symbol)}> &&${symbol}_${idx}_
+        std::shared_ptr<${get_base_class_name(symbol)}> ${symbol}_${idx}_
       `.trim();
     } else {
       return `
-        const token_t *${symbol}_${idx}_
+        std::shared_ptr<ast_token_t> ${symbol}_${idx}_
       `.trim();
     }
   }).join(',\n        ');
@@ -177,20 +181,20 @@ const get_factory_func = (group_name, pattern) => {
   const initializers = pattern.map((symbol, idx) => {
     if (is_non_terminal(symbol)) {
       return `
-        std::move(${symbol}_${idx}_)
+        ${symbol}_${idx}_
       `.trim();
     } else {
       return `
-        std::make_unique<token_t>(*${symbol}_${idx}_)
+        ${symbol}_${idx}_
       `.trim();
     }
   }).join(',\n          ');
 
   return `
-      static std::unique_ptr<${class_name}> make(
+      static std::shared_ptr<${class_name}> make(
         ${params}
       ) {
-        return std::make_unique<${class_name}>(
+        return std::make_shared<${class_name}>(
           ${initializers}
         );
       }
@@ -203,7 +207,7 @@ const get_constructor_init_list = (pattern) => {
   const names = get_class_prop_names(pattern);
   return types.map((type, idx) => {
     const name = names[idx];
-    return `${name}(std::move(${name}_))`;
+    return `${name}(${name}_)`;
   }).join(',\n         ');
 }
 
@@ -224,7 +228,7 @@ const get_derived_class_properties = (group_name, pattern) => {
   const names = get_class_prop_names(pattern);
   return types.map((type, idx) => {
     const name = names[idx];
-    return `${type} ${name}`;
+    return `std::shared_ptr<${type}> ${name}`;
   }).join(';\n\n      ') + ';';
 }
 
@@ -247,6 +251,10 @@ const get_derived_class_declaration = (group_name, pattern, idx) => {
         visitor(this);
       }
 
+      virtual int get_id() const override {
+        return ${get_group_id(group_name)};
+      }
+
       ${get_factory_func(group_name, pattern)}
 
     };  // ${class_name}
@@ -256,7 +264,10 @@ const get_derived_class_declaration = (group_name, pattern, idx) => {
 const get_empty_visitor = (group_name) => {
   if (!grammar[group_name].length) {
     const name = get_base_class_name(group_name);
-    return `virtual void accept(const visitor_t &) const override {}`
+    return `
+      virtual void accept(const visitor_t &) const override {}
+      virtual int get_id() const override {return -1;}
+    `;
   }
 
   return '';
@@ -337,6 +348,17 @@ const get_ast_nodes_by_id = () => {
   }).join('\n');
 }
 
+const get_ast_nodes_by_group_id = () => {
+  return Object.keys(grammar).map((group_name) => {
+    return `
+      template <>
+      struct ast_by_group_id<${get_group_id(group_name)}> {
+        using type_t = ${get_base_class_name(group_name)};
+      };
+    `.trim();
+  }).join('\n');
+}
+
 const get_ast_node_header = (group_name) => {
   const include_statements = get_include_statements(group_name);
   const base_class = get_base_class_declaration(group_name);
@@ -371,20 +393,106 @@ const get_ast_node_header = (group_name) => {
   `);
 }
 
-const get_all_classes = () => {
+const get_all_derived_classes = () => {
   const classes = [];
   Object.keys(grammar).forEach((key) => {
     grammar[key].forEach((pattern) => {
       classes.push(get_derived_class_name(key, pattern));
     });
   });
+  classes.push('ast_token_t');
   return classes;
 }
 
+const get_all_classes = () => {
+  const classes = get_all_derived_classes();
+  Object.keys(grammar).forEach((key) => {
+    classes.push(get_base_class_name(key));
+  });
+  return classes;
+}
+
+
 const get_visitor_declarations = () => {
-  return get_all_classes()
+  return get_all_derived_classes()
     .map((name) => `virtual void operator()(const ${name} *) const = 0;`)
     .join('\n      ');
+}
+
+const get_ast_reduction_factory = (reduction) => {
+  const names = [];
+
+  const dyn_casts = reduction.rule.map((group_id, idx) => {
+    const symbol = ast_nodes.symbols_by_group[group_id];
+    const class_name = `${symbol.group_name}_t`;
+    const name = `${symbol.group_name}_${idx}`;
+    names.push(name);
+
+    if (symbol.terminal) {
+      return `
+        auto ${name} = std::static_pointer_cast<ast_token_t>(nodes[${idx}]); // group_id ${group_id}
+      `.trim();
+    } else {
+      return `
+        auto ${name} = std::static_pointer_cast<${class_name}>(nodes[${idx}]); // group_id ${group_id}
+      `.trim();
+    }
+  }).join('\n            ');
+
+  const init_list = names.join(', ');
+
+  return `
+            ${dyn_casts}
+            return ast_by_id<${reduction.id}>::type_t::make(${init_list});
+  `;
+}
+
+const get_ast_reduction_condition = (reduction) => {
+  const target = reduction.id;
+  const checks = reduction.rule.reverse().map((id, idx) => {
+    return `delegate.check_stack_item(${idx}, ${id})`
+  }).join(' && ');
+  // reverse back to normal
+  reduction.rule.reverse();
+
+  return `
+        if (${checks}) {
+          delegate.reduce(${reduction.rule.length}, [](std::vector<std::shared_ptr<ast_t>> nodes) {
+            ${get_ast_reduction_factory(reduction)}
+          });
+          break;
+        }
+  `.trim();
+}
+
+const get_ast_predicted_checks = () => {
+  const reductions = ast_nodes.symbol_to_reductions;
+  return Object.keys(reductions).map((id) => {
+    const checks = reductions[id].map(get_ast_reduction_condition).join('\n        ');
+    return `
+      case ${id}: {
+        ${checks}
+        // if can't reduce, shift()
+        delegate.shift();
+        break;
+      }
+    `;
+  }).join('\n');
+}
+
+const get_ast_reducer = () => {
+  return `
+    template <typename delegate_t>
+    void try_reduce(delegate_t &delegate) {
+      switch(delegate.back()) {
+        ${get_ast_predicted_checks()}
+        default: {
+          delegate.shift();
+          break;
+        }
+      }
+    }
+  `;
 }
 
 const get_ast_nodes_h = () => {
@@ -415,7 +523,14 @@ const get_ast_nodes_h = () => {
     template <int N>
     struct ast_by_id;
 
+    template <int N>
+    struct ast_by_group_id {
+      using type_t = ast_token_t;
+    };
+
     ${get_ast_nodes_by_id()}
+
+    ${get_ast_nodes_by_group_id()}
 
     ${get_possible_reductions_from_right()}
 
@@ -461,6 +576,23 @@ const get_symbols_h = () => {
   `);
 }
 
+const get_ast_reducer_h = () => {
+  return format_code(4, `
+    #pragma once
+
+    #include "ast-nodes.h"
+    #include "ast-nodes/all.h"
+
+    namespace gliss {
+
+    namespace ast {
+      ${get_ast_reducer()}
+    }   // ast
+
+    }   // gliss
+  `);
+}
+
 Object.keys(grammar).forEach((group_name) => {
   const head_src = get_ast_node_header(group_name);
   const head_path = get_node_header_file_path(group_name);
@@ -478,3 +610,7 @@ fs.writeFileSync(combined_header, combined_src);
 const symbols_src = get_symbols_h();
 const symbol_path = get_symbol_header_file_path();
 fs.writeFileSync(symbol_path, symbols_src);
+
+const reducer_src = get_ast_reducer_h();
+const reducer_path = get_ast_reducer_header_file_path();
+fs.writeFileSync(reducer_path, reducer_src);

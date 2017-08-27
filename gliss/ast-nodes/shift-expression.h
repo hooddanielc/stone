@@ -28,7 +28,7 @@ public:
 
   static constexpr int rules = 3;
 
-  static constexpr int id = 226;
+  static constexpr int id = 227;
 
   virtual ~shift_expression_t() = default;
 
@@ -38,21 +38,25 @@ class shift_expression_additive_expression_t: public shift_expression_t {
 
 public:
 
-  std::unique_ptr<additive_expression_t> additive_expression_0;
+  std::shared_ptr<additive_expression_t> additive_expression_0;
 
   shift_expression_additive_expression_t(
-    std::unique_ptr<additive_expression_t> &&additive_expression_0_
-  ): additive_expression_0(std::move(additive_expression_0_)) {}
+    std::shared_ptr<additive_expression_t> additive_expression_0_
+  ): additive_expression_0(additive_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<shift_expression_additive_expression_t> make(
-    std::unique_ptr<additive_expression_t> &&additive_expression_0_
+  virtual int get_id() const override {
+    return 227;
+  }
+
+  static std::shared_ptr<shift_expression_additive_expression_t> make(
+    std::shared_ptr<additive_expression_t> additive_expression_0_
   ) {
-    return std::make_unique<shift_expression_additive_expression_t>(
-      std::move(additive_expression_0_)
+    return std::make_shared<shift_expression_additive_expression_t>(
+      additive_expression_0_
     );
   }
 
@@ -62,33 +66,37 @@ class shift_expression_shift_expression_left_op_additive_expression_t: public sh
 
 public:
 
-  std::unique_ptr<shift_expression_t> shift_expression_0;
+  std::shared_ptr<shift_expression_t> shift_expression_0;
 
-  std::unique_ptr<token_t> left_op_1;
+  std::shared_ptr<ast_token_t> left_op_1;
 
-  std::unique_ptr<additive_expression_t> additive_expression_2;
+  std::shared_ptr<additive_expression_t> additive_expression_2;
 
   shift_expression_shift_expression_left_op_additive_expression_t(
-    std::unique_ptr<shift_expression_t> &&shift_expression_0_,
-    std::unique_ptr<token_t> &&left_op_1_,
-    std::unique_ptr<additive_expression_t> &&additive_expression_2_
-  ): shift_expression_0(std::move(shift_expression_0_)),
-     left_op_1(std::move(left_op_1_)),
-     additive_expression_2(std::move(additive_expression_2_)) {}
+    std::shared_ptr<shift_expression_t> shift_expression_0_,
+    std::shared_ptr<ast_token_t> left_op_1_,
+    std::shared_ptr<additive_expression_t> additive_expression_2_
+  ): shift_expression_0(shift_expression_0_),
+     left_op_1(left_op_1_),
+     additive_expression_2(additive_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<shift_expression_shift_expression_left_op_additive_expression_t> make(
-    std::unique_ptr<shift_expression_t> &&shift_expression_0_,
-    const token_t *LEFT_OP_1_,
-    std::unique_ptr<additive_expression_t> &&additive_expression_2_
+  virtual int get_id() const override {
+    return 227;
+  }
+
+  static std::shared_ptr<shift_expression_shift_expression_left_op_additive_expression_t> make(
+    std::shared_ptr<shift_expression_t> shift_expression_0_,
+    std::shared_ptr<ast_token_t> LEFT_OP_1_,
+    std::shared_ptr<additive_expression_t> additive_expression_2_
   ) {
-    return std::make_unique<shift_expression_shift_expression_left_op_additive_expression_t>(
-      std::move(shift_expression_0_),
-      std::make_unique<token_t>(*LEFT_OP_1_),
-      std::move(additive_expression_2_)
+    return std::make_shared<shift_expression_shift_expression_left_op_additive_expression_t>(
+      shift_expression_0_,
+      LEFT_OP_1_,
+      additive_expression_2_
     );
   }
 
@@ -98,33 +106,37 @@ class shift_expression_shift_expression_right_op_additive_expression_t: public s
 
 public:
 
-  std::unique_ptr<shift_expression_t> shift_expression_0;
+  std::shared_ptr<shift_expression_t> shift_expression_0;
 
-  std::unique_ptr<token_t> right_op_1;
+  std::shared_ptr<ast_token_t> right_op_1;
 
-  std::unique_ptr<additive_expression_t> additive_expression_2;
+  std::shared_ptr<additive_expression_t> additive_expression_2;
 
   shift_expression_shift_expression_right_op_additive_expression_t(
-    std::unique_ptr<shift_expression_t> &&shift_expression_0_,
-    std::unique_ptr<token_t> &&right_op_1_,
-    std::unique_ptr<additive_expression_t> &&additive_expression_2_
-  ): shift_expression_0(std::move(shift_expression_0_)),
-     right_op_1(std::move(right_op_1_)),
-     additive_expression_2(std::move(additive_expression_2_)) {}
+    std::shared_ptr<shift_expression_t> shift_expression_0_,
+    std::shared_ptr<ast_token_t> right_op_1_,
+    std::shared_ptr<additive_expression_t> additive_expression_2_
+  ): shift_expression_0(shift_expression_0_),
+     right_op_1(right_op_1_),
+     additive_expression_2(additive_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<shift_expression_shift_expression_right_op_additive_expression_t> make(
-    std::unique_ptr<shift_expression_t> &&shift_expression_0_,
-    const token_t *RIGHT_OP_1_,
-    std::unique_ptr<additive_expression_t> &&additive_expression_2_
+  virtual int get_id() const override {
+    return 227;
+  }
+
+  static std::shared_ptr<shift_expression_shift_expression_right_op_additive_expression_t> make(
+    std::shared_ptr<shift_expression_t> shift_expression_0_,
+    std::shared_ptr<ast_token_t> RIGHT_OP_1_,
+    std::shared_ptr<additive_expression_t> additive_expression_2_
   ) {
-    return std::make_unique<shift_expression_shift_expression_right_op_additive_expression_t>(
-      std::move(shift_expression_0_),
-      std::make_unique<token_t>(*RIGHT_OP_1_),
-      std::move(additive_expression_2_)
+    return std::make_shared<shift_expression_shift_expression_right_op_additive_expression_t>(
+      shift_expression_0_,
+      RIGHT_OP_1_,
+      additive_expression_2_
     );
   }
 

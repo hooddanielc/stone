@@ -28,7 +28,7 @@ public:
 
   static constexpr int rules = 3;
 
-  static constexpr int id = 228;
+  static constexpr int id = 229;
 
   virtual ~equality_expression_t() = default;
 
@@ -38,21 +38,25 @@ class equality_expression_relational_expression_t: public equality_expression_t 
 
 public:
 
-  std::unique_ptr<relational_expression_t> relational_expression_0;
+  std::shared_ptr<relational_expression_t> relational_expression_0;
 
   equality_expression_relational_expression_t(
-    std::unique_ptr<relational_expression_t> &&relational_expression_0_
-  ): relational_expression_0(std::move(relational_expression_0_)) {}
+    std::shared_ptr<relational_expression_t> relational_expression_0_
+  ): relational_expression_0(relational_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<equality_expression_relational_expression_t> make(
-    std::unique_ptr<relational_expression_t> &&relational_expression_0_
+  virtual int get_id() const override {
+    return 229;
+  }
+
+  static std::shared_ptr<equality_expression_relational_expression_t> make(
+    std::shared_ptr<relational_expression_t> relational_expression_0_
   ) {
-    return std::make_unique<equality_expression_relational_expression_t>(
-      std::move(relational_expression_0_)
+    return std::make_shared<equality_expression_relational_expression_t>(
+      relational_expression_0_
     );
   }
 
@@ -62,33 +66,37 @@ class equality_expression_equality_expression_eq_op_relational_expression_t: pub
 
 public:
 
-  std::unique_ptr<equality_expression_t> equality_expression_0;
+  std::shared_ptr<equality_expression_t> equality_expression_0;
 
-  std::unique_ptr<token_t> eq_op_1;
+  std::shared_ptr<ast_token_t> eq_op_1;
 
-  std::unique_ptr<relational_expression_t> relational_expression_2;
+  std::shared_ptr<relational_expression_t> relational_expression_2;
 
   equality_expression_equality_expression_eq_op_relational_expression_t(
-    std::unique_ptr<equality_expression_t> &&equality_expression_0_,
-    std::unique_ptr<token_t> &&eq_op_1_,
-    std::unique_ptr<relational_expression_t> &&relational_expression_2_
-  ): equality_expression_0(std::move(equality_expression_0_)),
-     eq_op_1(std::move(eq_op_1_)),
-     relational_expression_2(std::move(relational_expression_2_)) {}
+    std::shared_ptr<equality_expression_t> equality_expression_0_,
+    std::shared_ptr<ast_token_t> eq_op_1_,
+    std::shared_ptr<relational_expression_t> relational_expression_2_
+  ): equality_expression_0(equality_expression_0_),
+     eq_op_1(eq_op_1_),
+     relational_expression_2(relational_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<equality_expression_equality_expression_eq_op_relational_expression_t> make(
-    std::unique_ptr<equality_expression_t> &&equality_expression_0_,
-    const token_t *EQ_OP_1_,
-    std::unique_ptr<relational_expression_t> &&relational_expression_2_
+  virtual int get_id() const override {
+    return 229;
+  }
+
+  static std::shared_ptr<equality_expression_equality_expression_eq_op_relational_expression_t> make(
+    std::shared_ptr<equality_expression_t> equality_expression_0_,
+    std::shared_ptr<ast_token_t> EQ_OP_1_,
+    std::shared_ptr<relational_expression_t> relational_expression_2_
   ) {
-    return std::make_unique<equality_expression_equality_expression_eq_op_relational_expression_t>(
-      std::move(equality_expression_0_),
-      std::make_unique<token_t>(*EQ_OP_1_),
-      std::move(relational_expression_2_)
+    return std::make_shared<equality_expression_equality_expression_eq_op_relational_expression_t>(
+      equality_expression_0_,
+      EQ_OP_1_,
+      relational_expression_2_
     );
   }
 
@@ -98,33 +106,37 @@ class equality_expression_equality_expression_ne_op_relational_expression_t: pub
 
 public:
 
-  std::unique_ptr<equality_expression_t> equality_expression_0;
+  std::shared_ptr<equality_expression_t> equality_expression_0;
 
-  std::unique_ptr<token_t> ne_op_1;
+  std::shared_ptr<ast_token_t> ne_op_1;
 
-  std::unique_ptr<relational_expression_t> relational_expression_2;
+  std::shared_ptr<relational_expression_t> relational_expression_2;
 
   equality_expression_equality_expression_ne_op_relational_expression_t(
-    std::unique_ptr<equality_expression_t> &&equality_expression_0_,
-    std::unique_ptr<token_t> &&ne_op_1_,
-    std::unique_ptr<relational_expression_t> &&relational_expression_2_
-  ): equality_expression_0(std::move(equality_expression_0_)),
-     ne_op_1(std::move(ne_op_1_)),
-     relational_expression_2(std::move(relational_expression_2_)) {}
+    std::shared_ptr<equality_expression_t> equality_expression_0_,
+    std::shared_ptr<ast_token_t> ne_op_1_,
+    std::shared_ptr<relational_expression_t> relational_expression_2_
+  ): equality_expression_0(equality_expression_0_),
+     ne_op_1(ne_op_1_),
+     relational_expression_2(relational_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<equality_expression_equality_expression_ne_op_relational_expression_t> make(
-    std::unique_ptr<equality_expression_t> &&equality_expression_0_,
-    const token_t *NE_OP_1_,
-    std::unique_ptr<relational_expression_t> &&relational_expression_2_
+  virtual int get_id() const override {
+    return 229;
+  }
+
+  static std::shared_ptr<equality_expression_equality_expression_ne_op_relational_expression_t> make(
+    std::shared_ptr<equality_expression_t> equality_expression_0_,
+    std::shared_ptr<ast_token_t> NE_OP_1_,
+    std::shared_ptr<relational_expression_t> relational_expression_2_
   ) {
-    return std::make_unique<equality_expression_equality_expression_ne_op_relational_expression_t>(
-      std::move(equality_expression_0_),
-      std::make_unique<token_t>(*NE_OP_1_),
-      std::move(relational_expression_2_)
+    return std::make_shared<equality_expression_equality_expression_ne_op_relational_expression_t>(
+      equality_expression_0_,
+      NE_OP_1_,
+      relational_expression_2_
     );
   }
 

@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 232;
+  static constexpr int id = 233;
 
   virtual ~logical_and_expression_t() = default;
 
@@ -37,21 +37,25 @@ class logical_and_expression_inclusive_or_expression_t: public logical_and_expre
 
 public:
 
-  std::unique_ptr<inclusive_or_expression_t> inclusive_or_expression_0;
+  std::shared_ptr<inclusive_or_expression_t> inclusive_or_expression_0;
 
   logical_and_expression_inclusive_or_expression_t(
-    std::unique_ptr<inclusive_or_expression_t> &&inclusive_or_expression_0_
-  ): inclusive_or_expression_0(std::move(inclusive_or_expression_0_)) {}
+    std::shared_ptr<inclusive_or_expression_t> inclusive_or_expression_0_
+  ): inclusive_or_expression_0(inclusive_or_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<logical_and_expression_inclusive_or_expression_t> make(
-    std::unique_ptr<inclusive_or_expression_t> &&inclusive_or_expression_0_
+  virtual int get_id() const override {
+    return 233;
+  }
+
+  static std::shared_ptr<logical_and_expression_inclusive_or_expression_t> make(
+    std::shared_ptr<inclusive_or_expression_t> inclusive_or_expression_0_
   ) {
-    return std::make_unique<logical_and_expression_inclusive_or_expression_t>(
-      std::move(inclusive_or_expression_0_)
+    return std::make_shared<logical_and_expression_inclusive_or_expression_t>(
+      inclusive_or_expression_0_
     );
   }
 
@@ -61,33 +65,37 @@ class logical_and_expression_logical_and_expression_and_op_inclusive_or_expressi
 
 public:
 
-  std::unique_ptr<logical_and_expression_t> logical_and_expression_0;
+  std::shared_ptr<logical_and_expression_t> logical_and_expression_0;
 
-  std::unique_ptr<token_t> and_op_1;
+  std::shared_ptr<ast_token_t> and_op_1;
 
-  std::unique_ptr<inclusive_or_expression_t> inclusive_or_expression_2;
+  std::shared_ptr<inclusive_or_expression_t> inclusive_or_expression_2;
 
   logical_and_expression_logical_and_expression_and_op_inclusive_or_expression_t(
-    std::unique_ptr<logical_and_expression_t> &&logical_and_expression_0_,
-    std::unique_ptr<token_t> &&and_op_1_,
-    std::unique_ptr<inclusive_or_expression_t> &&inclusive_or_expression_2_
-  ): logical_and_expression_0(std::move(logical_and_expression_0_)),
-     and_op_1(std::move(and_op_1_)),
-     inclusive_or_expression_2(std::move(inclusive_or_expression_2_)) {}
+    std::shared_ptr<logical_and_expression_t> logical_and_expression_0_,
+    std::shared_ptr<ast_token_t> and_op_1_,
+    std::shared_ptr<inclusive_or_expression_t> inclusive_or_expression_2_
+  ): logical_and_expression_0(logical_and_expression_0_),
+     and_op_1(and_op_1_),
+     inclusive_or_expression_2(inclusive_or_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<logical_and_expression_logical_and_expression_and_op_inclusive_or_expression_t> make(
-    std::unique_ptr<logical_and_expression_t> &&logical_and_expression_0_,
-    const token_t *AND_OP_1_,
-    std::unique_ptr<inclusive_or_expression_t> &&inclusive_or_expression_2_
+  virtual int get_id() const override {
+    return 233;
+  }
+
+  static std::shared_ptr<logical_and_expression_logical_and_expression_and_op_inclusive_or_expression_t> make(
+    std::shared_ptr<logical_and_expression_t> logical_and_expression_0_,
+    std::shared_ptr<ast_token_t> AND_OP_1_,
+    std::shared_ptr<inclusive_or_expression_t> inclusive_or_expression_2_
   ) {
-    return std::make_unique<logical_and_expression_logical_and_expression_and_op_inclusive_or_expression_t>(
-      std::move(logical_and_expression_0_),
-      std::make_unique<token_t>(*AND_OP_1_),
-      std::move(inclusive_or_expression_2_)
+    return std::make_shared<logical_and_expression_logical_and_expression_and_op_inclusive_or_expression_t>(
+      logical_and_expression_0_,
+      AND_OP_1_,
+      inclusive_or_expression_2_
     );
   }
 

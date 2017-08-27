@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 272;
+  static constexpr int id = 273;
 
   virtual ~initializer_list_t() = default;
 
@@ -37,21 +37,25 @@ class initializer_list_initializer_t: public initializer_list_t {
 
 public:
 
-  std::unique_ptr<initializer_t> initializer_0;
+  std::shared_ptr<initializer_t> initializer_0;
 
   initializer_list_initializer_t(
-    std::unique_ptr<initializer_t> &&initializer_0_
-  ): initializer_0(std::move(initializer_0_)) {}
+    std::shared_ptr<initializer_t> initializer_0_
+  ): initializer_0(initializer_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<initializer_list_initializer_t> make(
-    std::unique_ptr<initializer_t> &&initializer_0_
+  virtual int get_id() const override {
+    return 273;
+  }
+
+  static std::shared_ptr<initializer_list_initializer_t> make(
+    std::shared_ptr<initializer_t> initializer_0_
   ) {
-    return std::make_unique<initializer_list_initializer_t>(
-      std::move(initializer_0_)
+    return std::make_shared<initializer_list_initializer_t>(
+      initializer_0_
     );
   }
 
@@ -61,33 +65,37 @@ class initializer_list_initializer_list_comma_initializer_t: public initializer_
 
 public:
 
-  std::unique_ptr<initializer_list_t> initializer_list_0;
+  std::shared_ptr<initializer_list_t> initializer_list_0;
 
-  std::unique_ptr<token_t> comma_1;
+  std::shared_ptr<ast_token_t> comma_1;
 
-  std::unique_ptr<initializer_t> initializer_2;
+  std::shared_ptr<initializer_t> initializer_2;
 
   initializer_list_initializer_list_comma_initializer_t(
-    std::unique_ptr<initializer_list_t> &&initializer_list_0_,
-    std::unique_ptr<token_t> &&comma_1_,
-    std::unique_ptr<initializer_t> &&initializer_2_
-  ): initializer_list_0(std::move(initializer_list_0_)),
-     comma_1(std::move(comma_1_)),
-     initializer_2(std::move(initializer_2_)) {}
+    std::shared_ptr<initializer_list_t> initializer_list_0_,
+    std::shared_ptr<ast_token_t> comma_1_,
+    std::shared_ptr<initializer_t> initializer_2_
+  ): initializer_list_0(initializer_list_0_),
+     comma_1(comma_1_),
+     initializer_2(initializer_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<initializer_list_initializer_list_comma_initializer_t> make(
-    std::unique_ptr<initializer_list_t> &&initializer_list_0_,
-    const token_t *COMMA_1_,
-    std::unique_ptr<initializer_t> &&initializer_2_
+  virtual int get_id() const override {
+    return 273;
+  }
+
+  static std::shared_ptr<initializer_list_initializer_list_comma_initializer_t> make(
+    std::shared_ptr<initializer_list_t> initializer_list_0_,
+    std::shared_ptr<ast_token_t> COMMA_1_,
+    std::shared_ptr<initializer_t> initializer_2_
   ) {
-    return std::make_unique<initializer_list_initializer_list_comma_initializer_t>(
-      std::move(initializer_list_0_),
-      std::make_unique<token_t>(*COMMA_1_),
-      std::move(initializer_2_)
+    return std::make_shared<initializer_list_initializer_list_comma_initializer_t>(
+      initializer_list_0_,
+      COMMA_1_,
+      initializer_2_
     );
   }
 

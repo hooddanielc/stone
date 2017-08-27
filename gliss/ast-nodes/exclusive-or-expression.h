@@ -27,7 +27,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 230;
+  static constexpr int id = 231;
 
   virtual ~exclusive_or_expression_t() = default;
 
@@ -37,21 +37,25 @@ class exclusive_or_expression_and_expression_t: public exclusive_or_expression_t
 
 public:
 
-  std::unique_ptr<and_expression_t> and_expression_0;
+  std::shared_ptr<and_expression_t> and_expression_0;
 
   exclusive_or_expression_and_expression_t(
-    std::unique_ptr<and_expression_t> &&and_expression_0_
-  ): and_expression_0(std::move(and_expression_0_)) {}
+    std::shared_ptr<and_expression_t> and_expression_0_
+  ): and_expression_0(and_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<exclusive_or_expression_and_expression_t> make(
-    std::unique_ptr<and_expression_t> &&and_expression_0_
+  virtual int get_id() const override {
+    return 231;
+  }
+
+  static std::shared_ptr<exclusive_or_expression_and_expression_t> make(
+    std::shared_ptr<and_expression_t> and_expression_0_
   ) {
-    return std::make_unique<exclusive_or_expression_and_expression_t>(
-      std::move(and_expression_0_)
+    return std::make_shared<exclusive_or_expression_and_expression_t>(
+      and_expression_0_
     );
   }
 
@@ -61,33 +65,37 @@ class exclusive_or_expression_exclusive_or_expression_caret_and_expression_t: pu
 
 public:
 
-  std::unique_ptr<exclusive_or_expression_t> exclusive_or_expression_0;
+  std::shared_ptr<exclusive_or_expression_t> exclusive_or_expression_0;
 
-  std::unique_ptr<token_t> caret_1;
+  std::shared_ptr<ast_token_t> caret_1;
 
-  std::unique_ptr<and_expression_t> and_expression_2;
+  std::shared_ptr<and_expression_t> and_expression_2;
 
   exclusive_or_expression_exclusive_or_expression_caret_and_expression_t(
-    std::unique_ptr<exclusive_or_expression_t> &&exclusive_or_expression_0_,
-    std::unique_ptr<token_t> &&caret_1_,
-    std::unique_ptr<and_expression_t> &&and_expression_2_
-  ): exclusive_or_expression_0(std::move(exclusive_or_expression_0_)),
-     caret_1(std::move(caret_1_)),
-     and_expression_2(std::move(and_expression_2_)) {}
+    std::shared_ptr<exclusive_or_expression_t> exclusive_or_expression_0_,
+    std::shared_ptr<ast_token_t> caret_1_,
+    std::shared_ptr<and_expression_t> and_expression_2_
+  ): exclusive_or_expression_0(exclusive_or_expression_0_),
+     caret_1(caret_1_),
+     and_expression_2(and_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<exclusive_or_expression_exclusive_or_expression_caret_and_expression_t> make(
-    std::unique_ptr<exclusive_or_expression_t> &&exclusive_or_expression_0_,
-    const token_t *CARET_1_,
-    std::unique_ptr<and_expression_t> &&and_expression_2_
+  virtual int get_id() const override {
+    return 231;
+  }
+
+  static std::shared_ptr<exclusive_or_expression_exclusive_or_expression_caret_and_expression_t> make(
+    std::shared_ptr<exclusive_or_expression_t> exclusive_or_expression_0_,
+    std::shared_ptr<ast_token_t> CARET_1_,
+    std::shared_ptr<and_expression_t> and_expression_2_
   ) {
-    return std::make_unique<exclusive_or_expression_exclusive_or_expression_caret_and_expression_t>(
-      std::move(exclusive_or_expression_0_),
-      std::make_unique<token_t>(*CARET_1_),
-      std::move(and_expression_2_)
+    return std::make_shared<exclusive_or_expression_exclusive_or_expression_caret_and_expression_t>(
+      exclusive_or_expression_0_,
+      CARET_1_,
+      and_expression_2_
     );
   }
 

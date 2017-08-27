@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 219;
+  static constexpr int id = 220;
 
   virtual ~function_call_header_with_parameters_t() = default;
 
@@ -39,27 +39,31 @@ class function_call_header_with_parameters_function_call_header_assignment_expre
 
 public:
 
-  std::unique_ptr<function_call_header_t> function_call_header_0;
+  std::shared_ptr<function_call_header_t> function_call_header_0;
 
-  std::unique_ptr<assignment_expression_t> assignment_expression_1;
+  std::shared_ptr<assignment_expression_t> assignment_expression_1;
 
   function_call_header_with_parameters_function_call_header_assignment_expression_t(
-    std::unique_ptr<function_call_header_t> &&function_call_header_0_,
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_1_
-  ): function_call_header_0(std::move(function_call_header_0_)),
-     assignment_expression_1(std::move(assignment_expression_1_)) {}
+    std::shared_ptr<function_call_header_t> function_call_header_0_,
+    std::shared_ptr<assignment_expression_t> assignment_expression_1_
+  ): function_call_header_0(function_call_header_0_),
+     assignment_expression_1(assignment_expression_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_call_header_with_parameters_function_call_header_assignment_expression_t> make(
-    std::unique_ptr<function_call_header_t> &&function_call_header_0_,
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_1_
+  virtual int get_id() const override {
+    return 220;
+  }
+
+  static std::shared_ptr<function_call_header_with_parameters_function_call_header_assignment_expression_t> make(
+    std::shared_ptr<function_call_header_t> function_call_header_0_,
+    std::shared_ptr<assignment_expression_t> assignment_expression_1_
   ) {
-    return std::make_unique<function_call_header_with_parameters_function_call_header_assignment_expression_t>(
-      std::move(function_call_header_0_),
-      std::move(assignment_expression_1_)
+    return std::make_shared<function_call_header_with_parameters_function_call_header_assignment_expression_t>(
+      function_call_header_0_,
+      assignment_expression_1_
     );
   }
 
@@ -69,33 +73,37 @@ class function_call_header_with_parameters_function_call_header_with_parameters_
 
 public:
 
-  std::unique_ptr<function_call_header_with_parameters_t> function_call_header_with_parameters_0;
+  std::shared_ptr<function_call_header_with_parameters_t> function_call_header_with_parameters_0;
 
-  std::unique_ptr<token_t> comma_1;
+  std::shared_ptr<ast_token_t> comma_1;
 
-  std::unique_ptr<assignment_expression_t> assignment_expression_2;
+  std::shared_ptr<assignment_expression_t> assignment_expression_2;
 
   function_call_header_with_parameters_function_call_header_with_parameters_comma_assignment_expression_t(
-    std::unique_ptr<function_call_header_with_parameters_t> &&function_call_header_with_parameters_0_,
-    std::unique_ptr<token_t> &&comma_1_,
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_2_
-  ): function_call_header_with_parameters_0(std::move(function_call_header_with_parameters_0_)),
-     comma_1(std::move(comma_1_)),
-     assignment_expression_2(std::move(assignment_expression_2_)) {}
+    std::shared_ptr<function_call_header_with_parameters_t> function_call_header_with_parameters_0_,
+    std::shared_ptr<ast_token_t> comma_1_,
+    std::shared_ptr<assignment_expression_t> assignment_expression_2_
+  ): function_call_header_with_parameters_0(function_call_header_with_parameters_0_),
+     comma_1(comma_1_),
+     assignment_expression_2(assignment_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_call_header_with_parameters_function_call_header_with_parameters_comma_assignment_expression_t> make(
-    std::unique_ptr<function_call_header_with_parameters_t> &&function_call_header_with_parameters_0_,
-    const token_t *COMMA_1_,
-    std::unique_ptr<assignment_expression_t> &&assignment_expression_2_
+  virtual int get_id() const override {
+    return 220;
+  }
+
+  static std::shared_ptr<function_call_header_with_parameters_function_call_header_with_parameters_comma_assignment_expression_t> make(
+    std::shared_ptr<function_call_header_with_parameters_t> function_call_header_with_parameters_0_,
+    std::shared_ptr<ast_token_t> COMMA_1_,
+    std::shared_ptr<assignment_expression_t> assignment_expression_2_
   ) {
-    return std::make_unique<function_call_header_with_parameters_function_call_header_with_parameters_comma_assignment_expression_t>(
-      std::move(function_call_header_with_parameters_0_),
-      std::make_unique<token_t>(*COMMA_1_),
-      std::move(assignment_expression_2_)
+    return std::make_shared<function_call_header_with_parameters_function_call_header_with_parameters_comma_assignment_expression_t>(
+      function_call_header_with_parameters_0_,
+      COMMA_1_,
+      assignment_expression_2_
     );
   }
 

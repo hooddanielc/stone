@@ -23,7 +23,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 257;
+  static constexpr int id = 258;
 
   virtual ~precise_qualifier_t() = default;
 
@@ -33,21 +33,25 @@ class precise_qualifier_precise_t: public precise_qualifier_t {
 
 public:
 
-  std::unique_ptr<token_t> precise_0;
+  std::shared_ptr<ast_token_t> precise_0;
 
   precise_qualifier_precise_t(
-    std::unique_ptr<token_t> &&precise_0_
-  ): precise_0(std::move(precise_0_)) {}
+    std::shared_ptr<ast_token_t> precise_0_
+  ): precise_0(precise_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<precise_qualifier_precise_t> make(
-    const token_t *PRECISE_0_
+  virtual int get_id() const override {
+    return 258;
+  }
+
+  static std::shared_ptr<precise_qualifier_precise_t> make(
+    std::shared_ptr<ast_token_t> PRECISE_0_
   ) {
-    return std::make_unique<precise_qualifier_precise_t>(
-      std::make_unique<token_t>(*PRECISE_0_)
+    return std::make_shared<precise_qualifier_precise_t>(
+      PRECISE_0_
     );
   }
 

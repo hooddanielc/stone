@@ -28,7 +28,7 @@ public:
 
   static constexpr int rules = 3;
 
-  static constexpr int id = 225;
+  static constexpr int id = 226;
 
   virtual ~additive_expression_t() = default;
 
@@ -38,21 +38,25 @@ class additive_expression_multiplicative_expression_t: public additive_expressio
 
 public:
 
-  std::unique_ptr<multiplicative_expression_t> multiplicative_expression_0;
+  std::shared_ptr<multiplicative_expression_t> multiplicative_expression_0;
 
   additive_expression_multiplicative_expression_t(
-    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_0_
-  ): multiplicative_expression_0(std::move(multiplicative_expression_0_)) {}
+    std::shared_ptr<multiplicative_expression_t> multiplicative_expression_0_
+  ): multiplicative_expression_0(multiplicative_expression_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<additive_expression_multiplicative_expression_t> make(
-    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_0_
+  virtual int get_id() const override {
+    return 226;
+  }
+
+  static std::shared_ptr<additive_expression_multiplicative_expression_t> make(
+    std::shared_ptr<multiplicative_expression_t> multiplicative_expression_0_
   ) {
-    return std::make_unique<additive_expression_multiplicative_expression_t>(
-      std::move(multiplicative_expression_0_)
+    return std::make_shared<additive_expression_multiplicative_expression_t>(
+      multiplicative_expression_0_
     );
   }
 
@@ -62,33 +66,37 @@ class additive_expression_additive_expression_plus_multiplicative_expression_t: 
 
 public:
 
-  std::unique_ptr<additive_expression_t> additive_expression_0;
+  std::shared_ptr<additive_expression_t> additive_expression_0;
 
-  std::unique_ptr<token_t> plus_1;
+  std::shared_ptr<ast_token_t> plus_1;
 
-  std::unique_ptr<multiplicative_expression_t> multiplicative_expression_2;
+  std::shared_ptr<multiplicative_expression_t> multiplicative_expression_2;
 
   additive_expression_additive_expression_plus_multiplicative_expression_t(
-    std::unique_ptr<additive_expression_t> &&additive_expression_0_,
-    std::unique_ptr<token_t> &&plus_1_,
-    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_2_
-  ): additive_expression_0(std::move(additive_expression_0_)),
-     plus_1(std::move(plus_1_)),
-     multiplicative_expression_2(std::move(multiplicative_expression_2_)) {}
+    std::shared_ptr<additive_expression_t> additive_expression_0_,
+    std::shared_ptr<ast_token_t> plus_1_,
+    std::shared_ptr<multiplicative_expression_t> multiplicative_expression_2_
+  ): additive_expression_0(additive_expression_0_),
+     plus_1(plus_1_),
+     multiplicative_expression_2(multiplicative_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<additive_expression_additive_expression_plus_multiplicative_expression_t> make(
-    std::unique_ptr<additive_expression_t> &&additive_expression_0_,
-    const token_t *PLUS_1_,
-    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_2_
+  virtual int get_id() const override {
+    return 226;
+  }
+
+  static std::shared_ptr<additive_expression_additive_expression_plus_multiplicative_expression_t> make(
+    std::shared_ptr<additive_expression_t> additive_expression_0_,
+    std::shared_ptr<ast_token_t> PLUS_1_,
+    std::shared_ptr<multiplicative_expression_t> multiplicative_expression_2_
   ) {
-    return std::make_unique<additive_expression_additive_expression_plus_multiplicative_expression_t>(
-      std::move(additive_expression_0_),
-      std::make_unique<token_t>(*PLUS_1_),
-      std::move(multiplicative_expression_2_)
+    return std::make_shared<additive_expression_additive_expression_plus_multiplicative_expression_t>(
+      additive_expression_0_,
+      PLUS_1_,
+      multiplicative_expression_2_
     );
   }
 
@@ -98,33 +106,37 @@ class additive_expression_additive_expression_dash_multiplicative_expression_t: 
 
 public:
 
-  std::unique_ptr<additive_expression_t> additive_expression_0;
+  std::shared_ptr<additive_expression_t> additive_expression_0;
 
-  std::unique_ptr<token_t> dash_1;
+  std::shared_ptr<ast_token_t> dash_1;
 
-  std::unique_ptr<multiplicative_expression_t> multiplicative_expression_2;
+  std::shared_ptr<multiplicative_expression_t> multiplicative_expression_2;
 
   additive_expression_additive_expression_dash_multiplicative_expression_t(
-    std::unique_ptr<additive_expression_t> &&additive_expression_0_,
-    std::unique_ptr<token_t> &&dash_1_,
-    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_2_
-  ): additive_expression_0(std::move(additive_expression_0_)),
-     dash_1(std::move(dash_1_)),
-     multiplicative_expression_2(std::move(multiplicative_expression_2_)) {}
+    std::shared_ptr<additive_expression_t> additive_expression_0_,
+    std::shared_ptr<ast_token_t> dash_1_,
+    std::shared_ptr<multiplicative_expression_t> multiplicative_expression_2_
+  ): additive_expression_0(additive_expression_0_),
+     dash_1(dash_1_),
+     multiplicative_expression_2(multiplicative_expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<additive_expression_additive_expression_dash_multiplicative_expression_t> make(
-    std::unique_ptr<additive_expression_t> &&additive_expression_0_,
-    const token_t *DASH_1_,
-    std::unique_ptr<multiplicative_expression_t> &&multiplicative_expression_2_
+  virtual int get_id() const override {
+    return 226;
+  }
+
+  static std::shared_ptr<additive_expression_additive_expression_dash_multiplicative_expression_t> make(
+    std::shared_ptr<additive_expression_t> additive_expression_0_,
+    std::shared_ptr<ast_token_t> DASH_1_,
+    std::shared_ptr<multiplicative_expression_t> multiplicative_expression_2_
   ) {
-    return std::make_unique<additive_expression_additive_expression_dash_multiplicative_expression_t>(
-      std::move(additive_expression_0_),
-      std::make_unique<token_t>(*DASH_1_),
-      std::move(multiplicative_expression_2_)
+    return std::make_shared<additive_expression_additive_expression_dash_multiplicative_expression_t>(
+      additive_expression_0_,
+      DASH_1_,
+      multiplicative_expression_2_
     );
   }
 

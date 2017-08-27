@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 262;
+  static constexpr int id = 263;
 
   virtual ~type_specifier_t() = default;
 
@@ -39,21 +39,25 @@ class type_specifier_type_specifier_nonarray_t: public type_specifier_t {
 
 public:
 
-  std::unique_ptr<type_specifier_nonarray_t> type_specifier_nonarray_0;
+  std::shared_ptr<type_specifier_nonarray_t> type_specifier_nonarray_0;
 
   type_specifier_type_specifier_nonarray_t(
-    std::unique_ptr<type_specifier_nonarray_t> &&type_specifier_nonarray_0_
-  ): type_specifier_nonarray_0(std::move(type_specifier_nonarray_0_)) {}
+    std::shared_ptr<type_specifier_nonarray_t> type_specifier_nonarray_0_
+  ): type_specifier_nonarray_0(type_specifier_nonarray_0_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_type_specifier_nonarray_t> make(
-    std::unique_ptr<type_specifier_nonarray_t> &&type_specifier_nonarray_0_
+  virtual int get_id() const override {
+    return 263;
+  }
+
+  static std::shared_ptr<type_specifier_type_specifier_nonarray_t> make(
+    std::shared_ptr<type_specifier_nonarray_t> type_specifier_nonarray_0_
   ) {
-    return std::make_unique<type_specifier_type_specifier_nonarray_t>(
-      std::move(type_specifier_nonarray_0_)
+    return std::make_shared<type_specifier_type_specifier_nonarray_t>(
+      type_specifier_nonarray_0_
     );
   }
 
@@ -63,27 +67,31 @@ class type_specifier_type_specifier_nonarray_array_specifier_t: public type_spec
 
 public:
 
-  std::unique_ptr<type_specifier_nonarray_t> type_specifier_nonarray_0;
+  std::shared_ptr<type_specifier_nonarray_t> type_specifier_nonarray_0;
 
-  std::unique_ptr<array_specifier_t> array_specifier_1;
+  std::shared_ptr<array_specifier_t> array_specifier_1;
 
   type_specifier_type_specifier_nonarray_array_specifier_t(
-    std::unique_ptr<type_specifier_nonarray_t> &&type_specifier_nonarray_0_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_1_
-  ): type_specifier_nonarray_0(std::move(type_specifier_nonarray_0_)),
-     array_specifier_1(std::move(array_specifier_1_)) {}
+    std::shared_ptr<type_specifier_nonarray_t> type_specifier_nonarray_0_,
+    std::shared_ptr<array_specifier_t> array_specifier_1_
+  ): type_specifier_nonarray_0(type_specifier_nonarray_0_),
+     array_specifier_1(array_specifier_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<type_specifier_type_specifier_nonarray_array_specifier_t> make(
-    std::unique_ptr<type_specifier_nonarray_t> &&type_specifier_nonarray_0_,
-    std::unique_ptr<array_specifier_t> &&array_specifier_1_
+  virtual int get_id() const override {
+    return 263;
+  }
+
+  static std::shared_ptr<type_specifier_type_specifier_nonarray_array_specifier_t> make(
+    std::shared_ptr<type_specifier_nonarray_t> type_specifier_nonarray_0_,
+    std::shared_ptr<array_specifier_t> array_specifier_1_
   ) {
-    return std::make_unique<type_specifier_type_specifier_nonarray_array_specifier_t>(
-      std::move(type_specifier_nonarray_0_),
-      std::move(array_specifier_1_)
+    return std::make_shared<type_specifier_type_specifier_nonarray_array_specifier_t>(
+      type_specifier_nonarray_0_,
+      array_specifier_1_
     );
   }
 

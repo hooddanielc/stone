@@ -26,7 +26,7 @@ public:
 
   static constexpr int rules = 1;
 
-  static constexpr int id = 220;
+  static constexpr int id = 221;
 
   virtual ~function_call_header_t() = default;
 
@@ -36,27 +36,31 @@ class function_call_header_function_identifier_left_paren_t: public function_cal
 
 public:
 
-  std::unique_ptr<function_identifier_t> function_identifier_0;
+  std::shared_ptr<function_identifier_t> function_identifier_0;
 
-  std::unique_ptr<token_t> left_paren_1;
+  std::shared_ptr<ast_token_t> left_paren_1;
 
   function_call_header_function_identifier_left_paren_t(
-    std::unique_ptr<function_identifier_t> &&function_identifier_0_,
-    std::unique_ptr<token_t> &&left_paren_1_
-  ): function_identifier_0(std::move(function_identifier_0_)),
-     left_paren_1(std::move(left_paren_1_)) {}
+    std::shared_ptr<function_identifier_t> function_identifier_0_,
+    std::shared_ptr<ast_token_t> left_paren_1_
+  ): function_identifier_0(function_identifier_0_),
+     left_paren_1(left_paren_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<function_call_header_function_identifier_left_paren_t> make(
-    std::unique_ptr<function_identifier_t> &&function_identifier_0_,
-    const token_t *LEFT_PAREN_1_
+  virtual int get_id() const override {
+    return 221;
+  }
+
+  static std::shared_ptr<function_call_header_function_identifier_left_paren_t> make(
+    std::shared_ptr<function_identifier_t> function_identifier_0_,
+    std::shared_ptr<ast_token_t> LEFT_PAREN_1_
   ) {
-    return std::make_unique<function_call_header_function_identifier_left_paren_t>(
-      std::move(function_identifier_0_),
-      std::make_unique<token_t>(*LEFT_PAREN_1_)
+    return std::make_shared<function_call_header_function_identifier_left_paren_t>(
+      function_identifier_0_,
+      LEFT_PAREN_1_
     );
   }
 

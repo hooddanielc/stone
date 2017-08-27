@@ -29,7 +29,7 @@ public:
 
   static constexpr int rules = 2;
 
-  static constexpr int id = 290;
+  static constexpr int id = 291;
 
   virtual ~for_rest_statement_t() = default;
 
@@ -39,27 +39,31 @@ class for_rest_statement_conditionopt_semicolon_t: public for_rest_statement_t {
 
 public:
 
-  std::unique_ptr<conditionopt_t> conditionopt_0;
+  std::shared_ptr<conditionopt_t> conditionopt_0;
 
-  std::unique_ptr<token_t> semicolon_1;
+  std::shared_ptr<ast_token_t> semicolon_1;
 
   for_rest_statement_conditionopt_semicolon_t(
-    std::unique_ptr<conditionopt_t> &&conditionopt_0_,
-    std::unique_ptr<token_t> &&semicolon_1_
-  ): conditionopt_0(std::move(conditionopt_0_)),
-     semicolon_1(std::move(semicolon_1_)) {}
+    std::shared_ptr<conditionopt_t> conditionopt_0_,
+    std::shared_ptr<ast_token_t> semicolon_1_
+  ): conditionopt_0(conditionopt_0_),
+     semicolon_1(semicolon_1_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<for_rest_statement_conditionopt_semicolon_t> make(
-    std::unique_ptr<conditionopt_t> &&conditionopt_0_,
-    const token_t *SEMICOLON_1_
+  virtual int get_id() const override {
+    return 291;
+  }
+
+  static std::shared_ptr<for_rest_statement_conditionopt_semicolon_t> make(
+    std::shared_ptr<conditionopt_t> conditionopt_0_,
+    std::shared_ptr<ast_token_t> SEMICOLON_1_
   ) {
-    return std::make_unique<for_rest_statement_conditionopt_semicolon_t>(
-      std::move(conditionopt_0_),
-      std::make_unique<token_t>(*SEMICOLON_1_)
+    return std::make_shared<for_rest_statement_conditionopt_semicolon_t>(
+      conditionopt_0_,
+      SEMICOLON_1_
     );
   }
 
@@ -69,33 +73,37 @@ class for_rest_statement_conditionopt_semicolon_expression_t: public for_rest_st
 
 public:
 
-  std::unique_ptr<conditionopt_t> conditionopt_0;
+  std::shared_ptr<conditionopt_t> conditionopt_0;
 
-  std::unique_ptr<token_t> semicolon_1;
+  std::shared_ptr<ast_token_t> semicolon_1;
 
-  std::unique_ptr<expression_t> expression_2;
+  std::shared_ptr<expression_t> expression_2;
 
   for_rest_statement_conditionopt_semicolon_expression_t(
-    std::unique_ptr<conditionopt_t> &&conditionopt_0_,
-    std::unique_ptr<token_t> &&semicolon_1_,
-    std::unique_ptr<expression_t> &&expression_2_
-  ): conditionopt_0(std::move(conditionopt_0_)),
-     semicolon_1(std::move(semicolon_1_)),
-     expression_2(std::move(expression_2_)) {}
+    std::shared_ptr<conditionopt_t> conditionopt_0_,
+    std::shared_ptr<ast_token_t> semicolon_1_,
+    std::shared_ptr<expression_t> expression_2_
+  ): conditionopt_0(conditionopt_0_),
+     semicolon_1(semicolon_1_),
+     expression_2(expression_2_) {}
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
   }
 
-  static std::unique_ptr<for_rest_statement_conditionopt_semicolon_expression_t> make(
-    std::unique_ptr<conditionopt_t> &&conditionopt_0_,
-    const token_t *SEMICOLON_1_,
-    std::unique_ptr<expression_t> &&expression_2_
+  virtual int get_id() const override {
+    return 291;
+  }
+
+  static std::shared_ptr<for_rest_statement_conditionopt_semicolon_expression_t> make(
+    std::shared_ptr<conditionopt_t> conditionopt_0_,
+    std::shared_ptr<ast_token_t> SEMICOLON_1_,
+    std::shared_ptr<expression_t> expression_2_
   ) {
-    return std::make_unique<for_rest_statement_conditionopt_semicolon_expression_t>(
-      std::move(conditionopt_0_),
-      std::make_unique<token_t>(*SEMICOLON_1_),
-      std::move(expression_2_)
+    return std::make_shared<for_rest_statement_conditionopt_semicolon_expression_t>(
+      conditionopt_0_,
+      SEMICOLON_1_,
+      expression_2_
     );
   }
 
