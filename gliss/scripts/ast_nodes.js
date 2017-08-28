@@ -123,6 +123,18 @@ const symbols_by_group = () => {
     result[sym.group_id] = result[sym.group_id] || {};
     result[sym.group_id].group_name = sym.group_name;
     result[sym.group_id].terminal = sym.terminal;
+    result[sym.group_id].group_id = sym.group_id;
+
+    if (sym.terminal) {
+      result[sym.group_id].symbol_name = sym.name;
+    } else {
+      result[sym.group_id].symbol_name = sym.group_name;
+    }
+
+    if (sym.rule) {
+      result[sym.group_id].rules = result[sym.group_id].rules || [];
+      result[sym.group_id].rules.push(sym.rule);
+    }
   });
   return result;
 }
