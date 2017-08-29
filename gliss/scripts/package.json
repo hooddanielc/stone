@@ -1,0 +1,17 @@
+{
+  "name": "danalang",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ast_nodes.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha test/**"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^3.5.0"
+  },
+  "dependencies": {
+    "chai": "^4.1.1"
+  }
+}
