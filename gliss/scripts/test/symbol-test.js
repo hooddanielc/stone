@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { Symbol, Token, Reduction, Rule, Grammar } = require('../symbol');
+const { Symbol, Token, Reduction, Rule, Grammar, State } = require('../symbol');
 const { expect } = require('chai');
 
 describe('Symbol', () => {
@@ -106,6 +106,20 @@ describe('Grammar', () => {
     const res = Grammar.from_file(p);
     const start = res.get_starting_items();
     const state = res.get_closure(start);
-    expect(state.id > 0);
+    expect(state instanceof State).to.eql(true);
+  });
+
+  it('gets goto of state', () => {
+    const res = Grammar.from_file(p);
+    const start = res.get_starting_items();
+    const state = res.get_closure(start);
+    const next = res.get_goto(state, res.tokens['c']);
+    expect(next instanceof State).to.eql(true);
+  });
+
+  it('gets state table', () => {
+    const res = Grammar.from_file(p);
+    const states = res.get_state_table();
+    states.forEach((s) => expect(s instanceof State).to.eql(true));
   });
 });

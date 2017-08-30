@@ -138,6 +138,13 @@ class Item {
     return this.rule.rhs.slice(this.dot);
   }
 
+  get_next_item() {
+    if (!this.is_complete) {
+      const { rule, dot, peek } = this;
+      return new Item({ rule, dot: dot + 1, peek });
+    }
+  }
+
   get rhs() {
     return this.rule.rhs;
   }
@@ -151,7 +158,7 @@ class Item {
   }
 
   get corner_symbol() {
-    return this.rule[this.dot];
+    return this.rule.rhs[this.dot];
   }
 }
 
@@ -335,6 +342,66 @@ class Grammar {
     return new State({items: state_items});
   }
 
+  get_goto(state, symbol) {
+    const items = [];
+    state.items.forEach((item) => {
+      if (item.corner_symbol && item.corner_symbol.id === symbol.id) {
+        const next = item.get_next_item();
+        if (next) {
+          items.push(next);
+        }
+      }
+    });
+
+    if (items.length) {
+      return this.get_closure(items);
+    }
+  }
+
+  get_state_table() {
+    const result = [];
+    const start = this.get_starting_items();
+    const todo = [this.get_closure(start)];
+    result.push(todo[0]);
+    const done = [];
+
+    const get_state_id = (s) => s.items.map((i) => `${i.rule.id}_${i.dot}_${i.peek.id}`);
+
+    const check_done = (item_id_list) => {
+      for (let i = 0; i < done.length; ++i) {
+        if (done[i].length === item_id_list.length) {
+          if (done[i].filter((d) => item_id_list.indexOf(d) === -1).length === 0) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    }
+
+    const symbols_array = Object.keys(this.symbols).map((k) => this.symbols[k]);
+    const symbols = [this.top.lhs, this.break].concat(symbols_array);
+
+    while(todo.length) {
+      const state = todo.pop();
+      const state_id = get_state_id(state);
+      if (check_done(state_id)) {
+        continue;
+      }
+      done.push(state_id);
+      symbols.forEach((s) => {
+        const goto_ = this.get_goto(state, s);
+
+        if (goto_ && !check_done(get_state_id(goto_))) {
+          todo.push(goto_);
+          result.push(goto_);
+        }
+      });
+    }
+
+    return result;
+  }
+
   static from_str(str) {
     const rules = [];
     const tokens = {};
@@ -417,5 +484,6 @@ module.exports = {
   Token,
   Reduction,
   Rule,
-  Grammar
+  Grammar,
+  State
 };
