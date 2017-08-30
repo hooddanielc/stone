@@ -57,9 +57,55 @@ describe('Symbol', () => {
 
 describe('Grammar', () => {
   const p = path.join(__dirname, 'pets.tfr');
+  const p_epsilon = path.join(__dirname, 'pets_epsilon.tfr');
+  const p_no_top = path.join(__dirname, 'pets_no_top.tfr');
+  const p_unused_tokens = path.join(__dirname, 'pets_unused_tokens.tfr');
+  const p_no_top_arrow = path.join(__dirname, 'pets_no_top_arrow.tfr');
 
-  it('reads file', () => {
+  it('reads correct grammar', () => {
     const res = Grammar.from_file(p);
+    expect(res.tokens).to.be.a('object');
+  });
+
+  it('reads correct grammar with epsilon', () => {
+    const res = Grammar.from_file(p_epsilon);
+    expect(res.tokens).to.be.a('object');
+  });
+
+  it('throws if provided bad grammar', () => {
+    expect(() => Grammar.from_file(p_no_top)).to.throw();
+    expect(() => Grammar.from_file(p_unused_tokens)).to.throw();
+    expect(() => Grammar.from_file(p_unused_tokens)).to.throw();
+    expect(() => Grammar.from_file(p_no_top_arrow)).to.throw();
+  });
+
+  it('gets first set', () => {
+    const res = Grammar.from_file(p);
+    const first = res.get_first_set(res.top.lhs);
+    expect(first.map((e) => e.name)).to.eql(['c', 'd']);
+    expect(res.get_first_set(res.tokens['a'])).to.eql([res.tokens['a']]);
+  });
+
+  it('gets follow set', () => {
+    const res = Grammar.from_file(p);
+    const follow = res.get_follow_set(res.top.lhs);
+    expect(follow.map(({name}) => name)).to.eql(['BREAK', 'c', 'd']);
+    const follow_pet = res.get_follow_set(res.symbols['pet']);
+    expect(follow_pet.map(({name}) => name)).to.eql(['c', 'd']);
+  });
+
+  it('gets starting items', () => {
+    const res = Grammar.from_file(p);
+    const start = res.get_starting_items();
+    expect(start.map(({rule}) => this.top)).to.eql([this.top, this.top, this.top]);
+    expect(start.map(({dot}) => dot)).to.eql([0, 0, 0]);
+    expect(start.map(({peek}) => peek.name)).to.eql(['BREAK', 'c', 'd']);
+  });
+
+  it('gets closure of starting items', () => {
+    const res = Grammar.from_file(p);
+    const start = res.get_starting_items();
+    const state = res.get_closure(start);
+    expect(state.id > 0);
   });
 });
-

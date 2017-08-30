@@ -4,7 +4,7 @@
   "description": "",
   "main": "ast_nodes.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha test/**"
+    "test": "./node_modules/.bin/mocha test/*-test.js"
   },
   "author": "",
   "license": "ISC",

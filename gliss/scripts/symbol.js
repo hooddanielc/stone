@@ -64,6 +64,20 @@ class Break extends Symbol {
   }
 }
 
+class Epsilon extends Symbol {
+  constructor() {
+    super({ name: Epsilon.name });
+  }
+
+  print() {
+    console.log(Epsilon.name);
+  }
+
+  static get name() {
+    return 'EPSILON';
+  }
+}
+
 class Top extends Reduction {
   constructor() {
     super({ name: Top.name });
@@ -86,11 +100,21 @@ class Rule {
     assert(this.lhs, 'Rule requires a left hand side');
     assert(this.rhs instanceof Array, 'Right is always an array');
     assert(this.lhs instanceof Reduction, 'Left is always reduction');
-    this.rhs.forEach((sym) => assert(sym instanceof Token || sym instanceof Reduction));
+    this.rhs.forEach((sym) => assert(
+      sym instanceof Token ||
+      sym instanceof Reduction ||
+      sym instanceof Epsilon
+    ));
 
     if (lhs instanceof Top) {
       assert(rhs.length === 1, 'Omega rule has one token on right side');
     }
+
+    this.id = next_id++;
+  }
+
+  contains(token) {
+    return this.rhs.filter((s) => s.id === token.id).length > 0;
   }
 
   print() {
@@ -110,6 +134,10 @@ class Item {
     assert(dot >= 0 && dot <= rule.length, 'dot is within rule');
   }
 
+  get_beta_symbols() {
+    return this.rule.rhs.slice(this.dot);
+  }
+
   get rhs() {
     return this.rule.rhs;
   }
@@ -127,12 +155,184 @@ class Item {
   }
 }
 
+let next_state_id = 1;
+
+class State {
+  constructor({items}) {
+    this.id = next_state_id++;
+    this.items = items;
+  }
+}
+
 class Grammar {
+  static assert_has_starting_rule({rules}) {
+    assert(rules.filter((r) => r.lhs instanceof Top).length === 1);
+  }
+
+  static assert_all_tokens_used({rules, tokens}) {
+    Object.keys(tokens).map((n) => tokens[n]).forEach((token) => {
+      const len = rules.filter((r) => r.contains(token)).length;
+      assert(len > 0, `token '${token.name}' is used in a rule`);
+    });
+  }
+
+  static assert_all_reductions_defined({rules, symbols, epsilon}) {
+    Object.keys(symbols).forEach((name) => {
+      if (name === epsilon) {
+        return;
+      }
+      if (symbols[name] instanceof Reduction) {
+        const defs = rules.filter((rule) => {
+          return rule.lhs.name === name;
+        });
+        assert(defs.length > 0, `${name} has a definition`);
+      }
+    });
+  }
+
   constructor({ rules, tokens, symbols, epsilon }) {
     this.rules = rules;
     this.tokens = tokens;
     this.epsilon = epsilon;
     this.symbols = symbols;
+    Grammar.assert_has_starting_rule(this);
+    Grammar.assert_all_tokens_used(this);
+    Grammar.assert_all_reductions_defined(this);
+    this.top = rules.filter((r) => r.lhs instanceof Top)[0];
+    this.break = new Break();
+    this.follow_sets = {};
+    this.first_sets = {};
+    this.gather_empties();
+  }
+
+  gather_empties() {
+    this.empties = this.rules.filter((r) => {
+      return r.rhs.length === 0 || r.rhs[0] instanceof Epsilon;
+    }).map((r) => r.lhs);
+  }
+
+  print() {
+    console.log('tokens =', Object.keys(this.tokens).join(' '));
+    this.rules.forEach((r) => {
+      r.print();
+    });
+  }
+
+  get_starting_items() {
+    const result = [];
+    const follow = this.get_follow_set(this.top.lhs);
+    follow.forEach((f) => {
+      result.push(new Item({
+        rule: this.top,
+        dot: 0,
+        peek: f
+      }));
+    });
+    return result;
+  }
+
+  get_follow_set(symbol, result = [], taboo = []) {
+    if (taboo.indexOf(symbol.id) !== -1) return;
+    taboo.push(symbol.id);
+    if (this.follow_sets[symbol.name]) return this.follow_sets[symbol.name];
+    if (symbol instanceof Top) {
+      result.push(this.break);
+      this.get_first_set(symbol).forEach((f) => result.push(f));
+    } else if (symbol instanceof Symbol) {
+      const by_rhs = this.rules.forEach((r) => {
+        const dot = r.rhs.map(({id}) => id).indexOf(symbol.id);
+        if (dot === -1) {
+          return;
+        } else if (dot < r.rhs.length - 1) {
+          const first = this.get_first_set_sequence(r.rhs.slice(dot + 1));
+          first.forEach((f) => this.add_unique(f, result));
+        } else {
+          this.get_follow_set(r.lhs, result, taboo);
+        }
+      });
+    }
+    this.follow_sets[symbol.name] = result;
+    return result;
+  }
+
+  add_unique(symbol, list) {
+    if (!list.filter((s) => s.id === symbol.id).length) {
+      list.push(symbol);
+    }
+  }
+
+  is_empty(symbol) {
+    if (symbol instanceof Epsilon) return true;
+    const is_empty = this.empties.filter((e) => {
+      return e.id === symbol.id
+    }).length > 0;
+    return is_empty;
+  }
+
+  get_first_set_sequence(symbols) {
+    const result = [];
+    for (let i = 0; i < symbols.length; ++i) {
+      const add = this.get_first_set(symbols[i]);
+      const without_break = add.filter((s) => s.name !== Break.name);
+      without_break.forEach((s) => this.add_unique(s, result));
+      if (without_break.length === add.length) {
+        break;
+      }
+    }
+    return result;
+  }
+
+  get_first_set(symbol, result = [], taboo = []) {
+    if (taboo.indexOf(symbol.id) !== -1) {
+      return result;
+    }
+    taboo.push(symbol.id);
+    if (this.first_sets[symbol.name]) {
+      this.first_sets[symbol.name].forEach((s) => this.add_unique(s, result));
+      return result;
+    }
+    if (symbol instanceof Reduction) {
+      const rules = this.rules.filter((r) => r.lhs.id === symbol.id);
+      rules.forEach((rule) => {
+        for (let i = 0; i < rule.rhs.length; ++i) {
+          this.get_first_set(rule.rhs[i], result, taboo);
+          if (!this.is_empty(rule.rhs[i])) {
+            break;
+          }
+        }
+      });
+    } else if (symbol instanceof Token) {
+      this.add_unique(symbol, result);
+    } else if (symbol instanceof Epsilon) {
+      this.add_unique(symbol, result);
+    }
+    this.first_sets[symbol.name] = result;
+    return result;
+  }
+
+  get_closure(items) {
+    const todo = items.concat([]);
+    const done = [];
+    const state_items = [];
+    while (todo.length) {
+      const item = todo.pop();
+      const item_id = `${item.rule.id}_${item.dot}_${item.peek.id}`;
+      if (done.indexOf(item_id) !== -1) {
+        continue;
+      }
+      done.push(item_id);
+      state_items.push(item);
+      if (item.is_complete) {
+        continue;
+      }
+      item.get_beta_symbols().concat(item.peek).forEach((peek) => {
+        this.rules.filter(({lhs}) => lhs.id === peek.id).forEach((rule) => {
+          todo.push(new Item({rule, dot: 0, peek}));
+        });
+      });
+    }
+
+    return new State({items: state_items});
   }
 
   static from_str(str) {
@@ -186,8 +386,12 @@ class Grammar {
           lhs: symbols[name],
           rhs: parts.map((part_name) => {
             if (!symbols[part_name]) {
-              symbols[part_name] = new Reduction({ name: part_name });
-              reductions[part_name] = symbols[part_name];
+              if (epsilon && part_name === epsilon) {
+                symbols[part_name] = new Epsilon();
+              } else {
+                symbols[part_name] = new Reduction({ name: part_name });
+                reductions[part_name] = symbols[part_name];
+              }
             }
             return symbols[part_name]
           })
@@ -195,12 +399,11 @@ class Grammar {
       }
     });
 
-    // assert reductions has at least one definition
-    Object.keys(reductions).forEach((name) => {
-      const defs = rules.filter((rule) => {
-        return rule.lhs.name === name;
-      });
-      assert(defs.length > 0, `${name} has a definition`);
+    return new Grammar({
+      rules,
+      tokens,
+      epsilon,
+      symbols
     });
   }
 

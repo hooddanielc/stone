@@ -1,6 +1,7 @@
 /token c a t d o g c a n a r y
 /top -> pets
-pets -> pet
+/epsilon -> nothing
+pets -> nothing
 pets -> pets pet
 pet -> c a t
 pet -> d o g
