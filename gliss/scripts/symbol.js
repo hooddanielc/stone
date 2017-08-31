@@ -14,7 +14,7 @@ class Symbol {
     this.id = symbol_ids[name];
     assert(this.name, 'symbol must have a name');
     assert(!/\s+/g.exec(this.name), 'no spaces in name');
-    const match = /([A-Z]|[a-z]|[0-9])+$/.exec(this.name);
+    const match = /([A-Z]|[a-z]|[0-9]|_)+$/.exec(this.name);
     assert(match && match.index === 0, 'valid name');
   }
 }
@@ -121,6 +121,10 @@ class Rule {
     console.log(`Rule(${this.lhs.name} -> ${this.rhs.map(({name}) => name).join(' ')})`);
   }
 
+  get_str() {
+    return `${this.lhs.name} -> ${this.rhs.map(({name}) => name).join(' ')}`;
+  }
+
   get length() {
     return this.rhs.length;
   }
@@ -132,6 +136,14 @@ class Item {
     this.dot = dot;
     this.peek = peek;
     assert(dot >= 0 && dot <= rule.length, 'dot is within rule');
+  }
+
+  print() {
+    console.log(`Rule(${this.lhs.name} -> ${this.rhs.map(({name}) => name).join(' ')}), dot: ${this.dot}, peek: ${this.peek.name}`);
+  }
+
+  get_str() {
+    return `Rule(${this.lhs.name} -> ${this.rhs.map(({name}) => name).join(' ')}), dot: ${this.dot}, peek: ${this.peek.name}`;
   }
 
   get_beta_symbols() {
@@ -223,6 +235,12 @@ class Grammar {
     this.rules.forEach((r) => {
       r.print();
     });
+  }
+
+  get_str() {
+    let str = '';
+    str += 'tokens = ' + Object.keys(this.tokens).join(' ');
+    str += '  ' + this.rules.map((r) => r.get_str()).join('\n  ');
   }
 
   get_starting_items() {

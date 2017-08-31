@@ -61,6 +61,7 @@ describe('Grammar', () => {
   const p_no_top = path.join(__dirname, 'pets_no_top.tfr');
   const p_unused_tokens = path.join(__dirname, 'pets_unused_tokens.tfr');
   const p_no_top_arrow = path.join(__dirname, 'pets_no_top_arrow.tfr');
+  const p_glsl_test = path.join(__dirname, 'glsl-test.tfr');
 
   it('reads correct grammar', () => {
     const res = Grammar.from_file(p);
@@ -117,7 +118,7 @@ describe('Grammar', () => {
     expect(next instanceof State).to.eql(true);
   });
 
-  it('gets state table', () => {
+  it('gets state table', function () {
     const res = Grammar.from_file(p);
     const states = res.get_state_table();
     states.forEach((s) => expect(s instanceof State).to.eql(true));
