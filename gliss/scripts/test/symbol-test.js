@@ -1,6 +1,16 @@
 const fs = require('fs');
 const path = require('path');
-const { Symbol, Token, Reduction, Rule, Grammar, State } = require('../symbol');
+
+const {
+  Symbol,
+  Token,
+  Reduction,
+  Rule,
+  Grammar,
+  State,
+  StateCollection
+} = require('../grammar');
+
 const { expect } = require('chai');
 
 describe('Symbol', () => {
@@ -120,7 +130,9 @@ describe('Grammar', () => {
 
   it('gets state table', function () {
     const res = Grammar.from_file(p);
-    const states = res.get_state_table();
+    const state_collection = res.get_state_table();
+    expect(state_collection instanceof StateCollection);
+    const states = state_collection.states;
     states.forEach((s) => expect(s instanceof State).to.eql(true));
   });
 });
