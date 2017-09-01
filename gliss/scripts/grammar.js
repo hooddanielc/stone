@@ -177,11 +177,34 @@ class Item {
 }
 
 let next_state_id = 1;
+const state_cache = {};
 
 class State {
-  constructor({items}) {
+  constructor({items, items_id}) {
     this.id = next_state_id++;
     this.items = items;
+    this.goto_actions = {};
+    this.items_id = items_id;
+  }
+
+  add_goto(symbol, state) {
+    this.goto_actions[symbol.id] = this.goto_actions[symbol.id] || [];
+    this.goto_actions[symbol.id].push(state.id);
+  }
+
+  static get({items}) {
+    const items_id = items
+      .map((i) => `${i.rule.id}_${i.dot}_${i.peek.id}`)
+      .sort()
+      .join('_');
+
+    if (state_cache[items_id]) {
+      return state_cache[items_id];
+    }
+
+    const state = new State({items, items_id});
+    state_cache[items_id] = state;
+    return state;
   }
 }
 
@@ -369,7 +392,7 @@ class Grammar {
       });
     }
 
-    return new State({items: state_items});
+    return State.get({items: state_items});
   }
 
   get_goto(state, symbol) {
@@ -392,39 +415,30 @@ class Grammar {
     const result = [];
     const start = this.get_starting_items();
     const todo = [this.get_closure(start)];
-    result.push(todo[0]);
     const done = [];
-
-    const get_state_id = (s) => s.items.map((i) => `${i.rule.id}_${i.dot}_${i.peek.id}`);
-
-    const check_done = (item_id_list) => {
-      for (let i = 0; i < done.length; ++i) {
-        if (done[i].length === item_id_list.length) {
-          if (done[i].filter((d) => item_id_list.indexOf(d) === -1).length === 0) {
-            return true;
-          }
-        }
-      }
-
-      return false;
-    }
-
     const symbols_array = Object.keys(this.symbols).map((k) => this.symbols[k]);
     const symbols = [this.top.lhs, this.break].concat(symbols_array);
 
     while(todo.length) {
       const state = todo.pop();
-      const state_id = get_state_id(state);
-      if (check_done(state_id)) {
+      if (done.indexOf(state.items_id) > -1) {
         continue;
       }
-      done.push(state_id);
+
+      if (result.filter((s) => s.id === state.id).length > 0) {
+        continue;
+      }
+
+      result.push(state);
+      done.push(state.items_id);
       symbols.forEach((s) => {
         const goto_ = this.get_goto(state, s);
+        if (!goto_) return;
+        state.add_goto(s, goto_);
 
-        if (goto_ && !check_done(get_state_id(goto_))) {
+        // add to todo if state has not been completed
+        if (done.indexOf(goto_.items_id) === -1) {
           todo.push(goto_);
-          result.push(goto_);
         }
       });
     }
