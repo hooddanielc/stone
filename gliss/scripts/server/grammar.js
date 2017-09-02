@@ -1,5 +1,6 @@
-const fs = require('fs');
-const assert = require('assert');
+import fs from 'fs';
+import assert from 'assert';
+
 let next_id = 1;
 const symbol_ids = {};
 
@@ -523,10 +524,22 @@ class Grammar {
   }
 }
 
-module.exports = {
+export {
   Symbol,
   Token,
   Reduction,
+  Item,
+  Rule,
+  Grammar,
+  State,
+  StateCollection
+};
+
+export default {
+  Symbol,
+  Token,
+  Reduction,
+  Item,
   Rule,
   Grammar,
   State,

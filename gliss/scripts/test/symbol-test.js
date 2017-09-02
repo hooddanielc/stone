@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-const {
+import {
   Symbol,
   Token,
   Reduction,
@@ -9,7 +9,7 @@ const {
   Grammar,
   State,
   StateCollection
-} = require('../grammar');
+} from '../server/grammar';
 
 const { expect } = require('chai');
 
@@ -66,12 +66,12 @@ describe('Symbol', () => {
 });
 
 describe('Grammar', () => {
-  const p = path.join(__dirname, 'pets.tfr');
-  const p_epsilon = path.join(__dirname, 'pets_epsilon.tfr');
-  const p_no_top = path.join(__dirname, 'pets_no_top.tfr');
-  const p_unused_tokens = path.join(__dirname, 'pets_unused_tokens.tfr');
-  const p_no_top_arrow = path.join(__dirname, 'pets_no_top_arrow.tfr');
-  const p_glsl_test = path.join(__dirname, 'glsl-test.tfr');
+  const p = path.join(__dirname, '..', 'grammar', 'pets.tfr');
+  const p_epsilon = path.join(__dirname, '..', 'grammar', 'pets_epsilon.tfr');
+  const p_no_top = path.join(__dirname, '..', 'grammar', 'pets_no_top.tfr');
+  const p_unused_tokens = path.join(__dirname, '..', 'grammar', 'pets_unused_tokens.tfr');
+  const p_no_top_arrow = path.join(__dirname, '..', 'grammar', 'pets_no_top_arrow.tfr');
+  const p_glsl_test = path.join(__dirname, '..', 'grammar', 'glsl-test.tfr');
 
   it('reads correct grammar', () => {
     const res = Grammar.from_file(p);
@@ -108,7 +108,7 @@ describe('Grammar', () => {
   it('gets starting items', () => {
     const res = Grammar.from_file(p);
     const start = res.get_starting_items();
-    expect(start.map(({rule}) => this.top)).to.eql([this.top, this.top, this.top]);
+    expect(start.map(({rule}) => rule.lhs.name)).to.eql(['TOP', 'TOP', 'TOP']);
     expect(start.map(({dot}) => dot)).to.eql([0, 0, 0]);
     expect(start.map(({peek}) => peek.name)).to.eql(['BREAK', 'c', 'd']);
   });

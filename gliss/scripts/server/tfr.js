@@ -1,8 +1,7 @@
-#!/usr/bin/env node
-const program = require('commander');
-const path = require('path');
-const fs = require('fs');
-const { Grammar } = require('./grammar');
+import program from 'commander';
+import path from 'path';
+import fs from 'fs';
+import { Grammar } from './grammar';
 
 program
   .version('1.0.0')
