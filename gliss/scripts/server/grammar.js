@@ -15,13 +15,15 @@ class Symbol {
     this.id = symbol_ids[name];
     assert(this.name, 'symbol must have a name');
     assert(!/\s+/g.exec(this.name), 'no spaces in name');
-    const match = /([A-Z]|[a-z]|[0-9]|_)+$/.exec(this.name);
+    const match = /([A-Z]|[a-z]|[0-9]|_|-)+$/.exec(this.name);
     assert(match && match.index === 0, 'valid name');
   }
 }
 
 const token_names = [];
 const reduction_names = [];
+const tokens_by_name = [];
+const reductions_by_name = [];
 
 class Token extends Symbol {
   constructor({ name }) {
@@ -36,13 +38,22 @@ class Token extends Symbol {
   print() {
     console.log(`Token(${this.name})`);
   }
+
+  static get({ name }) {
+    if (tokens_by_name[name]) {
+      return tokens_by_name[name];
+    }
+
+    tokens_by_name[name] = new Token({ name });
+    return tokens_by_name[name];
+  }
 }
 
 class Reduction extends Symbol {
   constructor({ name }) {
     super({ name });
     this.terminal = false;
-    assert(token_names.indexOf(name) === -1, 'reduction can not be a reduction');
+    assert(token_names.indexOf(name) === -1, 'reduction can not be a terminal');
     if (reduction_names.indexOf(name) === -1) {
       reduction_names.push(name);
     }
@@ -50,6 +61,15 @@ class Reduction extends Symbol {
 
   print() {
     console.log(`Reduction(${this.name})`);
+  }
+
+  static get({ name }) {
+    if (reductions_by_name[name]) {
+      return reductions_by_name[name];
+    }
+
+    reductions_by_name[name] = new Reduction({ name });
+    return reductions_by_name[name];
   }
 }
 
@@ -63,7 +83,7 @@ class Break extends Symbol {
   }
 
   static get name() {
-    return 'BREAK';
+    return '--';
   }
 }
 
@@ -95,11 +115,12 @@ class Top extends Reduction {
   }
 }
 
+const rules_by_lookup = {};
+
 class Rule {
-  constructor({ rhs, lhs, timeout=0 }) {
+  constructor({ rhs, lhs }) {
     this.lhs = lhs;
     this.rhs = rhs || [];
-    this.timeout = timeout;
     assert(this.lhs, 'Rule requires a left hand side');
     assert(this.rhs instanceof Array, 'Right is always an array');
     assert(this.lhs instanceof Reduction, 'Left is always reduction');
@@ -110,7 +131,7 @@ class Rule {
     ));
 
     if (lhs instanceof Top) {
-      assert(rhs.length === 1, 'Omega rule has one token on right side');
+      assert(rhs.length === 1, 'Omega rule has one symbol on right side');
     }
 
     this.id = next_id++;
@@ -131,13 +152,44 @@ class Rule {
   get length() {
     return this.rhs.length;
   }
+
+  static get_lookup({ lhs, rhs }) {
+    return `${lhs.id}_${rhs.map(l => l.id).join('_')}`;
+  }
+
+  static get({ rhs, lhs }) {
+    const lookup = Rule.get_lookup({ rhs, lhs });
+    if (rules_by_lookup[lookup]) {
+      return rules_by_lookup[lookup];
+    }
+    rules_by_lookup[lookup] = new Rule({ rhs, lhs });
+    return rules_by_lookup[lookup];
+  }
 }
 
+const items_by_lookup = [];
+let next_item_id = 1;
+
 class Item {
+
+  static get({ rule, dot, peek }) {
+    const lookup = Item.get_lookup({ rule, dot, peek });
+    if (items_by_lookup[lookup]) {
+      return items_by_lookup[lookup];
+    }
+    items_by_lookup[lookup] = new Item({ rule, dot, peek });
+    return items_by_lookup[lookup];
+  }
+
+  static get_lookup({ rule, dot, peek }) {
+    return `${rule.id}_${dot}_${peek.id}`;
+  }
+
   constructor({ rule, dot, peek }) {
     this.rule = rule;
     this.dot = dot;
     this.peek = peek;
+    this.id = next_item_id++;
     assert(dot >= 0 && dot <= rule.length, 'dot is within rule');
   }
 
@@ -156,7 +208,7 @@ class Item {
   get_next_item() {
     if (!this.is_complete) {
       const { rule, dot, peek } = this;
-      return new Item({ rule, dot: dot + 1, peek });
+      return Item.get({ rule, dot: dot + 1, peek });
     }
   }
 
@@ -178,14 +230,14 @@ class Item {
 }
 
 let next_state_id = 1;
-const state_cache = {};
+const state_by_lookup = {};
 
 class State {
-  constructor({items, items_id}) {
+
+  constructor({items}) {
     this.id = next_state_id++;
     this.items = items;
     this.goto_actions = {};
-    this.items_id = items_id;
   }
 
   add_goto(symbol, state) {
@@ -193,19 +245,22 @@ class State {
     this.goto_actions[symbol.id].push(state.id);
   }
 
-  static get({items}) {
-    const items_id = items
+  static get_lookup({items}) {
+    return items
       .map((i) => `${i.rule.id}_${i.dot}_${i.peek.id}`)
       .sort()
       .join('_');
+  }
 
-    if (state_cache[items_id]) {
-      return state_cache[items_id];
+  static get({items}) {
+    const lookup = State.get_lookup({items});
+
+    if (state_by_lookup[lookup]) {
+      return state_by_lookup[lookup];
     }
 
-    const state = new State({items, items_id});
-    state_cache[items_id] = state;
-    return state;
+    state_by_lookup[lookup] = new State({items});
+    return state_by_lookup[lookup];
   }
 }
 
@@ -283,7 +338,7 @@ class Grammar {
     const result = [];
     const follow = this.get_follow_set(this.top.lhs);
     follow.forEach((f) => {
-      result.push(new Item({
+      result.push(Item.get({
         rule: this.top,
         dot: 0,
         peek: f
@@ -374,26 +429,33 @@ class Grammar {
   get_closure(items) {
     const todo = items.concat([]);
     const done = [];
-    const state_items = [];
+    const result = [];
     while (todo.length) {
       const item = todo.pop();
-      const item_id = `${item.rule.id}_${item.dot}_${item.peek.id}`;
-      if (done.indexOf(item_id) !== -1) {
+      if (done.indexOf(item.id) !== -1) {
         continue;
       }
-      done.push(item_id);
-      state_items.push(item);
+      done.push(item.id);
+      result.push(item);
       if (item.is_complete) {
         continue;
       }
-      item.get_beta_symbols().concat(item.peek).forEach((peek) => {
-        this.rules.filter(({lhs}) => lhs.id === peek.id).forEach((rule) => {
-          todo.push(new Item({rule, dot: 0, peek}));
+      const peeks = this.get_first_set_sequence(item.get_beta_symbols().concat([item.peek]));
+      peeks.push(this.break);
+
+      const by_lhs = this.rules.filter(({lhs}) => lhs.id === item.corner_symbol.id);
+
+      peeks.forEach((peek) => {
+        by_lhs.forEach((rule) => {
+          const next_item = Item.get({rule, dot: 0, peek});
+          if (done.indexOf(next_item.id) === -1) {
+            todo.push(next_item);
+          }
         });
       });
     }
 
-    return State.get({items: state_items});
+    return State.get({items: result});
   }
 
   get_goto(state, symbol) {
@@ -421,28 +483,36 @@ class Grammar {
     const symbols = [this.top.lhs, this.break].concat(symbols_array);
 
     while(todo.length) {
-      const state = todo.pop();
-      if (done.indexOf(state.items_id) > -1) {
-        continue;
-      }
+      console.log('todo:', todo.length, 'done:', result.length);
 
+      const state = todo.pop();
       if (result.filter((s) => s.id === state.id).length > 0) {
         continue;
       }
 
       result.push(state);
-      done.push(state.items_id);
       symbols.forEach((s) => {
         const goto_ = this.get_goto(state, s);
         if (!goto_) return;
         state.add_goto(s, goto_);
 
         // add to todo if state has not been completed
-        if (done.indexOf(goto_.items_id) === -1) {
+        if (result.filter((s) => s.id === goto_.id).length === 0) {
           todo.push(goto_);
         }
       });
     }
+
+    result.sort((a, b) => {
+      const res = a.id - b.id;
+      if (res < 0) {
+        return -1;
+      } else if (res > 0) {
+        return 1;
+      }
+
+      return 0;
+    });
 
     return new StateCollection({ states: result });
   }
@@ -464,7 +534,7 @@ class Grammar {
         parts.shift();
         parts.forEach((part) => {
           if (part !== '->') {
-            tokens[part] = new Token({ name: part });
+            tokens[part] = Token.get({ name: part });
             symbols[part] = tokens[part];
           }
         });
@@ -473,9 +543,9 @@ class Grammar {
         assert(parts[0] === '->', '/top has an arrow to the right');
         parts.shift();
         assert(parts.length === 1);
-        symbols[parts[0]] = symbols[parts[0]] || new Reduction({ name: parts[0] });
+        symbols[parts[0]] = symbols[parts[0]] || Reduction.get({ name: parts[0] });
         reductions[parts[0]] = symbols[parts[0]];
-        rules.push(new Rule({
+        rules.push(Rule.get({
           lhs: new Top(),
           rhs: [symbols[parts[0]]]
         }));
@@ -490,18 +560,18 @@ class Grammar {
         parts.shift();
 
         if (!symbols[name]) {
-          symbols[name] = new Reduction({ name });
+          symbols[name] = Reduction.get({ name });
           reductions[name] = symbols[name];
         }
 
-        rules.push(new Rule({
+        rules.push(Rule.get({
           lhs: symbols[name],
           rhs: parts.map((part_name) => {
             if (!symbols[part_name]) {
               if (epsilon && part_name === epsilon) {
                 symbols[part_name] = new Epsilon();
               } else {
-                symbols[part_name] = new Reduction({ name: part_name });
+                symbols[part_name] = Reduction.get({ name: part_name });
                 reductions[part_name] = symbols[part_name];
               }
             }
