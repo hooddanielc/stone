@@ -1,0 +1,8 @@
+/token c a t d o g c a n a r y
+/top -> pets
+pets -> pets pet
+pets -> nothing
+pet -> c a t
+pet -> d o g
+pet -> c a n a r y
+nothing ->
