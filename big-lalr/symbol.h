@@ -225,7 +225,7 @@ public:
   }
 
   virtual std::string get_description() const override {
-    return "Break(--)";
+    return "Epsilon(--)";
   }
 
 protected:

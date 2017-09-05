@@ -23,4 +23,13 @@ FIXTURE(first_sets) {
   };
   std::sort(set.begin(), set.end(), [](auto a, auto b) { return *a < *b; });
   EXPECT_TRUE(set == expected);
+  auto sequence = grammar->get_first_sequence(set);
+  EXPECT_TRUE(sequence == std::vector<std::shared_ptr<symbol_t>>({ token_t::make("c") }));
+}
+
+FIXTURE(follow_sets) {
+  auto grammar = grammar_t::from_file(example_grammar);
+  auto follow_set = grammar->get_follow_set(top_t::make());
+  EXPECT_EQ(follow_set.size(), size_t(1));
+  EXPECT_EQ(follow_set[0], break_t::make());
 }

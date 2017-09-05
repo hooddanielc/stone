@@ -37,6 +37,14 @@ public:
     return std::get<1>(data);
   }
 
+  std::vector<std::shared_ptr<symbol_t>> get_beta(int dot) {
+    std::vector<std::shared_ptr<symbol_t>> result;
+    for (size_t i = dot + 1; i < get_rhs().size(); ++i) {
+      result.push_back(get_rhs()[i]);
+    }
+    return result;
+  }
+
   static void flush() {
     store.clear();
   }
