@@ -41,6 +41,42 @@ public:
     store.clear();
   }
 
+  static std::vector<std::shared_ptr<rule_t>> get_store() {
+    std::vector<std::shared_ptr<rule_t>> rules;
+    for (auto it = store.begin(); it != store.end(); ++it) {
+      if (auto ptr = it->second.lock()) {
+        rules.push_back(ptr);
+      }
+    }
+    return rules;
+  }
+
+  virtual bool operator<(const rule_t &other) {
+    if (*(get_lhs()) < *(other.get_lhs())) {
+      return true;
+    } else if (*(get_lhs()) > *(other.get_lhs())) {
+      return false;
+    }
+
+    size_t size_a = get_rhs().size();
+    size_t size_b = other.get_rhs().size();
+    size_t len = size_a < size_b ? size_b : size_a;
+
+    for (size_t i = 0; i < len; ++i) {
+      if (i < size_a && i < size_b) {
+        if (*(get_rhs()[i]) < *(other.get_rhs()[i])) {
+          return true;
+        } else if (*(get_rhs()[i]) > *(other.get_rhs()[i])) {
+          return false;
+        }
+      } else {
+        return size_a < size_b;
+      }
+    }
+
+    return false;
+  }
+
 protected:
 
   struct store_key_hash_t : public std::unary_function<data_t, std::size_t> {

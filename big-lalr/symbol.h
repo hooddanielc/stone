@@ -20,6 +20,20 @@ public:
     return ss.str();
   }
 
+  virtual bool operator<(const symbol_t &other) {
+    return get_name() < other.get_name();
+  }
+
+  virtual bool operator>(const symbol_t &other) {
+    return get_name() > other.get_name();
+  }
+
+  virtual bool is_reduction() const { return false; }
+
+  virtual bool is_token() const { return false; }
+
+  virtual bool is_break() const { return false; }
+
 protected:
 
   std::string name;
@@ -55,8 +69,24 @@ public:
     return ss.str();
   }
 
+  virtual bool is_token() const override { return true; }
+
   static void flush() {
     store.clear();
+  }
+
+  static bool exists(const std::string &name) {
+    return bool(store[name].lock());
+  }
+
+  static std::vector<std::shared_ptr<token_t>> get_store() {
+    std::vector<std::shared_ptr<token_t>> tokens;
+    for (auto it = store.begin(); it != store.end(); ++it) {
+      if (auto ptr = it->second.lock()) {
+        tokens.push_back(ptr);
+      }
+    }
+    return tokens;
   }
 
 protected:
@@ -90,8 +120,24 @@ public:
     return ss.str();
   }
 
+  virtual bool is_reduction() const override { return true; }
+
   static void flush() {
     store.clear();
+  }
+
+  static bool exists(const std::string &name) {
+    return bool(store[name].lock());
+  }
+
+  static std::vector<std::shared_ptr<reduction_t>> get_store() {
+    std::vector<std::shared_ptr<reduction_t>> reductions;
+    for (auto it = store.begin(); it != store.end(); ++it) {
+      if (auto ptr = it->second.lock()) {
+        reductions.push_back(ptr);
+      }
+    }
+    return reductions;
   }
 
 protected:
@@ -104,7 +150,7 @@ protected:
 
 std::unordered_map<std::string, std::weak_ptr<reduction_t>> reduction_t::store;
 
-class top_t: public symbol_t {
+class top_t: public reduction_t {
 
 public:
 
@@ -127,13 +173,13 @@ protected:
 
   static std::weak_ptr<top_t> cached;
 
-  top_t(const std::string &name): symbol_t(name) {}
+  top_t(const std::string &name): reduction_t(name) {}
 
 };  // top_t
 
 std::weak_ptr<top_t> top_t::cached;
 
-class break_t: public symbol_t {
+class break_t: public token_t {
 
 public:
 
@@ -149,17 +195,47 @@ public:
   }
 
   virtual std::string get_description() const override {
-    return "--";
+    return "Break(--)";
   }
 
 protected:
 
   static std::weak_ptr<break_t> cached;
 
-  break_t(const std::string &name): symbol_t(name) {}
+  break_t(const std::string &name): token_t(name) {}
 
 };  // break_t
 
 std::weak_ptr<break_t> break_t::cached;
+
+
+class epsilon_t: public token_t {
+
+public:
+
+  static std::shared_ptr<epsilon_t> make() {
+    if (auto cached_ptr = cached.lock()) {
+      return cached_ptr;
+    }
+
+    auto symbol = new epsilon_t("--");
+    std::shared_ptr<epsilon_t> ptr(symbol);
+    cached = ptr;
+    return ptr;
+  }
+
+  virtual std::string get_description() const override {
+    return "Break(--)";
+  }
+
+protected:
+
+  static std::weak_ptr<epsilon_t> cached;
+
+  epsilon_t(const std::string &name): token_t(name) {}
+
+};  // epsilon_t
+
+std::weak_ptr<epsilon_t> epsilon_t::cached;
 
 }   // biglr
