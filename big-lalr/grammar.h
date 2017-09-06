@@ -5,8 +5,10 @@
 #include <utility>
 #include "util.h"
 #include "rule.h"
+#include "item.h"
 #include "symbol.h"
 #include "lexer.h"
+#include "state.h"
 
 namespace biglr {
 
@@ -185,6 +187,93 @@ public:
       follow_sets[symbol] = result;
     }
     return follow_sets[symbol];
+  }
+
+  std::vector<std::shared_ptr<item_t>> get_start_items() {
+    std::vector<std::shared_ptr<item_t>> result;
+    auto follow_set = get_follow_set(omega);
+    auto r0 = by_lhs[omega][0];
+
+    for (auto symbol: follow_set) {
+      result.push_back(item_t::make(r0, 0, symbol));
+    }
+
+    return result;
+  }
+
+  std::shared_ptr<state_t> get_closure(std::vector<std::shared_ptr<item_t>> items) {
+    std::vector<std::shared_ptr<item_t>> done;
+
+    while(items.size()) {
+      auto item = items.back();
+      items.pop_back();
+      if (std::find(done.begin(), done.end(), item) != done.end()) {
+        continue;
+      }
+      done.push_back(item);
+      if (item->is_complete()) {
+        continue;
+      }
+      auto first_sequence = item->get_beta();
+      first_sequence.push_back(item->get_peek());
+      auto peeks = get_first_sequence(first_sequence);
+      peeks.push_back(break_);
+      for (auto peek: peeks) {
+        for (auto rule: by_lhs[item->get_corner()]) {
+          items.push_back(item_t::make(rule, 0, peek));
+        }
+      }
+    }
+
+    return state_t::make(done);
+  }
+
+  std::shared_ptr<state_t> get_goto(std::shared_ptr<state_t> state, std::shared_ptr<symbol_t> symbol) {
+    std::vector<std::shared_ptr<item_t>> items;
+
+    for (auto item: state->get_items()) {
+      if (item->get_corner() == symbol) {
+        if (auto next_item = item->get_next()) {
+          items.push_back(next_item);
+        }
+      }
+    }
+
+    if (items.size()) {
+      return get_closure(items);
+    }
+
+    std::shared_ptr<state_t> empty;
+    return empty;
+  }
+
+  using state_list_t = std::vector<std::shared_ptr<state_t>>;
+
+  state_list_t get_full_parse_table() {
+    std::vector<std::shared_ptr<symbol_t>> action_symbols;
+    action_symbols.insert(action_symbols.end(), tokens.begin(), tokens.end());
+    action_symbols.insert(action_symbols.end(), reductions.begin(), reductions.end());
+
+    auto start_items = get_start_items();
+    auto first_todo = get_closure(start_items);
+    state_list_t todo = { first_todo };
+    state_list_t done;
+
+    while(todo.size()) {
+      auto state = todo.back();
+      todo.pop_back();
+      if (std::find(done.begin(), done.end(), state) != done.end()) {
+        continue;
+      }
+      done.push_back(state);
+      for (auto symbol: action_symbols) {
+        if (auto goto_for_symbol = get_goto(state, symbol)) {
+          todo.push_back(goto_for_symbol);
+        }
+      }
+    }
+
+    return done;
   }
 
 private:

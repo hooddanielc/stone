@@ -33,3 +33,37 @@ FIXTURE(follow_sets) {
   EXPECT_EQ(follow_set.size(), size_t(1));
   EXPECT_EQ(follow_set[0], break_t::make());
 }
+
+FIXTURE(starting_items) {
+  auto grammar = grammar_t::from_file(example_grammar);
+  auto starting_items = grammar->get_start_items();
+  EXPECT_EQ(starting_items.size(), size_t(1));
+  EXPECT_EQ(starting_items[0], item_t::make(
+    rule_t::make(top_t::make(), {reduction_t::make("pets")}),
+    0,
+    break_t::make()
+  ));
+}
+
+FIXTURE(get_closure) {
+  auto grammar = grammar_t::from_file(example_grammar);
+  auto starting_items = grammar->get_start_items();
+  auto state = grammar->get_closure(starting_items);
+  EXPECT_EQ(state->get_items().size(), size_t(10));
+}
+
+FIXTURE(get_goto) {
+  auto grammar = grammar_t::from_file(example_grammar);
+  auto starting_items = grammar->get_start_items();
+  auto state = grammar->get_closure(starting_items);
+  auto goto_for_pets = grammar->get_goto(state, reduction_t::make("pets"));
+  EXPECT_EQ(goto_for_pets->get_items().size(), size_t(13));
+  auto goto_for_g = grammar->get_goto(state, token_t::make("g"));
+  EXPECT_FALSE(goto_for_g);
+}
+
+FIXTURE(get_all_states) {
+  auto grammar = grammar_t::from_file(example_grammar);
+  auto full_parse_table = grammar->get_full_parse_table();
+  EXPECT_EQ(full_parse_table.size(), size_t(14));
+}

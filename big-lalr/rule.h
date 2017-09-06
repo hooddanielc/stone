@@ -66,23 +66,7 @@ public:
       return false;
     }
 
-    size_t size_a = get_rhs().size();
-    size_t size_b = other.get_rhs().size();
-    size_t len = size_a < size_b ? size_b : size_a;
-
-    for (size_t i = 0; i < len; ++i) {
-      if (i < size_a && i < size_b) {
-        if (*(get_rhs()[i]) < *(other.get_rhs()[i])) {
-          return true;
-        } else if (*(get_rhs()[i]) > *(other.get_rhs()[i])) {
-          return false;
-        }
-      } else {
-        return size_a < size_b;
-      }
-    }
-
-    return false;
+    return get_rhs() < other.get_rhs();
   }
 
 protected:
@@ -118,6 +102,11 @@ std::ostream &operator<<(std::ostream &strm, const rule_t &rule) {
     strm << " " << symbol;
   }
   strm << ")";
+  return strm;
+}
+
+std::ostream &operator<<(std::ostream &strm, const rule_t *rule) {
+  strm << *rule;
   return strm;
 }
 

@@ -43,6 +43,10 @@ public:
     return size_t(get_dot()) == get_rule()->get_rhs().size();
   }
 
+  std::vector<std::shared_ptr<symbol_t>> get_beta() {
+    return get_rule()->get_beta(get_dot());
+  }
+
   std::shared_ptr<item_t> get_next() {
     if (is_complete()) {
       std::shared_ptr<item_t> ptr;
@@ -100,6 +104,11 @@ std::ostream &operator<<(std::ostream &strm, const item_t &item) {
   strm << "Item(" << *(item.get_rule()) << " ";
   strm << "dot: " << item.get_dot() << " ";
   strm << "peek: " << item.get_peek() << ")";
+  return strm;
+}
+
+std::ostream &operator<<(std::ostream &strm, const item_t *item) {
+  strm << *item;
   return strm;
 }
 

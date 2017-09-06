@@ -13,6 +13,10 @@ public:
 
   using item_list_t = std::vector<std::shared_ptr<item_t>>;
 
+  item_list_t get_items() const {
+    return items;
+  }
+
   static std::shared_ptr<state_t> make(item_list_t items) {
     std::sort(items.begin(), items.end());
 
@@ -50,5 +54,31 @@ protected:
 };  // state_t
 
 state_t::store_t state_t::store;
+
+std::ostream &operator<<(std::ostream &strm, const state_t &state) {
+  auto items = state.get_items();
+
+  std::sort(items.begin(), items.end(), [](auto a, auto b) {
+    if (*(a->get_rule()) < *(b->get_rule())) return true;
+    if (a->get_rule() != b->get_rule()) return false;
+    if (a->get_dot() < b->get_dot()) return true;
+    if (a->get_dot() != b->get_dot()) return false;
+    if (*(a->get_peek()) < *(b->get_peek())) return true;
+    if (a->get_peek() != b->get_peek()) return false;
+    return true;
+  });
+
+  strm << "State(" << std::endl;
+  for (auto item: items) {
+    strm << "  " << item << std::endl;
+  }
+  strm << ")";
+  return strm;
+}
+
+std::ostream &operator<<(std::ostream &strm, const state_t *state) {
+  strm << *state;
+  return strm;
+}
 
 }   // biglr
