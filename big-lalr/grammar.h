@@ -88,105 +88,103 @@ public:
     return first_sequences[set];
   }
 
-  first_set_t get_first_set(std::shared_ptr<symbol_t> symbol, std::vector<std::shared_ptr<symbol_t>> &taboo) {
-    if (std::find(taboo.begin(), taboo.end(), symbol) != taboo.end()) {
-      return {};
-    } else {
-      taboo.push_back(symbol);
-      return get_first_set(symbol);
-    }
-  }
-
   first_set_t get_first_set(std::shared_ptr<symbol_t> symbol) {
     if (first_sets.find(symbol) == first_sets.end()) {
       std::vector<std::shared_ptr<symbol_t>> taboo;
-      taboo.push_back(symbol);
-      if (symbol == break_) {
-        first_sets[symbol] = {};
-      } else if (symbol->is_token()) {
-        first_sets[symbol] = { symbol };
-      } else if (symbol->is_reduction()) {
-        first_set_t result;
-        for (auto rule: by_lhs[symbol]) {
-          for (auto rhs_symbol: rule->get_rhs()) {
-            auto first = get_first_set(rhs_symbol, taboo);
-
-            for (auto first_symbol: first) {
-              if (std::find(result.begin(), result.end(), first_symbol) == result.end()) {
-                result.push_back(first_symbol);
-              }
-            }
-            if (std::find(empties.begin(), empties.end(), rhs_symbol) == empties.end()) {
-              break;
-            }
-          }
-          if (!rule->get_rhs().size()) {
-            // this rule produces the symbol for free. It's first-set will
-            // therefore contain epsilon
-            result.push_back(epsilon);
-          }
-        }
-        first_sets[symbol] = result;
-      } else {
-        throw std::runtime_error("don't know how to get first set");
-      }
+      return get_first_set(symbol, taboo);
     }
     return first_sets[symbol];
   }
 
-  first_set_t get_follow_set(std::shared_ptr<symbol_t> symbol, std::vector<std::shared_ptr<symbol_t>> &taboo) {
+  first_set_t get_first_set(std::shared_ptr<symbol_t> symbol, std::vector<std::shared_ptr<symbol_t>> &taboo) {
     if (std::find(taboo.begin(), taboo.end(), symbol) != taboo.end()) {
       return {};
-    } else {
-      taboo.push_back(symbol);
-      return get_follow_set(symbol);
     }
+    taboo.push_back(symbol);
+    if (symbol == break_) {
+      first_sets[symbol] = {};
+    } else if (symbol->is_token()) {
+      first_sets[symbol] = { symbol };
+    } else if (symbol->is_reduction()) {
+      first_set_t result;
+      for (auto rule: by_lhs[symbol]) {
+        for (auto rhs_symbol: rule->get_rhs()) {
+          auto first = get_first_set(rhs_symbol, taboo);
+
+          for (auto first_symbol: first) {
+            if (std::find(result.begin(), result.end(), first_symbol) == result.end()) {
+              result.push_back(first_symbol);
+            }
+          }
+          if (std::find(empties.begin(), empties.end(), rhs_symbol) == empties.end()) {
+            break;
+          }
+        }
+        if (!rule->get_rhs().size()) {
+          // this rule produces the symbol for free. It's first-set will
+          // therefore contain epsilon
+          result.push_back(epsilon);
+        }
+      }
+      first_sets[symbol] = result;
+    } else {
+      throw std::runtime_error("don't know how to get first set");
+    }
+    return first_sets[symbol];
   }
 
   first_set_t get_follow_set(std::shared_ptr<symbol_t> symbol) {
     if (follow_sets.find(symbol) == follow_sets.end()) {
       std::vector<std::shared_ptr<symbol_t>> taboo;
-      taboo.push_back(symbol);
-      first_set_t result;
-      if (symbol == omega) {
-        result.push_back(break_);
-        auto first_set = get_first_set(symbol);
-        for (auto first_symbol: first_set) {
-          if (first_symbol != epsilon) {
-            result.push_back(first_symbol);
-          }
-        }
-      }
-      for (auto occurence: by_rhs[symbol]) {
-        bool chain = false;
-        auto beta = std::get<0>(occurence)->get_beta(std::get<1>(occurence));
-        if (beta.size()) {
-          auto first_set = get_first_sequence(beta);
-          for (auto first_symbol: first_set) {
-            if (first_symbol == epsilon) {
-              chain = true;
-            } else {
-              if (std::find(result.begin(), result.end(), first_symbol) == result.end()) {
-                result.push_back(first_symbol);
-              }
-            }
-
-          }
-        } else {
-          chain = true;
-        }
-        if (chain) {
-          auto follow_set = get_follow_set(std::get<0>(occurence)->get_lhs(), taboo);
-          for (auto follow_symbol: follow_set) {
-            if (std::find(result.begin(), result.end(), follow_symbol) == result.end()) {
-              result.push_back(follow_symbol);
-            }
-          }
-        }
-      }
-      follow_sets[symbol] = result;
+      return get_follow_set(symbol, taboo);
     }
     return follow_sets[symbol];
+  }
+
+  first_set_t get_follow_set(std::shared_ptr<symbol_t> symbol, std::vector<std::shared_ptr<symbol_t>> &taboo) {
+    if (std::find(taboo.begin(), taboo.end(), symbol) != taboo.end()) {
+      return {};
+    }
+    taboo.push_back(symbol);
+    first_set_t result;
+    if (symbol == omega) {
+      result.push_back(break_);
+      auto first_set = get_first_set(symbol);
+      for (auto first_symbol: first_set) {
+        if (first_symbol != epsilon) {
+          result.push_back(first_symbol);
+        }
+      }
+    }
+    for (auto occurence: by_rhs[symbol]) {
+      bool chain = false;
+      auto beta = std::get<0>(occurence)->get_beta(std::get<1>(occurence));
+      if (beta.size()) {
+        auto first_set = get_first_sequence(beta);
+        for (auto first_symbol: first_set) {
+          if (first_symbol == epsilon) {
+            chain = true;
+          } else {
+            if (std::find(result.begin(), result.end(), first_symbol) == result.end()) {
+              result.push_back(first_symbol);
+            }
+          }
+
+        }
+      } else {
+        chain = true;
+      }
+      if (chain) {
+        auto follow_set = get_follow_set(std::get<0>(occurence)->get_lhs(), taboo);
+        for (auto follow_symbol: follow_set) {
+          if (std::find(result.begin(), result.end(), follow_symbol) == result.end()) {
+            result.push_back(follow_symbol);
+          }
+        }
+      }
+    }
+    follow_sets[symbol] = result;
+    return result;
   }
 
   std::vector<std::shared_ptr<item_t>> get_start_items() {
