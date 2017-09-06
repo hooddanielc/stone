@@ -9,11 +9,11 @@ Is it? Big LALR is a parser generator written in C++. Big LALR utilizes all plat
 
 `biglr -h`
 
-`biglr --rules pets.txt`
+`biglr --rules pets.biglr`
 
 ## Example Rules
 
-`pets.txt`
+`pets.biglr`
 
 ```
 /token c a t d o g c a n a r y
@@ -36,3 +36,7 @@ _nothing ->_ Rule without right side (epsilon) is aloud.
 - Install [ib](https://github.com/JasonL9000/ib)
 - `ib --cfg release big-lalr/biglr`
 - ib will build output files in the parent folder called out (`../out/`)
+
+## Run Tests
+
+`ib --test_all big-lalr`

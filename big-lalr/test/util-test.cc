@@ -8,7 +8,7 @@ using namespace biglr;
 /* assumes $PWD = root directory of project */
 FIXTURE(read_a_file) {
   std::string pwd(std::getenv("PWD"));
-  std::string path = pwd + "/big-lalr/test/fixtures/pets.tfr";
+  std::string path = pwd + "/big-lalr/test/fixtures/pets.biglr";
   auto str = get_file_contents(path);
   EXPECT_EQ(str.size(), size_t(133));
 }

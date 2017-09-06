@@ -3,7 +3,6 @@ import RulesTable from '../RulesTable';
 
 const Item = ({item}) => {
   const {rule, dot, peek} = item;
-  console.log(rule, dot, peek);
 
   const token_list = rule.rhs.map(({name}, i) => {
     if (dot === i) {

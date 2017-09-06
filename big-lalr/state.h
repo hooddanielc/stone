@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include "item.h"
+#include "json/json.hpp"
 
 namespace biglr {
 
@@ -28,6 +29,11 @@ public:
     std::shared_ptr<state_t> ptr(state);
     store[items] = ptr;
     return ptr;
+  }
+
+  nlohmann::json to_json() {
+    nlohmann::json j;
+    return j;
   }
 
 protected:

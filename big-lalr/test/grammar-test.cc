@@ -4,7 +4,7 @@
 
 using namespace biglr;
 
-const std::string &example_grammar = "big-lalr/test/fixtures/pets.tfr";
+const std::string &example_grammar = "big-lalr/test/fixtures/pets.biglr";
 
 FIXTURE(constructs) {
   auto grammar = grammar_t::from_file(example_grammar);
