@@ -1,9 +1,23 @@
 import React, {Component} from 'react';
 
 const Rule = ({rule}) => {
+  if (!rule.rhs) {
+    return (
+      <div>
+        {rule.lhs} {`→`} <span>&epsilon;</span>
+      </div>
+    );
+  }
+
+  let {lhs, rhs} = rule;
+
+  if (lhs === 'TOP') {
+    lhs = <span>&Omega;</span>
+  }
+
   return (
     <div>
-      {rule.lhs.name} {`→`} «{rule.rhs.map(t => t.name).join('» «')}»
+      {lhs} {`→`} «{rhs ? rhs.join('» «') : ''}»
     </div>
   )
 }
@@ -15,7 +29,7 @@ export default class extends Component {
       <table className="mui-table mui-table--bordered">
         <thead>
           <tr>
-            <th>Rule</th>
+            <th width="30px">Rule</th>
             <th>Syntax</th>
           </tr>
         </thead>
