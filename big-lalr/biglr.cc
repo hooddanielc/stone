@@ -10,10 +10,11 @@ void print_help() {
     usage: biglr [-h] [--rules path]
 
     required arguments:
-      --rules path  file containing grammar
+      -r, --rules   path to grammar file
 
     optional arguments:
       -h, --help    show this help message and exit
+      -o, --out     defaults to --rules parent dir
   )" << std::endl;
 }
 
@@ -26,7 +27,12 @@ bool has_flag(const std::string &small, const std::string &big, const args_t &ar
   return false;
 }
 
-std::string get_value(const std::string &small, const std::string &big, const args_t &args) {
+std::string get_value(
+  const std::string &small,
+  const std::string &big,
+  const args_t &args,
+  const std::string &default_value = ""
+) {
   bool found = false;
   for (auto arg: args) {
     if (found) {
@@ -36,7 +42,7 @@ std::string get_value(const std::string &small, const std::string &big, const ar
       found = true;
     }
   }
-  return "";
+  return default_value;
 }
 
 std::vector<std::string> normalize_args(int argc, char *argv[]) {
@@ -59,11 +65,37 @@ std::vector<std::string> normalize_args(int argc, char *argv[]) {
   return result;
 }
 
-void make_parser(const std::string &rules) {
+void make_parser(const std::string &rules, const std::string &out) {
   auto grammar = grammar_t::from_file(rules);
-  auto states = grammar->get_full_parse_table();
-  std::cout << "states size: " << states.size() << std::endl;
-  std::cout << "making bacon pancakes" << std::endl;
+  auto parser = grammar->get_full_parse_table([](size_t todo, size_t done) {
+    std::cout << "todo: " << todo << " done: " << done << std::endl;
+  });
+  parser->write_html(out + ".html");
+  parser->write_json(out + ".json");
+}
+
+std::string get_file_name(const std::string &path) {
+  std::string tmp = "";
+  for (auto c: path) {
+    if (c == '.') {
+      return tmp;
+    }
+    tmp += c;
+  }
+  return "";
+}
+
+std::string get_file_dir(const std::string &path) {
+  std::string tmp = "";
+  std::string result = "";
+  for (auto c: path) {
+    if (c == '/' && !tmp.empty()) {
+      result += tmp;
+      tmp.clear();
+    }
+    tmp += c;
+  }
+  return result;
 }
 
 int main(int argc, char *argv[]) {
@@ -81,10 +113,12 @@ int main(int argc, char *argv[]) {
 
   bool needs_help = true;
   auto rules = get_value("-r", "--rules", args);
+  auto out = get_value("-o", "--out", args, get_file_name(rules));
+
   if (!rules.empty()) {
     needs_help = false;
     try {
-      make_parser(rules);
+      make_parser(rules, out);
     } catch (const std::exception &e) {
       std::cout << e.what() << std::endl;
       return 1;

@@ -37,6 +37,10 @@ public:
     return std::get<1>(data);
   }
 
+  int get_id() const {
+    return id;
+  }
+
   std::vector<std::shared_ptr<symbol_t>> get_beta(int dot) {
     std::vector<std::shared_ptr<symbol_t>> result;
     for (size_t i = dot + 1; i < get_rhs().size(); ++i) {
@@ -58,6 +62,8 @@ public:
     }
     return rules;
   }
+
+  static int next_id;
 
   virtual bool operator<(const rule_t &other) {
     if (*(get_lhs()) < *(other.get_lhs())) {
@@ -90,14 +96,18 @@ protected:
 
   data_t data;
 
-  rule_t(data_t data_): data(data_) {}
+  int id;
+
+  rule_t(data_t data_): data(data_), id(next_id++) {}
 
 };  // rule_t
 
 rule_t::store_t rule_t::store;
 
+int rule_t::next_id = 1;
+
 std::ostream &operator<<(std::ostream &strm, const rule_t &rule) {
-  strm << "Rule(" << rule.get_lhs() << " ->";
+  strm << "Rule " << rule.get_id() << "(" << rule.get_lhs() << " ->";
   for (std::shared_ptr<symbol_t> symbol: rule.get_rhs()) {
     strm << " " << symbol;
   }

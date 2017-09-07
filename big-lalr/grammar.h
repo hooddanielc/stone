@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <functional>
 #include <utility>
 #include "util.h"
 #include "rule.h"
@@ -9,6 +10,7 @@
 #include "symbol.h"
 #include "lexer.h"
 #include "state.h"
+#include "parser.h"
 
 namespace biglr {
 
@@ -52,27 +54,29 @@ public:
 
   using by_rhs_t = std::unordered_map<symbol_key_t, by_rhs_list_t>;
 
+  using goto_map_t = std::unordered_map<std::shared_ptr<symbol_t>, std::shared_ptr<state_t>>;
+
   void print() {
-    for (auto token: tokens) {
+    for (const auto &token: tokens) {
       std::cout << token << std::endl;
     }
 
-    for (auto reduction: reductions) {
+    for (const auto &reduction: reductions) {
       std::cout << reduction << std::endl;
     }
 
-    for (auto rule: rules) {
+    for (const auto &rule: rules) {
       std::cout << *rule << std::endl;
     }
   }
 
-  first_set_t get_first_sequence(first_set_t set) {
+  first_set_t get_first_sequence(const first_set_t &set) {
     if (first_sequences.find(set) == first_sequences.end()) {
       first_set_t result;
-      for (auto symbol: set) {
+      for (const auto &symbol: set) {
         auto first_set = get_first_set(symbol);
         bool found_epsilon = false;
-        for (auto first_symbol: first_set) {
+        for (const auto &first_symbol: first_set) {
           if (first_symbol == epsilon) {
             found_epsilon = true;
           } else if (std::find(result.begin(), result.end(), first_symbol) == result.end()) {
@@ -88,7 +92,7 @@ public:
     return first_sequences[set];
   }
 
-  first_set_t get_first_set(std::shared_ptr<symbol_t> symbol) {
+  first_set_t get_first_set(const std::shared_ptr<symbol_t> &symbol) {
     if (first_sets.find(symbol) == first_sets.end()) {
       std::vector<std::shared_ptr<symbol_t>> taboo;
       return get_first_set(symbol, taboo);
@@ -96,7 +100,7 @@ public:
     return first_sets[symbol];
   }
 
-  first_set_t get_first_set(std::shared_ptr<symbol_t> symbol, std::vector<std::shared_ptr<symbol_t>> &taboo) {
+  first_set_t get_first_set(const std::shared_ptr<symbol_t> &symbol, std::vector<std::shared_ptr<symbol_t>> &taboo) {
     if (std::find(taboo.begin(), taboo.end(), symbol) != taboo.end()) {
       return {};
     }
@@ -107,11 +111,11 @@ public:
       first_sets[symbol] = { symbol };
     } else if (symbol->is_reduction()) {
       first_set_t result;
-      for (auto rule: by_lhs[symbol]) {
-        for (auto rhs_symbol: rule->get_rhs()) {
+      for (const auto &rule: by_lhs[symbol]) {
+        for (const auto &rhs_symbol: rule->get_rhs()) {
           auto first = get_first_set(rhs_symbol, taboo);
 
-          for (auto first_symbol: first) {
+          for (const auto &first_symbol: first) {
             if (std::find(result.begin(), result.end(), first_symbol) == result.end()) {
               result.push_back(first_symbol);
             }
@@ -133,7 +137,7 @@ public:
     return first_sets[symbol];
   }
 
-  first_set_t get_follow_set(std::shared_ptr<symbol_t> symbol) {
+  first_set_t get_follow_set(const std::shared_ptr<symbol_t> &symbol) {
     if (follow_sets.find(symbol) == follow_sets.end()) {
       std::vector<std::shared_ptr<symbol_t>> taboo;
       return get_follow_set(symbol, taboo);
@@ -141,7 +145,7 @@ public:
     return follow_sets[symbol];
   }
 
-  first_set_t get_follow_set(std::shared_ptr<symbol_t> symbol, std::vector<std::shared_ptr<symbol_t>> &taboo) {
+  first_set_t get_follow_set(const std::shared_ptr<symbol_t> &symbol, std::vector<std::shared_ptr<symbol_t>> &taboo) {
     if (std::find(taboo.begin(), taboo.end(), symbol) != taboo.end()) {
       return {};
     }
@@ -150,18 +154,18 @@ public:
     if (symbol == omega) {
       result.push_back(break_);
       auto first_set = get_first_set(symbol);
-      for (auto first_symbol: first_set) {
+      for (const auto &first_symbol: first_set) {
         if (first_symbol != epsilon) {
           result.push_back(first_symbol);
         }
       }
     }
-    for (auto occurence: by_rhs[symbol]) {
+    for (const auto &occurence: by_rhs[symbol]) {
       bool chain = false;
       auto beta = std::get<0>(occurence)->get_beta(std::get<1>(occurence));
       if (beta.size()) {
         auto first_set = get_first_sequence(beta);
-        for (auto first_symbol: first_set) {
+        for (const auto &first_symbol: first_set) {
           if (first_symbol == epsilon) {
             chain = true;
           } else {
@@ -176,7 +180,7 @@ public:
       }
       if (chain) {
         auto follow_set = get_follow_set(std::get<0>(occurence)->get_lhs(), taboo);
-        for (auto follow_symbol: follow_set) {
+        for (const auto &follow_symbol: follow_set) {
           if (std::find(result.begin(), result.end(), follow_symbol) == result.end()) {
             result.push_back(follow_symbol);
           }
@@ -192,7 +196,7 @@ public:
     auto follow_set = get_follow_set(omega);
     auto r0 = by_lhs[omega][0];
 
-    for (auto symbol: follow_set) {
+    for (const auto &symbol: follow_set) {
       result.push_back(item_t::make(r0, 0, symbol));
     }
 
@@ -216,8 +220,8 @@ public:
       first_sequence.push_back(item->get_peek());
       auto peeks = get_first_sequence(first_sequence);
       peeks.push_back(break_);
-      for (auto peek: peeks) {
-        for (auto rule: by_lhs[item->get_corner()]) {
+      for (const auto &peek: peeks) {
+        for (const auto &rule: by_lhs[item->get_corner()]) {
           items.push_back(item_t::make(rule, 0, peek));
         }
       }
@@ -226,10 +230,16 @@ public:
     return state_t::make(done);
   }
 
-  std::shared_ptr<state_t> get_goto(std::shared_ptr<state_t> state, std::shared_ptr<symbol_t> symbol) {
+  std::shared_ptr<state_t> get_goto(const std::shared_ptr<state_t> &state, const std::shared_ptr<symbol_t> &symbol) {
+    if (action_table.find(state) != action_table.end()) {
+      if (action_table[state].find(symbol) != action_table[state].end()) {
+        return action_table[state][symbol];
+      }
+    }
+
     std::vector<std::shared_ptr<item_t>> items;
 
-    for (auto item: state->get_items()) {
+    for (const auto &item: state->get_items()) {
       if (item->get_corner() == symbol) {
         if (auto next_item = item->get_next()) {
           items.push_back(next_item);
@@ -238,16 +248,20 @@ public:
     }
 
     if (items.size()) {
-      return get_closure(items);
+      action_table[state][symbol] = get_closure(items);
+      return action_table[state][symbol];
     }
 
     std::shared_ptr<state_t> empty;
+    action_table[state][symbol] = empty;
     return empty;
   }
 
   using state_list_t = std::vector<std::shared_ptr<state_t>>;
 
-  state_list_t get_full_parse_table() {
+  using progress_cb_t = std::function<void(size_t, size_t)>;
+
+  std::shared_ptr<parser_t> get_full_parse_table(const progress_cb_t &cb = [](size_t, size_t){}) {
     std::vector<std::shared_ptr<symbol_t>> action_symbols;
     action_symbols.insert(action_symbols.end(), tokens.begin(), tokens.end());
     action_symbols.insert(action_symbols.end(), reductions.begin(), reductions.end());
@@ -258,20 +272,21 @@ public:
     state_list_t done;
 
     while(todo.size()) {
+      cb(todo.size(), done.size());
       auto state = todo.back();
       todo.pop_back();
       if (std::find(done.begin(), done.end(), state) != done.end()) {
         continue;
       }
       done.push_back(state);
-      for (auto symbol: action_symbols) {
+      for (const auto &symbol: action_symbols) {
         if (auto goto_for_symbol = get_goto(state, symbol)) {
           todo.push_back(goto_for_symbol);
         }
       }
     }
 
-    return done;
+    return parser_t::make(done, action_table, tokens, reductions, rules);
   }
 
 private:
@@ -292,11 +307,13 @@ private:
 
   std::unordered_map<symbol_key_t, first_set_t> first_sets;
 
+  std::unordered_map<std::shared_ptr<state_t>, goto_map_t> action_table;
+
   struct first_set_key_t : public std::unary_function<first_set_t, std::size_t> {
     std::size_t operator()(const first_set_t &k) const {
       std::hash<std::shared_ptr<symbol_t>> hash_symbol;
       size_t result = 0;
-      for (auto symbol: k) {
+      for (const auto &symbol: k) {
         result ^= hash_symbol(symbol);
       }
       return result;
@@ -319,7 +336,7 @@ private:
   std::vector<std::shared_ptr<reduction_t>> filter_empties() {
     std::vector<std::shared_ptr<reduction_t>> result;
     std::unordered_map<std::string, std::shared_ptr<reduction_t>> taboo;
-    for (auto rule: rules) {
+    for (const auto &rule: rules) {
       if (!rule->get_rhs().size() && !taboo.count(rule->get_lhs()->get_name())) {
         auto lhs = rule->get_lhs();
         result.push_back(lhs);
@@ -332,7 +349,7 @@ private:
   std::shared_ptr<top_t> get_omega() {
     std::shared_ptr<reduction_t> top;
     std::shared_ptr<top_t> cached = top_t::make();
-    for (auto rule: rules) {
+    for (const auto &rule: rules) {
       if (top && rule->get_lhs() == cached) {
         throw std::runtime_error("Only one rule can use /top reduction");
       }
@@ -348,7 +365,7 @@ private:
 
   std::unordered_map<symbol_key_t, rule_list_t> populate_by_lhs() {
     std::unordered_map<symbol_key_t, rule_list_t> result;
-    for (auto rule: rules) {
+    for (const auto &rule: rules) {
       result[rule->get_lhs()].push_back(rule);
     }
     return result;
@@ -356,9 +373,9 @@ private:
 
   by_rhs_t populate_by_rhs() {
     by_rhs_t result;
-    for (auto rule: rules) {
+    for (const auto &rule: rules) {
       int i = 0;
-      for (auto rhs_symbol: rule->get_rhs()) {
+      for (const auto &rhs_symbol: rule->get_rhs()) {
         result[rhs_symbol].emplace_back(rule, i++);
       }
     }

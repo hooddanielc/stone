@@ -35,14 +35,24 @@ public:
 
   virtual bool is_break() const { return false; }
 
+  int get_id() const {
+    return id;
+  }
+
 protected:
+
+  static int next_id;
 
   std::string name;
 
+  int id;
+
   symbol_t(const std::string &name_)
-      :name(name_) {}
+      :name(name_), id(next_id++) {}
 
 };  // symbol_t
+
+int symbol_t::next_id = 1;
 
 std::ostream &operator<<(std::ostream &strm, const symbol_t *symbol) {
   strm << symbol->get_description();

@@ -36,6 +36,10 @@ public:
     return j;
   }
 
+  int get_id() const {
+    return id;
+  }
+
 protected:
 
   item_list_t items;
@@ -55,11 +59,17 @@ protected:
 
   static store_t store;
 
-  state_t(item_list_t items_): items(items_) {};
+  static int next_id;
+
+  int id;
+
+  state_t(item_list_t items_): items(items_), id(next_id++) {};
 
 };  // state_t
 
 state_t::store_t state_t::store;
+
+int state_t::next_id = 1;
 
 std::ostream &operator<<(std::ostream &strm, const state_t &state) {
   auto items = state.get_items();
@@ -74,7 +84,7 @@ std::ostream &operator<<(std::ostream &strm, const state_t &state) {
     return true;
   });
 
-  strm << "State(" << std::endl;
+  strm << "State" << state.get_id() << "(" << std::endl;
   for (auto item: items) {
     strm << "  " << item << std::endl;
   }
