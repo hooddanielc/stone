@@ -346,6 +346,13 @@ public:
     file.close();
   }
 
+  void write_dot(const std::string &path) {
+    std::ofstream file;
+    file.open(path);
+    file << to_dot();
+    file.close();
+  }
+
   void write_json(const std::string &path) {
     std::ofstream file;
     file.open(path);

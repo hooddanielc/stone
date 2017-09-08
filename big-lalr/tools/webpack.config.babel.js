@@ -122,9 +122,7 @@ const REACT_CONFIG = {
 
 const CLI_CONFIG = {
   entry: {
-    'server.js': './server/server.js',
-    'grammar.js': './server/grammar.js',
-    'tfr': './server/tfr.js'
+    'server.js': './server/server.js'
   },
 
   output: {
