@@ -1,0 +1,15 @@
+.CenterInput {
+  width: 100px;
+  text-align: center;
+}
+
+.Controls {
+  padding: 5px;
+  border: 1px solid #eee;
+  background: #fefefe;
+  border-radius: 3px;
+  float: left;
+  & > * {
+    margin: 0px 5px;
+  }
+}

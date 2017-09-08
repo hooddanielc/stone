@@ -1,5 +1,9 @@
 import React, {Component} from 'react';
 import RulesTable from '../RulesTable';
+import Form from 'muicss/lib/react/form';
+import Input from 'muicss/lib/react/input';
+import Button from 'muicss/lib/react/button';
+import s from './ParserTable.scss';
 
 const Item = ({item}) => {
   const {rule, dot, peek} = item;
@@ -29,11 +33,28 @@ const Item = ({item}) => {
 
 export default class extends Component {
 
+  static get defaultProps() {
+    return {
+      offset: 0,
+      limit: 20
+    };
+  }
+
+  constructor(props) {
+    super(props);
+    this.offset = props.offset;
+    this.state = {
+      offset: props.offset,
+      dirtyoffset: props.offset,
+      limit: props.limit
+    };
+  }
+
   render_header() {
     const {tokens, reductions} = this.props.grammar;
     const header_cols = ['state']
-      .concat(Object.keys(tokens))
-      .concat(Object.keys(reductions));
+      .concat(Object.keys(tokens).map((k) => tokens[k].id))
+      .concat(Object.keys(reductions).map((k) => reductions[k].id));
     return (
       <thead>
         <tr>
@@ -70,12 +91,76 @@ export default class extends Component {
   }
 
   render_actions() {
-    return this.props.grammar.actions.map((a)=>this.render_row(a));
+    const result = [];
+    const {actions} = this.props.grammar;
+    const {limit, offset} = this.state;
+    for (let i = offset; i < offset + limit; ++i) {
+      if (!actions[i]) break;
+      result.push(this.render_row(actions[i]));
+    }
+
+    if (!result.length) {
+      return <p>End</p>;
+    }
+
+    return result;
+  }
+
+  submitForm(e) {
+    e.preventDefault();
+    if (isNaN(this.state.dirtyoffset)) {
+      this.setState({ error: 'offset must be a number' });
+      return;
+    }
+    this.setState({
+      offset: parseInt(this.state.dirtyoffset)
+    });
+  }
+
+  onInputChange(name) {
+    return (e) => {
+      const newState = {};
+      newState['dirty' + name] = e.target.value;
+      this.setState(newState);
+    };
+  }
+
+  nextPage(e) {
+    e.preventDefault();
+    let {offset, limit} = this.state;
+    offset += limit;
+    this.setState({offset, dirtyoffset: offset});
+  }
+
+  prevPage(e) {
+    e.preventDefault();
+    let {offset, limit} = this.state;
+    offset -= limit;
+    this.setState({offset, dirtyoffset: offset});
   }
 
   render() {
     return (
       <div>
+        <Form className={s.Controls} inline={true} onSubmit={this.submitForm.bind(this)}>
+          <span>offset</span>
+          &nbsp;
+          <input type="text"
+            className={s.CenterInput}
+            size={5}
+            value={this.state.dirtyoffset}
+            onChange={this.onInputChange('offset')}
+          />
+          &nbsp;
+          <span>of</span>
+          &nbsp;
+          <b>{this.props.grammar.actions.length}</b>
+          &nbsp;
+          <button>submit</button>
+          <span>or</span>
+          <button onClick={this.prevPage.bind(this)}>prev</button>
+          <button onClick={this.nextPage.bind(this)}>next</button>
+        </Form>
         <div>
           <table className="mui-table mui-table--bordered">
             {this.render_header()}

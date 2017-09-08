@@ -1,0 +1,15 @@
+$page-width: 1200px;
+
+.ContentWrapper {
+  width: $page-width;
+  padding: 20px 0;
+  margin: 0px auto;
+}
+
+.HeaderWrapper {
+  width: $page-width;
+  margin: 0px auto;
+  padding: 15px;
+  box-sizing: border-box;
+  height: 100%;
+}

@@ -72,6 +72,7 @@ void make_parser(const std::string &rules, const std::string &out) {
   });
   parser->write_html(out + ".html");
   parser->write_json(out + ".json");
+  parser->write_dot(out + ".dot");
 }
 
 std::string get_file_name(const std::string &path) {
