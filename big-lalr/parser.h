@@ -11,6 +11,13 @@ namespace biglr {
 
 struct action_t {
 
+  enum kind_t {
+    blank,
+    restart,
+    reduce,
+    shift
+  };
+
   std::shared_ptr<symbol_t> symbol;
 
   action_t(std::shared_ptr<symbol_t> symbol_): symbol(symbol_) {}
@@ -23,11 +30,19 @@ struct action_t {
     return "";
   }
 
+  virtual kind_t get_kind() const {
+    return kind_t::blank;
+  }
+
   virtual nlohmann::json to_json() const {
     nlohmann::json j;
     j["label"] = get_label();
     j["type"] = "blank";
     return j;
+  }
+
+  virtual std::string get_ref() const {
+    return "error";
   }
 
 };
@@ -42,11 +57,19 @@ struct restart_action_t: public action_t {
     return "\u21BA";
   }
 
+  virtual kind_t get_kind() const override {
+    return kind_t::restart;
+  }
+
   virtual nlohmann::json to_json() const override {
     nlohmann::json j;
     j["label"] = get_label();
     j["type"] = "restart";
     return j;
+  }
+
+  virtual std::string get_ref() const override {
+    return "r1";
   }
 
 };
@@ -68,12 +91,22 @@ struct shift_action_t: public action_t {
     return ss.str();
   }
 
+  virtual kind_t get_kind() const override {
+    return kind_t::shift;
+  }
+
   virtual nlohmann::json to_json() const override {
     nlohmann::json j;
     j["label"] = get_label();
     j["type"] = "shift";
     j["state"] = state->get_id();
     return j;
+  }
+
+  virtual std::string get_ref() const override {
+    std::stringstream ss;
+    ss << "s" << state->get_id();
+    return ss.str();
   }
 
 };
@@ -95,12 +128,22 @@ struct reduce_action_t: public action_t {
     return ss.str();
   }
 
+  virtual kind_t get_kind() const override {
+    return kind_t::reduce;
+  }
+
   virtual nlohmann::json to_json() const override {
     nlohmann::json j;
     j["label"] = get_label();
     j["type"] = "reduce";
     j["rule"] = rule->get_id();
     return j;
+  }
+
+  virtual std::string get_ref() const override {
+    std::stringstream ss;
+    ss << "r" << rule->get_id();
+    return ss.str();
   }
 
 };
@@ -216,7 +259,70 @@ public:
     j["reductions"] = get_reductions_json();
     j["rules"] = get_rules_json();
     j["actions"] = get_actions_json();
+    j["dot"] = to_dot();
     return j;
+  }
+
+  std::shared_ptr<rule_t> get_omega_rule() {
+    auto omega = top_t::make();
+    for (auto rule: rules) {
+      if (rule->get_lhs() == omega) {
+        return rule;
+      }
+    }
+    throw std::runtime_error("/top rule not found");
+  }
+
+  std::string to_dot() {
+    auto omega_rule = get_omega_rule();
+    std::stringstream ss;
+    ss << "digraph {" << std::endl;
+    ss << "  label=<<i>Diagram of State Machine</i>>" << std::endl;
+    for (auto rule: rules) {
+      // for each rule, create a diamond shape
+      auto id = rule->get_id();
+      auto name = rule->get_lhs()->get_name();
+      auto rhs_size = rule->get_rhs().size();
+      if (name == "TOP") {
+        name = "&Omega;";
+      }
+      ss << "  r" << id << " [shape=diamond, label=<r" << id << " (" << name << ", "<< rhs_size << ")>];" << std::endl;
+    }
+    for (auto state: states) {
+      // for each state create a cirlce
+      auto id = state->get_id();
+      ss << "  s" << id << " [shape=circle, label=<s" << id << ">];" << std::endl;
+    }
+    for (auto state: states) {
+      auto id = state->get_id();
+      for (auto token: tokens) {
+        auto action = actions[state][token];
+        switch (action->get_kind()) {
+          case action_t::kind_t::blank:
+            break;
+          case action_t::kind_t::shift:
+            ss << "  s" << id << " -> " << action->get_ref() << " "
+               << "[label=<&laquo;" << token->get_name() << "&raquo;>];" << std::endl;
+            break;
+          case action_t::kind_t::restart:
+            ss << "  r" << omega_rule->get_id() << " -> s" << id << " "
+               << "[label=<&laquo;" << token->get_name() << "&raquo;>, arrowhead=inv];" << std::endl;
+            break;
+          case action_t::kind_t::reduce:
+            ss << "  " << action->get_ref() << " -> s" << id  << " "
+               << "[label=<&laquo;" << token->get_name() << "&raquo;>, arrowhead=inv];" << std::endl;
+            break;
+        }
+      }
+      for (auto reduction: reductions) {
+        if (auto next_state = goto_table[state][reduction]) {
+          ss << "  s" << id << " -> s" << next_state->get_id() << " "
+             << "[label=<" << reduction->get_name() << ">, style=dotted];" << std::endl;
+        }
+      }
+    }
+    ss << "}" << std::endl;
+    return ss.str();
   }
 
   void write_html(const std::string &path) {
