@@ -12,3 +12,8 @@ FIXTURE(read_a_file) {
   auto str = get_file_contents(path);
   EXPECT_EQ(str.size(), size_t(133));
 }
+
+FIXTURE(sanitize_cpp_ids) {
+  EXPECT_EQ(sanitize_cpp_identifier("alignas"), "alignas_");
+  EXPECT_EQ(sanitize_cpp_identifier("xor"), "xor_");
+}
