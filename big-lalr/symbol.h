@@ -36,6 +36,8 @@ public:
 
   virtual bool is_break() const { return false; }
 
+  virtual bool is_epsilon() const { return false; }
+
   virtual std::string get_cpp_identifier() const = 0;
 
   int get_id() const {
@@ -222,6 +224,10 @@ public:
     return ptr;
   }
 
+  virtual bool is_break() const override {
+    return true;
+  }
+
   virtual std::string get_cpp_identifier() const override {
     return "special_BREAK";
   }
@@ -263,6 +269,8 @@ public:
   virtual std::string get_description() const override {
     return "Epsilon(--)";
   }
+
+  virtual bool is_epsilon() const override { return true; }
 
 protected:
 

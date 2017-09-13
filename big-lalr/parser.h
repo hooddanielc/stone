@@ -6,6 +6,7 @@
 #include <fstream>
 #include "symbol.h"
 #include "state.h"
+#include "codegen/generate_tokens_h.h"
 
 namespace biglr {
 
@@ -325,6 +326,10 @@ public:
     return ss.str();
   }
 
+  std::string get_tokens_h() {
+    return generate_tokens_h(tokens);
+  }
+
   void write_html(const std::string &path) {
     std::ofstream file;
     file.open(path);
@@ -430,7 +435,6 @@ protected:
      reductions(reductions_),
      rules(rules_),
      actions(construct_actions()) {};
-
 };  // parser_t
 
 std::ostream &operator<<(std::ostream &strm, const parser_t &parser) {
