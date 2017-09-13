@@ -4,6 +4,7 @@
 #include <memory>
 #include <unordered_map>
 #include <sstream>
+#include "util.h"
 
 namespace biglr {
 
@@ -34,6 +35,8 @@ public:
   virtual bool is_token() const { return false; }
 
   virtual bool is_break() const { return false; }
+
+  virtual std::string get_cpp_identifier() const = 0;
 
   int get_id() const {
     return id;
@@ -82,6 +85,10 @@ public:
 
   virtual bool is_token() const override { return true; }
 
+  virtual std::string get_cpp_identifier() const override {
+    return sanitize_cpp_identifier(name);
+  }
+
   static void flush() {
     store.clear();
   }
@@ -103,6 +110,8 @@ public:
 protected:
 
   static std::unordered_map<std::string, std::weak_ptr<token_t>> store;
+
+  std::string cpp_identifier;
 
   token_t(const std::string &name): symbol_t(name) {}
 
@@ -135,6 +144,10 @@ public:
 
   static void flush() {
     store.clear();
+  }
+
+  virtual std::string get_cpp_identifier() const override {
+    return sanitize_cpp_identifier(name);
   }
 
   static bool exists(const std::string &name) {
@@ -176,6 +189,10 @@ public:
     return ptr;
   }
 
+  virtual std::string get_cpp_identifier() const override {
+    return "special_TOP";
+  }
+
   virtual std::string get_description() const override {
     return "TOP";
   }
@@ -203,6 +220,10 @@ public:
     std::shared_ptr<break_t> ptr(symbol);
     cached = ptr;
     return ptr;
+  }
+
+  virtual std::string get_cpp_identifier() const override {
+    return "special_BREAK";
   }
 
   virtual std::string get_description() const override {
@@ -233,6 +254,10 @@ public:
     std::shared_ptr<epsilon_t> ptr(symbol);
     cached = ptr;
     return ptr;
+  }
+
+  virtual std::string get_cpp_identifier() const override {
+    return "special_EPSILON";
   }
 
   virtual std::string get_description() const override {
