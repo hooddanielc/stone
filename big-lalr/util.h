@@ -2,11 +2,12 @@
 
 #include <fstream>
 #include <sstream>
+#include <unordered_map>
 
 namespace biglr {
 
 /* quick and dirty read file method */
-const std::string get_file_contents(const std::string &path) {
+inline const std::string get_file_contents(const std::string &path) {
   std::ifstream t(path.c_str());
 
   if (!t.good()) {
@@ -33,14 +34,14 @@ const std::string get_file_contents(const std::string &path) {
  *
  * a b c d e f g h i j k l m n o p q r s t u v w x y z
  * A B C D E F G H I J K L M N O P Q R S T U V W X Y Z _ */
-std::string sanitize_cpp_identifier(const std::string &name) {
+inline std::string sanitize_cpp_identifier(const std::string &name) {
   for (auto c: name) {
     if (!isalpha(c) && c != '_') {
       throw std::runtime_error("invalid c++ identifier `" + name + '`');
     }
   }
 
-  static std::map<std::string, std::string> reserved = {
+  static std::unordered_map<std::string, std::string> reserved = {
     { "alignas", "alignas_" },
     { "alignof", "alignof_" },
     { "and", "and_" },
