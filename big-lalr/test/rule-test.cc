@@ -38,3 +38,37 @@ FIXTURE(constructs_only_once) {
   EXPECT_EQ(rule1, rule2);
   EXPECT_NE(rule2, rule3);
 }
+
+FIXTURE(get_cpp_identifier) {
+  auto rule1 = rule_t::make(reduction_t::make("REDUCTION"), {
+    token_t::make("a"),
+    token_t::make("b")
+  });
+
+  auto rule2 = rule_t::make(reduction_t::make("REDUCTION"), {
+    token_t::make("a")
+  });
+
+  auto rule3 = rule_t::make(reduction_t::make("REDUCTION"), {});
+
+  EXPECT_EQ(rule1->get_cpp_identifier(), "REDUCTION_a_b_rule");
+  EXPECT_EQ(rule2->get_cpp_identifier(), "REDUCTION_a_rule");
+  EXPECT_EQ(rule3->get_cpp_identifier(), "REDUCTION_rule");
+}
+
+FIXTURE(get_cpp_branch_identifier) {
+  auto rule1 = rule_t::make(reduction_t::make("REDUCTION"), {
+    token_t::make("a"),
+    token_t::make("b")
+  });
+
+  auto rule2 = rule_t::make(reduction_t::make("REDUCTION"), {
+    token_t::make("a")
+  });
+
+  auto rule3 = rule_t::make(reduction_t::make("REDUCTION"), {});
+
+  EXPECT_EQ(rule1->get_cpp_branch_identifier(), "REDUCTION_branch");
+  EXPECT_EQ(rule2->get_cpp_branch_identifier(), "REDUCTION_branch");
+  EXPECT_EQ(rule3->get_cpp_branch_identifier(), "REDUCTION_branch");
+}
