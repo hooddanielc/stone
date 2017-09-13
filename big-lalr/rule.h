@@ -75,6 +75,22 @@ public:
     return get_rhs() < other.get_rhs();
   }
 
+  std::string get_cpp_identifier() {
+    std::string result = get_lhs()->get_cpp_identifier();
+    for (const auto &symbol: get_rhs()) {
+      result += '_';
+      result += symbol->get_cpp_identifier();
+    }
+    result += "_rule";
+    return result;
+  }
+
+  std::string get_cpp_branch_identifier() {
+    std::string result = get_lhs()->get_cpp_identifier();
+    result += "_branch";
+    return result;
+  }
+
 protected:
 
   struct store_key_hash_t : public std::unary_function<data_t, std::size_t> {
