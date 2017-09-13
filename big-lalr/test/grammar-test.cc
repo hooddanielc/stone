@@ -65,5 +65,6 @@ FIXTURE(get_goto) {
 FIXTURE(get_all_states) {
   auto grammar = grammar_t::from_file(example_grammar);
   auto full_parse_table = grammar->get_full_parse_table();
-  EXPECT_EQ(full_parse_table.size(), size_t(14));
+  auto states = full_parse_table->get_states();
+  EXPECT_EQ(states.size(), size_t(14));
 }
