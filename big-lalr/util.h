@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdio.h>
-#include <wait.h>
 #include <unistd.h>
 #include <fstream>
 #include <iostream>
@@ -260,17 +259,17 @@ public:
       close(stdin_pipe[child_process_t::pipe_read]);
       close(stdin_pipe[child_process_t::pipe_write]);
       close(stdout_pipe[child_process_t::pipe_read]);
-      close(stdout_pipe[child_process_t::pipe_write]); 
+      close(stdout_pipe[child_process_t::pipe_write]);
 
       // run child process image
       // replace this with any exec* function find easier to use ("man exec")
       std::vector<char *> c_str_array;
-      c_str_array.push_back(const_cast<char*>(cmd.c_str()));
+      c_str_array.push_back(strdup(cmd.c_str()));
       for (const auto &str: args) {
-        c_str_array.push_back(const_cast<char*>(str.c_str()));
+        c_str_array.push_back(strdup(str.c_str()));
       }
-
-      int exit_code = execv(cmd.c_str(), &c_str_array[0]);
+      c_str_array.push_back(nullptr);
+      int exit_code = execv(c_str_array.front(), c_str_array.data());
 
       // if we get here at all, an error occurred, but we are in the child
       // process, so just exit
@@ -283,20 +282,40 @@ public:
       close(stdin_pipe[child_process_t::pipe_read]);
       close(stdout_pipe[child_process_t::pipe_write]);
 
-      int status = -1;
-      size_t buff_size = 100;
-      char buff[buff_size];
-      size_t num_read = 0;
-      while (waitpid(child_pid, &status, WNOHANG|WUNTRACED) == 0) {
-        while ((num_read = read(stdout_pipe[child_process_t::pipe_read], &buff, buff_size)) > 0) {
-          emit_on_data(std::string{ buff, num_read });
+      int exit_code = -1;
+      bool exited = false;
+      for (;;) {
+        if (!exited) {
+          int status = -1;
+          if (waitpid(0, &status, 0) < 0) {
+            throw std::runtime_error { "waitpid error" };
+          }
+          if (WIFSIGNALED(status)) {
+            throw std::runtime_error { "child signaled?" };
+          }
+          if (WIFEXITED(status)) {
+            exit_code = WEXITSTATUS(status);
+            exited = true;
+          }
         }
-      }
+        char buff[256];
+        auto num_read = read(stdout_pipe[child_process_t::pipe_read], buff, sizeof(buff));
+        if (num_read < 0) {
+          throw std::runtime_error("read error");
+        }
+        if (!num_read) {
+          if (exited) {
+            break;
+          }
+          continue;
+        }
+        emit_on_data(std::string{ buff, static_cast<size_t>(num_read) });
+      }  // for
 
       // closing since child process exited and we are done talking to it
       close(stdin_pipe[child_process_t::pipe_write]);
       close(stdout_pipe[child_process_t::pipe_read]);
-      emit_on_exit(status);
+      emit_on_exit(exit_code);
     } else {
       // failed to create child
       close(stdin_pipe[child_process_t::pipe_read]);
