@@ -51,9 +51,9 @@ FIXTURE(get_cpp_identifier) {
 
   auto rule3 = rule_t::make(reduction_t::make("REDUCTION"), {});
 
-  EXPECT_EQ(rule1->get_cpp_identifier(), "REDUCTION_a_b_rule");
-  EXPECT_EQ(rule2->get_cpp_identifier(), "REDUCTION_a_rule");
-  EXPECT_EQ(rule3->get_cpp_identifier(), "REDUCTION_rule");
+  EXPECT_EQ(rule1->get_cpp_identifier(), "REDUCTION_from_a_b");
+  EXPECT_EQ(rule2->get_cpp_identifier(), "REDUCTION_from_a");
+  EXPECT_EQ(rule3->get_cpp_identifier(), "REDUCTION_as_epsilon");
 }
 
 FIXTURE(get_cpp_branch_identifier) {
