@@ -33,7 +33,7 @@ FIXTURE(parser_gens_tokens_and_compiles) {
   write_file_contents(input_path, ss.str());
 
   // run compiler in child process and test output
-  auto child_process = child_process_t::make("/bin/gcc", {
+  auto child_process = child_process_t::make("/usr/bin/gcc", {
     input_path,
     "-std=c++14",
     "-lstdc++",
