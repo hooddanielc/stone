@@ -286,7 +286,7 @@ public:
       }
     }
 
-    return parser_t::make(done, action_table, tokens, reductions, rules);
+    return parser_t::make(done, action_table, tokens, reductions, rules, by_lhs);
   }
 
 private:

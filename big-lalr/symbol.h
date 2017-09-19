@@ -192,7 +192,7 @@ public:
   }
 
   virtual std::string get_cpp_identifier() const override {
-    return "special_TOP";
+    return "omega";
   }
 
   virtual std::string get_description() const override {

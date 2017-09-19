@@ -7,6 +7,7 @@
 #include "symbol.h"
 #include "state.h"
 #include "codegen/generate_tokens_h.h"
+#include "codegen/generate_ast_base_h.h"
 
 namespace biglr {
 
@@ -169,14 +170,17 @@ public:
 
   using rules_list_t = std::vector<std::shared_ptr<rule_t>>;
 
+  using symbol_key_t = std::shared_ptr<symbol_t>;
+
   static std::shared_ptr<parser_t> make(
     state_list_t states,
     goto_table_t goto_table,
     tokens_list_t tokens,
     reductions_list_t reductions,
-    rules_list_t rules
+    rules_list_t rules,
+    std::unordered_map<symbol_key_t, rules_list_t> by_lhs
   ) {
-    auto parser = new parser_t(states, goto_table, tokens, reductions, rules);
+    auto parser = new parser_t(states, goto_table, tokens, reductions, rules, by_lhs);
     std::shared_ptr<parser_t> ptr(parser);
     return ptr;
   }
@@ -195,6 +199,10 @@ public:
 
   rules_list_t get_rules() const {
     return rules;
+  }
+
+  std::unordered_map<symbol_key_t, rules_list_t> get_rules_by_lhs() const {
+    return by_lhs;
   }
 
   nlohmann::json get_tokens_json() {
@@ -330,6 +338,10 @@ public:
     return generate_tokens_h(tokens);
   }
 
+  std::string get_ast_base_h() {
+    return generate_ast_base_h(get_reductions(), get_rules_by_lhs());
+  }
+
   void write_html(const std::string &path) {
     std::ofstream file;
     file.open(path);
@@ -376,6 +388,8 @@ protected:
   std::vector<std::shared_ptr<reduction_t>> reductions;
 
   std::vector<std::shared_ptr<rule_t>> rules;
+
+  std::unordered_map<symbol_key_t, rules_list_t> by_lhs;
 
   action_table_t actions;
 
@@ -428,12 +442,14 @@ protected:
     goto_table_t goto_table_,
     tokens_list_t tokens_,
     reductions_list_t reductions_,
-    rules_list_t rules_
+    rules_list_t rules_,
+    std::unordered_map<symbol_key_t, rules_list_t> by_lhs_
   ): states(states_),
      goto_table(goto_table_),
      tokens(tokens_),
      reductions(reductions_),
      rules(rules_),
+     by_lhs(by_lhs_),
      actions(construct_actions()) {};
 };  // parser_t
 

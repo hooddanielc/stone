@@ -77,11 +77,15 @@ public:
 
   std::string get_cpp_identifier() {
     std::string result = get_lhs()->get_cpp_identifier();
-    for (const auto &symbol: get_rhs()) {
-      result += '_';
-      result += symbol->get_cpp_identifier();
+    if (get_rhs().size()) {
+      result += "_from";
+      for (const auto &symbol: get_rhs()) {
+        result += '_';
+        result += symbol->get_cpp_identifier();
+      }
+    } else {
+      result += "_as_epsilon";
     }
-    result += "_rule";
     return result;
   }
 
