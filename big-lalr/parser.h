@@ -8,6 +8,7 @@
 #include "state.h"
 #include "codegen/generate_tokens_h.h"
 #include "codegen/generate_ast_base_h.h"
+#include "codegen/generate_reduction_h.h"
 
 namespace biglr {
 
@@ -340,6 +341,14 @@ public:
 
   std::string get_ast_base_h() {
     return generate_ast_base_h(get_reductions(), get_rules_by_lhs());
+  }
+
+  std::string get_reduction_h(std::shared_ptr<reduction_t> reduction) {
+    std::vector<std::shared_ptr<rule_t>> rule_group;
+    for (const auto &rule: by_lhs[reduction]) {
+      rule_group.push_back(rule);
+    }
+    return generate_reduction_h(rule_group);
   }
 
   void write_html(const std::string &path) {

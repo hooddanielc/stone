@@ -44,10 +44,16 @@ inline std::string generate_tokens_h(const std::vector<std::shared_ptr<token_t>>
   ss << "    return \"unknown\";" << std::endl;
   ss << "  }" << std::endl;
   ss << std::endl;
-  ss << "  /* Cache the kind. */" << std::endl;
-  ss << "  token_t(kind_t kind): kind(kind) {}" << std::endl;
+  ss << "  static std::shared_ptr<token_t> make(kind_t kind) {" << std::endl;
+  ss << "    auto ptr = new token_t(kind);" << std::endl;
+  ss << "    std::shared_ptr<token_t> result(ptr);" << std::endl;
+  ss << "    return result;" << std::endl;
+  ss << "  }" << std::endl;
   ss << std::endl;
   ss << "protected:" << std::endl;
+  ss << std::endl;
+  ss << "  /* Cache the kind. */" << std::endl;
+  ss << "  token_t(kind_t kind): kind(kind) {}" << std::endl;
   ss << std::endl;
   ss << "  kind_t kind;" << std::endl;
   ss << std::endl;

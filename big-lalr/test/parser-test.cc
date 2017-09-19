@@ -25,9 +25,22 @@ FIXTURE(parser_gens_tokens_and_compiles) {
   ss << tokens_header << std::endl;
   ss << ast_base_header << std::endl;
   ss << std::endl;
+
+  for (const auto &r: full_parse_table->get_reductions()) {
+    ss << full_parse_table->get_reduction_h(r) << std::endl;
+  }
+
   ss << "int main(int, char*[]) {" << std::endl;
-  ss << "  token_t token(token_t::a);" << std::endl;
-  ss << "  std::cout << token.get_name();" << std::endl;
+  ss << "  auto token = token_t::make(token_t::a);" << std::endl;
+  ss << "  std::cout << token->get_name();" << std::endl;
+  ss << "  auto d = ast_token_t::make(token_t::make(token_t::d));" << std::endl <<
+        "  auto o = ast_token_t::make(token_t::make(token_t::o));" << std::endl <<
+        "  auto g = ast_token_t::make(token_t::make(token_t::g));" << std::endl <<
+        "  auto dog = pet_from_d_o_g_t::make({" << std::endl <<
+        "    d," << std::endl <<
+        "    o," << std::endl <<
+        "    g" << std::endl <<
+        "  });" << std::endl;
   ss << "  return 0;" << std::endl;
   ss << "}" << std::endl;
   write_file_contents(input_path, ss.str());

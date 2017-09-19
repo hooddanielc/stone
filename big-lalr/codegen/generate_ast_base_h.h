@@ -93,7 +93,9 @@ public:
   }
 
   static std::shared_ptr<ast_token_t> make(std::shared_ptr<token_t> token) {
-    return ast_token_t::make(token);
+    auto ptr = new ast_token_t(token);
+    std::shared_ptr<ast_token_t> result(ptr);
+    return result;
   }
 
 protected:
@@ -101,7 +103,7 @@ protected:
   std::shared_ptr<token_t> token;
 
   ast_token_t(std::shared_ptr<token_t> token_): ast_t({}), token(token_) {
-    assert(children.size() == 1);
+    assert(children.size() == 0);
   }
 
 };  // ast_token_t
