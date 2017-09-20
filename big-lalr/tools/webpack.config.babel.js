@@ -123,6 +123,7 @@ const REACT_CONFIG = {
 
 const CLI_CONFIG = {
   entry: {
+    'dev-server.js': './server/dev-server.js',
     'server.js': './server/server.js'
   },
 

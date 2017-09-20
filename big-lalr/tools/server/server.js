@@ -1,38 +1,42 @@
 import path from 'path';
 import browserSync from 'browser-sync';
-import webpack from 'webpack';
 import fallback from 'connect-history-api-fallback';
-import {REACT_CONFIG} from '../webpack.config.babel';
+import program from 'commander';
+import pkg from '../package.json';
 
-const bs = browserSync.create('Dev Server');
+program
+  .version(pkg.version)
+  .option('-d, --docs [file]', 'Serve generated one page app')
+  .parse(process.argv);
+
+if (!program.docs) {
+  console.log('No doc file provided, showing demo grammar now.');
+  program.docs = path.resolve(__dirname, '..', '..', 'test', 'fixtures');
+} else {
+  program.docs = path.resolve(program.docs);
+}
+
+const bs = browserSync.create('Docs Server');
 
 const init_bs = () => {
+  bs.notify('Initializing...');
+
+  const index = `/${path.basename(program.docs)}`;
+
   bs.init({
+    startPath: index,
     server: {
-      baseDir: path.resolve(__dirname, '..', 'dist'),
-      middleware: [fallback()]
+      baseDir: path.dirname(program.docs),
+      index,
+      middleware: [fallback({index})],
+      serveStaticOptions: {
+        extensions: ["html", "js"]
+      }
     }
   });
 }
 
-bs.notify('Initializing...');
-const compiler = webpack(REACT_CONFIG);
-const watching = compiler.watch({}, (err, stats) => {
-  if (err) {
-    console.log(err);
-  }
-
-  if (!bs.active) {
-    init_bs();
-  }
-
-  if (stats && typeof stats.toString === 'function') {
-    console.log(stats.toString({ colors: true }));
-  }
-
-  bs.notify('Build Complete... Reloading');
-  bs.reload();
-});
+init_bs();
 
 process.on('exit', () => {
   if (bs.active) {
