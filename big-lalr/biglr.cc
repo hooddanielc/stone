@@ -70,6 +70,30 @@ std::vector<std::string> normalize_args(int argc, char *argv[]) {
   return result;
 }
 
+auto gui = get_project_path("big-lalr/tools/dist/react-report.js");
+auto tools = get_project_path("big-lalr/tools");
+
+void build_gui_if_needed() {
+  if (!file_exists(gui)) {
+    // need to rebuild webpack project
+    std::cout << "building webpack application for first time" << std::endl;
+    std::cout << "this might take a while please be patient" << std::endl;
+    auto exec_compiled_file = child_process_t::make("/bin/sh", {
+      "-c",
+      "cd " + tools + " && npm install && npm run build"
+    });
+    exec_compiled_file->on_data([&](auto str) {
+      std::cout << str;
+    });
+    exec_compiled_file->on_exit([&](auto code) {
+      if (code != 0) {
+        throw std::runtime_error("incorrect exit code");
+      }
+    });
+    exec_compiled_file->exec_sync();
+  }
+}
+
 void make_parser(
   const std::string &rules,
   const std::string &out,
@@ -106,6 +130,7 @@ void make_parser(
   }
 
   if (should_generate) {
+    build_gui_if_needed();
     auto grammar = grammar_t::from_file(rules);
     auto parser = grammar->get_full_parse_table([](size_t todo, size_t done) {
       std::cout << "todo: " << todo << " done: " << done << std::endl;
@@ -125,30 +150,6 @@ void make_parser(
     parser->write_json(out + ".json");
     parser->write_dot(out + ".dot");
 
-  
-    // generate javascript if needed
-    auto gui = get_project_path("big-lalr/tools/dist/react-report.js");
-    auto tools = get_project_path("big-lalr/tools");
-
-    if (!file_exists(gui)) {
-      // need to rebuild webpack project
-      std::cout << "building webpack application for first time" << std::endl;
-      std::cout << "this might take a while please be patient" << std::endl;
-      auto exec_compiled_file = child_process_t::make("/bin/sh", {
-        "-c",
-        "cd " + tools + " && npm install && npm run build"
-      });
-      exec_compiled_file->on_data([&](auto str) {
-        std::cout << str;
-      });
-      exec_compiled_file->on_exit([&](auto code) {
-        if (code != 0) {
-          throw std::runtime_error("incorrect exit code");
-        }
-      });
-      exec_compiled_file->exec_sync();
-    }
-
     // copy the javascript next to generated html
     std::ifstream  src(gui, std::ios::binary);
     std::ofstream  dst(out + ".js", std::ios::binary);
@@ -165,6 +166,7 @@ void make_parser(
 
   // launch web server?
   if (has_flag("-s", "--server", args)) {
+    build_gui_if_needed();
     std::cout << "Launching Web Server" << std::endl;
     auto server = get_project_path("big-lalr/tools/dist/server.js");
     auto exec_server = child_process_t::make("/bin/sh", {
