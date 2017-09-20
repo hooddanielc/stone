@@ -17,7 +17,7 @@ const Rule = ({rule}) => {
 
   return (
     <div>
-      {lhs} {`→`} «{rhs ? rhs.join('» «') : ''}»
+      {lhs} {`→`} «{rhs ? rhs.join(`» «`) : ''}»
     </div>
   )
 }

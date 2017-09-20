@@ -1,13 +1,21 @@
 import React, {Component} from 'react';
+
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom';
+
 import Appbar from 'muicss/lib/react/appbar';
 import Panel from 'muicss/lib/react/panel';
 import Button from 'muicss/lib/react/button';
 import Diagram from '../Diagram';
 import RulesTable from '../RulesTable';
 import ParserTable from '../ParserTable';
+import Code from '../Code';
 import s from './Explorer.scss';
 
-export default class extends Component {
+class App extends Component {
   static get defaultProps() {
     return {
       section: 'Home'
@@ -16,15 +24,11 @@ export default class extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props);
-    this.state = {
-      section: props.section
-    };
+    console.log(this);
   }
 
-  getButtonColor(name) {
-    const {section} = this.state;
-    if (section === name) {
+  getButtonColor(path) {
+    if (window.location.pathname === path) {
       return;
     }
 
@@ -59,9 +63,15 @@ export default class extends Component {
       <div className={s.ContentWrapper}>
         <h2>404: Not Found</h2>
         <Panel>
-          <p>Whoops! Something went wrong.</p>
+          <p>Everything Went Horribly Right</p>
         </Panel>
       </div>
+    );
+  }
+
+  renderCode() {
+    return (
+      <Code grammar={this.props.grammar} />
     );
   }
 
@@ -92,9 +102,18 @@ export default class extends Component {
     return (
       <Appbar>
         <div className={s.HeaderWrapper}>
-          <Button color={this.getButtonColor('Home')} onClick={this.changeSection('Home')}>Stats</Button>
-          <Button color={this.getButtonColor('ParseTable')} onClick={this.changeSection('ParseTable')}>Parse Table</Button>
-          <Button color={this.getButtonColor('Diagram')} onClick={this.changeSection('Diagram')}>Diagram</Button>
+          <Link className={s.HeaderLink} to="/">
+            <Button color={this.getButtonColor("/")}>Stats</Button>
+          </Link>
+          <Link className={s.HeaderLink} to="/parse-table">
+            <Button color={this.getButtonColor("/parse-table")}>Parse Table</Button>
+          </Link>
+          <Link className={s.HeaderLink} to="/diagram">
+            <Button color={this.getButtonColor("/diagram")}>Diagram</Button>
+          </Link>
+          <Link className={s.HeaderLink} to="/code">
+            <Button color={this.getButtonColor("/code")}>Code</Button>
+          </Link>
         </div>
       </Appbar>
     );
@@ -104,8 +123,13 @@ export default class extends Component {
     return (
       <div>
         {this.renderHeader()}
-        {this.renderSection(this.state.section)}
+        <Route exact path="/" component={this.renderHome.bind(this)}/>
+        <Route path="/parse-table" component={this.renderParseTable.bind(this)}/>
+        <Route path="/diagram" component={this.renderDiagram.bind(this)}/>
+        <Route path="/code" component={this.renderCode.bind(this)}/>
       </div>
     );
   }
 }
+
+export default (props) => <Router><App {...props}/></Router>;

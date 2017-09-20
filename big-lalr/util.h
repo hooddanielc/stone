@@ -2,11 +2,14 @@
 
 #include <sys/wait.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <unordered_map>
+#include <vector>
+#include <memory>
 
 namespace biglr {
 

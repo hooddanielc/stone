@@ -1,13 +1,17 @@
 import path from 'path';
 import browserSync from 'browser-sync';
 import webpack from 'webpack';
+import fallback from 'connect-history-api-fallback';
 import {REACT_CONFIG} from '../webpack.config.babel';
 
 const bs = browserSync.create('Dev Server');
 
 const init_bs = () => {
   bs.init({
-    server: path.resolve(__dirname, '..', 'dist')
+    server: {
+      baseDir: path.resolve(__dirname, '..', 'dist'),
+      middleware: [fallback()]
+    }
   });
 }
 
