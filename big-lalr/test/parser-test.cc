@@ -8,6 +8,27 @@ using namespace biglr;
 
 const std::string &example_grammar = "big-lalr/test/fixtures/pets.biglr";
 
+FIXTURE(parser_gens_json) {
+  auto grammar = grammar_t::from_file(get_project_path(example_grammar));
+  auto full_parse_table = grammar->get_full_parse_table();
+  auto json = full_parse_table->to_json();
+  // iterate the array
+  EXPECT_TRUE(json.find("actions") != json.end());
+  EXPECT_TRUE(json.find("cpp") != json.end());
+  EXPECT_TRUE(json.find("dot") != json.end());
+  EXPECT_TRUE(json.find("reductions") != json.end());
+  EXPECT_TRUE(json.find("rules") != json.end());
+  EXPECT_TRUE(json.find("tokens") != json.end());
+
+  // check valid length
+  EXPECT_EQ(json["actions"].size(), size_t(14));
+  EXPECT_EQ(json["cpp"].size(), size_t(3));
+  EXPECT_EQ(json["dot"].size(), size_t(1));
+  EXPECT_EQ(json["reductions"].size(), size_t(3));
+  EXPECT_EQ(json["rules"].size(), size_t(7));
+  EXPECT_EQ(json["tokens"].size(), size_t(10));
+}
+
 FIXTURE(parser_gens_tokens_and_compiles) {
   auto grammar = grammar_t::from_file(get_project_path(example_grammar));
   auto full_parse_table = grammar->get_full_parse_table();

@@ -263,6 +263,18 @@ public:
     return result;
   }
 
+  nlohmann::json get_code_gen_json() {
+    nlohmann::json json;
+    json["tokens"] = get_tokens_h();
+    json["ast_base"] = get_ast_base_h();
+
+    for (const auto &r: get_reductions()) {
+      json["reductions"][r->get_name()].push_back(get_reduction_h(r));
+    }
+
+    return json;
+  }
+
   nlohmann::json to_json() {
     nlohmann::json j;
     j["tokens"] = get_tokens_json();
@@ -270,6 +282,7 @@ public:
     j["rules"] = get_rules_json();
     j["actions"] = get_actions_json();
     j["dot"] = to_dot();
+    j["cpp"] = get_code_gen_json();
     return j;
   }
 

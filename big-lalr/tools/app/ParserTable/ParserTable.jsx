@@ -53,8 +53,8 @@ export default class extends Component {
   render_header() {
     const {tokens, reductions} = this.props.grammar;
     const header_cols = ['state']
-      .concat(Object.keys(tokens).map((k) => tokens[k].id))
-      .concat(Object.keys(reductions).map((k) => reductions[k].id));
+      .concat(Object.keys(tokens).map((k) => k))
+      .concat(Object.keys(reductions).map((k) => k));
     return (
       <thead>
         <tr>
@@ -64,20 +64,41 @@ export default class extends Component {
     );
   }
 
+  showAction(action) {
+    const {rules} = this.props.grammar;
+    if (action.type === 'reduce') {
+      console.log('reduce', rules.filter(({id}) => id === action.rule)[0]);
+    } else if (action.type === 'shift') {
+      console.log('shift', action);
+    }
+  }
+
+  showTransition(transition) {
+    console.log('show transition', transition);
+  }
+
   render_row(action) {
     const {tokens, reductions} = this.props.grammar;
     const row = [];
     row.push(`s${action.state}`);
     Object.keys(tokens).forEach((t) => {
       if (action.actions && action.actions[t]) {
-        row.push(action.actions[t].label);
+        row.push(
+          <button onClick={() => this.showAction(action.actions[t])}>
+            {action.actions[t].label}
+          </button>
+        );
       } else {
         row.push('');
       }
     });
     Object.keys(reductions).forEach((t) => {
       if (action.transition && action.transition[t]) {
-        row.push(action.transition[t].label);
+        row.push(
+          <button onClick={() => this.showTransition(action.transition[t])}>
+            {action.transition[t].label}
+          </button>
+        );
       } else {
         row.push('');
       }

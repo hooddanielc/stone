@@ -65,6 +65,7 @@ const REACT_CONFIG = {
               includePaths: [
                 nodeModulesDir,
                 path.join(nodeModulesDir, 'muicss', 'lib', 'sass'),
+                path.join(nodeModulesDir, 'highlight.js', 'styles')
               ],
             },
           },
