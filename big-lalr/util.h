@@ -113,11 +113,16 @@ std::string get_tmp_path(const std::string &prefix = "tmp-file-", const std::str
  * Any characters not allowed in c++ identifiers will result
  * in an exception. The following characters are allowed.
  *
+ * 0 1 2 3 4 5 6 7 8 9 _
  * a b c d e f g h i j k l m n o p q r s t u v w x y z
- * A B C D E F G H I J K L M N O P Q R S T U V W X Y Z _ */
+ * A B C D E F G H I J K L M N O P Q R S T U V W X Y Z */
 inline std::string sanitize_cpp_identifier(const std::string &name) {
+  if (isdigit(name.at(0))) {
+    throw std::runtime_error("invalid c++ identifier `" + name + '`');
+  }
+
   for (auto c: name) {
-    if (!isalpha(c) && c != '_') {
+    if (!isalnum(c) && c != '_') {
       throw std::runtime_error("invalid c++ identifier `" + name + '`');
     }
   }
