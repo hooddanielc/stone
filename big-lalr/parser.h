@@ -364,7 +364,7 @@ public:
     return generate_reduction_h(rule_group);
   }
 
-  void write_html(const std::string &path) {
+  void write_html(const std::string &path, const std::string &js_path = "react-report.js") {
     std::ofstream file;
     file.open(path);
     file <<
@@ -378,7 +378,7 @@ public:
             <script id="json" type="application/json">
               )" << to_json() << R"(
             </script>
-            <script src="react-report.js" type="text/javascript"></script>
+            <script src=")" << js_path<< R"(" type="text/javascript"></script>
           </body>
         </html>
       )";
