@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <map>
 #include <fstream>
 #include "symbol.h"
 #include "state.h"
@@ -202,8 +203,18 @@ public:
     return rules;
   }
 
-  std::unordered_map<symbol_key_t, rules_list_t> get_rules_by_lhs() const {
-    return by_lhs;
+  std::map<symbol_key_t, rules_list_t> get_rules_by_lhs() const {
+    std::map<symbol_key_t, rules_list_t> sorted_map;
+    auto reductions = get_reductions();
+    auto rules = get_rules();
+    std::sort(reductions.begin(), reductions.end());
+    std::sort(rules.begin(), rules.end());
+    for (auto reduction: reductions) {
+      for (auto rule: rules) {
+        sorted_map[rule->get_lhs()].push_back(rule);
+      }
+    }
+    return sorted_map;
   }
 
   nlohmann::json get_tokens_json() {

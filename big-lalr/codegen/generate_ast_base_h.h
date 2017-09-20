@@ -6,7 +6,7 @@ namespace biglr {
 
 inline std::string generate_ast_base_h(
   std::vector<std::shared_ptr<reduction_t>> reductions,
-  std::unordered_map<std::shared_ptr<symbol_t>, std::vector<std::shared_ptr<rule_t>>> by_lhs
+  std::map<std::shared_ptr<symbol_t>, std::vector<std::shared_ptr<rule_t>>> by_lhs
 ) {
   std::vector<std::string> branches;
   std::stringstream ss;
@@ -14,6 +14,8 @@ inline std::string generate_ast_base_h(
   auto omega = top_t::make();
   branches.push_back(by_lhs[omega].front()->get_cpp_branch_identifier());
   branches.push_back(by_lhs[omega].front()->get_cpp_identifier());
+
+  std::sort(reductions.begin(), reductions.end());
 
   for (const auto &reduction: reductions) {
     branches.push_back(by_lhs[reduction].front()->get_cpp_branch_identifier());
@@ -23,6 +25,7 @@ inline std::string generate_ast_base_h(
   }
 
   branches.push_back("ast_token");
+  std::sort(branches.begin(), branches.end());
 
   for (const auto &id: branches) {
     ss << "class " << id << "_t;" << std::endl;

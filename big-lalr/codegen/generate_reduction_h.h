@@ -13,7 +13,7 @@ inline std::string generate_reduction_h(std::vector<std::shared_ptr<rule_t>> rul
   });
 
   assert(rules.size() == count);
-
+  std::sort(rules.begin(), rules.end());
   auto base_name = rules.front()->get_cpp_branch_identifier();
   auto reduction_id = rules.front()->get_lhs()->get_id();
 

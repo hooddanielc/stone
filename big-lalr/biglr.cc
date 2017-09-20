@@ -72,6 +72,7 @@ std::vector<std::string> normalize_args(int argc, char *argv[]) {
 
 auto gui = get_project_path("big-lalr/tools/dist/react-report.js");
 auto tools = get_project_path("big-lalr/tools");
+auto server = get_project_path("big-lalr/tools/dist/server.js");
 
 void build_gui_if_needed() {
   if (!file_exists(gui)) {
@@ -168,7 +169,6 @@ void make_parser(
   if (has_flag("-s", "--server", args)) {
     build_gui_if_needed();
     std::cout << "Launching Web Server" << std::endl;
-    auto server = get_project_path("big-lalr/tools/dist/server.js");
     auto exec_server = child_process_t::make("/bin/sh", {
       "-c",
       "node " + server + " -d " + out + ".html"
@@ -182,6 +182,13 @@ void make_parser(
       }
     });
     exec_server->exec_sync();
+  } else if (should_generate) {
+    std::cout << std::endl;
+    std::cout << "================================================" << std::endl;
+    std::cout << "Success!" << std::endl;
+    std::cout << std::endl;
+    std::cout << "To view the documentation, rerun command with -s" << std::endl;
+    std::cout << "================================================" << std::endl;
   }
 }
 
