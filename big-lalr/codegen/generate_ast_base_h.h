@@ -4,6 +4,10 @@
 
 namespace biglr {
 
+inline std::vector<std::string> get_ast_base_deps() {
+  return { "vector", "memory" }; 
+}
+
 inline std::string generate_ast_base_h(
   std::vector<std::shared_ptr<reduction_t>> reductions,
   std::map<std::shared_ptr<symbol_t>, std::vector<std::shared_ptr<rule_t>>> by_lhs
@@ -14,7 +18,6 @@ inline std::string generate_ast_base_h(
   auto omega = top_t::make();
   branches.push_back(by_lhs[omega].front()->get_cpp_branch_identifier());
   branches.push_back(by_lhs[omega].front()->get_cpp_identifier());
-
   std::sort(reductions.begin(), reductions.end());
 
   for (const auto &reduction: reductions) {

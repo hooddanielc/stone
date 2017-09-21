@@ -72,26 +72,24 @@ std::vector<std::string> normalize_args(int argc, char *argv[]) {
 
 auto gui = get_project_path("big-lalr/tools/dist/react-report.js");
 auto tools = get_project_path("big-lalr/tools");
+auto bootstrap = get_project_path("big-lalr/tools/bootstrap.sh");
 auto server = get_project_path("big-lalr/tools/dist/server.js");
 
 void build_gui_if_needed() {
-  if (!file_exists(gui)) {
+  if (!file_exists(gui) || !file_exists(server)) {
     // need to rebuild webpack project
     std::cout << "building webpack application for first time" << std::endl;
     std::cout << "this might take a while please be patient" << std::endl;
-    auto exec_compiled_file = child_process_t::make("/bin/sh", {
-      "-c",
-      "cd " + tools + " && npm install && npm run build"
-    });
-    exec_compiled_file->on_data([&](auto str) {
+    auto bootstrap_process = child_process_t::make("/usr/bin/sh", { bootstrap });
+    bootstrap_process->on_data([&](auto str) {
       std::cout << str;
     });
-    exec_compiled_file->on_exit([&](auto code) {
+    bootstrap_process->on_exit([&](auto code) {
       if (code != 0) {
         throw std::runtime_error("incorrect exit code");
       }
     });
-    exec_compiled_file->exec_sync();
+    bootstrap_process->exec_sync();
   }
 }
 

@@ -9,7 +9,13 @@ Is it? Big LALR is a parser generator written in C++. Big LALR utilizes all plat
 
 `biglr -h`
 
+Generate parser next to grammar file
+
 `biglr --rules pets.biglr`
+
+View generated tools/documentation in a web app
+
+`biglr --rules pets.biglr -s`
 
 ## Example Rules
 
@@ -33,9 +39,10 @@ _nothing ->_ Rule without right side (epsilon) is aloud.
 
 ## Building
 
+- Install [clang](https://clang.llvm.org/)
 - Install [ib](https://github.com/JasonL9000/ib)
-- `ib --cfg release big-lalr/biglr`
-- ib will build output files in the parent folder called out (`../out/`)
+- build generator `ib --cfg release big-lalr/biglr`
+- launch biglr `../out/release/big-lalr/biglr -r big-lalr/test/fixtures/pets.biglr`
 
 ## Run Tests
 

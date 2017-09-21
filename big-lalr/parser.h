@@ -209,10 +209,8 @@ public:
     auto rules = get_rules();
     std::sort(reductions.begin(), reductions.end());
     std::sort(rules.begin(), rules.end());
-    for (auto reduction: reductions) {
-      for (auto rule: rules) {
-        sorted_map[rule->get_lhs()].push_back(rule);
-      }
+    for (auto rule: rules) {
+      sorted_map[rule->get_lhs()].push_back(rule);
     }
     return sorted_map;
   }
@@ -369,10 +367,20 @@ public:
 
   std::string get_reduction_h(std::shared_ptr<reduction_t> reduction) {
     std::vector<std::shared_ptr<rule_t>> rule_group;
-    for (const auto &rule: by_lhs[reduction]) {
+    for (auto rule: by_lhs[reduction]) {
       rule_group.push_back(rule);
     }
+    std::sort(rule_group.begin(), rule_group.end());
     return generate_reduction_h(rule_group);
+  }
+
+  std::string get_all_reductions_h() {
+    std::stringstream ss;
+    std::sort(reductions.begin(), reductions.end());
+    for (auto reduction: reductions) {
+      ss << get_reduction_h(reduction) << std::endl;
+    }
+    return ss.str();
   }
 
   void write_html(const std::string &path, const std::string &js_path = "react-report.js") {

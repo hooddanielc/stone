@@ -5,6 +5,10 @@
 
 namespace biglr {
 
+inline std::vector<std::string> get_reduction_deps() {
+  return { "vector", "memory" };
+}
+
 inline std::string generate_reduction_h(std::vector<std::shared_ptr<rule_t>> rules) {
   std::stringstream ss;
 
