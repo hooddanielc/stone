@@ -84,7 +84,7 @@ FIXTURE(make_child_process) {
 
 FIXTURE(child_process_output) {
   auto proc = child_process_t::make();
-  proc->set_cmd("/usr/bin/bash");
+  proc->set_cmd("/bin/bash");
   proc->set_args({"-c", ">&2 echo 'illusion of choice' && sleep 1 && echo 'works'"});
   std::string stdout;
   std::string stderr;
