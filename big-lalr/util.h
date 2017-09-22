@@ -229,17 +229,17 @@ class child_process_t {
 
 public:
 
+  using data_cb_t = std::function<void(const std::string &)>;
+
   /* execute child process synchronously */
   void exec_sync() {
-    int stdin_pipe[2];
-    int stdout_pipe[2];
     pid_t child_pid;
 
     if (pipe(stdin_pipe) < 0) {
       throw std::runtime_error("allocating pipe for child input redirect");
     }
 
-    if (pipe(stdout_pipe) < 0) {
+    if (pipe(stdout_pipe) < 0 || pipe(stderr_pipe) < 0) {
       close(stdin_pipe[child_process_t::pipe_read]);
       close(stdin_pipe[child_process_t::pipe_write]);
       throw std::runtime_error("allocating pipe for child output redirect");
@@ -260,15 +260,12 @@ public:
       }
 
       // redirect stderr
-      if (dup2(stdout_pipe[child_process_t::pipe_write], STDERR_FILENO) == -1) {
+      if (dup2(stderr_pipe[child_process_t::pipe_write], STDERR_FILENO) == -1) {
         exit(errno);
       }
 
       // all these are for use by parent only
-      close(stdin_pipe[child_process_t::pipe_read]);
-      close(stdin_pipe[child_process_t::pipe_write]);
-      close(stdout_pipe[child_process_t::pipe_read]);
-      close(stdout_pipe[child_process_t::pipe_write]);
+      cleanup_pipes();
 
       // run child process image
       // replace this with any exec* function find easier to use ("man exec")
@@ -290,6 +287,7 @@ public:
       // close unused file descriptors, these are for child only
       close(stdin_pipe[child_process_t::pipe_read]);
       close(stdout_pipe[child_process_t::pipe_write]);
+      close(stderr_pipe[child_process_t::pipe_write]);
 
       int exit_code = -1;
       bool exited = false;
@@ -307,45 +305,72 @@ public:
             exited = true;
           }
         }
-        char buff[256];
-        auto num_read = read(stdout_pipe[child_process_t::pipe_read], buff, sizeof(buff));
-        if (num_read < 0) {
-          throw std::runtime_error("read error");
+
+        // read stdout
+        std::stringstream ss_out;
+        std::stringstream ss_err;
+        ssize_t stdout_size = read_pipe(stdout_pipe[child_process_t::pipe_read], buff_size, ss_out);
+        ssize_t stderr_size = read_pipe(stderr_pipe[child_process_t::pipe_read], buff_size, ss_err);
+        emit_on_data(ss_out.str(), on_stdout_cbs);
+        emit_on_data(ss_err.str(), on_stderr_cbs);
+
+        if (!stdout_size && !stderr_size && exited) {
+          break;
         }
-        if (!num_read) {
-          if (exited) {
-            break;
-          }
-          continue;
-        }
-        emit_on_data(std::string{ buff, static_cast<size_t>(num_read) });
       }  // for
 
       // closing since child process exited and we are done talking to it
       close(stdin_pipe[child_process_t::pipe_write]);
       close(stdout_pipe[child_process_t::pipe_read]);
+      close(stderr_pipe[child_process_t::pipe_read]);
+
       emit_on_exit(exit_code);
     } else {
       // failed to create child
-      close(stdin_pipe[child_process_t::pipe_read]);
-      close(stdin_pipe[child_process_t::pipe_write]);
-      close(stdout_pipe[child_process_t::pipe_read]);
-      close(stdout_pipe[child_process_t::pipe_write]);
+      cleanup_pipes();
       throw std::runtime_error("failed to create child process");
     }
   }
 
+  void cleanup_pipes() {
+    close(stdin_pipe[child_process_t::pipe_read]);
+    close(stdin_pipe[child_process_t::pipe_write]);
+    close(stdout_pipe[child_process_t::pipe_read]);
+    close(stdout_pipe[child_process_t::pipe_write]);
+    close(stderr_pipe[child_process_t::pipe_read]);
+    close(stderr_pipe[child_process_t::pipe_write]);
+  }
+
+  ssize_t read_pipe(const int &fd, const ssize_t &size, std::ostream &strm) {
+    char buff[size];
+    ssize_t num_returned = read(fd, buff, sizeof(buff));
+    if (num_returned < 0) {
+      throw std::runtime_error("read error");
+    } else if (num_returned) {
+      strm.write(buff, num_returned);
+    }
+    return num_returned;
+  }
+
   void set_cmd(const std::string &cmd_) {
-    if (started) {
-      throw std::runtime_error("cannot modify executable after process started");
+    if (running) {
+      throw std::runtime_error("cannot modify executable while process is running");
     }
 
     cmd = cmd_;
   }
 
+  void set_buffer_size(const size_t &size) {
+    if (running) {
+      throw std::runtime_error("cannot modify executable while process is running");
+    }
+
+    buff_size = size;
+  }
+
   void set_args(const std::vector<std::string> &args_) {
-    if (started) {
-      throw std::runtime_error("cannot modify executable after process started");
+    if (running) {
+      throw std::runtime_error("cannot modify executable while process is running");
     }
 
     args = args_;
@@ -360,7 +385,7 @@ public:
   }
 
   bool is_running() const {
-    return started;
+    return running;
   }
 
   static std::shared_ptr<child_process_t> make(
@@ -372,8 +397,12 @@ public:
     return result;
   }
 
-  void on_data(const std::function<void(const std::string &)> &cb) {
-    on_data_cbs.push_back(cb);
+  void on_stdout(const data_cb_t &cb) {
+    on_stdout_cbs.push_back(cb);
+  }
+
+  void on_stderr(const data_cb_t &cb) {
+    on_stderr_cbs.push_back(cb);
   }
 
   void on_exit(const std::function<void(int)> &cb) {
@@ -386,26 +415,37 @@ public:
 
 private:
 
+  size_t buff_size;
+
+  int stdin_pipe[2];
+
+  int stdout_pipe[2];
+
+  int stderr_pipe[2];
+
   std::string cmd;
 
   std::vector<std::string> args;
 
-  bool started;
+  bool running;
 
   static const int pipe_read = 0;
 
   static const int pipe_write = 1;
 
-  std::vector<std::function<void(const std::string &data)>> on_data_cbs;
+  std::vector<data_cb_t> on_stdout_cbs;
+
+  std::vector<data_cb_t> on_stderr_cbs;
 
   std::vector<std::function<void(int exit_code)>> on_exit_cbs;
 
   std::vector<std::function<void(pid_t pid)>> on_start_cbs;
 
   child_process_t(const std::string &cmd_, const std::vector<std::string> &args_):
+    buff_size(256),
     cmd(cmd_),
     args(args_),
-    started(false) {}
+    running(false) {}
 
   void emit_on_exit(int exit_code) const {
     for (const auto &cb: on_exit_cbs) {
@@ -413,8 +453,8 @@ private:
     }
   }
 
-  void emit_on_data(const std::string &str) const {
-    for (const auto &cb: on_data_cbs) {
+  void emit_on_data(const std::string &str, const std::vector<data_cb_t> list) const {
+    for (const auto &cb: list) {
       cb(str);
     }
   }

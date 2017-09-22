@@ -63,7 +63,11 @@ FIXTURE(make_child_process) {
     pid_returned = pid;
   });
 
-  proc->on_data([&](const std::string &str) {
+  proc->on_stdout([&](const std::string &str) {
+    total_chars_received += str.size();
+  });
+
+  proc->on_stderr([&](const std::string &str) {
     total_chars_received += str.size();
   });
 
@@ -76,4 +80,29 @@ FIXTURE(make_child_process) {
   EXPECT_NE(pid_returned, pid_t(0));
   EXPECT_NE(exit_code, -1);
   EXPECT_NE(total_chars_received, 0);
+}
+
+FIXTURE(child_process_output) {
+  auto proc = child_process_t::make();
+  proc->set_cmd("/usr/bin/bash");
+  proc->set_args({"-c", ">&2 echo 'illusion of choice' && sleep 1 && echo 'works'"});
+  std::string stdout;
+  std::string stderr;
+
+  proc->on_stdout([&](const std::string &str) {
+    stdout += str;
+  });
+
+  proc->on_stderr([&](const std::string &str) {
+    stderr += str;
+  });
+
+  proc->on_exit([&](int status) {
+    EXPECT_EQ(status, 0);
+    EXPECT_EQ(stderr, "illusion of choice\n");
+    EXPECT_EQ(stdout, "works\n");
+    EXPECT_FALSE(stdout.back() != '\n');
+  });
+
+  proc->exec_sync();
 }
