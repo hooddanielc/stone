@@ -10,6 +10,7 @@
 #include "codegen/generate_tokens_h.h"
 #include "codegen/generate_ast_base_h.h"
 #include "codegen/generate_reduction_h.h"
+#include "codegen/generate_symbols_h.h"
 
 namespace biglr {
 
@@ -276,6 +277,7 @@ public:
     nlohmann::json json;
     json["tokens"] = get_tokens_h();
     json["ast_base"] = get_ast_base_h();
+    json["symbols"] = get_symbols_h();
 
     for (const auto &r: get_reductions()) {
       json["reductions"][r->get_name()].push_back(get_reduction_h(r));
@@ -363,6 +365,20 @@ public:
 
   std::string get_ast_base_h() {
     return generate_ast_base_h(get_reductions(), get_rules_by_lhs());
+  }
+
+  std::string get_symbols_h() {
+    std::vector<std::shared_ptr<symbol_t>> symbols;
+    for (auto s: tokens) {
+      if (s != break_t::make()) {
+        symbols.push_back(s);
+      }
+    }
+    for (auto s: reductions) {
+      symbols.push_back(s);
+    }
+    symbols.push_back(top_t::make());
+    return generate_symbols_h(symbols);
   }
 
   std::string get_reduction_h(std::shared_ptr<reduction_t> reduction) {

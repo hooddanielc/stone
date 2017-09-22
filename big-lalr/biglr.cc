@@ -192,7 +192,7 @@ void make_parser(
     std::cout << "=================================" << std::endl;
     auto exec_server = child_process_t::make(server, {
       "-d",
-      rules
+      out + ".html"
     });
     exec_server->on_stdout([&](auto str) {
       std::cout << str;
