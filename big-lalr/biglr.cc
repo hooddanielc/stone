@@ -73,7 +73,7 @@ std::vector<std::string> normalize_args(int argc, char *argv[]) {
 auto gui = get_project_path("big-lalr/tools/dist/react-report.js");
 auto tools = get_project_path("big-lalr/tools");
 auto bootstrap = get_project_path("big-lalr/tools/bootstrap.sh");
-auto server = get_project_path("big-lalr/tools/dist/server.js");
+auto server = get_project_path("big-lalr/tools/view-grammar.sh");
 
 void build_gui_if_needed() {
   if (!file_exists(gui) || !file_exists(server)) {
@@ -81,7 +81,10 @@ void build_gui_if_needed() {
     std::cout << "building webpack application for first time" << std::endl;
     std::cout << "this might take a while please be patient" << std::endl;
     auto bootstrap_process = child_process_t::make("/usr/bin/sh", { bootstrap });
-    bootstrap_process->on_data([&](auto str) {
+    bootstrap_process->on_stdout([&](auto str) {
+      std::cout << str;
+    });
+    bootstrap_process->on_stderr([&](auto str) {
       std::cout << str;
     });
     bootstrap_process->on_exit([&](auto code) {
@@ -98,6 +101,13 @@ void make_parser(
   const std::string &out,
   std::vector<std::string> args = {}
 ) {
+
+  if (!file_exists(rules)) {
+    std::cout << "===========================" << std::endl;
+    std::cout << "Grammar file does not exist" << std::endl;
+    std::cout << "===========================" << std::endl;
+  }
+
   bool should_generate = true;
 
   if (has_flag("-f", "--force", args)) {
@@ -121,19 +131,30 @@ void make_parser(
     auto saved_hash = get_file_contents(out + ".sha256");
 
     if (saved_hash == hash_string) {
-      std::cout << "Hashes are the same, skipping... ";
-      std::cout << "Use -f, --force flag to override" << std::endl;
-      std::cout << "Use -s, --server to launch generated docs" << std::endl;
-      should_generate = false;
+      std::cout << std::endl << std::endl;
+      std::cout << "========================================" << std::endl;
+      std::cout << "Hashes are the same, skipping code gen" << std::endl;
+      std::cout << "Use with -f, --force to override" << std::endl;
+      std::cout << "========================================" << std::endl;
+      std::cout << std::endl << std::endl;
+      if (!has_flag("-s", "--server", args)) {
+        std::cout << "========================================" << std::endl;
+        std::cout << "Use -s, --server to launch generated docs" << std::endl;
+        std::cout << "========================================" << std::endl;
+        should_generate = false;
+      }
     }
   }
 
   if (should_generate) {
     build_gui_if_needed();
     auto grammar = grammar_t::from_file(rules);
+    std::cout << std::endl;
     auto parser = grammar->get_full_parse_table([](size_t todo, size_t done) {
-      std::cout << "todo: " << todo << " done: " << done << std::endl;
+      std::cout << "\r" << "todo: " << todo << " done: " << done;
     });
+    std::cout << "\r                     "; // erase line
+    std::cout << std::endl;
 
     // get basename of output
     std::string out_name = "";
@@ -166,17 +187,22 @@ void make_parser(
   // launch web server?
   if (has_flag("-s", "--server", args)) {
     build_gui_if_needed();
+    std::cout << "=================================" << std::endl;
     std::cout << "Launching Web Server" << std::endl;
-    auto exec_server = child_process_t::make("/bin/sh", {
-      "-c",
-      "node " + server + " -d " + out + ".html"
+    std::cout << "=================================" << std::endl;
+    auto exec_server = child_process_t::make(server, {
+      "-d",
+      rules
     });
-    exec_server->on_data([&](auto str) {
+    exec_server->on_stdout([&](auto str) {
+      std::cout << str;
+    });
+    exec_server->on_stderr([&](auto str) {
       std::cout << str;
     });
     exec_server->on_exit([&](auto code) {
       if (code != 0) {
-        throw std::runtime_error("incorrect exit code");
+        throw std::runtime_error("server exit failure");
       }
     });
     exec_server->exec_sync();

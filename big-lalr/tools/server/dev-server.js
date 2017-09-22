@@ -8,6 +8,7 @@ const bs = browserSync.create('Dev Server');
 
 const init_bs = () => {
   bs.init({
+    logLevel: "debug",
     server: {
       baseDir: path.resolve(__dirname, '..', 'dist'),
       middleware: [fallback()]

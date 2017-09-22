@@ -75,16 +75,13 @@ FIXTURE(parser_gens_tokens_and_compiles) {
 
     std::string stdout = "";
     auto exec_compiled_file = child_process_t::make(output_path, {});
-    exec_compiled_file->on_data([&](auto str) {
+    exec_compiled_file->on_stdout([&](auto str) {
       stdout += str;
     });
 
     exec_compiled_file->on_exit([&](auto compiled_file_exit_code) {
       EXPECT_EQ(compiled_file_exit_code, 0);
       EXPECT_EQ(stdout, "a");
-      // std::remove(input_path.c_str());
-      // std::remove(output_path.c_str());
-      std::cout << compiler_process << std::endl;
     });
 
     exec_compiled_file->exec_sync();
