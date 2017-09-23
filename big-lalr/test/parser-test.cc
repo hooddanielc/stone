@@ -22,7 +22,7 @@ FIXTURE(parser_gens_json) {
 
   // check valid length
   EXPECT_EQ(json["actions"].size(), size_t(14));
-  EXPECT_EQ(json["cpp"].size(), size_t(4));
+  EXPECT_TRUE(json["cpp"].size() > size_t(4));
   EXPECT_EQ(json["dot"].size(), size_t(1));
   EXPECT_EQ(json["reductions"].size(), size_t(3));
   EXPECT_EQ(json["rules"].size(), size_t(7));
@@ -39,11 +39,14 @@ std::string generate_pets_code() {
   ss << "#include <memory>" << std::endl;
   ss << "#include <iostream>" << std::endl;
   ss << "#include <cassert>" << std::endl;
+  ss << "#include <utility>" << std::endl;
+  ss << "#include <unordered_map>" << std::endl;
   ss << std::endl;
   ss << full_parse_table->get_symbols_h() << std::endl;
   ss << full_parse_table->get_tokens_h() << std::endl;
   ss << full_parse_table->get_ast_base_h() << std::endl;
   ss << full_parse_table->get_all_reductions_h() << std::endl;
+  ss << full_parse_table->get_actions_h() << std::endl;
   ss << std::endl;
   return ss.str();
 }
@@ -71,6 +74,15 @@ std::string symbols_program = R"(
 int main(int, char*[]) {
   std::cout << symbol_description_t<symbol_t::r>::get_name();
   return 0;
+}
+
+)";
+
+std::string reduction_lookup_program = R"(
+
+int main (int, char*[]) {
+  auto size = reduction_lookup_t<7>::type::pattern.size();
+  std::cout << "empty rule has " << size << " children";
 }
 
 )";
@@ -117,4 +129,9 @@ FIXTURE(parser_gens_tokens_and_compiles) {
 
   EXPECT_EQ(get_program_output(pets_code_gen + token_fixture_program), "a");
   EXPECT_EQ(get_program_output(pets_code_gen + symbols_program), "r");
+
+  EXPECT_EQ(
+    get_program_output(pets_code_gen + reduction_lookup_program),
+    "empty rule has 0 children"
+  );
 }

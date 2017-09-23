@@ -27,9 +27,7 @@ class )" << base_name << R"(_t: public ast_t {
 
 public:
 
-  virtual int get_symbol_id() const override {
-    return )" << reduction_id << R"(;
-  }
+  static constexpr int symbol_id = )" << reduction_id << R"(;
 
 protected:
 
@@ -38,10 +36,24 @@ protected:
 };  // )" << base_name << R"(_t
 )";
 
-  for (const auto rule: rules) {
+  for (const auto &rule: rules) {
     auto rule_id = rule->get_id();
     auto identifier = rule->get_cpp_identifier();
+    auto rhs = rule->get_rhs();
     auto num_children = rule->get_rhs().size();
+    std::stringstream ss_pattern;
+    ss_pattern << "{ ";
+    for (auto it = rhs.begin(); it != rhs.end(); ++it) {
+      auto sid = (*it)->get_cpp_identifier();
+      ss_pattern << sid;
+      if (it + 1 != rhs.end()) {
+        ss_pattern << ",";
+      }
+      ss_pattern << " ";
+    }
+    ss_pattern << "}";
+
+
     ss << R"(
 class )" << identifier << R"(_t: public )" << base_name << R"(_t {
 
@@ -58,15 +70,22 @@ public:
     visitor(this);
   }
 
-  virtual int get_rule_id() const override {
-    return )" << rule_id << R"(;
-  }
+  static constexpr int rule_id = )" << rule_id << R"(;
+
+  static const std::vector<symbol_t> pattern;
 
 protected:
 
   )" << identifier << R"(_t(std::vector<std::shared_ptr<ast_t>> children): )" << base_name << R"(_t(children) {}
 
 };  // )" << identifier << R"(_t
+
+const std::vector<symbol_t> )" << identifier << R"(_t::pattern = )" << ss_pattern.str() << R"(;
+
+template <> struct reduction_lookup_t<)" << rule_id << R"(> {
+  using type = )" << identifier << R"(_t;
+};
+
 )";
   }
 

@@ -63,14 +63,6 @@ public:
   /* famous out of the box visitor pattern functionality */
   virtual void accept(const visitor_t &visitor) const = 0;
 
-  /* each ast node represents either a token or reduction */
-  virtual int get_symbol_id() const = 0;
-
-  /* if this node is a reduction, return number > 0, otherwise return -1 */
-  virtual int get_rule_id() const {
-    return -1;
-  }
-
   /* return all children */
   std::vector<std::shared_ptr<ast_t>> get_children() const {
     return children;
@@ -91,11 +83,6 @@ public:
 
   virtual void accept(const visitor_t &visitor) const override {
     visitor(this);
-  }
-
-  /* each ast node represents either a token or reduction */
-  virtual int get_symbol_id() const override {
-    return int(token->get_kind());
   }
 
   static std::shared_ptr<ast_token_t> make(std::shared_ptr<token_t> token) {

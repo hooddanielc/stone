@@ -19,18 +19,9 @@ export default class extends Component {
   }
 
   initFileList() {
-    const files = [
-      {path: 'tokens.h', src: this.props.grammar.cpp.tokens},
-      {path: 'ast.h', src: this.props.grammar.cpp.ast_base}
-    ];
-
-    const {reductions} = this.props.grammar.cpp;
-
-    Object.keys(reductions).forEach((key) => {
-      files.push({path: `reductions/${key}.h`, src: reductions[key].join('\n\n')});
-    });
-
-    return files;
+    const { cpp } = this.props.grammar;
+    const names = Object.keys(cpp).sort();
+    return names.map((k) => ({path: k, src: cpp[k]}));
   }
 
   renderSelectedFile() {
