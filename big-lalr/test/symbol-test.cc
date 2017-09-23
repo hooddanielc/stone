@@ -1,5 +1,4 @@
 #include <lick/lick.h>
-#include <big-lalr/json/json.hpp>
 #include <big-lalr/symbol.h>
 
 using namespace biglr;

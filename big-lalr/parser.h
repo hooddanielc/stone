@@ -7,151 +7,14 @@
 #include <fstream>
 #include "symbol.h"
 #include "state.h"
+#include "action.h"
 #include "codegen/generate_tokens_h.h"
 #include "codegen/generate_ast_base_h.h"
 #include "codegen/generate_reduction_h.h"
 #include "codegen/generate_symbols_h.h"
+#include "codegen/generate_actions_h.h"
 
 namespace biglr {
-
-struct action_t {
-
-  enum kind_t {
-    blank,
-    restart,
-    reduce,
-    shift
-  };
-
-  std::shared_ptr<symbol_t> symbol;
-
-  action_t(std::shared_ptr<symbol_t> symbol_): symbol(symbol_) {}
-
-  action_t() = default;
-
-  virtual bool is_blank() const { return true; }
-
-  virtual std::string get_label() const {
-    return "";
-  }
-
-  virtual kind_t get_kind() const {
-    return kind_t::blank;
-  }
-
-  virtual nlohmann::json to_json() const {
-    nlohmann::json j;
-    j["label"] = get_label();
-    j["type"] = "blank";
-    return j;
-  }
-
-  virtual std::string get_ref() const {
-    return "error";
-  }
-
-};
-
-struct restart_action_t: public action_t {
-
-  restart_action_t(std::shared_ptr<symbol_t> symbol_): action_t(symbol_) {}
-
-  virtual bool is_blank() const override { return false; }
-
-  virtual std::string get_label() const override {
-    return "\u21BA";
-  }
-
-  virtual kind_t get_kind() const override {
-    return kind_t::restart;
-  }
-
-  virtual nlohmann::json to_json() const override {
-    nlohmann::json j;
-    j["label"] = get_label();
-    j["type"] = "restart";
-    return j;
-  }
-
-  virtual std::string get_ref() const override {
-    return "r1";
-  }
-
-};
-
-struct shift_action_t: public action_t {
-
-  std::shared_ptr<state_t> state;
-
-  shift_action_t(
-    std::shared_ptr<symbol_t> symbol_,
-    std::shared_ptr<state_t> state_
-  ): action_t(symbol_), state(state_) {}
-
-  virtual bool is_blank() const override { return false; }
-
-  virtual std::string get_label() const override {
-    std::stringstream ss;
-    ss << "s" << state->get_id();
-    return ss.str();
-  }
-
-  virtual kind_t get_kind() const override {
-    return kind_t::shift;
-  }
-
-  virtual nlohmann::json to_json() const override {
-    nlohmann::json j;
-    j["label"] = get_label();
-    j["type"] = "shift";
-    j["state"] = state->get_id();
-    return j;
-  }
-
-  virtual std::string get_ref() const override {
-    std::stringstream ss;
-    ss << "s" << state->get_id();
-    return ss.str();
-  }
-
-};
-
-struct reduce_action_t: public action_t {
-
-  std::shared_ptr<rule_t> rule;
-
-  reduce_action_t(
-    std::shared_ptr<symbol_t> symbol_,
-    std::shared_ptr<rule_t> rule_
-  ): action_t(symbol_), rule(rule_) {}
-
-  virtual bool is_blank() const override { return false; }
-
-  virtual std::string get_label() const override {
-    std::stringstream ss;
-    ss << "r" << rule->get_id();
-    return ss.str();
-  }
-
-  virtual kind_t get_kind() const override {
-    return kind_t::reduce;
-  }
-
-  virtual nlohmann::json to_json() const override {
-    nlohmann::json j;
-    j["label"] = get_label();
-    j["type"] = "reduce";
-    j["rule"] = rule->get_id();
-    return j;
-  }
-
-  virtual std::string get_ref() const override {
-    std::stringstream ss;
-    ss << "r" << rule->get_id();
-    return ss.str();
-  }
-
-};
 
 class parser_t {
 
@@ -193,7 +56,17 @@ public:
   }
 
   tokens_list_t get_tokens() const {
-    return tokens;
+    auto omega = static_cast<std::shared_ptr<symbol_t>>(top_t::make());
+    auto break_ = static_cast<std::shared_ptr<symbol_t>>(break_t::make());
+    auto epsilon = static_cast<std::shared_ptr<symbol_t>>(epsilon_t::make());
+    std::vector<std::shared_ptr<token_t>> result;
+    for (auto token: tokens) {
+      auto casted = static_cast<std::shared_ptr<symbol_t>>(token);
+      if (token != omega && token != break_ && token != epsilon) {
+        result.push_back(token);
+      }
+    }
+    return result;
   }
 
   reductions_list_t get_reductions() const {
@@ -275,12 +148,13 @@ public:
 
   nlohmann::json get_code_gen_json() {
     nlohmann::json json;
-    json["tokens"] = get_tokens_h();
-    json["ast_base"] = get_ast_base_h();
-    json["symbols"] = get_symbols_h();
+    json["token.h"] = get_tokens_h();
+    json["ast.h"] = get_ast_base_h();
+    json["symbol.h"] = get_symbols_h();
+    json["actions.h"] = get_actions_h();
 
     for (const auto &r: get_reductions()) {
-      json["reductions"][r->get_name()].push_back(get_reduction_h(r));
+      json["reductions/" + r->get_name() + ".h"] = get_reduction_h(r);
     }
 
     return json;
@@ -357,6 +231,10 @@ public:
     }
     ss << "}" << std::endl;
     return ss.str();
+  }
+
+  std::string get_actions_h() {
+    return generate_actions_h(states, get_tokens(), get_reductions(), actions);
   }
 
   std::string get_tokens_h() {

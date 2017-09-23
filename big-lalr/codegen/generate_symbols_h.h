@@ -53,6 +53,13 @@ struct symbol_description_t<)" << id << R"(> {
 
   }
 
+  ss << R"(
+
+template <int id>
+struct reduction_lookup_t {};
+
+)";
+
   return ss.str();
 }
 
