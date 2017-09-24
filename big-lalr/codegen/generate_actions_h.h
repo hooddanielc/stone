@@ -52,7 +52,7 @@ enum action_kind_t {
 //   ...
 // }
 
-static const std::unordered_map<int, std::unordered_map<int, std::pair<int, int>>> actions = {
+static const std::unordered_map<int, std::unordered_map<int, std::pair<action_kind_t, int>>> actions = {
 )";
 
   std::unordered_map<int, std::unordered_map<int, std::pair<int, int>>> actions_tmp;
@@ -76,8 +76,15 @@ static const std::unordered_map<int, std::unordered_map<int, std::pair<int, int>
       auto state_id = it_col->first;
       auto type = it_col->second.first;
       auto param = it_col->second.second;
+      std::string type_name;
 
-      ss << "    { " << state_id << ", { " << type << ", " << param << " } }";
+      switch (type) {
+        case static_cast<int>(action_t::restart): type_name = "restart"; break;
+        case static_cast<int>(action_t::reduce): type_name = "reduce"; break;
+        case static_cast<int>(action_t::shift): type_name = "shift"; break;
+      }
+
+      ss << "    { " << state_id << ", { " << type_name << ", " << param << " } }";
 
       if (std::next(it_col) != it_row->second.end()) {
         ss << ",";

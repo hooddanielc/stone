@@ -245,6 +245,7 @@ public:
       throw std::runtime_error("allocating pipe for child output redirect");
     }
 
+
     child_pid = fork();
     if (child_pid == 0) {
       // child continues here
@@ -275,7 +276,7 @@ public:
         c_str_array.push_back(strdup(str.c_str()));
       }
       c_str_array.push_back(nullptr);
-      int exit_code = execv(c_str_array.front(), c_str_array.data());
+      int exit_code = execve(c_str_array.front(), c_str_array.data(), environ);
 
       // if we get here at all, an error occurred, but we are in the child
       // process, so just exit
@@ -309,9 +310,11 @@ public:
         // read stdout
         std::stringstream ss_out;
         std::stringstream ss_err;
+
         ssize_t stdout_size = read_pipe(stdout_pipe[child_process_t::pipe_read], buff_size, ss_out);
-        ssize_t stderr_size = read_pipe(stderr_pipe[child_process_t::pipe_read], buff_size, ss_err);
         emit_on_data(ss_out.str(), on_stdout_cbs);
+
+        ssize_t stderr_size = read_pipe(stderr_pipe[child_process_t::pipe_read], buff_size, ss_err);
         emit_on_data(ss_err.str(), on_stderr_cbs);
 
         if (!stdout_size && !stderr_size && exited) {
@@ -347,7 +350,9 @@ public:
     if (num_returned < 0) {
       throw std::runtime_error("read error");
     } else if (num_returned) {
-      strm.write(buff, num_returned);
+      for (ssize_t i = 0; i < num_returned; ++i) {
+        strm.put(buff[i]);
+      }
     }
     return num_returned;
   }
@@ -442,7 +447,7 @@ private:
   std::vector<std::function<void(pid_t pid)>> on_start_cbs;
 
   child_process_t(const std::string &cmd_, const std::vector<std::string> &args_):
-    buff_size(256),
+    buff_size(1),
     cmd(cmd_),
     args(args_),
     running(false) {}
