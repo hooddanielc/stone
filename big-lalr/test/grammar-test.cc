@@ -21,6 +21,8 @@ FIXTURE(first_sets) {
     token_t::make("c"),
     token_t::make("d")
   };
+  std::sort(set.begin(), set.end());
+  std::sort(expected.begin(), expected.end());
   EXPECT_TRUE(set == expected);
   auto sequence = grammar->get_first_sequence(set);
   EXPECT_TRUE(sequence == std::vector<std::shared_ptr<symbol_t>>({ token_t::make("c") }));
