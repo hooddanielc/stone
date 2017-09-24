@@ -5,7 +5,6 @@
 namespace biglr {
 
 inline std::string generate_symbols_h(std::vector<std::shared_ptr<symbol_t>> symbols) {
-
   std::stringstream ss;
   ss << "enum symbol_t {" << std::endl;
   for (auto it = symbols.begin(); it != symbols.end(); ++it) {

@@ -16,12 +16,11 @@ FIXTURE(constructs) {
 
 FIXTURE(first_sets) {
   auto grammar = grammar_t::from_file(example_grammar);
-  auto set = grammar->get_first_set(grammar->get_reductions()[1]);
+  auto set = grammar->get_first_set(reduction_t::make("pet"));
   std::vector<std::shared_ptr<symbol_t>> expected = {
     token_t::make("c"),
     token_t::make("d")
   };
-  std::sort(set.begin(), set.end(), [](auto a, auto b) { return *a < *b; });
   EXPECT_TRUE(set == expected);
   auto sequence = grammar->get_first_sequence(set);
   EXPECT_TRUE(sequence == std::vector<std::shared_ptr<symbol_t>>({ token_t::make("c") }));

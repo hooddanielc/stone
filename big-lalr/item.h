@@ -69,6 +69,10 @@ public:
     store.clear();
   }
 
+  int get_id() const {
+    return id;
+  }
+
   bool operator==(const item_t &other) const { return data == other.data; }
 
   bool operator!=(const item_t &other) const { return data != other.data; }
@@ -94,9 +98,15 @@ protected:
 
   static store_t store;
 
-  item_t(data_t data_): data(data_) {}
+  static int next_id;
+
+  int id;
+
+  item_t(data_t data_): data(data_), id(next_id++) {}
 
 };  // item_t
+
+int item_t::next_id = 1;
 
 item_t::store_t item_t::store;
 

@@ -137,11 +137,11 @@ void make_parser(
       std::cout << "Use with -f, --force to override" << std::endl;
       std::cout << "========================================" << std::endl;
       std::cout << std::endl << std::endl;
+      should_generate = false;
       if (!has_flag("-s", "--server", args)) {
         std::cout << "========================================" << std::endl;
         std::cout << "Use -s, --server to launch generated docs" << std::endl;
         std::cout << "========================================" << std::endl;
-        should_generate = false;
       }
     }
   }
