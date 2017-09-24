@@ -276,7 +276,7 @@ public:
         c_str_array.push_back(strdup(str.c_str()));
       }
       c_str_array.push_back(nullptr);
-      int exit_code = execve(c_str_array.front(), c_str_array.data(), environ);
+      int exit_code = execv(c_str_array.front(), c_str_array.data());
 
       // if we get here at all, an error occurred, but we are in the child
       // process, so just exit

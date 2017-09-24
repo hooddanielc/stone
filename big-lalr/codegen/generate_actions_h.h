@@ -35,9 +35,10 @@ inline std::string generate_actions_h(
   ss << R"(
 
 enum action_kind_t {
-  restart = )" << action_t::restart << R"(,
+  restart = )" << action_t::restart << R"(, // unused
   reduce = )" << action_t::reduce << R"(,
   shift = )" << action_t::shift << R"(,
+  transition = )" << (action_t::shift + 1) << R"(
 };
 
 // actions layout
