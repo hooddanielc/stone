@@ -8,7 +8,7 @@ inline std::string generate_symbols_h(std::vector<std::shared_ptr<symbol_t>> sym
   std::stringstream ss;
   ss << "enum symbol_t {" << std::endl;
   for (auto it = symbols.begin(); it != symbols.end(); ++it) {
-    ss << "    " << (*it)->get_cpp_identifier();
+    ss << "    " << (*it)->get_cpp_identifier() << " = " << (*it)->get_id();
     if (it + 1 != symbols.end()) {
       ss << ",";
     }

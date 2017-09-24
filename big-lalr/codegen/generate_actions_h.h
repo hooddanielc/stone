@@ -35,9 +35,10 @@ inline std::string generate_actions_h(
   ss << R"(
 
 enum action_kind_t {
-  restart = )" << action_t::restart << R"(,
+  restart = )" << action_t::restart << R"(, // unused
   reduce = )" << action_t::reduce << R"(,
   shift = )" << action_t::shift << R"(,
+  transition = )" << (action_t::shift + 1) << R"(
 };
 
 // actions layout
@@ -52,10 +53,11 @@ enum action_kind_t {
 //   ...
 // }
 
-static const std::unordered_map<int, std::unordered_map<int, std::pair<int, int>>> actions = {
+static std::unordered_map<int, std::unordered_map<int, std::pair<action_kind_t, int>>> actions = {
 )";
 
   std::unordered_map<int, std::unordered_map<int, std::pair<int, int>>> actions_tmp;
+  auto breaker = break_t::make();
 
   for (auto state: states) {
     auto state_id = state->get_id();
@@ -64,6 +66,12 @@ static const std::unordered_map<int, std::unordered_map<int, std::pair<int, int>
       auto type = int(actions[state][token]->get_kind());
       auto param = actions[state][token]->get_param();
       auto token_id = token->get_id();
+      actions_tmp[token_id][state_id] = {type, param};
+    }
+    if (!actions[state][breaker]->is_blank()) {
+      auto type = int(actions[state][breaker]->get_kind());
+      auto param = actions[state][breaker]->get_param();
+      auto token_id = breaker->get_id();
       actions_tmp[token_id][state_id] = {type, param};
     }
   }
@@ -76,8 +84,15 @@ static const std::unordered_map<int, std::unordered_map<int, std::pair<int, int>
       auto state_id = it_col->first;
       auto type = it_col->second.first;
       auto param = it_col->second.second;
+      std::string type_name;
 
-      ss << "    { " << state_id << ", { " << type << ", " << param << " } }";
+      switch (type) {
+        case static_cast<int>(action_t::restart): type_name = "restart"; break;
+        case static_cast<int>(action_t::reduce): type_name = "reduce"; break;
+        case static_cast<int>(action_t::shift): type_name = "shift"; break;
+      }
+
+      ss << "    { " << state_id << ", { " << type_name << ", " << param << " } }";
 
       if (std::next(it_col) != it_row->second.end()) {
         ss << ",";
@@ -109,7 +124,7 @@ static std::unordered_map<int, int> transitions = {
   for (auto reduction: reductions) {
     for (auto state: states) {
       if (actions[state][reduction]->is_blank()) continue;
-      goto_tmp[reduction->get_id()] = state->get_id();
+      goto_tmp[reduction->get_id()] = actions[state][reduction]->get_param();
     }
   }
 

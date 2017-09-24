@@ -44,6 +44,10 @@ public:
     return id;
   }
 
+  static void clear() {
+    next_id = 1;
+  }
+
 protected:
 
   static int next_id;
@@ -109,6 +113,11 @@ public:
     return tokens;
   }
 
+  static void clear_store() {
+    std::unordered_map<std::string, std::weak_ptr<token_t>> empty;
+    std::swap(store, empty);
+  }
+
 protected:
 
   static std::unordered_map<std::string, std::weak_ptr<token_t>> store;
@@ -166,6 +175,11 @@ public:
     return reductions;
   }
 
+  static void clear_store() {
+    std::unordered_map<std::string, std::weak_ptr<reduction_t>> empty;
+    std::swap(store, empty);
+  }
+
 protected:
 
   static std::unordered_map<std::string, std::weak_ptr<reduction_t>> store;
@@ -192,11 +206,15 @@ public:
   }
 
   virtual std::string get_cpp_identifier() const override {
-    return "omega";
+    return "__omega__";
   }
 
   virtual std::string get_description() const override {
-    return "TOP";
+    return "__omega__";
+  }
+
+  static void clear_store() {
+    cached.reset();
   }
 
 protected:
@@ -229,11 +247,15 @@ public:
   }
 
   virtual std::string get_cpp_identifier() const override {
-    return "special_BREAK";
+    return "__break__";
   }
 
   virtual std::string get_description() const override {
-    return "Break(--)";
+    return "__break__";
+  }
+
+  static void clear_store() {
+    cached.reset();
   }
 
 protected:
@@ -263,14 +285,18 @@ public:
   }
 
   virtual std::string get_cpp_identifier() const override {
-    return "special_EPSILON";
+    return "__epsilon__";
   }
 
   virtual std::string get_description() const override {
-    return "Epsilon(--)";
+    return "__epsilon__";
   }
 
   virtual bool is_epsilon() const override { return true; }
+
+  static void clear_store() {
+    cached.reset();
+  }
 
 protected:
 

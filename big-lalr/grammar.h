@@ -19,6 +19,7 @@ class grammar_t {
 public:
 
   static std::shared_ptr<grammar_t> make(const char *grammar_src) {
+    // clear stores
     auto lexer = lexer_t::make(grammar_src);
     auto grammar = new grammar_t(
       lexer->get_tokens(),
@@ -30,6 +31,16 @@ public:
   }
 
   static std::shared_ptr<grammar_t> from_file(const std::string &path) {
+    // clear stores
+    token_t::clear_store();
+    reduction_t::clear_store();
+    item_t::clear_store();
+    state_t::clear_store();
+    symbol_t::clear();
+    break_t::clear_store();
+    epsilon_t::clear_store();
+    top_t::clear_store();
+
     auto str = get_file_contents(path);
     return make(str.c_str());
   }

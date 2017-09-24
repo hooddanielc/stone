@@ -19,7 +19,7 @@ inline std::string generate_tokens_h(std::vector<std::shared_ptr<token_t>> token
     auto token = *it;
 
     if (!token->is_break() && !token->is_epsilon()) {
-      ss << "    " << token->get_cpp_identifier();
+      ss << "    " << token->get_cpp_identifier() << " = " << token->get_id();
 
       if ((it + 1) != tokens.end()) {
         ss << "," << std::endl;

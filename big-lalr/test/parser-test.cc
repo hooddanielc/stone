@@ -41,12 +41,14 @@ std::string generate_pets_code() {
   ss << "#include <cassert>" << std::endl;
   ss << "#include <utility>" << std::endl;
   ss << "#include <unordered_map>" << std::endl;
+  ss << "#include <functional>" << std::endl;
   ss << std::endl;
   ss << full_parse_table->get_symbols_h() << std::endl;
   ss << full_parse_table->get_tokens_h() << std::endl;
   ss << full_parse_table->get_ast_base_h() << std::endl;
   ss << full_parse_table->get_all_reductions_h() << std::endl;
   ss << full_parse_table->get_actions_h() << std::endl;
+  ss << full_parse_table->get_driver_h() << std::endl;
   ss << std::endl;
   return ss.str();
 }
@@ -81,8 +83,29 @@ int main(int, char*[]) {
 std::string reduction_lookup_program = R"(
 
 int main (int, char*[]) {
-  auto size = reduction_lookup_t<7>::type::pattern.size();
+  auto size = reduction_lookup_t<nothing_as_epsilon_t::rule_id>::type::pattern.size();
   std::cout << "empty rule has " << size << " children";
+  return 0;
+}
+
+)";
+
+std::string driver_functionality = R"(
+
+int main (int, char*[]) {
+  try {
+    std::vector<std::shared_ptr<token_t>> input = {
+      token_t::make(token_t::d),
+      token_t::make(token_t::o),
+      token_t::make(token_t::g)
+    };
+    auto parser = parser_t::make();
+    auto result = parser->parse(input);
+    std::cout << "output size: " << result.size();
+  } catch (const std::exception &e) {
+    std::cout << e.what() << std::endl;
+  }
+  return 0;
 }
 
 )";
@@ -98,7 +121,14 @@ std::string get_program_output(const std::string &src) {
     "-std=c++14",
     "-lstdc++",
     "-o",
-    output_path
+    output_path,
+    "-v"
+  });
+  compiler_process->on_stdout([](auto) {
+    //std::cout << str;
+  });
+  compiler_process->on_stderr([](auto) {
+    //std::cout << str;
   });
   compiler_process->on_exit([](auto code) {
     EXPECT_EQ(code, 0);
@@ -134,4 +164,6 @@ FIXTURE(parser_gens_tokens_and_compiles) {
     get_program_output(pets_code_gen + reduction_lookup_program),
     "empty rule has 0 children"
   );
+
+  EXPECT_EQ(get_program_output(pets_code_gen + driver_functionality), "output size: 1");
 }

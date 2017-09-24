@@ -13,6 +13,7 @@
 #include "codegen/generate_reduction_h.h"
 #include "codegen/generate_symbols_h.h"
 #include "codegen/generate_actions_h.h"
+#include "codegen/generate_driver_h.h"
 
 namespace biglr {
 
@@ -141,14 +142,17 @@ public:
 
   nlohmann::json get_code_gen_json() {
     nlohmann::json json;
-    json["token.h"] = get_tokens_h();
     json["ast.h"] = get_ast_base_h();
-    json["symbol.h"] = get_symbols_h();
+    json["driver.h"] = get_driver_h();
     json["parser_table.h"] = get_actions_h();
+    json["symbol.h"] = get_symbols_h();
+    json["token.h"] = get_tokens_h();
 
     for (const auto &r: get_reductions()) {
       json["reductions/" + r->get_name() + ".h"] = get_reduction_h(r);
     }
+
+    json["reductions/" + top_t::make()->get_name() + ".h"] = get_reduction_h(top_t::make());
 
     return json;
   }
@@ -240,6 +244,8 @@ public:
 
   std::string get_symbols_h() {
     std::vector<std::shared_ptr<symbol_t>> symbols;
+    symbols.push_back(top_t::make());
+    symbols.push_back(break_t::make());
     for (auto s: tokens) {
       if (s != break_t::make()) {
         symbols.push_back(s);
@@ -248,8 +254,11 @@ public:
     for (auto s: reductions) {
       symbols.push_back(s);
     }
-    symbols.push_back(top_t::make());
     return generate_symbols_h(symbols);
+  }
+
+  std::string get_driver_h() {
+    return generate_driver_h(get_rules());
   }
 
   std::string get_reduction_h(std::shared_ptr<reduction_t> reduction) {
@@ -257,6 +266,7 @@ public:
     for (auto rule: by_lhs[reduction]) {
       rule_group.push_back(rule);
     }
+
     return generate_reduction_h(rule_group);
   }
 
@@ -265,6 +275,7 @@ public:
     for (auto reduction: reductions) {
       ss << get_reduction_h(reduction) << std::endl;
     }
+    ss << get_reduction_h(top_t::make()) << std::endl;
     return ss.str();
   }
 

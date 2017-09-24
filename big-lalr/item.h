@@ -77,6 +77,13 @@ public:
 
   bool operator!=(const item_t &other) const { return data != other.data; }
 
+  static void clear_store() {
+    store_t empty;
+    std::swap(store, empty);
+    next_id = 1;
+  }
+
+
 protected:
 
   data_t data;

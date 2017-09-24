@@ -26,6 +26,10 @@ class )" << base_name << R"(_t: public ast_t {
 
 public:
 
+  virtual symbol_t get_symbol_id() const override {
+    return static_cast<symbol_t>(symbol_id);
+  }
+
   static constexpr int symbol_id = )" << reduction_id << R"(;
 
 protected:

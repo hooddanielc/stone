@@ -42,6 +42,12 @@ public:
     return id;
   }
 
+  static void clear_store() {
+    store_t empty;
+    std::swap(store, empty);
+    next_id = 1;
+  }
+
 protected:
 
   item_list_t items;
