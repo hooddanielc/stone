@@ -2,7 +2,7 @@
 
 #include <sstream>
 #include <memory>
-#include <unordered_map>
+#include <map>
 #include "../symbol.h"
 #include "../action.h"
 
@@ -30,9 +30,6 @@ inline std::string generate_actions_h(
   std::vector<std::shared_ptr<reduction_t>> reductions,
   action_table_t actions
 ) {
-  std::sort(states.begin(), states.end(), [](auto a, auto b) {
-    return a->get_id() < b->get_id();
-  });
   std::stringstream ss;
 
   ss << R"(

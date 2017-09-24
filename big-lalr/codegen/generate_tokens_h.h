@@ -8,7 +8,7 @@ inline std::vector<std::string> get_tokens_deps() {
   return { "string", "memory" };
 }
 
-inline std::string generate_tokens_h(const std::vector<std::shared_ptr<token_t>> &tokens) {
+inline std::string generate_tokens_h(std::vector<std::shared_ptr<token_t>> tokens) {
   std::stringstream ss;
   ss << "class token_t {" << std::endl;
   ss << std::endl;

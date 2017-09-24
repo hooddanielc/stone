@@ -395,9 +395,6 @@ private:
         epsilon(epsilon_t::make()),
         by_lhs(populate_by_lhs()),
         by_rhs(populate_by_rhs()) {
-    std::sort(tokens.begin(), tokens.end(), [](auto a, auto b) { return *a < *b;});
-    std::sort(reductions.begin(), reductions.end(), [](auto a, auto b) { return *a < *b;});
-    std::sort(rules.begin(), rules.end(), [](auto a, auto b) { return *a < *b;});
   }
 
 };  // grammar_t

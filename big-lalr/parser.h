@@ -77,12 +77,10 @@ public:
     return rules;
   }
 
-  std::map<symbol_key_t, rules_list_t> get_rules_by_lhs() const {
-    std::map<symbol_key_t, rules_list_t> sorted_map;
+  std::unordered_map<symbol_key_t, rules_list_t> get_rules_by_lhs() const {
+    std::unordered_map<symbol_key_t, rules_list_t> sorted_map;
     auto reductions = get_reductions();
     auto rules = get_rules();
-    std::sort(reductions.begin(), reductions.end());
-    std::sort(rules.begin(), rules.end());
     for (auto rule: rules) {
       sorted_map[rule->get_lhs()].push_back(rule);
     }
@@ -108,7 +106,6 @@ public:
   }
 
   nlohmann::json get_rules_json() {
-    std::sort(rules.begin(), rules.end(), [](auto a, auto b) { return a->get_id() < b->get_id(); });
     nlohmann::json j;
     for (auto r: rules) {
       nlohmann::json rule_item;
@@ -123,10 +120,6 @@ public:
   }
 
   nlohmann::json get_actions_json() {
-    std::sort(states.begin(), states.end(), [](auto a, auto b) {
-      return a->get_id() < b->get_id();
-    });
-
     nlohmann::json result;
 
     for (auto state: states) {
@@ -151,7 +144,7 @@ public:
     json["token.h"] = get_tokens_h();
     json["ast.h"] = get_ast_base_h();
     json["symbol.h"] = get_symbols_h();
-    json["actions.h"] = get_actions_h();
+    json["parser_table.h"] = get_actions_h();
 
     for (const auto &r: get_reductions()) {
       json["reductions/" + r->get_name() + ".h"] = get_reduction_h(r);
@@ -264,13 +257,11 @@ public:
     for (auto rule: by_lhs[reduction]) {
       rule_group.push_back(rule);
     }
-    std::sort(rule_group.begin(), rule_group.end());
     return generate_reduction_h(rule_group);
   }
 
   std::string get_all_reductions_h() {
     std::stringstream ss;
-    std::sort(reductions.begin(), reductions.end());
     for (auto reduction: reductions) {
       ss << get_reduction_h(reduction) << std::endl;
     }
@@ -331,6 +322,7 @@ protected:
   action_table_t construct_actions() {
     auto omega = top_t::make();
     action_table_t tmp;
+
     for (auto state: states) {
       auto row = tmp[state];
       // Compute actions for tokens

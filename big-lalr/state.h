@@ -19,7 +19,9 @@ public:
   }
 
   static std::shared_ptr<state_t> make(item_list_t items) {
-    std::sort(items.begin(), items.end());
+    std::sort(items.begin(), items.end(), [](auto a, auto b) {
+      return a->get_id() < b->get_id();
+    });
 
     if (auto cached_ptr = store[items].lock()) {
       return cached_ptr;
