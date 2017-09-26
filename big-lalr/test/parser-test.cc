@@ -29,8 +29,8 @@ FIXTURE(parser_gens_json) {
   EXPECT_EQ(json["tokens"].size(), size_t(10));
 }
 
-std::string generate_pets_code() {
-  auto grammar = grammar_t::from_file(get_project_path(example_grammar));
+std::string generate_pets_code(const std::string &grammar_file) {
+  auto grammar = grammar_t::from_file(get_project_path(grammar_file));
   auto full_parse_table = grammar->get_full_parse_table();
 
   std::stringstream ss;
@@ -74,7 +74,7 @@ int main(int, char*[]) {
 std::string symbols_program = R"(
 
 int main(int, char*[]) {
-  std::cout << symbol_description_t<symbol_t::r>::get_name();
+  std::cout << symbol_t::get_name(symbol_t::r);
   return 0;
 }
 
@@ -101,7 +101,7 @@ int main (int, char*[]) {
     };
     auto parser = parser_t::make();
     auto result = parser->parse(input);
-    std::cout << "output size: " << result.size();
+    std::cout << "output size: " << result.size() << ", name: " << result[0]->get_name();
   } catch (const std::exception &e) {
     std::cout << e.what() << std::endl;
   }
@@ -155,7 +155,7 @@ std::string get_program_output(const std::string &src) {
 FIXTURE(parser_gens_tokens_and_compiles) {
   auto input_path = get_tmp_path("test-token-cpp-", ".cc");
   auto output_path = get_tmp_path();
-  auto pets_code_gen = generate_pets_code();
+  auto pets_code_gen = generate_pets_code("big-lalr/test/fixtures/pets.biglr");
 
   EXPECT_EQ(get_program_output(pets_code_gen + token_fixture_program), "a");
   EXPECT_EQ(get_program_output(pets_code_gen + symbols_program), "r");
@@ -165,5 +165,5 @@ FIXTURE(parser_gens_tokens_and_compiles) {
     "empty rule has 0 children"
   );
 
-  EXPECT_EQ(get_program_output(pets_code_gen + driver_functionality), "output size: 1");
+  EXPECT_EQ(get_program_output(pets_code_gen + driver_functionality), "output size: 1, name: pets");
 }

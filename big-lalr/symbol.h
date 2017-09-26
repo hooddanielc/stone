@@ -44,6 +44,10 @@ public:
     return id;
   }
 
+  void set_id(int new_id) {
+    id = new_id;
+  }
+
   static void clear() {
     next_id = 1;
   }

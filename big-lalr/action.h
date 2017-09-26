@@ -24,7 +24,7 @@ struct action_t {
   virtual bool is_blank() const { return true; }
 
   virtual std::string get_label() const {
-    return "";
+    return "  ";
   }
 
   virtual kind_t get_kind() const {
@@ -42,8 +42,8 @@ struct action_t {
     return "error";
   }
 
-  virtual int get_param() const {
-    return 0;
+  virtual int16_t get_param() const {
+    return INT16_MAX;
   }
 
 };  // action_t
@@ -71,6 +71,10 @@ struct restart_action_t: public action_t {
 
   virtual std::string get_ref() const override {
     return "r1";
+  }
+
+  virtual int16_t get_param() const override {
+    return 0;
   }
 
 };  // restart_action_t
@@ -110,8 +114,8 @@ struct shift_action_t: public action_t {
     return ss.str();
   }
 
-  virtual int get_param() const override {
-    return state->get_id();
+  virtual int16_t get_param() const override {
+    return state->get_id() + 1;
   }
 
 };  // shift_action_t
@@ -151,8 +155,8 @@ struct reduce_action_t: public action_t {
     return ss.str();
   }
 
-  virtual int get_param() const override {
-    return rule->get_id();
+  virtual int16_t get_param() const override {
+    return rule->get_id() * -1;
   }
 
 };  // reduce_action_t

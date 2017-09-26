@@ -231,7 +231,9 @@ public:
   }
 
   std::string get_actions_h() {
-    return generate_actions_h(states, get_tokens(), get_reductions(), actions);
+    auto tokens = get_tokens();
+    tokens.push_back(break_t::make());
+    return generate_actions_h(states, tokens, get_reductions(), actions);
   }
 
   std::string get_tokens_h() {
@@ -314,6 +316,31 @@ public:
     file.close();
   }
 
+  void write_cpp(const std::string &path, const std::string &namespace_name = "biglr") {
+    std::ofstream fs;
+    fs.open(path);
+    fs << "#include <string>" << std::endl;
+    fs << "#include <vector>" << std::endl;
+    fs << "#include <memory>" << std::endl;
+    fs << "#include <iostream>" << std::endl;
+    fs << "#include <cassert>" << std::endl;
+    fs << "#include <utility>" << std::endl;
+    fs << "#include <unordered_map>" << std::endl;
+    fs << "#include <functional>" << std::endl;
+    fs << std::endl;
+    fs << "namespace " << namespace_name << " {" << std::endl;
+    fs << std::endl;
+    fs << get_symbols_h();
+    fs << get_tokens_h();
+    fs << get_ast_base_h();
+    fs << get_all_reductions_h();
+    fs << get_actions_h();
+    fs << get_driver_h();
+    fs << std::endl;
+    fs << "}   // " << namespace_name << std::endl;
+    fs.close();
+  }
+
 protected:
 
   state_list_t states;
@@ -388,7 +415,7 @@ protected:
      reductions(reductions_),
      rules(rules_),
      by_lhs(by_lhs_),
-     actions(construct_actions()) {};
+     actions(construct_actions()) {}
 };  // parser_t
 
 std::ostream &operator<<(std::ostream &strm, const parser_t &parser) {

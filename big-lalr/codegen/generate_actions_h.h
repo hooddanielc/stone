@@ -12,17 +12,23 @@ using action_map_t = std::unordered_map<std::shared_ptr<symbol_t>, std::shared_p
 
 using action_table_t = std::unordered_map<std::shared_ptr<state_t>, action_map_t>;
 
-// actions std::unordered_map<token_t, std::unordered_map<state_t, action_t> >
-// {
-//   { token_1, { {s1, action}, {s2, action}, {s3, action} } },
-//   ...
-// }
+int get_num_digits (int x) {
+  if (x < 0) return get_num_digits(-x) + 1;
 
-// transitions std::unordered_map<reduction_id, action_t>
-// {
-//   { reduction, state_id },
-//   ...
-// }
+  if (x < 10) {
+    return 1;
+  } else if (x < 100) {
+    return 2;
+  } else if (x < 1000) {
+    return 3;
+  } else if (x < 10000) {
+    return 4;
+  } else if (x < 100000) {
+    return 5;
+  }
+
+  return 6;
+}
 
 inline std::string generate_actions_h(
   std::vector<std::shared_ptr<state_t>> states,
@@ -31,6 +37,18 @@ inline std::string generate_actions_h(
   action_table_t actions
 ) {
   std::stringstream ss;
+
+  int num_tokens = tokens.size();
+  int num_reductions = reductions.size();
+  int num_states = states.size();
+
+  std::sort(states.begin(), states.end(), [](auto a, auto b) {
+    return a->get_id() < b->get_id();
+  });
+
+  std::sort(tokens.begin(), tokens.end(), [](auto a, auto b) {
+    return a->get_id() < b->get_id();
+  });
 
   ss << R"(
 
@@ -41,11 +59,11 @@ enum action_kind_t {
   transition = )" << (action_t::shift + 1) << R"(
 };
 
-// actions layout
-// {
-//   { token_id, { {state_id, {action_type, action_param}}, ... } ... },
-//   ...
-// }
+// state == actions[(state_id * num_tokens) + token_id];
+// if (state == 0) accept
+// if (state < 0) { reduce(state * -1); }
+// if (state > 0 && state != INT16_MAX) { shift and go to (state-1) }
+// if (state == INT16_MAX) { error }
 
 // transition layout
 // {
@@ -53,92 +71,49 @@ enum action_kind_t {
 //   ...
 // }
 
-static std::unordered_map<int, std::unordered_map<int, std::pair<action_kind_t, int>>> actions = {
+const int16_t num_tokens = )" << num_tokens << R"(;
+
+const int16_t num_reductions = )" << num_reductions << R"(;
+
+const int16_t num_symbols = )" << (num_reductions + num_tokens) << R"(;
+
+const int16_t actions[)" << num_tokens + num_reductions << R"( * )" << num_states << R"(] = {
+
 )";
 
-  std::unordered_map<int, std::unordered_map<int, std::pair<int, int>>> actions_tmp;
-  auto breaker = break_t::make();
+  for (auto states_it = states.begin(); states_it != states.end(); ++states_it) {
+    auto state = (*states_it);
+    ss << "  /* s" << state->get_id() << " */ ";
+    for (auto token_it = tokens.begin(); token_it != tokens.end(); ++token_it) {
+      auto token = (*token_it);
+      ss << actions[state][token]->get_param() << " /* " << token->get_name() << " */";
 
-  for (auto state: states) {
-    auto state_id = state->get_id();
-    for (auto token: tokens) {
-      if (actions[state][token]->is_blank()) continue;
-      auto type = int(actions[state][token]->get_kind());
-      auto param = actions[state][token]->get_param();
-      auto token_id = token->get_id();
-      actions_tmp[token_id][state_id] = {type, param};
-    }
-    if (!actions[state][breaker]->is_blank()) {
-      auto type = int(actions[state][breaker]->get_kind());
-      auto param = actions[state][breaker]->get_param();
-      auto token_id = breaker->get_id();
-      actions_tmp[token_id][state_id] = {type, param};
-    }
-  }
-
-  for (auto it_row = actions_tmp.begin(); it_row != actions_tmp.end(); ++it_row) {
-    auto token_id = it_row->first;
-    ss << "  { " << token_id << ", " << "{" << std::endl;
-
-    for (auto it_col = it_row->second.begin(); it_col != it_row->second.end(); ++it_col) {
-      auto state_id = it_col->first;
-      auto type = it_col->second.first;
-      auto param = it_col->second.second;
-      std::string type_name;
-
-      switch (type) {
-        case static_cast<int>(action_t::restart): type_name = "restart"; break;
-        case static_cast<int>(action_t::reduce): type_name = "reduce"; break;
-        case static_cast<int>(action_t::shift): type_name = "shift"; break;
+      if (std::next(token_it) != tokens.end()) {
+        ss << ", ";
+      } else {
+        ss << ", /* END TOKENS */ ";
       }
+    }
 
-      ss << "    { " << state_id << ", { " << type_name << ", " << param << " } }";
+    for (auto reduction_it = reductions.begin(); reduction_it != reductions.end(); ++reduction_it) {
+      auto reduction = (*reduction_it);
+      ss << actions[state][reduction]->get_param() << " /* " << reduction->get_name() << " */";
 
-      if (std::next(it_col) != it_row->second.end()) {
+      if (std::next(states_it) != states.end() || std::next(reduction_it) != reductions.end()) {
         ss << ",";
       }
 
-      ss << std::endl;
+      if (std::next(reduction_it) != reductions.end()) {
+        ss << " ";
+      } else {
+        ss << std::endl;
+      }
     }
-
-    ss << "  }}";
-
-    if (std::next(it_row) != actions_tmp.end()) {
-      ss << ",";
-    }
-
-    ss << std::endl;
   }
 
   ss << R"(
 };   // actions
   )";
-
-  ss << R"(
-
-static std::unordered_map<int, int> transitions = {
-)";
-
-  std::unordered_map<int, int> goto_tmp;
-
-  for (auto reduction: reductions) {
-    for (auto state: states) {
-      if (actions[state][reduction]->is_blank()) continue;
-      goto_tmp[reduction->get_id()] = actions[state][reduction]->get_param();
-    }
-  }
-
-  for (auto it = goto_tmp.begin(); it != goto_tmp.end(); ++it) {
-    ss << "  { " << it->first << ", " << it->second << " }";
-    if (std::next(it) != goto_tmp.end()) {
-      ss << ",";
-    }
-    ss << std::endl;
-  }
-
-  ss << R"(
-};  // transition
-)";
 
   return ss.str();
 }

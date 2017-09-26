@@ -58,7 +58,11 @@ public:
 
   virtual ~ast_t() = default;
 
-  virtual symbol_t get_symbol_id() const = 0;
+  virtual symbol_t::kind_t get_symbol_id() const = 0;
+
+  std::string get_name() {
+    return symbol_t::get_name(get_symbol_id());
+  }
 
   /* famous out of the box visitor pattern functionality */
   virtual void accept(const visitor_t &visitor) const = 0;
@@ -81,8 +85,8 @@ class ast_token_t: public ast_t {
 
 public:
 
-  virtual symbol_t get_symbol_id() const override {
-    return static_cast<symbol_t>(token->get_kind());
+  virtual symbol_t::kind_t get_symbol_id() const override {
+    return static_cast<symbol_t::kind_t>(token->get_kind());
   }
 
   virtual void accept(const visitor_t &visitor) const override {

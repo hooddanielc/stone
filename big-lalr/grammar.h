@@ -272,6 +272,34 @@ public:
 
   using progress_cb_t = std::function<void(size_t, size_t)>;
 
+  void reset_symbol_ids() {
+    // tokens and reductions should be numbered from 0 - n
+    int next_id = 0;
+    break_t::make()->set_id(next_id++);
+    for (std::shared_ptr<symbol_t> token: tokens) {
+      if (token != break_t::make() && token != top_t::make() && token != epsilon_t::make()) {
+        token->set_id(next_id++);
+      }
+    }
+    for (auto reduction: reductions) {
+      reduction->set_id(next_id++);
+    }
+    top_t::make()->set_id(next_id++);
+    epsilon_t::make()->set_id(next_id++);
+  }
+
+  void reset_state_ids(state_list_t &states) {
+    // states should be numbered from 0 - n
+    std::sort(states.begin(), states.end(), [](auto a, auto b) {
+      return a->get_id() < b->get_id();
+    });
+
+    int next_id = 0;
+    for (auto state: states) {
+      state->set_id(next_id++);
+    }
+  }
+
   std::shared_ptr<parser_t> get_full_parse_table(const progress_cb_t &cb = [](size_t, size_t){}) {
     std::vector<std::shared_ptr<symbol_t>> action_symbols;
     action_symbols.insert(action_symbols.end(), tokens.begin(), tokens.end());
@@ -296,6 +324,13 @@ public:
         }
       }
     }
+    reset_symbol_ids();
+    reset_state_ids(done);
+
+    // sort rules
+    std::sort(rules.begin(), rules.end(), [](auto a, auto b) {
+      return a->get_id() < b->get_id();
+    });
 
     return parser_t::make(done, action_table, tokens, reductions, rules, by_lhs);
   }

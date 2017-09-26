@@ -15,10 +15,11 @@ void print_help() {
       -r, --rules   path to grammar file
 
     optional arguments:
-      -f, --force   ignore sha256 hash indicating successful generation
-      -s, --server  launch web server for viewing web documentation
-      -h, --help    show this help message and exit
-      -o, --out     defaults to --rules parent dir
+      -f, --force       ignore sha256 hash indicating successful generation
+      -s, --server      launch web server for viewing web documentation
+      -h, --help        show this help message and exit
+      -o, --out         defaults to --rules parent dir
+      -n, --namespace   wrap code in your your own namespace, defaults to file name
 
   )" << std::endl;
 }
@@ -169,6 +170,9 @@ void make_parser(
     parser->write_html(out + ".html", out_name + ".js");
     parser->write_json(out + ".json");
     parser->write_dot(out + ".dot");
+
+    auto namespace_name = get_value("-n", "--namespace", args, out_name);
+    parser->write_cpp(out + ".h", namespace_name);
 
     // copy the javascript next to generated html
     std::ifstream  src(gui, std::ios::binary);

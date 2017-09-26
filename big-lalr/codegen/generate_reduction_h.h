@@ -12,11 +12,11 @@ inline std::vector<std::string> get_reduction_deps() {
 inline std::string generate_reduction_h(std::vector<std::shared_ptr<rule_t>> rules) {
   std::stringstream ss;
 
-  size_t count = std::count_if(rules.begin(), rules.end(), [&](auto item) {
-    return item->get_lhs() == rules.front()->get_lhs();
-  });
+  // size_t count = std::count_if(rules.begin(), rules.end(), [&](auto item) {
+  //   return item->get_lhs() == rules.front()->get_lhs();
+  // });
 
-  assert(rules.size() == count);
+  // assert(rules.size() == count);
   auto base_name = rules.front()->get_cpp_branch_identifier();
   auto reduction_id = rules.front()->get_lhs()->get_id();
 
@@ -26,8 +26,8 @@ class )" << base_name << R"(_t: public ast_t {
 
 public:
 
-  virtual symbol_t get_symbol_id() const override {
-    return static_cast<symbol_t>(symbol_id);
+  virtual symbol_t::kind_t get_symbol_id() const override {
+    return static_cast<symbol_t::kind_t>(symbol_id);
   }
 
   static constexpr int symbol_id = )" << reduction_id << R"(;
@@ -48,8 +48,8 @@ protected:
     ss_pattern << "{ ";
     for (auto it = rhs.begin(); it != rhs.end(); ++it) {
       auto sid = (*it)->get_cpp_identifier();
-      ss_pattern << sid;
-      if (it + 1 != rhs.end()) {
+      ss_pattern << "symbol_t::" << sid;
+      if (std::next(it) != rhs.end()) {
         ss_pattern << ",";
       }
       ss_pattern << " ";
@@ -75,7 +75,7 @@ public:
 
   static constexpr int rule_id = )" << rule_id << R"(;
 
-  static const std::vector<symbol_t> pattern;
+  static const std::vector<symbol_t::kind_t> pattern;
 
 protected:
 
@@ -83,7 +83,7 @@ protected:
 
 };  // )" << identifier << R"(_t
 
-const std::vector<symbol_t> )" << identifier << R"(_t::pattern = )" << ss_pattern.str() << R"(;
+const std::vector<symbol_t::kind_t> )" << identifier << R"(_t::pattern = )" << ss_pattern.str() << R"(;
 
 template <> struct reduction_lookup_t<)" << rule_id << R"(> {
   using type = )" << identifier << R"(_t;
