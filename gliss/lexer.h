@@ -3,10 +3,10 @@
 #include <cctype>
 #include <map>
 
-#include "pos.h"
-#include "token.h"
+#include "glsl-lang.h"
 #include "error.h"
 #include "ice.h"
+#include "token.h"
 
 namespace gliss {
 
@@ -14,6 +14,8 @@ namespace gliss {
 class lexer_t final {
 
 public:
+
+  using pos_t = glsl::pos_t;
 
   /* An error in lexing. */
   class error_t final: public gliss::error_t {
@@ -29,7 +31,7 @@ public:
 
   /* Convert the given source text into a vector of tokens, ending with an
      end token. */
-  static std::vector<token_t> lex(const char *next_cursor) {
+  static std::vector<std::shared_ptr<token_t>> lex(const char *next_cursor) {
     return lexer_t(next_cursor).lex();
   }
 
@@ -49,7 +51,7 @@ private:
     anchor(nullptr) {}
 
   /* Used by our public lex function. */
-  std::vector<token_t> lex() {
+  std::vector<std::shared_ptr<token_t>> lex() {
     enum {
       start,
       start_zero,
@@ -93,19 +95,18 @@ private:
           switch (c) {
             case '\0': {
               set_anchor();
-              tokens.emplace_back(anchor_pos, token_t::end);
               go = false;
               break;
             }
-            case ';': add_single_token(token_t::semicolon); break;
-            case '(': add_single_token(token_t::left_paren); break;
-            case ')': add_single_token(token_t::right_paren); break;
-            case '[': add_single_token(token_t::left_bracket); break;
-            case ']': add_single_token(token_t::right_bracket); break;
-            case '{': add_single_token(token_t::left_brace); break;
-            case '}': add_single_token(token_t::right_brace); break;
-            case '~': add_single_token(token_t::tilde); break;
-            case ',': add_single_token(token_t::comma); break;
+            case ';': add_single_token(token_t::SEMICOLON); break;
+            case '(': add_single_token(token_t::LEFT_PAREN); break;
+            case ')': add_single_token(token_t::RIGHT_PAREN); break;
+            case '[': add_single_token(token_t::LEFT_BRACKET); break;
+            case ']': add_single_token(token_t::RIGHT_BRACKET); break;
+            case '{': add_single_token(token_t::LEFT_BRACE); break;
+            case '}': add_single_token(token_t::RIGHT_BRACE); break;
+            case '~': add_single_token(token_t::TILDE); break;
+            case ',': add_single_token(token_t::COMMA); break;
             case '0': {
               set_anchor();
               pop();
@@ -220,7 +221,7 @@ private:
           }
           pop_anchor();
           state = start;
-          tokens.emplace_back(anchor_pos, token_t::dot);
+          tokens.push_back(token_t::make(anchor_pos, token_t::DOT));
           break;
         }
         case start_plus: {
@@ -229,21 +230,21 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::inc_op);
+              tokens.push_back(token_t::make(anchor_pos, token_t::INC_OP));
               break;
             }
             case '=': {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::add_assign);
+              tokens.push_back(token_t::make(anchor_pos, token_t::ADD_ASSIGN));
               break;
             }
             default: {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::plus);
+              tokens.push_back(token_t::make(anchor_pos, token_t::PLUS));
               break;
             }
           }
@@ -255,21 +256,21 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::dec_op);
+              tokens.push_back(token_t::make(anchor_pos, token_t::DEC_OP));
               break;
             }
             case '=': {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::sub_assign);
+              tokens.push_back(token_t::make(anchor_pos, token_t::SUB_ASSIGN));
               break;
             }
             default: {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::dash);
+              tokens.push_back(token_t::make(anchor_pos, token_t::DASH));
               break;
             }
           }
@@ -281,14 +282,14 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::mul_assign);
+              tokens.push_back(token_t::make(anchor_pos, token_t::MUL_ASSIGN));
               break;
             }
             default: {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::star);
+              tokens.push_back(token_t::make(anchor_pos, token_t::STAR));
               break;
             }
           }
@@ -300,14 +301,14 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::ne_op);
+              tokens.push_back(token_t::make(anchor_pos, token_t::NE_OP));
               break;
             }
             default: {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::bang);
+              tokens.push_back(token_t::make(anchor_pos, token_t::BANG));
               break;
             }
           }
@@ -319,21 +320,21 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::and_assign);
+              tokens.push_back(token_t::make(anchor_pos, token_t::AND_ASSIGN));
               break;
             }
             case '&': {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::and_op);
+              tokens.push_back(token_t::make(anchor_pos, token_t::AND_OP));
               break;
             }
             default: {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::ampersand);
+              tokens.push_back(token_t::make(anchor_pos, token_t::AMPERSAND));
               break;
             }
           }
@@ -345,21 +346,21 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::or_assign);
+              tokens.push_back(token_t::make(anchor_pos, token_t::OR_ASSIGN));
               break;
             }
             case '|': {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::or_op);
+              tokens.push_back(token_t::make(anchor_pos, token_t::OR_OP));
               break;
             }
             default: {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::ampersand);
+              tokens.push_back(token_t::make(anchor_pos, token_t::AMPERSAND));
               break;
             }
           }
@@ -371,14 +372,14 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::mod_assign);
+              tokens.push_back(token_t::make(anchor_pos, token_t::MOD_ASSIGN));
               break;
             }
             default: {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::percent);
+              tokens.push_back(token_t::make(anchor_pos, token_t::PERCENT));
               break;
             }
           }
@@ -390,21 +391,21 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::xor_assign);
+              tokens.push_back(token_t::make(anchor_pos, token_t::XOR_ASSIGN));
               break;
             }
             case '^': {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::xor_op);
+              tokens.push_back(token_t::make(anchor_pos, token_t::XOR_OP));
               break;
             }
             default: {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::caret);
+              tokens.push_back(token_t::make(anchor_pos, token_t::CARET));
               break;
             }
           }
@@ -416,7 +417,7 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::le_op);
+              tokens.push_back(token_t::make(anchor_pos, token_t::LE_OP));
               break;
             }
             case '<': {
@@ -428,7 +429,7 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::left_angle);
+              tokens.push_back(token_t::make(anchor_pos, token_t::LEFT_ANGLE));
               break;
             }
           }
@@ -440,14 +441,14 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::left_assign);
+              tokens.push_back(token_t::make(anchor_pos, token_t::LEFT_ASSIGN));
               break;
             }
             default: {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::left_op);
+              tokens.push_back(token_t::make(anchor_pos, token_t::LEFT_OP));
               break;
             }
           }
@@ -459,7 +460,7 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::ge_op);
+              tokens.push_back(token_t::make(anchor_pos, token_t::GE_OP));
               break;
             }
             case '>': {
@@ -471,7 +472,7 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::right_angle);
+              tokens.push_back(token_t::make(anchor_pos, token_t::RIGHT_ANGLE));
               break;
             }
           }
@@ -483,14 +484,14 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::right_assign);
+              tokens.push_back(token_t::make(anchor_pos, token_t::RIGHT_ASSIGN));
               break;
             }
             default: {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::right_op);
+              tokens.push_back(token_t::make(anchor_pos, token_t::RIGHT_OP));
               break;
             }
           }
@@ -512,14 +513,14 @@ private:
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::div_assign);
+              tokens.push_back(token_t::make(anchor_pos, token_t::DIV_ASSIGN));
               break;
             }
             default: {
               pop_anchor();
               pop();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::slash);
+              tokens.push_back(token_t::make(anchor_pos, token_t::SLASH));
               break;
             }
           }
@@ -530,13 +531,13 @@ private:
             case '=': {
               pop_anchor();
               pop();
-              tokens.emplace_back(anchor_pos, token_t::eq_op);
+              tokens.push_back(token_t::make(anchor_pos, token_t::EQ_OP));
               state = start;
               break;
             }
             default: {
               pop_anchor();
-              tokens.emplace_back(anchor_pos, token_t::equal);
+              tokens.push_back(token_t::make(anchor_pos, token_t::EQUAL));
               state = start;
               break;
             }
@@ -573,12 +574,12 @@ private:
             pop();
           } else {
             auto text = pop_anchor();
-            auto kind = token_t::str_to_kind(text);
+            auto kind = get_textual_token(text);
 
-            if (kind == token_t::identifier) {
-              tokens.emplace_back(anchor_pos, kind, std::move(text));
+            if (kind == token_t::IDENTIFIER) {
+              tokens.push_back(token_t::make(anchor_pos, kind, std::move(text)));
             } else {
-              tokens.emplace_back(anchor_pos, kind);
+              tokens.push_back(token_t::make(anchor_pos, kind));
             }
             state = start;
           }
@@ -612,7 +613,7 @@ private:
             throw error_t(this, "bad character after leading zero");
           }
           auto text = pop_anchor();
-          tokens.emplace_back(anchor_pos, token_t::intconstant, std::move(text));
+          tokens.push_back(token_t::make(anchor_pos, token_t::INTCONSTANT, std::move(text)));
           state = start;
           break;
         }
@@ -640,7 +641,7 @@ private:
             throw error_t(this, "bad character in integer-constant");
           }
           auto text = pop_anchor();
-          tokens.emplace_back(anchor_pos, token_t::intconstant, std::move(text));
+          tokens.push_back(token_t::make(anchor_pos, token_t::INTCONSTANT, std::move(text)));
           state = start;
           break;
         }
@@ -649,7 +650,7 @@ private:
             throw error_t(this, "bad character after integer-suffix");
           }
           auto text = pop_anchor();
-          tokens.emplace_back(anchor_pos, token_t::intconstant, std::move(text));
+          tokens.push_back(token_t::make(anchor_pos, token_t::INTCONSTANT, std::move(text)));
           state = start;
           break;
         }
@@ -701,7 +702,7 @@ private:
               }
               auto text = pop_anchor();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::intconstant, std::move(text));
+              tokens.push_back(token_t::make(anchor_pos, token_t::INTCONSTANT, std::move(text)));
               break;
             }
           }
@@ -720,7 +721,7 @@ private:
               }
               auto text = pop_anchor();
               state = start;
-              tokens.emplace_back(anchor_pos, token_t::intconstant, std::move(text));
+              tokens.push_back(token_t::make(anchor_pos, token_t::INTCONSTANT, std::move(text)));
               break;
             }
           }
@@ -750,7 +751,7 @@ private:
             throw error_t(this, "bad character in floating-point constant");
           }
           auto text = pop_anchor();
-          tokens.emplace_back(anchor_pos, token_t::floatconstant, std::move(text));
+          tokens.push_back(token_t::make(anchor_pos, token_t::FLOATCONSTANT, std::move(text)));
           state = start;
           break;
         }
@@ -764,7 +765,7 @@ private:
             throw error_t(this, "bad character in floating-point constant");
           }
           auto text = pop_anchor();
-          tokens.emplace_back(anchor_pos, token_t::floatconstant, std::move(text));
+          tokens.push_back(token_t::make(anchor_pos, token_t::FLOATCONSTANT, std::move(text)));
           state = start;
           break;
         }
@@ -773,7 +774,7 @@ private:
             throw error_t(this, "bad character in floating-point constant");
           }
           auto text = pop_anchor();
-          tokens.emplace_back(anchor_pos, token_t::floatconstant, std::move(text));
+          tokens.push_back(token_t::make(anchor_pos, token_t::FLOATCONSTANT, std::move(text)));
           state = start;
           break;
         }
@@ -782,7 +783,7 @@ private:
             throw error_t(this, "bad character in floating-point constant");
           }
           auto text = pop_anchor();
-          tokens.emplace_back(anchor_pos, token_t::doubleconstant, std::move(text));
+          tokens.push_back(token_t::make(anchor_pos, token_t::DOUBLECONSTANT, std::move(text)));
           state = start;
           break;
         }
@@ -826,7 +827,7 @@ private:
             throw error_t(this, "bad character in floating point constant");
           }
           auto text = pop_anchor();
-          tokens.emplace_back(anchor_pos, token_t::floatconstant, std::move(text));
+          tokens.push_back(token_t::make(anchor_pos, token_t::FLOATCONSTANT, std::move(text)));
           state = start;
           break;
         }
@@ -900,11 +901,11 @@ private:
     set_anchor();
     pop();
     pop_anchor();
-    tokens.emplace_back(anchor_pos, kind);
+    tokens.push_back(token_t::make(anchor_pos, kind));
   }
 
   /* Temporarily holds tokens while lexing */
-  std::vector<token_t> tokens;
+  std::vector<std::shared_ptr<token_t>> tokens;
 
   /* Our next position within the source text. */
   mutable const char *next_cursor;

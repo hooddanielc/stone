@@ -210,7 +210,7 @@ protected:
     states.push_back(next_state);
   }
 
-  virtual void on_transition_action() {
+  void on_transition_action() {
     assert(action_stack.back().first == transition);
     assert(action_stack.back().second >= 0 && action_stack.back().second < INT16_MAX);
     int transition_to = action_stack.back().second;

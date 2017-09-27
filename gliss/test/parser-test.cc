@@ -1,26 +1,23 @@
 #include <iostream>
 #include <lick/lick.h>
-#include <gliss/lexer.h>
 #include <gliss/parser.h>
-#include <gliss/pretty-print-ast.h>
 
 using namespace gliss;
 
-FIXTURE(shifting) {
-  auto tokens = lexer_t::lex(R"(
-    =
+FIXTURE(simple_program) {
+  auto output = parser_t::parse_string(R"(
+    uniform mat4 viewMatrix, projMatrix;
+
+    in vec4 position;
+    in vec3 color;
+
+    out vec3 Color;
+
+    void main() {
+      Color = color;
+      gl_Position = projMatrix * viewMatrix * position ;
+    }
   )");
 
-  auto parser = parser_t::make(tokens);
-  EXPECT_TRUE(parser.check_stack_item(0, symbol_t::equal));
-  EXPECT_FALSE(parser.shift());
-}
-
-FIXTURE(reduce_variable_identifier) {
-  auto tokens = lexer_t::lex(R"(
-    blah = 3;
-  )");
-
-  auto stack = parser_t::parse(tokens);
-  EXPECT_EQ(int(stack.size()), 4);
+  EXPECT_EQ(output->get_name(), "translation_unit");
 }

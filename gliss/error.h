@@ -4,7 +4,7 @@
 #include <memory>
 #include <sstream>
 #include <string>
-#include "pos.h"
+#include "glsl-lang.h"
 
 namespace gliss {
 
@@ -12,6 +12,8 @@ namespace gliss {
 class error_t: public std::exception {
 
 public:
+
+  using pos_t = glsl::pos_t;
 
   /* Return our diagnostic message. */
   virtual const char *what() const noexcept override final {

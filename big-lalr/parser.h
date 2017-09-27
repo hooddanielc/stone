@@ -324,6 +324,8 @@ public:
   void write_cpp(const std::string &path, const std::string &namespace_name = "biglr") {
     std::ofstream fs;
     fs.open(path);
+    fs << "#pragma once" << std::endl;
+    fs << std::endl;
     fs << "#include <string>" << std::endl;
     fs << "#include <vector>" << std::endl;
     fs << "#include <memory>" << std::endl;

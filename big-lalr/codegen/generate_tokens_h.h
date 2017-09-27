@@ -33,6 +33,14 @@ public:
     col_number = 1;
   }
 
+  int get_line() {
+    return line_number;
+  }
+
+  int get_col() {
+    return col_number;
+  }
+
   friend std::ostream &operator<<(std::ostream &strm, const pos_t &that) {
     return strm
         << "line " << that.line_number
@@ -67,14 +75,6 @@ private:
   }
   ss << "  };   // kind_t" << std::endl;
   ss << std::endl;
-  ss << "  kind_t get_kind() {" << std::endl;
-  ss << "    return kind;" << std::endl;
-  ss << "  }" << std::endl;
-  ss << std::endl;
-  ss << "  std::string get_name() {" << std::endl;
-  ss << "    return token_t::get_desc(kind);" << std::endl;
-  ss << "  }" << std::endl;
-  ss << std::endl;
   ss << "  static std::string get_desc(kind_t kind) {" << std::endl;
   ss << "    switch(kind) {" << std::endl;
   for (auto it = tokens.begin(); it != tokens.end(); ++it) {
@@ -88,17 +88,47 @@ private:
   ss << "    }" << std::endl;
   ss << "    return \"unknown\";" << std::endl;
   ss << "  }" << std::endl;
-  ss << std::endl;
-  ss << "  static std::shared_ptr<token_t> make(kind_t kind) {" << std::endl;
-  ss << "    auto ptr = new token_t(kind);" << std::endl;
-  ss << "    std::shared_ptr<token_t> result(ptr);" << std::endl;
-  ss << "    return result;" << std::endl;
-  ss << "  }" << std::endl;
-  ss << std::endl;
-  ss << "protected:" << std::endl;
+
 
   ss <<
 R"(
+
+  kind_t get_kind() {
+    return kind;
+  }
+
+  std::string get_text() {
+    return text;
+  }
+
+  std::string get_name() {
+    return token_t::get_desc(kind);
+  }
+
+  pos_t get_pos() {
+    return pos;
+  }
+
+  static std::shared_ptr<token_t> make(kind_t kind) {
+    auto ptr = new token_t(kind);
+    std::shared_ptr<token_t> result(ptr);
+    return result;
+  }
+
+  static std::shared_ptr<token_t> make(const pos_t &pos, kind_t kind) {
+    auto ptr = new token_t(pos, kind);
+    std::shared_ptr<token_t> result(ptr);
+    return result;
+  }
+
+  static std::shared_ptr<token_t> make(const pos_t &pos, kind_t kind, std::string &&text) {
+    auto ptr = new token_t(pos, kind, std::move(text));
+    std::shared_ptr<token_t> result(ptr);
+    return result;
+  }
+
+protected:
+
   /* Cache the kind. */
   token_t(kind_t kind): kind(kind) {}
 

@@ -155,15 +155,14 @@ std::string get_program_output(const std::string &src) {
     "-std=c++14",
     "-lstdc++",
     "-o",
-    output_path,
-    "-v"
+    output_path
   });
 
   compiler_process->on_stdout([](auto) {
     //std::cout << str;
   });
-  compiler_process->on_stderr([](auto str) {
-    std::cout << str;
+  compiler_process->on_stderr([](auto) {
+    //std::cout << str;
   });
   compiler_process->on_exit([](auto code) {
     EXPECT_EQ(code, 0);

@@ -4,7 +4,7 @@
 
 ### Dependencies
 
-None! You can easily copy and paste this code into another build system super easily. I recommend continuing to use ib since it saves you a lot of time by removing some features ;)
+None! You can easily copy and paste this code into another build system without much hassle.
 
 ### Building
 
@@ -22,36 +22,41 @@ ib gliss/test/lexer-test
 ib gliss/test/lexer-test --cfg osx-debug.cfg
 ```
 
-4. If you modify any of the generator code in `scripts/gen_cpp_node_constants.js` just run it with nodejs.
+4. If you modify the grammar file `docs/glsl.biglr` be sure to regenerate the parser using the provided script.
 
 ```
-node gliss/scripts/gen_cpp_node_constants.js # generate c++ parser
+./regenerate_parser.sh
 ```
+
+### View Language Docs
+
+`./view_parser_doc.sh`
 
 ### Getting Started
 
 ```c++
 #include <iostream>
-#include <gliss/lexer.h>
 #include <gliss/parser.h>
-#include <gliss/pretty-print-ast.h>
 
 using namespace gliss;
 
 int main() {
-  // First grab list of token from source text
-  auto tokens = lexer_t::lex(R"(
-    int blah = 3;
+  auto output = parser_t::parse_string(R"(
+    uniform mat4 viewMatrix, projMatrix;
+
+    in vec4 position;
+    in vec3 color;
+
+    out vec3 Color;
+
+    void main() {
+      Color = color;
+      gl_Position = projMatrix * viewMatrix * position;
+    }
   )");
 
-  // create a parser with tokens
-  auto parser = parser_t::make(tokens);
-  // reduce to a syntax tree using shift reduce parser
-  auto stack = parser.parse(tokens);
+  std::cout << output->get_name() << std::endl;
 
-  // print the ast using the "pretty-print-ast" visitor
-  parser.print_stack();
+  return 0;
 }
 ```
-
-To make your own visitor, look at `pretty-print-ast.h`
