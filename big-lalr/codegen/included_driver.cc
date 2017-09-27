@@ -1,15 +1,4 @@
 
-inline std::vector<std::shared_ptr<ast_t>> pop_children(int len, std::vector<std::shared_ptr<ast_t>> &stack, std::vector<int> &states) {
-  assert(stack.size() >= len);
-  std::vector<std::shared_ptr<ast_t>> children;
-  for (int i = 0; i < len; ++i) {
-    states.pop_back();
-    children.push_back(stack.back());
-    stack.pop_back();
-  }
-  return children;
-}
-
 class parser_t {
 
 public:
@@ -153,7 +142,23 @@ public:
 
 protected:
 
-  virtual void on_restart_action() {
+  virtual std::shared_ptr<ast_t> reduce_by_id(int id, std::vector<std::shared_ptr<ast_t>> &children) {
+    return default_reduce_by_id(id, children);
+  }
+
+  std::vector<std::shared_ptr<ast_t>> pop_reduction(int id) {
+    int len = rule_lengths[id - 1];
+    assert(int(output.size()) >= len);
+    std::vector<std::shared_ptr<ast_t>> children;
+    for (int i = 0; i < len; ++i) {
+      states.pop_back();
+      children.push_back(output.back());
+      output.pop_back();
+    }
+    return children;
+  }
+
+  void on_restart_action() {
     if (input.size() == 0) {
       go = false;
       emit_on_accept(action_stack.back());
@@ -164,19 +169,20 @@ protected:
     }
   }
 
-  virtual void on_reduce_action() {
+  void on_reduce_action() {
     // lookup the reduction by rule id
     assert(action_stack.back().first == reduce);
     assert(action_stack.back().second >= 0);
     int rule_id = action_stack.back().second;
-    auto reduction = reduce_by_id(rule_id, output, states);
+    std::vector<std::shared_ptr<ast_t>> children = pop_reduction(rule_id);
+    auto reduction = reduce_by_id(rule_id, children);
     output.push_back(reduction);
 
     int last_state = states.back();
     action_stack.push_back(get_transition(reduction->get_symbol_id(), last_state));
   }
 
-  virtual void on_shift_action() {
+  void on_shift_action() {
     if (input.empty()) {
       throw std::runtime_error("cannot shift input is empty");
     }
@@ -221,7 +227,7 @@ protected:
 
   /* get transition from table */
   action_t get_transition(int reduction_id, int state_id) {
-    assert(((state_id * num_symbols) + reduction_id) < sizeof(actions));
+    assert(((state_id * num_symbols) + reduction_id) < int(sizeof(actions)));
     auto action = actions[(state_id * num_symbols) + reduction_id];
 
     if (action < INT16_MAX) {
@@ -233,7 +239,7 @@ protected:
 
   /* get action from table */
   action_t get_action(int token_id, int state_id) {
-    assert(((state_id * num_symbols) + token_id) < sizeof(actions));
+    assert(((state_id * num_symbols) + token_id) < int(sizeof(actions)));
     auto action = actions[(state_id * num_symbols) + token_id];
 
     if (action < 0) {

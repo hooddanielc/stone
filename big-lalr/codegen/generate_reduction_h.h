@@ -10,13 +10,11 @@ inline std::vector<std::string> get_reduction_deps() {
 }
 
 inline std::string generate_reduction_h(std::vector<std::shared_ptr<rule_t>> rules) {
+  std::sort(rules.begin(), rules.end(), [](auto a, auto b) {
+    return a->get_id() < b->get_id();
+  });
+
   std::stringstream ss;
-
-  // size_t count = std::count_if(rules.begin(), rules.end(), [&](auto item) {
-  //   return item->get_lhs() == rules.front()->get_lhs();
-  // });
-
-  // assert(rules.size() == count);
   auto base_name = rules.front()->get_cpp_branch_identifier();
   auto reduction_id = rules.front()->get_lhs()->get_id();
 

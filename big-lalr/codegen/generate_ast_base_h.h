@@ -12,6 +12,10 @@ inline std::string generate_ast_base_h(
   std::vector<std::shared_ptr<reduction_t>> reductions,
   std::unordered_map<std::shared_ptr<symbol_t>, std::vector<std::shared_ptr<rule_t>>> by_lhs
 ) {
+  std::sort(reductions.begin(), reductions.end(), [](auto a, auto b) {
+    return a->get_id() < b->get_id();
+  });
+
   std::vector<std::string> branches;
   std::stringstream ss;
 
@@ -21,6 +25,11 @@ inline std::string generate_ast_base_h(
 
   for (auto reduction: reductions) {
     branches.push_back(by_lhs[reduction].front()->get_cpp_branch_identifier());
+
+    std::sort(by_lhs[reduction].begin(), by_lhs[reduction].end(), [](auto a, auto b) {
+      return a->get_id() < b->get_id();
+    });
+
     for (const auto &rule: by_lhs[reduction]) {
       branches.push_back(rule->get_cpp_identifier());
     }

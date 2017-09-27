@@ -5,6 +5,10 @@
 namespace biglr {
 
 inline std::string generate_symbols_h(std::vector<std::shared_ptr<symbol_t>> symbols) {
+  std::sort(symbols.begin(), symbols.end(), [](auto a, auto b) {
+    return a->get_id() < b->get_id();
+  });
+
   std::stringstream ss;
   ss << "class symbol_t {" << std::endl;
   ss << std::endl;

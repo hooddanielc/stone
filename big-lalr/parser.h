@@ -274,6 +274,11 @@ public:
 
   std::string get_all_reductions_h() {
     std::stringstream ss;
+
+    std::sort(reductions.begin(), reductions.end(), [](auto a, auto b) {
+      return a->get_id() < b->get_id();
+    });
+
     for (auto reduction: reductions) {
       ss << get_reduction_h(reduction) << std::endl;
     }

@@ -40,6 +40,7 @@ public:
     break_t::clear_store();
     epsilon_t::clear_store();
     top_t::clear_store();
+    rule_t::clear_store();
 
     auto str = get_file_contents(path);
     return make(str.c_str());

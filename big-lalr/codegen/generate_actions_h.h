@@ -50,6 +50,10 @@ inline std::string generate_actions_h(
     return a->get_id() < b->get_id();
   });
 
+  std::sort(reductions.begin(), reductions.end(), [](auto a, auto b) {
+    return a->get_id() < b->get_id();
+  });
+
   ss << R"(
 
 enum action_kind_t {

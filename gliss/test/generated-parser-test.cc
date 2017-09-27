@@ -1,11 +1,7 @@
 #include <lick/lick.h>
 #include <gliss/docs/glsl.h>
 
-
-
 using namespace glsl;
-// layout(location = 2) in vec3 values[4];
-// LAYOUT LEFT_PAREN IDENTIFIER EQUAL constant_expression RIGHT_PAREN SEMICOLON
 
 FIXTURE(does_it_compile) {
   std::cout << "i did it" << std::endl;

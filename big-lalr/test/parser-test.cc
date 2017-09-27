@@ -162,8 +162,8 @@ std::string get_program_output(const std::string &src) {
   compiler_process->on_stdout([](auto) {
     //std::cout << str;
   });
-  compiler_process->on_stderr([](auto) {
-    //std::cout << str;
+  compiler_process->on_stderr([](auto str) {
+    std::cout << str;
   });
   compiler_process->on_exit([](auto code) {
     EXPECT_EQ(code, 0);

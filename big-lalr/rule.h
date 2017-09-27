@@ -49,8 +49,9 @@ public:
     return result;
   }
 
-  static void flush() {
+  static void clear_store() {
     store.clear();
+    next_id = 1;
   }
 
   static std::vector<std::shared_ptr<rule_t>> get_store() {
