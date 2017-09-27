@@ -57,6 +57,7 @@ public:
   std::vector<cb_action_t> on_reduce_cbs;
   std::vector<cb_action_t> on_shift_cbs;
   std::vector<cb_action_t> on_accept_cbs;
+  std::vector<cb_action_t> on_transition_cbs;
 
   void on_step(const cb_action_t &cb) {
     on_step_cbs.push_back(cb);
@@ -72,6 +73,10 @@ public:
 
   void on_shift(const cb_action_t &cb) {
     on_shift_cbs.push_back(cb);
+  }
+
+  void on_transition(const cb_action_t &cb) {
+    on_transition_cbs.push_back(cb);
   }
 
   void emit_on_step(const action_t &data) {
@@ -98,17 +103,22 @@ public:
     }
   }
 
+  void emit_on_transition(const action_t &data) {
+    for (const auto &cb: on_transition_cbs) {
+      cb(data);
+    }
+  }
+
   std::vector<std::shared_ptr<ast_t>> parse(input_queue_t tokens) {
     input = tokens;
     go = true;
 
-    while(input.size() || go) {
+    while(go) {
       auto action = action_stack.back();
       emit_on_step(action);
       switch (action.first) {
         case restart:
           // accept
-          emit_on_accept(action);
           on_restart_action();
           break;
         case reduce:
@@ -126,6 +136,7 @@ public:
           break;
         case transition:
           // push the state identified in goto table
+          emit_on_transition(action);
           on_transition_action();
           break;
       }
@@ -143,7 +154,14 @@ public:
 protected:
 
   virtual void on_restart_action() {
-    go = false;
+    if (input.size() == 0) {
+      go = false;
+      emit_on_accept(action_stack.back());
+    } else {
+      // refer to state zero to continue matching
+      int token_id = static_cast<int>(input.front()->get_kind());
+      action_stack.push_back(get_action(token_id, 0));
+    }
   }
 
   virtual void on_reduce_action() {

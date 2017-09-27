@@ -97,9 +97,43 @@ int main (int, char*[]) {
     std::vector<std::shared_ptr<token_t>> input = {
       token_t::make(token_t::d),
       token_t::make(token_t::o),
-      token_t::make(token_t::g)
+      token_t::make(token_t::g),
+      token_t::make(token_t::d),
+      token_t::make(token_t::o),
+      token_t::make(token_t::g),
+      token_t::make(token_t::c),
+      token_t::make(token_t::a),
+      token_t::make(token_t::t)
     };
     auto parser = parser_t::make();
+
+    // parser->on_step([&](auto data) {
+    //   parser->write_states(std::cout); std::cout << std::endl;
+    //   parser->write_output(std::cout); std::cout << std::endl;
+    //   parser->write_input(std::cout); std::cout << std::endl;
+    //   std::cout << "=================================" << std::endl;
+    // });
+
+    // parser->on_reduce([&](auto data) {
+    //   std::cout << "on reduce " << data.second << std::endl;
+    // });
+
+    // parser->on_shift([&](auto data) {
+    //   std::cout << "on shift " << data.second << std::endl;
+    // });
+
+    // parser->on_accept([&](auto data) {
+    //   std::cout << "on accept " << data.second << std::endl;
+    // });
+
+    // parser->on_accept([&](auto data) {
+    //   std::cout << "on transition " << data.second << std::endl;
+    //   parser->write_states(std::cout); std::cout << std::endl;
+    //   parser->write_output(std::cout); std::cout << std::endl;
+    //   parser->write_input(std::cout); std::cout << std::endl;
+    //   std::cout << "=================================" << std::endl;
+    // });
+
     auto result = parser->parse(input);
     std::cout << "output size: " << result.size() << ", name: " << result[0]->get_name();
   } catch (const std::exception &e) {
@@ -124,6 +158,7 @@ std::string get_program_output(const std::string &src) {
     output_path,
     "-v"
   });
+
   compiler_process->on_stdout([](auto) {
     //std::cout << str;
   });
