@@ -25,7 +25,7 @@ FIXTURE(parser_gens_json) {
   EXPECT_TRUE(json["cpp"].size() > size_t(4));
   EXPECT_EQ(json["dot"].size(), size_t(1));
   EXPECT_EQ(json["reductions"].size(), size_t(3));
-  EXPECT_EQ(json["rules"].size(), size_t(7));
+  EXPECT_EQ(json["rules"].size(), size_t(8));
   EXPECT_EQ(json["tokens"].size(), size_t(10));
 }
 

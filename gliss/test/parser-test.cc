@@ -1,6 +1,7 @@
 #include <iostream>
 #include <lick/lick.h>
 #include <gliss/parser.h>
+#include <gliss/pretty-print.h>
 
 using namespace gliss;
 

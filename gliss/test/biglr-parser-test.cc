@@ -1,5 +1,5 @@
 #include <lick/lick.h>
-#include <gliss/docs/glsl.h>
+#include <gliss/glsl-lang.h>
 
 using namespace glsl;
 
@@ -47,24 +47,24 @@ FIXTURE(does_it_compile) {
 
   try {
 
-    // parser->on_step([&](auto data) {
-    //   parser->write_states(std::cout); std::cout << std::endl;
-    //   parser->write_output(std::cout); std::cout << std::endl;
-    //   parser->write_input(std::cout); std::cout << std::endl;
-    //   std::cout << "=================================" << std::endl;
-    // });
+    parser->on_step([&](auto data) {
+      parser->write_states(std::cout); std::cout << std::endl;
+      parser->write_output(std::cout); std::cout << std::endl;
+      parser->write_input(std::cout); std::cout << std::endl;
+      std::cout << "=================================" << std::endl;
+    });
 
-    // parser->on_reduce([&](auto data) {
-    //   std::cout << "on reduce " << data.second << std::endl;
-    // });
+    parser->on_reduce([&](auto data) {
+      std::cout << "on reduce " << data.second << std::endl;
+    });
 
-    // parser->on_shift([&](auto data) {
-    //   std::cout << "on shift " << data.second << std::endl;
-    // });
+    parser->on_shift([&](auto data) {
+      std::cout << "on shift " << data.second << std::endl;
+    });
 
-    // parser->on_accept([&](auto data) {
-    //   std::cout << "on accept " << data.second << std::endl;
-    // });
+    parser->on_accept([&](auto data) {
+      std::cout << "on accept " << data.second << std::endl;
+    });
 
     auto result = parser->parse(input);
     std::cout << "output size: " << result.size();

@@ -163,9 +163,7 @@ protected:
       go = false;
       emit_on_accept(action_stack.back());
     } else {
-      // refer to state zero to continue matching
-      int token_id = static_cast<int>(input.front()->get_kind());
-      action_stack.push_back(get_action(token_id, 0));
+      throw std::runtime_error("expected end of file, but have more input");
     }
   }
 

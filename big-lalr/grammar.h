@@ -165,42 +165,37 @@ public:
     first_set_t result;
     if (symbol == omega) {
       result.push_back(break_);
-      auto first_set = get_first_set(symbol);
-      for (const auto &first_symbol: first_set) {
-        if (first_symbol != epsilon) {
-          result.push_back(first_symbol);
-        }
-      }
-    }
-    for (const auto &occurence: by_rhs[symbol]) {
-      bool chain = false;
-      auto beta = std::get<0>(occurence)->get_beta(std::get<1>(occurence));
-      if (beta.size()) {
-        auto first_set = get_first_sequence(beta);
-        for (const auto &first_symbol: first_set) {
-          if (first_symbol == epsilon) {
-            chain = true;
-          } else {
-            if (std::find(result.begin(), result.end(), first_symbol) == result.end()) {
-              result.push_back(first_symbol);
+      return result;
+    } else {
+      for (const auto &occurence: by_rhs[symbol]) {
+        bool chain = false;
+        auto beta = std::get<0>(occurence)->get_beta(std::get<1>(occurence));
+        if (beta.size()) {
+          auto first_set = get_first_sequence(beta);
+          for (const auto &first_symbol: first_set) {
+            if (first_symbol == epsilon) {
+              chain = true;
+            } else {
+              if (std::find(result.begin(), result.end(), first_symbol) == result.end()) {
+                result.push_back(first_symbol);
+              }
             }
           }
-
+        } else {
+          chain = true;
         }
-      } else {
-        chain = true;
-      }
-      if (chain) {
-        auto follow_set = get_follow_set(std::get<0>(occurence)->get_lhs(), taboo);
-        for (const auto &follow_symbol: follow_set) {
-          if (std::find(result.begin(), result.end(), follow_symbol) == result.end()) {
-            result.push_back(follow_symbol);
+        if (chain) {
+          auto follow_set = get_follow_set(std::get<0>(occurence)->get_lhs(), taboo);
+          for (const auto &follow_symbol: follow_set) {
+            if (std::find(result.begin(), result.end(), follow_symbol) == result.end()) {
+              result.push_back(follow_symbol);
+            }
           }
         }
       }
+      follow_sets[symbol] = result;
+      return result;
     }
-    follow_sets[symbol] = result;
-    return result;
   }
 
   std::vector<std::shared_ptr<item_t>> get_start_items() {
