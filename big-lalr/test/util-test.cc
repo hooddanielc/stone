@@ -26,7 +26,7 @@ FIXTURE(get_tmp_path_result) {
 FIXTURE(read_a_file) {
   std::string path = get_project_path("/big-lalr/test/fixtures/pets.biglr");
   auto str = get_file_contents(path);
-  EXPECT_EQ(str.size(), size_t(133));
+  EXPECT_EQ(str.size(), size_t(145));
 }
 
 FIXTURE(write_a_file) {

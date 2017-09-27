@@ -20,5 +20,7 @@ FIXTURE(simple_program) {
     }
   )");
 
+  std::cout << output << std::endl;
+
   EXPECT_EQ(output->get_name(), "translation_unit");
 }

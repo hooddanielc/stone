@@ -102,6 +102,10 @@ public:
     visitor(this);
   }
 
+  std::shared_ptr<token_t> get_token() const {
+    return token;
+  }
+
   static std::shared_ptr<ast_token_t> make(std::shared_ptr<token_t> token) {
     auto ptr = new ast_token_t(token);
     std::shared_ptr<ast_token_t> result(ptr);

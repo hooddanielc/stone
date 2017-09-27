@@ -3085,7 +3085,7 @@ std::ostream &operator<<(std::ostream &strm, const glsl::ast_t *ast) {
       std::cout << ")" << std::endl;
     }
     virtual void operator()(const glsl::ast_token_t *node) const override {
-      strm << "ast_token_t(" << glsl::symbol_t::get_name(node->get_symbol_id()) << ")" << std::endl;
+      strm << "ast_token_t(" << node->get_token() << ")" << std::endl;
     }
 
   private:

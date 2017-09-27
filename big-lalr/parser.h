@@ -331,6 +331,7 @@ public:
     fs << "#include <memory>" << std::endl;
     fs << "#include <iostream>" << std::endl;
     fs << "#include <cassert>" << std::endl;
+    fs << "#include <algorithm>" << std::endl;
     fs << "#include <utility>" << std::endl;
     fs << "#include <unordered_map>" << std::endl;
     fs << "#include <functional>" << std::endl;

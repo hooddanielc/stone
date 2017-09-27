@@ -21,7 +21,7 @@ FIXTURE(parser_gens_json) {
   EXPECT_TRUE(json.find("tokens") != json.end());
 
   // check valid length
-  EXPECT_EQ(json["actions"].size(), size_t(14));
+  EXPECT_EQ(json["actions"].size(), size_t(15));
   EXPECT_TRUE(json["cpp"].size() > size_t(4));
   EXPECT_EQ(json["dot"].size(), size_t(1));
   EXPECT_EQ(json["reductions"].size(), size_t(3));
@@ -37,6 +37,7 @@ std::string generate_pets_code(const std::string &grammar_file) {
   ss << "#include <string>" << std::endl;
   ss << "#include <vector>" << std::endl;
   ss << "#include <memory>" << std::endl;
+  ss << "#include <algorithm>" << std::endl;
   ss << "#include <iostream>" << std::endl;
   ss << "#include <cassert>" << std::endl;
   ss << "#include <utility>" << std::endl;
@@ -157,7 +158,6 @@ std::string get_program_output(const std::string &src) {
     "-o",
     output_path
   });
-
   compiler_process->on_stdout([](auto) {
     //std::cout << str;
   });

@@ -33,11 +33,11 @@ public:
     col_number = 1;
   }
 
-  int get_line() {
+  int get_line() const {
     return line_number;
   }
 
-  int get_col() {
+  int get_col() const {
     return col_number;
   }
 
@@ -93,19 +93,19 @@ private:
   ss <<
 R"(
 
-  kind_t get_kind() {
+  kind_t get_kind() const {
     return kind;
   }
 
-  std::string get_text() {
+  std::string get_text() const {
     return text;
   }
 
-  std::string get_name() {
+  std::string get_name() const {
     return token_t::get_desc(kind);
   }
 
-  pos_t get_pos() {
+  pos_t get_pos() const {
     return pos;
   }
 

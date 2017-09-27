@@ -10,7 +10,7 @@ FIXTURE(constructs) {
   auto grammar = grammar_t::from_file(example_grammar);
   EXPECT_EQ(grammar->get_tokens().size(), size_t(10));
   EXPECT_EQ(grammar->get_reductions().size(), size_t(3));
-  EXPECT_EQ(grammar->get_rules().size(), size_t(7));
+  EXPECT_EQ(grammar->get_rules().size(), size_t(8));
   EXPECT_EQ(grammar->get_empties().size(), size_t(1));
 }
 
@@ -50,7 +50,7 @@ FIXTURE(get_closure) {
   auto grammar = grammar_t::from_file(example_grammar);
   auto starting_items = grammar->get_start_items();
   auto state = grammar->get_closure(starting_items);
-  EXPECT_EQ(state->get_items().size(), size_t(10));
+  EXPECT_EQ(state->get_items().size(), size_t(22));
 }
 
 FIXTURE(get_goto) {
@@ -67,5 +67,5 @@ FIXTURE(get_all_states) {
   auto grammar = grammar_t::from_file(example_grammar);
   auto full_parse_table = grammar->get_full_parse_table();
   auto states = full_parse_table->get_states();
-  EXPECT_EQ(states.size(), size_t(14));
+  EXPECT_EQ(states.size(), size_t(15));
 }

@@ -155,6 +155,7 @@ protected:
       children.push_back(output.back());
       output.pop_back();
     }
+    std::reverse(children.begin(), children.end());
     return children;
   }
 
