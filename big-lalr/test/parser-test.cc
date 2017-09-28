@@ -145,6 +145,35 @@ int main (int, char*[]) {
 
 )";
 
+
+std::string recover_from_error_program = R"(
+
+int main (int, char*[]) {
+  auto parser = parser_t::make();
+
+  try {
+    pos_t pos;
+    std::vector<std::shared_ptr<token_t>> input = {
+      token_t::make(pos, token_t::d),
+      token_t::make(pos, token_t::o),
+      token_t::make(pos, token_t::g),
+      token_t::make(pos, token_t::d),
+      token_t::make(pos, token_t::o),
+      token_t::make(pos, token_t::g),
+      token_t::make(pos, token_t::c),
+      token_t::make(pos, token_t::d),
+      token_t::make(pos, token_t::o)
+    };
+
+    auto result = parser->parse(input);
+  } catch (const std::exception &) {
+    std::cout << "error " << parser->get_remaining_input()[0];
+  }
+  return 0;
+}
+
+)";
+
 std::string get_program_output(const std::string &src) {
   auto input_path = get_tmp_path("test-token-cpp-", ".cc");
   auto output_path = get_tmp_path();
@@ -158,6 +187,7 @@ std::string get_program_output(const std::string &src) {
     "-o",
     output_path
   });
+  std::cout << compiler_process << std::endl;
   compiler_process->on_stdout([](auto) {
     //std::cout << str;
   });
@@ -200,4 +230,5 @@ FIXTURE(parser_gens_tokens_and_compiles) {
   );
 
   EXPECT_EQ(get_program_output(pets_code_gen + driver_functionality), "output size: 1, name: pets");
+  EXPECT_EQ(get_program_output(pets_code_gen + recover_from_error_program), "error line 1, col 1; d");
 }

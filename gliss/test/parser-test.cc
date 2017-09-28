@@ -7,6 +7,11 @@ using namespace gliss;
 
 FIXTURE(simple_program) {
   auto output = parser_t::parse_string(R"(
+    layout (location = 0) in vec3 aPos;
+    layout (location = 1) in vec3 aNormal;
+    out vec3 FragPos;
+    out vec3 Normal;
+    in vec3 FragPos;
     uniform mat4 viewMatrix, projMatrix;
 
     in vec4 position;
@@ -25,6 +30,8 @@ FIXTURE(simple_program) {
       gl_Position = projMatrix * viewMatrix * position ;
     }
   )");
+
+  std::cout << output.get() << std::endl;
 
   EXPECT_EQ(output->get_name(), "translation_unit");
 }

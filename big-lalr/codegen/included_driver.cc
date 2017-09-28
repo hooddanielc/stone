@@ -98,6 +98,14 @@ public:
     }
   }
 
+  std::vector<std::shared_ptr<token_t>> get_remaining_input() const {
+    return input;
+  }
+
+  std::vector<std::shared_ptr<ast_t>> get_output() const {
+    return output;
+  }
+
   std::vector<std::shared_ptr<ast_t>> parse(input_queue_t tokens) {
     input = tokens;
     go = true;
@@ -163,8 +171,6 @@ protected:
     if (input.size() == 0) {
       go = false;
       emit_on_accept(action_stack.back());
-    } else {
-      throw std::runtime_error("expected end of file, but have more input");
     }
   }
 
@@ -182,14 +188,11 @@ protected:
   }
 
   void on_shift_action() {
-    if (input.empty()) {
-      throw std::runtime_error("cannot shift input is empty");
-    }
-
     assert(action_stack.back().first == shift);
     assert(action_stack.back().second >= 0);
 
     if (input.empty()) {
+      throw throw_unexpected_eof();
       throw std::runtime_error("unexpected end of program");
     }
 
@@ -233,7 +236,8 @@ protected:
       return {action_kind_t::transition, action - 1};
     }
 
-    throw std::runtime_error("action does not exist");
+    throw_unexpected_token();
+    throw std::runtime_error("unexpected token");
   }
 
   /* get action from table */
@@ -252,8 +256,13 @@ protected:
       return {action_kind_t::shift, action - 1};
     }
 
-    throw std::runtime_error("action does not exist");
+    throw_unexpected_token();
+    throw std::runtime_error("unexpected token");
   }
+
+  virtual void throw_unexpected_token() const {}
+
+  virtual void throw_unexpected_eof() const {}
 
   /* temporary input queue */
   input_queue_t input;
