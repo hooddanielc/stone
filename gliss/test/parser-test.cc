@@ -11,16 +11,20 @@ FIXTURE(simple_program) {
 
     in vec4 position;
     in vec3 color;
-
     out vec3 Color;
+
+    struct Light {
+      vec3 eyePosOrDir;
+      bool isDirectional;
+      vec3 intensity;
+      float attenuation;
+    } variableName;
 
     void main() {
       Color = color;
       gl_Position = projMatrix * viewMatrix * position ;
     }
   )");
-
-  std::cout << output << std::endl;
 
   EXPECT_EQ(output->get_name(), "translation_unit");
 }
