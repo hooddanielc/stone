@@ -115,10 +115,6 @@ int main (int, char*[]) {
     //   std::cout << "=================================" << std::endl;
     // });
 
-    // parser->on_reduce([&](auto data) {
-    //   std::cout << "on reduce " << data.second << std::endl;
-    // });
-
     // parser->on_shift([&](auto data) {
     //   std::cout << "on shift " << data.second << std::endl;
     // });
@@ -187,7 +183,7 @@ std::string get_program_output(const std::string &src) {
     "-o",
     output_path
   });
-  std::cout << compiler_process << std::endl;
+
   compiler_process->on_stdout([](auto) {
     //std::cout << str;
   });

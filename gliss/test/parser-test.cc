@@ -25,13 +25,15 @@ FIXTURE(simple_program) {
       float attenuation;
     } variableName;
 
+    int ok = 1;
+
     void main() {
       Color = color;
-      gl_Position = projMatrix * viewMatrix * position ;
+      gl_Position = projMatrix * viewMatrix * position;
     }
   )");
 
-  std::cout << output.get() << std::endl;
+  // std::cout << output.get() << std::endl;
 
   EXPECT_EQ(output->get_name(), "translation_unit");
 }

@@ -40,20 +40,21 @@ public:
     }
   }
 
-  using cb_action_t = std::function<void(const action_t &data)>;
+  using cb_action_t = std::function<void(const action_t &)>;
+  using cb_reduce_t = std::function<void(std::shared_ptr<ast_t>)>;
 
   std::vector<cb_action_t> on_step_cbs;
-  std::vector<cb_action_t> on_reduce_cbs;
   std::vector<cb_action_t> on_shift_cbs;
   std::vector<cb_action_t> on_accept_cbs;
   std::vector<cb_action_t> on_transition_cbs;
+  std::unordered_map<int, cb_reduce_t> on_reduce_cbs;
 
   void on_step(const cb_action_t &cb) {
     on_step_cbs.push_back(cb);
   }
 
-  void on_reduce(const cb_action_t &cb) {
-    on_reduce_cbs.push_back(cb);
+  void on_reduce(int rule_id, const cb_reduce_t &cb) {
+    on_reduce_cbs[rule_id] = cb;
   }
 
   void on_accept(const cb_action_t &cb) {
@@ -74,9 +75,9 @@ public:
     }
   }
 
-  void emit_on_reduce(const action_t &data) {
-    for (const auto &cb: on_reduce_cbs) {
-      cb(data);
+  void emit_on_reduce(int rule_id, std::shared_ptr<ast_t> reduction) {
+    if (on_reduce_cbs.find(rule_id) != on_reduce_cbs.end()) {
+      on_reduce_cbs[rule_id](reduction);
     }
   }
 
@@ -123,7 +124,6 @@ public:
           // identify size of rule, pop n tokens
           // from output stack, create reduction, push
           // output. Push transition state on to state stack
-          emit_on_reduce(action);
           on_reduce_action();
           break;
         case shift:
@@ -149,6 +149,14 @@ public:
   }
 
 protected:
+
+  /* scan token could return an entirely different TYPE_NAME instead of IDENTIFIER
+   * this is where you would want to correctly disambiguate between a
+   * variable name and an identifier based on your grammar. You might want
+   * to assert a variable is not being redeclared. */
+  virtual std::shared_ptr<token_t> scan_token(std::shared_ptr<token_t> token) const {
+    return token;
+  }
 
   virtual std::shared_ptr<ast_t> reduce_by_id(int id, std::vector<std::shared_ptr<ast_t>> &children) {
     return default_reduce_by_id(id, children);
@@ -181,6 +189,7 @@ protected:
     int rule_id = action_stack.back().second;
     std::vector<std::shared_ptr<ast_t>> children = pop_reduction(rule_id);
     auto reduction = reduce_by_id(rule_id, children);
+    emit_on_reduce(rule_id, reduction);
     output.push_back(reduction);
 
     int last_state = states.back();
@@ -192,11 +201,12 @@ protected:
     assert(action_stack.back().second >= 0);
 
     if (input.empty()) {
-      throw throw_unexpected_eof();
+      throw_unexpected_eof();
       throw std::runtime_error("unexpected end of program");
     }
 
-    auto shifted_token = ast_token_t::make(input.front());
+    auto scanned_token = scan_token(input.front());
+    auto shifted_token = ast_token_t::make(scanned_token);
     input.erase(input.begin());
     output.push_back(shifted_token);
     int next_state = action_stack.back().second;
