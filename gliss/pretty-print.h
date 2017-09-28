@@ -11,10 +11,12 @@ std::ostream &operator<<(std::ostream &strm, const glsl::ast_t *ast) {
     pretty_print_t(std::ostream &strm_)
           : strm(strm_) {}
 
-    void write(std::ostream &strm, const char *, const glsl::ast_t *node) const {
+    void write(std::ostream &strm, const char *name, const glsl::ast_t *node) const {
+      std::cout << name << "(" << std::endl;
       for (auto child: node->get_children()) {
         strm << child.get();
       }
+      std::cout << ") // " << name << std::endl;
     }
 
     virtual void operator()(const glsl::__omega___branch_t *node) const override {

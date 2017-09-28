@@ -83,10 +83,6 @@ protected:
 
 const std::vector<symbol_t::kind_t> )" << identifier << R"(_t::pattern = )" << ss_pattern.str() << R"(;
 
-template <> struct reduction_lookup_t<)" << rule_id << R"(> {
-  using type = )" << identifier << R"(_t;
-};
-
 )";
   }
 

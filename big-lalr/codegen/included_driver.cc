@@ -40,20 +40,21 @@ public:
     }
   }
 
-  using cb_action_t = std::function<void(const action_t &data)>;
+  using cb_action_t = std::function<void(const action_t &)>;
+  using cb_reduce_t = std::function<void(std::shared_ptr<ast_t>)>;
 
   std::vector<cb_action_t> on_step_cbs;
-  std::vector<cb_action_t> on_reduce_cbs;
   std::vector<cb_action_t> on_shift_cbs;
   std::vector<cb_action_t> on_accept_cbs;
   std::vector<cb_action_t> on_transition_cbs;
+  std::unordered_map<int, cb_reduce_t> on_reduce_cbs;
 
   void on_step(const cb_action_t &cb) {
     on_step_cbs.push_back(cb);
   }
 
-  void on_reduce(const cb_action_t &cb) {
-    on_reduce_cbs.push_back(cb);
+  void on_reduce(int rule_id, const cb_reduce_t &cb) {
+    on_reduce_cbs[rule_id] = cb;
   }
 
   void on_accept(const cb_action_t &cb) {
@@ -74,9 +75,9 @@ public:
     }
   }
 
-  void emit_on_reduce(const action_t &data) {
-    for (const auto &cb: on_reduce_cbs) {
-      cb(data);
+  void emit_on_reduce(int rule_id, std::shared_ptr<ast_t> reduction) {
+    if (on_reduce_cbs.find(rule_id) != on_reduce_cbs.end()) {
+      on_reduce_cbs[rule_id](reduction);
     }
   }
 
@@ -98,6 +99,14 @@ public:
     }
   }
 
+  std::vector<std::shared_ptr<token_t>> get_remaining_input() const {
+    return input;
+  }
+
+  std::vector<std::shared_ptr<ast_t>> get_output() const {
+    return output;
+  }
+
   std::vector<std::shared_ptr<ast_t>> parse(input_queue_t tokens) {
     input = tokens;
     go = true;
@@ -115,7 +124,6 @@ public:
           // identify size of rule, pop n tokens
           // from output stack, create reduction, push
           // output. Push transition state on to state stack
-          emit_on_reduce(action);
           on_reduce_action();
           break;
         case shift:
@@ -142,8 +150,25 @@ public:
 
 protected:
 
+  /* scan token accepts the next token, and may return the same token, or a different
+   * token. The token returned is used. */
+  virtual std::shared_ptr<token_t> scan_token(std::shared_ptr<token_t> token) const {
+    return token;
+  }
+
   virtual std::shared_ptr<ast_t> reduce_by_id(int id, std::vector<std::shared_ptr<ast_t>> &children) {
     return default_reduce_by_id(id, children);
+  }
+
+  std::shared_ptr<token_t> get_next_token() {
+    if (!last_token_scanned || last_token_scanned != input.front()) {
+      last_token_scanned = scan_token(input.front());
+
+      if (last_token_scanned != input.front()) {
+        input.front() = last_token_scanned;
+      }
+    }
+    return last_token_scanned;
   }
 
   std::vector<std::shared_ptr<ast_t>> pop_reduction(int id) {
@@ -163,8 +188,6 @@ protected:
     if (input.size() == 0) {
       go = false;
       emit_on_accept(action_stack.back());
-    } else {
-      throw std::runtime_error("expected end of file, but have more input");
     }
   }
 
@@ -175,6 +198,7 @@ protected:
     int rule_id = action_stack.back().second;
     std::vector<std::shared_ptr<ast_t>> children = pop_reduction(rule_id);
     auto reduction = reduce_by_id(rule_id, children);
+    emit_on_reduce(rule_id, reduction);
     output.push_back(reduction);
 
     int last_state = states.back();
@@ -182,18 +206,15 @@ protected:
   }
 
   void on_shift_action() {
-    if (input.empty()) {
-      throw std::runtime_error("cannot shift input is empty");
-    }
-
     assert(action_stack.back().first == shift);
     assert(action_stack.back().second >= 0);
 
     if (input.empty()) {
+      throw_unexpected_eof();
       throw std::runtime_error("unexpected end of program");
     }
 
-    auto shifted_token = ast_token_t::make(input.front());
+    auto shifted_token = ast_token_t::make(get_next_token());
     input.erase(input.begin());
     output.push_back(shifted_token);
     int next_state = action_stack.back().second;
@@ -202,7 +223,7 @@ protected:
       int token_id = static_cast<int>(symbol_t::__break__);
       action_stack.push_back(get_action(token_id, next_state));
     } else {
-      int token_id = static_cast<int>(input.front()->get_kind());
+      int token_id = static_cast<int>(get_next_token()->get_kind());
       action_stack.push_back(get_action(token_id, next_state));
     }
 
@@ -219,7 +240,7 @@ protected:
       int token_id = static_cast<int>(symbol_t::__break__);
       action_stack.push_back(get_action(token_id, transition_to));
     } else {
-      int token_id = static_cast<int>(input.front()->get_kind());
+      int token_id = static_cast<int>(get_next_token()->get_kind());
       action_stack.push_back(get_action(token_id, transition_to));
     }
   }
@@ -233,7 +254,8 @@ protected:
       return {action_kind_t::transition, action - 1};
     }
 
-    throw std::runtime_error("action does not exist");
+    throw_unexpected_token();
+    throw std::runtime_error("unexpected token");
   }
 
   /* get action from table */
@@ -252,8 +274,13 @@ protected:
       return {action_kind_t::shift, action - 1};
     }
 
-    throw std::runtime_error("action does not exist");
+    throw_unexpected_token();
+    throw std::runtime_error("unexpected token");
   }
+
+  virtual void throw_unexpected_token() {}
+
+  virtual void throw_unexpected_eof() {}
 
   /* temporary input queue */
   input_queue_t input;
@@ -266,6 +293,8 @@ protected:
 
   /* output stack */
   output_stack_t output;
+
+  std::shared_ptr<token_t> last_token_scanned;
 
   bool go;
 

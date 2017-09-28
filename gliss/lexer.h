@@ -107,6 +107,7 @@ private:
             case '}': add_single_token(token_t::RIGHT_BRACE); break;
             case '~': add_single_token(token_t::TILDE); break;
             case ',': add_single_token(token_t::COMMA); break;
+            case ':': add_single_token(token_t::COLON); break;
             case '0': {
               set_anchor();
               pop();

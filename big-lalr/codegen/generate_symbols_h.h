@@ -36,15 +36,6 @@ inline std::string generate_symbols_h(std::vector<std::shared_ptr<symbol_t>> sym
   ss << "  }" << std::endl;
   ss << "};" << std::endl;
 
-  for (auto symbol: symbols) {}
-
-  ss << R"(
-
-template <int id>
-struct reduction_lookup_t {};
-
-)";
-
   return ss.str();
 }
 
