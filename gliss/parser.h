@@ -30,37 +30,6 @@ public:
       std::cout << "=================================" << std::endl;
     });
 
-    // declare variable in current scope
-    std::vector<int> init_declarator_list_ids({
-      glsl::init_declarator_list_from_single_declaration_t::rule_id,
-      glsl::init_declarator_list_from_init_declarator_list_COMMA_IDENTIFIER_t::rule_id,
-      glsl::init_declarator_list_from_init_declarator_list_COMMA_IDENTIFIER_array_specifier_t::rule_id,
-      glsl::init_declarator_list_from_init_declarator_list_COMMA_IDENTIFIER_array_specifier_EQUAL_initializer_t::rule_id,
-      glsl::init_declarator_list_from_init_declarator_list_COMMA_IDENTIFIER_EQUAL_initializer_t::rule_id
-    });
-
-    for (auto id: init_declarator_list_ids) {
-      parser->on_reduce(id, [](auto reduction) {
-        //std::cout << "I just reduced " << reduction->get_name() << std::endl;
-        //std::cout << ast_t::make(reduction)->to_json() << std::endl;
-      });
-    }
-
-    // function header inserts a new scope
-    parser->on_reduce(glsl::function_header_from_fully_specified_type_IDENTIFIER_LEFT_PAREN_t::rule_id, [](auto reduction) {
-
-    });
-
-    // function definition closes scope
-    parser->on_reduce(glsl::function_definition_from_function_prototype_compound_statement_no_new_scope_t::rule_id, [](auto reduction) {
-
-    });
-
-    // function declaration closes function scope
-    parser->on_reduce(glsl::declaration_from_function_prototype_SEMICOLON_t::rule_id, [](auto reduction) {
-
-    });
-
     auto output = parser->parse(lexer_t::lex(src)).front();
     return ast_t::make(output);
   }
@@ -80,7 +49,7 @@ public:
 
   enum symbol_type_t {
     structure,
-    variable,
+    reference,
     function,
     if_stmt,
     do_stmt,
@@ -94,37 +63,16 @@ protected:
 
   parser_t(): scope(0) {}
 
-  void insert_symbol(const std::string &name, symbol_type_t type) {
-
+  void insert_symbol(std::shared_ptr<glsl::ast_t> ast, symbol_type_t type) {
+    if (auto token = std::dynamic_pointer_cast<glsl::ast_token_t>(ast)) {
+      std::cout << "SCOPE adding " << token->get_token()->get_text() << std::endl;
+    } else {
+      std::cout << "SCOPE ERROR YOU DIDNT PASS A TOKEN" << std::endl;
+    }
   }
 
   void reduce_symbols(symbol_type_t type) {
 
-  }
-
-  bool is_while_end() const {
-    auto end = glsl::parser_t::input.end();
-    auto begin = glsl::parser_t::input.begin() + 1;
-    assert(glsl::parser_t::input.front()->get_kind() == token_t::WHILE);
-    assert((*begin)->get_kind() == token_t::LEFT_PAREN);
-    int test_scope = 0;
-
-    for (auto it = begin; it != end; ++it) {
-      auto token = (*it);
-      if (token->get_kind() == token_t::LEFT_PAREN) test_scope += 1;
-      if (token->get_kind() == token_t::RIGHT_PAREN) test_scope -= 1;
-      if (test_scope > 0) continue;
-
-      if (test_scope == 0 && std::next(it) != end) {
-        auto term = *(std::next(it));
-        if (term->get_kind() == token_t::SEMICOLON) {
-          return true;
-        }
-        return false;
-      }
-    }
-
-    return false;
   }
 
   virtual std::shared_ptr<token_t> scan_token(std::shared_ptr<glsl::token_t> token) const override {
@@ -151,10 +99,15 @@ protected:
       std::cout << "SCOPE struct adds a typename onto symbol table" << std::endl;
     }
     if (reduction->get_symbol_id() == glsl::symbol_t::single_declaration) {
-      std::cout << "SCOPE add declaration" << std::endl;
+      if (reduction->get_children().size() > 1) {
+        insert_symbol(reduction->get_children()[1], reference);
+      }
     }
     if (reduction->get_symbol_id() == glsl::symbol_t::function_prototype) {
-      std::cout << "SCOPE add function declaration to symbol table" << std::endl;
+      auto function_declarator = reduction->get_children()[0];
+      auto function_header = function_declarator->get_children()[0];
+      auto function_header_params = function_declarator->get_children()[1];
+      insert_symbol(function_header->get_children()[1], function);
     }
     return glsl::default_reduce_by_id(id, children);
   }
