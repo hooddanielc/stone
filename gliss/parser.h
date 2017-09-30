@@ -61,9 +61,7 @@ public:
 
     });
 
-    parser->push_symbol_table();
     auto output = parser->parse(lexer_t::lex(src)).front();
-    parser->pop_symbol_table();
     return ast_t::make(output);
   }
 
@@ -80,23 +78,85 @@ public:
     throw std::runtime_error(ss.str());
   }
 
+  enum symbol_type_t {
+    structure,
+    variable,
+    function,
+    if_stmt,
+    do_stmt,
+    while_stmt,
+    for_stmt
+  };
+
 protected:
 
-  void push_symbol_table() {
+  int scope;
+
+  parser_t(): scope(0) {}
+
+  void insert_symbol(const std::string &name, symbol_type_t type) {
 
   }
 
-  void pop_symbol_table() {
+  void reduce_symbols(symbol_type_t type) {
 
+  }
+
+  bool is_while_end() const {
+    auto end = glsl::parser_t::input.end();
+    auto begin = glsl::parser_t::input.begin() + 1;
+    assert(glsl::parser_t::input.front()->get_kind() == token_t::WHILE);
+    assert((*begin)->get_kind() == token_t::LEFT_PAREN);
+    int test_scope = 0;
+
+    for (auto it = begin; it != end; ++it) {
+      auto token = (*it);
+      if (token->get_kind() == token_t::LEFT_PAREN) test_scope += 1;
+      if (token->get_kind() == token_t::RIGHT_PAREN) test_scope -= 1;
+      if (test_scope > 0) continue;
+
+      if (test_scope == 0 && std::next(it) != end) {
+        auto term = *(std::next(it));
+        if (term->get_kind() == token_t::SEMICOLON) {
+          return true;
+        }
+        return false;
+      }
+    }
+
+    return false;
   }
 
   virtual std::shared_ptr<token_t> scan_token(std::shared_ptr<glsl::token_t> token) const override {
     if (token->get_kind() == glsl::token_t::IDENTIFIER) {
-      //std::cout << "found an identifier token" << std::endl;
+      // do a lookup in symbol table
     }
     std::cout << token->get_name() << std::endl;
 
     return token;
+  }
+
+  virtual std::shared_ptr<glsl::ast_t> reduce_by_id(int id, std::vector<std::shared_ptr<glsl::ast_t>> &children) {
+    auto reduction = glsl::default_reduce_by_id(id, children);
+    if (reduction->get_symbol_id() == glsl::symbol_t::function_definition) {
+      std::cout << "SCOPE reduce function def ends a scope" << std::endl;
+    }
+    if (reduction->get_symbol_id() == glsl::symbol_t::compound_statement) {
+      std::cout << "SCOPE reduce compound_statement" << std::endl;
+    }
+    if (reduction->get_symbol_id() == glsl::symbol_t::iteration_statement) {
+      std::cout << "SCOPE reduce iteration_statement" << std::endl;
+    }
+    if (reduction->get_symbol_id() == glsl::symbol_t::struct_specifier) {
+      std::cout << "SCOPE struct adds a typename onto symbol table" << std::endl;
+    }
+    if (reduction->get_symbol_id() == glsl::symbol_t::single_declaration) {
+      std::cout << "SCOPE add declaration" << std::endl;
+    }
+    if (reduction->get_symbol_id() == glsl::symbol_t::function_prototype) {
+      std::cout << "SCOPE add function declaration to symbol table" << std::endl;
+    }
+    return glsl::default_reduce_by_id(id, children);
   }
 
 };   // parser_t

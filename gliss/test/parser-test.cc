@@ -67,6 +67,19 @@ FIXTURE(simple_program) {
         }
       }
 
+      switch(i) {
+        case 1: break;
+        case 2: int y = 3; break;
+        case 4: int y = 2; break;
+        default: int y = 4;
+      }
+
+      if (i == 3) {
+        int b = 3;
+      } else if (i == 4) {
+        int a = 3;
+      }
+
       gl_Position = projMatrix * viewMatrix * position;
     }
   )");

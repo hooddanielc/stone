@@ -8,11 +8,14 @@ FIXTURE(does_it_compile) {
     layout (location = 0) in vec3 aPos;
     layout (location = 1) in vec3 aNormal;
 
+    int bar(int a, int b) {
+      return 3;
+    }
+
     void main() {
-      if (3 == 3) {
-        int a = 3;
+      for (int i = 0; i < 10; ++i) {
+        i += 1;
       }
-      gl_Position = projMatrix * viewMatrix * position;
     }
   )");
 
