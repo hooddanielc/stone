@@ -243,7 +243,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::PLUS));
               break;
@@ -269,7 +268,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::DASH));
               break;
@@ -288,7 +286,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::STAR));
               break;
@@ -307,7 +304,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::BANG));
               break;
@@ -333,7 +329,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::AMPERSAND));
               break;
@@ -359,7 +354,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::AMPERSAND));
               break;
@@ -378,7 +372,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::PERCENT));
               break;
@@ -404,7 +397,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::CARET));
               break;
@@ -428,7 +420,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::LEFT_ANGLE));
               break;
@@ -447,7 +438,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::LEFT_OP));
               break;
@@ -471,7 +461,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::RIGHT_ANGLE));
               break;
@@ -490,7 +479,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::RIGHT_OP));
               break;
@@ -519,7 +507,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::SLASH));
               break;

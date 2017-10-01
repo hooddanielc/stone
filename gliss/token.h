@@ -171,6 +171,11 @@ static token_t::kind_t get_textual_token(const std::string &str) {
     { "iimage2DMSArray", symbol_t::kind_t::IIMAGE2DMSARRAY },
     { "uimage2DMSArray", symbol_t::kind_t::UIMAGE2DMSARRAY },
     { "struct", symbol_t::kind_t::STRUCT },
+    { "lowp", symbol_t::kind_t::LOW_PRECISION },
+    { "mediump", symbol_t::kind_t::MEDIUM_PRECISION },
+    { "highp", symbol_t::kind_t::HIGH_PRECISION },
+    { "varying", symbol_t::kind_t::OUT },
+    { "attribute", symbol_t::kind_t::IN },
     { "common", symbol_t::kind_t::__break__ },
     { "partition", symbol_t::kind_t::__break__ },
     { "active", symbol_t::kind_t::__break__ },
@@ -209,18 +214,13 @@ static token_t::kind_t get_textual_token(const std::string &str) {
     { "sizeof", symbol_t::kind_t::__break__ },
     { "cast", symbol_t::kind_t::__break__ },
     { "namespace", symbol_t::kind_t::__break__ },
-    { "using", symbol_t::kind_t::__break__ },
-    { "attribute", symbol_t::kind_t::__break__ },
-    { "lowp", symbol_t::kind_t::__break__ },
-    { "mediump", symbol_t::kind_t::__break__ },
-    { "highp", symbol_t::kind_t::__break__ },
-    { "varying", symbol_t::kind_t::__break__ }
+    { "using", symbol_t::kind_t::__break__ }
   };
 
   auto iter = keywords.find(str);
   if (iter != keywords.end()) {
     if (iter->second == symbol_t::kind_t::__break__) {
-      throw std::runtime_error("reserved keyword unsupported");
+      throw std::runtime_error("reserved keyword unsupported " + str);
     }
 
     return static_cast<token_t::kind_t>(iter->second);
