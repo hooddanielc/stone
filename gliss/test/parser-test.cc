@@ -2,93 +2,50 @@
 #include <lick/lick.h>
 #include <gliss/parser.h>
 #include <gliss/pretty-print.h>
+#include <gliss/util.h>
 
 using namespace gliss;
 
-FIXTURE(simple_program) {
-  auto output = parser_t::parse_string(R"(
-    layout (location = 0) in vec3 a;
-    layout (location = 1) in vec3 b;
+std::string get_src(const std::string &path) {
+  return get_file_contents(get_project_path(path));
+}
 
-    in vec4 c;
-    in vec3 d;
-    out vec3 e;
+FIXTURE(robot_skin) {
+  auto str = get_src("gliss/test/fixtures/animated_robot_skin.glsl");
+  auto output = parser_t::parse_string(str.c_str());
+}
 
-    struct Light {
-      vec3 eyePosOrDir;
-      bool isDirectional;
-      vec3 intensity;
-      float attenuation;
-    } f;
+FIXTURE(bees_eye_view) {
+  auto str = get_src("gliss/test/fixtures/bees_eye_view.glsl");
+  auto output = parser_t::parse_string(str.c_str());
+}
 
-    Light light, light_two, light_three;
+FIXTURE(blinking_light) {
+  auto str = get_src("gliss/test/fixtures/blinking_light.glsl");
+  auto output = parser_t::parse_string(str.c_str());
+}
 
-    int g = 1;
+FIXTURE(creeper_skin) {
+  auto str = get_src("gliss/test/fixtures/creeper_skin.glsl");
+  auto output = parser_t::parse_string(str.c_str());
+}
 
-    int h(int i) {
-      int j = 3;
-      {
-        int k = k + 3; // 2nd k is parameter, initializing nested first k
-        int l = k; // use of new k, which is hiding the parameter
-      }
-    }
+FIXTURE(inner_space) {
+  auto str = get_src("gliss/test/fixtures/inner_space.glsl");
+  auto output = parser_t::parse_string(str.c_str());
+}
 
-    void main() {
-      Color = color;
-      for ( /* nested scope begins here */ int m = 0; m < 10; m++) {
-        int n; // redeclaration error
-      }
-      int o = 17;
-      do {
-        int p = 4; // okay, in nested scope
+FIXTURE(noise_sweep) {
+  auto str = get_src("gliss/test/fixtures/noise_sweep.glsl");
+  auto output = parser_t::parse_string(str.c_str());
+}
 
-        while (i = 2) {
-          i -= 4;
-        }
+FIXTURE(ska_triangles) {
+  auto str = get_src("gliss/test/fixtures/ska_triangles.glsl");
+  auto output = parser_t::parse_string(str.c_str());
+}
 
-      } while (i == 0); // i is 17, scoped outside the do-while body
-
-      switch (i) {
-        case 0: break;
-        case 1: break;
-        case 2: a = 3;
-        default: m = 3;
-      }
-
-      while(i = 0) {
-        a += 2;
-
-        if (i == 2) {
-          a += 3;
-
-          if (i = 2) {
-            a += 4;
-          } else {
-            a += 2;
-          }
-        }
-      }
-
-      switch(i) {
-        case 1: break;
-        case 2: int q = 3; break;
-        case 4: int r = 2; break;
-        default: int s = 4;
-      }
-
-      if (i == 3) {
-        int t = 3;
-      } else if (i == 4) {
-        int u = 3;
-        int v;
-      }
-
-      vec4 w;
-      int x, y, z;
-
-      gl_Position = projMatrix * viewMatrix * position;
-    }
-  )");
-
-  EXPECT_EQ(output->get_name(), "translation_unit");
+FIXTURE(space_without_time) {
+  auto str = get_src("gliss/test/fixtures/space_without_time.glsl");
+  auto output = parser_t::parse_string(str.c_str());
 }

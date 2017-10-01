@@ -10,26 +10,8 @@ class parser_t: public glsl::parser_t {
 
 public:
 
-  using statement_one = glsl::statement_from_compound_statement_t;
-
-  using statement_two = glsl::statement_from_simple_statement_t;
-
-  using struct_rule = glsl::struct_specifier_from_STRUCT_IDENTIFIER_LEFT_BRACE_struct_declaration_list_RIGHT_BRACE_t;
-
-  using statement_rule = glsl::statement_list_from_statement_t;
-
-  using statement_list_rule = glsl::statement_list_from_statement_list_statement_t;
-
   static std::shared_ptr<ast_t> parse_string(const char *src) {
     auto parser = parser_t::make();
-
-    // parser->on_shift([&](auto a) {
-    //   parser->write_states(std::cout); std::cout << std::endl;
-    //   parser->write_output(std::cout); std::cout << std::endl;
-    //   parser->write_input(std::cout); std::cout << std::endl;
-    //   std::cout << "=================================" << std::endl;
-    // });
-
     auto output = parser->parse(lexer_t::lex(src)).front();
     return ast_t::make(output);
   }
@@ -40,11 +22,23 @@ public:
     return result;
   }
 
+  void print_current_state(std::ostream &strm = std::cout) {
+    write_states(strm); strm << std::endl;
+    write_output(strm); strm << std::endl;
+    write_input(strm); strm << std::endl;
+    strm << "=================================" << std::endl;
+  }
+
   virtual void throw_unexpected_token() override {
     std::stringstream ss;
     ss << "unexpected token ";
     ss << input.front();
     throw std::runtime_error(ss.str());
+
+    write_states(std::cout); std::cout << std::endl;
+    write_output(std::cout); std::cout << std::endl;
+    write_input(std::cout); std::cout << std::endl;
+    std::cout << "=================================" << std::endl;
   }
 
   enum symbol_type_t {
@@ -123,8 +117,6 @@ public:
         auto range_end = std::find_if(children.begin(), children.end(), [&](auto item) {
           return item->get_node() == filtered.back();
         });
-        assert(range_start != children.begin());
-        assert(range_end != children.end());
         assert(std::distance(range_start, range_end) >= 0);
         std::vector<std::shared_ptr<symbol_table_t>> reduced_children(range_start, std::next(range_end));
         children.erase(range_start, std::next(range_end));
@@ -185,10 +177,21 @@ protected:
    * glsl requires a scanner to identify if an identifier is a TYPE_NAME or a regular
    * IDENTIFIER. If a token is incorrectly identified as not being a TYPE_NAME or
    * an IDENTIFIER, this will throw off the grammar and cause a compiler error
-   * during parsing. */
+   * during parsing. Also all type specifiers that occur before a LEFT_PAREN are
+   * rewritten as IDENTIFIER */
   virtual std::shared_ptr<token_t> scan_token(std::shared_ptr<glsl::token_t> token) const override {
-    // TODO rewrite IDENTIFIER to FIELD_SELECTION if occurs after a DOT
+    if (is_global_type(token->get_kind())) {
+      if (input.size() > 1 && input[1]->get_kind() == glsl::token_t::LEFT_PAREN) {
+        auto text = token->get_text();
+        return glsl::token_t::make(token->get_pos(), token_t::IDENTIFIER, std::move(text));
+      }
+    }
+
     if (token->get_kind() == glsl::token_t::IDENTIFIER) {
+      if (output.size() && output.back()->get_symbol_id() == glsl::symbol_t::DOT) {
+        auto text = token->get_text();
+        return glsl::token_t::make(token->get_pos(), token_t::FIELD_SELECTION, std::move(text));
+      }
       if (input.size() > 1 && input[1]->get_kind() == glsl::token_t::IDENTIFIER) {
         auto text = token->get_text();
         return glsl::token_t::make(token->get_pos(), token_t::TYPE_NAME, std::move(text));

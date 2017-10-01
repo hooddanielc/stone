@@ -108,6 +108,14 @@ private:
             case '~': add_single_token(token_t::TILDE); break;
             case ',': add_single_token(token_t::COMMA); break;
             case ':': add_single_token(token_t::COLON); break;
+            case '?': add_single_token(token_t::QUESTION); break;
+            // TODO - remove when preprocessor is ready to be integrated
+            case '#': {
+              set_anchor();
+              pop();
+              state = oneline_comment;
+              break;
+            }
             case '0': {
               set_anchor();
               pop();
@@ -243,7 +251,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::PLUS));
               break;
@@ -269,7 +276,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::DASH));
               break;
@@ -288,7 +294,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::STAR));
               break;
@@ -307,7 +312,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::BANG));
               break;
@@ -333,7 +337,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::AMPERSAND));
               break;
@@ -359,7 +362,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::AMPERSAND));
               break;
@@ -378,7 +380,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::PERCENT));
               break;
@@ -404,7 +405,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::CARET));
               break;
@@ -428,7 +428,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::LEFT_ANGLE));
               break;
@@ -447,7 +446,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::LEFT_OP));
               break;
@@ -471,7 +469,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::RIGHT_ANGLE));
               break;
@@ -490,7 +487,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::RIGHT_OP));
               break;
@@ -519,7 +515,6 @@ private:
             }
             default: {
               pop_anchor();
-              pop();
               state = start;
               tokens.push_back(token_t::make(anchor_pos, token_t::SLASH));
               break;
@@ -580,7 +575,7 @@ private:
             if (kind == token_t::IDENTIFIER) {
               tokens.push_back(token_t::make(anchor_pos, kind, std::move(text)));
             } else {
-              tokens.push_back(token_t::make(anchor_pos, kind));
+              tokens.push_back(token_t::make(anchor_pos, kind, std::move(text)));
             }
             state = start;
           }
