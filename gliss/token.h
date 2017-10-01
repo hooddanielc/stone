@@ -12,7 +12,7 @@ using token_t = glsl::token_t;
 
 using symbol_t = glsl::symbol_t;
 
-static bool is_global_type(glsl::token_t::kind_t kind) {
+inline static bool is_global_type(glsl::token_t::kind_t kind) {
   static const std::vector<glsl::token_t::kind_t> types = {
     glsl::token_t::VOID,
     glsl::token_t::FLOAT,
