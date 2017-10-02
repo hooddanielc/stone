@@ -1,0 +1,14 @@
+json
+node_modules
+test
+docs/glsl.json
+docs/glsl.html
+docs/glsl.js
+docs/glsl.sha256
+docs/.gitignore
+docs/glsl.h
+docs/glsl.dot
+*.h
+*.sh
+.gitignore
+.npmignore
