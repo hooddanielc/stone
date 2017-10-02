@@ -3,7 +3,7 @@
 
 namespace xcbxx {
 
-window_t::~window_t()  {
+window_t::~window_t() {
   xcb_destroy_window(get_connection(), window);
 }
 
