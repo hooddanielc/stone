@@ -4,7 +4,23 @@
 
 namespace xcbxx {
 
+class window_t;
+
 class client_message_event_t: public event_t {
+
+public:
+
+  std::shared_ptr<window_t> get_window();
+
+  uint8_t get_response_type();
+
+  uint8_t get_format();
+
+  uint16_t get_sequence();
+
+  xcb_atom_t get_type();
+
+  xcb_client_message_data_t get_data();
 
 protected:
 

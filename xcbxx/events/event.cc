@@ -2,7 +2,7 @@
 
 namespace xcbxx {
 
-const std::map<unsigned, std::string> event_t::event_types = {
+const std::map<uint8_t, std::string> event_t::event_types = {
   { XCB_KEY_PRESS, "XCB_KEY_PRESS" },
   { XCB_KEY_RELEASE, "XCB_KEY_RELEASE" },
   { XCB_BUTTON_PRESS, "XCB_BUTTON_PRESS" },

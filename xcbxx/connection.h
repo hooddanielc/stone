@@ -11,11 +11,11 @@
 #include <xcb/xcb.h>
 #include <X11/Xlib.h>
 #include <X11/Xlib-xcb.h>
-#include <xcbxx/screen.h>
-#include <xcbxx/window.h>
-#include <xcbxx/graphic-ctx.h>
-#include <xcbxx/events.h>
-#include <xcbxx/glx-window.h>
+#include "screen.h"
+#include "window.h"
+#include "graphic-ctx.h"
+#include "events.h"
+#include "glx-window.h"
 
 namespace xcbxx {
 
@@ -34,6 +34,10 @@ public:
   friend class graphic_ctx_t;
 
   using cb_event_t = std::function<void(std::shared_ptr<event_t>)>;
+
+  void throw_xcb_generic_error(xcb_generic_error_t *error) {
+    throw std::runtime_error("xcb error " + std::to_string(error->error_code));
+  }
 
   master_event_register_t events;
 

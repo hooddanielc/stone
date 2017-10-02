@@ -24,7 +24,7 @@ protected:
 
 public:
 
-  static const std::map<unsigned, std::string> event_types;
+  static const std::map<uint8_t, std::string> event_types;
 
   static std::string get_event_name(unsigned int macro);
 
@@ -35,10 +35,15 @@ public:
     xcb_generic_event_t *e,
     uint8_t assert_response_type
   ) {
-    if (e->response_type != assert_response_type) {
+    if ((e->response_type & ~0x80) != assert_response_type) {
       std::stringstream ss;
       ss << "can't create event " << event_type_t::name << " "
-         << "with " << e->response_type;
+         << "with ";
+      if (event_types.count(e->response_type & ~0x80)) {
+        ss << event_types.at(e->response_type & ~0x80);
+      } else {
+        ss << " unknown event type";
+      }
       throw std::runtime_error(ss.str());
     }
 
