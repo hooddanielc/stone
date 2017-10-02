@@ -1,0 +1,7 @@
+/token PLUS DASH HASH NEWLINE LEFT_PAREN RIGHT_PAREN TILDE PERCENT SLASH STAR SHIFT_LEFT SHIFT_RIGHT LEFT_ANGLE RIGHT_ANGLE EQ_OP NE_OP LE_OP GE_OP DEFINED AND AND_OP OR OR_OP CARET PIPE
+/top preprocessing_file
+
+group_part -> IDENTIFIER
+group -> group_part
+group -> group group_part
+preprocessing_file -> group
