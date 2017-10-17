@@ -4,6 +4,8 @@
 #include <tchar.h>
 #include <iostream>
 
+using namespace std;
+
 static TCHAR szWindowClass[] = _T("win32app");
 static TCHAR szTitle[] = _T("Win32 Guided Tour Application");
 
@@ -18,12 +20,20 @@ int CALLBACK WinMain(
   _In_ LPSTR     lpCmdLine,
   _In_ int       nCmdShow
 ) {
-  // for debug purposes only
-  // AllocConsole();
-  // freopen("conin$", "r", stdin);
-  // freopen("conout$", "w", stdout);
-  // freopen("conout$", "w", stderr);
+  #ifdef DEBUG
+    if (AllocConsole()) {
+      FILE *fp_out;
+      FILE *fp_in;
+      freopen_s(&fp_out, "CONOUT$", "w", stdout);
+      freopen_s(&fp_in, "CONIN$", "rt", stdin);
+      SetConsoleTitle("Debug Console");
+    }
 
+    printf("Hello Windows\n");
+  #endif
+
+  // Redirect the CRT standard input, output, and error handles to the console
+  // create the console
   WNDCLASSEX wcex;
   wcex.cbSize = sizeof(WNDCLASSEX);
   wcex.style          = CS_HREDRAW | CS_VREDRAW;
