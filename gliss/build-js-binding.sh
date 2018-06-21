@@ -17,5 +17,6 @@ mkdir -p gliss/dist
 echo 'building to gliss/dist/jsbinding.js'
 ib --cfg js_release gliss/jsbinding.js
 cp ../out/js_release/gliss/jsbinding.js gliss/dist/jsbinding.js
-cp ../out/js_release/gliss/jsbinding.js.mem gliss/dist/jsbinding.js.mem
+cp ../out/js_release/gliss/jsbinding.wasm gliss/dist/jsbinding.js.wasm
+cp ../out/js_release/gliss/jsbinding.wasm gliss/dist/jsbinding.js.mem
 cd $PREV_PWD

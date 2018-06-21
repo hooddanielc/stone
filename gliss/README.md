@@ -28,6 +28,14 @@ ib gliss/test/lexer-test --cfg osx-debug.cfg
 ./regenerate_parser.sh
 ```
 
+### Building the NodeJS Module
+
+Requires nodejs and emscripten
+
+```
+./build_js_binding.sh
+```
+
 ### View Language Docs
 
 `./view_parser_doc.sh`
