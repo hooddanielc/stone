@@ -10,6 +10,10 @@ class parser_t: public glsl::parser_t {
 
 public:
 
+  parser_t(): global_scope(symbol_table_t::make(std::shared_ptr<glsl::ast_t>(), scope)) {}
+
+  virtual ~parser_t() = default;
+
   static std::shared_ptr<ast_t> parse_string(const char *src) {
     auto parser = parser_t::make();
     auto output = parser->parse(lexer_t::lex(src)).front();
@@ -170,8 +174,6 @@ public:
 protected:
 
   std::shared_ptr<symbol_table_t> global_scope;
-
-  parser_t(): global_scope(symbol_table_t::make(std::shared_ptr<glsl::ast_t>(), scope)) {}
 
   /*
    * glsl requires a scanner to identify if an identifier is a TYPE_NAME or a regular

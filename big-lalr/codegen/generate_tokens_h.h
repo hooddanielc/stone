@@ -55,9 +55,10 @@ private:
 
 )";
 
-  ss << "class token_t {" << std::endl;
-  ss << std::endl;
-  ss << "public:" << std::endl;
+  ss << R"(
+    class token_t {
+    public:
+  )";
   ss << std::endl;
   ss << "  enum kind_t {" << std::endl;
   for (auto it = tokens.begin(); it != tokens.end(); ++it) {
@@ -74,6 +75,20 @@ private:
     }
   }
   ss << "  };   // kind_t" << std::endl;
+  ss << R"(
+      /* Cache the kind. */
+      token_t(kind_t kind): kind(kind) {}
+
+      /* Cache the position and kind and set the text to the empty string. */
+      token_t(const pos_t &pos, kind_t kind): pos(pos), kind(kind) {}
+
+      /* Cache the position and kind and the text. */
+      token_t(const pos_t &pos, kind_t kind, std::string &&text):
+        pos(pos),
+        kind(kind),
+        text(std::move(text)) {}
+  )";
+  ss << std::endl;
   ss << std::endl;
   ss << "  static std::string get_desc(kind_t kind) {" << std::endl;
   ss << "    switch(kind) {" << std::endl;
@@ -128,18 +143,6 @@ R"(
   }
 
 protected:
-
-  /* Cache the kind. */
-  token_t(kind_t kind): kind(kind) {}
-
-  /* Cache the position and kind and set the text to the empty string. */
-  token_t(const pos_t &pos, kind_t kind): pos(pos), kind(kind) {}
-
-  /* Cache the position and kind and the text. */
-  token_t(const pos_t &pos, kind_t kind, std::string &&text):
-    pos(pos),
-    kind(kind),
-    text(std::move(text)) {}
 
   /* Writes a human-readable dump of the token.  This is for debugging
      purposes only.  In production, a user never sees tokens directly. */

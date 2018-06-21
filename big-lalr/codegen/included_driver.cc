@@ -3,6 +3,10 @@ class parser_t {
 
 public:
 
+  parser_t(): action_stack({ {action_kind_t::transition, 0} }), go(false) {}
+
+  virtual ~parser_t() = default;
+
   using output_stack_t = std::vector<std::shared_ptr<ast_t>>;
 
   using input_queue_t = std::vector<std::shared_ptr<token_t>>;
@@ -143,9 +147,7 @@ public:
   }
 
   static std::shared_ptr<parser_t> make() {
-    auto ptr = new parser_t();
-    std::shared_ptr<parser_t> result(ptr);
-    return result;
+    return std::make_shared<parser_t>();
   }
 
 protected:
@@ -297,7 +299,5 @@ protected:
   std::shared_ptr<token_t> last_token_scanned;
 
   bool go;
-
-  parser_t(): action_stack({ {action_kind_t::transition, 0} }), go(false) {}
 
 };  // parser_t

@@ -96,6 +96,8 @@ public:
     return result;
   }
 
+  virtual ~rule_t() = default;
+
 protected:
 
   struct store_key_hash_t : public std::unary_function<data_t, std::size_t> {

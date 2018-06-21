@@ -21,11 +21,18 @@ FIXTURE(first_sets) {
     token_t::make("c"),
     token_t::make("d")
   };
-  std::sort(set.begin(), set.end());
-  std::sort(expected.begin(), expected.end());
+
+  std::sort(set.begin(), set.end(), [](auto a, auto b) {
+    return a->get_name() < b->get_name();
+  });
+  std::sort(expected.begin(), expected.end(), [](auto a, auto b) {
+    return a->get_name() < b->get_name();
+  });
+
   EXPECT_TRUE(set == expected);
   auto sequence = grammar->get_first_sequence(set);
-  EXPECT_TRUE(sequence == std::vector<std::shared_ptr<symbol_t>>({ token_t::make("c") }));
+  std::vector<std::shared_ptr<symbol_t>> expected_sequence({token_t::make("c")});
+  EXPECT_TRUE(sequence == expected_sequence);
 }
 
 FIXTURE(follow_sets) {

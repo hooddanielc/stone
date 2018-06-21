@@ -12,6 +12,11 @@ class symbol_t {
 
 public:
 
+  symbol_t(const std::string &name_)
+      :name(name_), id(next_id++) {}
+
+  virtual ~symbol_t() = default;
+
   std::string get_name() const {
     return name;
   }
@@ -60,9 +65,6 @@ protected:
 
   int id;
 
-  symbol_t(const std::string &name_)
-      :name(name_), id(next_id++) {}
-
 };  // symbol_t
 
 int symbol_t::next_id = 1;
@@ -75,6 +77,10 @@ std::ostream &operator<<(std::ostream &strm, const symbol_t *symbol) {
 class token_t: public symbol_t {
 
 public:
+
+  token_t(const std::string &name): symbol_t(name) {}
+
+  virtual ~token_t() = default;
 
   static std::shared_ptr<token_t> make(const std::string &name) {
     if (auto cached_ptr = store[name].lock()) {
@@ -128,8 +134,6 @@ protected:
 
   std::string cpp_identifier;
 
-  token_t(const std::string &name): symbol_t(name) {}
-
 };  // token_t
 
 std::unordered_map<std::string, std::weak_ptr<token_t>> token_t::store;
@@ -137,6 +141,10 @@ std::unordered_map<std::string, std::weak_ptr<token_t>> token_t::store;
 class reduction_t: public symbol_t {
 
 public:
+
+  reduction_t(const std::string &name): symbol_t(name) {}
+
+  virtual ~reduction_t() = default;
 
   static std::shared_ptr<reduction_t> make(const std::string &name) {
     if (auto cached_ptr = store[name].lock()) {
@@ -188,8 +196,6 @@ protected:
 
   static std::unordered_map<std::string, std::weak_ptr<reduction_t>> store;
 
-  reduction_t(const std::string &name): symbol_t(name) {}
-
 };  // reduction_t
 
 std::unordered_map<std::string, std::weak_ptr<reduction_t>> reduction_t::store;
@@ -197,6 +203,10 @@ std::unordered_map<std::string, std::weak_ptr<reduction_t>> reduction_t::store;
 class top_t: public reduction_t {
 
 public:
+
+  top_t(const std::string &name): reduction_t(name) {}
+
+  virtual ~top_t() = default;
 
   static std::shared_ptr<top_t> make() {
     if (auto cached_ptr = cached.lock()) {
@@ -225,7 +235,6 @@ protected:
 
   static std::weak_ptr<top_t> cached;
 
-  top_t(const std::string &name): reduction_t(name) {}
 
 };  // top_t
 
@@ -234,6 +243,10 @@ std::weak_ptr<top_t> top_t::cached;
 class break_t: public token_t {
 
 public:
+
+  break_t(const std::string &name): token_t(name) {}
+
+  virtual ~break_t() = default;
 
   static std::shared_ptr<break_t> make() {
     if (auto cached_ptr = cached.lock()) {
@@ -266,8 +279,6 @@ protected:
 
   static std::weak_ptr<break_t> cached;
 
-  break_t(const std::string &name): token_t(name) {}
-
 };  // break_t
 
 std::weak_ptr<break_t> break_t::cached;
@@ -276,6 +287,10 @@ std::weak_ptr<break_t> break_t::cached;
 class epsilon_t: public token_t {
 
 public:
+
+  epsilon_t(const std::string &name): token_t(name) {}
+
+  virtual ~epsilon_t() = default;
 
   static std::shared_ptr<epsilon_t> make() {
     if (auto cached_ptr = cached.lock()) {
@@ -305,8 +320,6 @@ public:
 protected:
 
   static std::weak_ptr<epsilon_t> cached;
-
-  epsilon_t(const std::string &name): token_t(name) {}
 
 };  // epsilon_t
 

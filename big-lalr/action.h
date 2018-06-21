@@ -46,6 +46,8 @@ struct action_t {
     return INT16_MAX;
   }
 
+  virtual ~action_t() = default;
+
 };  // action_t
 
 struct restart_action_t: public action_t {

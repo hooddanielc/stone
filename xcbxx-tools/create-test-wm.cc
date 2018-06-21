@@ -1,3 +1,7 @@
+/*
+ * This program is meant to run as a window manager.
+ */
+
 #include <iostream>
 #include <csignal>
 #include <xcbxx/connection.h>
