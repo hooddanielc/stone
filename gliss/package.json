@@ -1,6 +1,6 @@
 {
   "name": "gliss",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A handrolled glsl parser written in C++",
   "main": "index.js",
   "directories": {
