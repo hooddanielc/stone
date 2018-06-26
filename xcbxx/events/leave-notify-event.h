@@ -21,6 +21,6 @@ protected:
     connection(connection_),
     event((xcb_leave_notify_event_t *) event_) {}
 
-};  // event_t
+};
 
 }

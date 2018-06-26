@@ -14,19 +14,17 @@ class event_t {
 
 protected:
 
-  xcb_generic_event_t *event;
-
-  event_t(xcb_generic_event_t *event_): event(event_) {}
-
-  virtual ~event_t() {
-    free(event);
-  }
+  xcb_generic_event_t *xevent;
 
 public:
 
-  static const std::map<uint8_t, std::string> event_types;
+  event_t(xcb_generic_event_t *event_): xevent(event_) {}
 
-  static std::string get_event_name(unsigned int macro);
+  ~event_t();
+
+  static const std::map<unsigned char, std::string> event_types;
+
+  static std::string get_event_name(unsigned char macro);
 
   template <typename event_type_t>
   static std::shared_ptr<event_type_t>

@@ -33,9 +33,20 @@ public:
 
   friend class graphic_ctx_t;
 
+  connection_t(
+    xcb_connection_t *connection_,
+    Display *display_,
+    const char *display_name_,
+    int *screen_num_
+  ) :
+    connection(connection_),
+    display(display_),
+    display_name(display_name_),
+    screen_num(screen_num_) {}
+
   using cb_event_t = std::function<void(std::shared_ptr<event_t>)>;
 
-  void throw_xcb_generic_error(xcb_generic_error_t *error) {
+  [[noreturn]] void throw_xcb_generic_error(xcb_generic_error_t *error) {
     throw std::runtime_error("xcb error " + std::to_string(error->error_code));
   }
 
@@ -117,17 +128,6 @@ private:
   const char *display_name;
 
   int *screen_num;
-
-  connection_t(
-    xcb_connection_t *connection_,
-    Display *display_,
-    const char *display_name_,
-    int *screen_num_
-  ) :
-    connection(connection_),
-    display(display_),
-    display_name(display_name_),
-    screen_num(screen_num_) {};
 
 };  // connection_t
 

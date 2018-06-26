@@ -48,7 +48,7 @@ std::shared_ptr<connection_t> connection_t::make(const char *display_name, int *
       throw std::runtime_error("XCB_CONN_CLOSED_INVALID_SCREEN");
   }
 
-  auto result = std::shared_ptr<connection_t>(new connection_t(connection, display, display_name, screen_num));
+  auto result = std::make_shared<connection_t>(connection, display, display_name, screen_num);
   result->weak_ref = result;
   return result;
 }
@@ -82,7 +82,7 @@ void connection_t::pause() {
 }
 
 std::shared_ptr<screen_t> connection_t::get_screen(int *num) {
-  return std::shared_ptr<screen_t>(new screen_t(weak_ref.lock(), num));
+  return std::make_shared<screen_t>(weak_ref.lock(), num);
 }
 
 int connection_t::flush() {
@@ -92,8 +92,7 @@ int connection_t::flush() {
 std::shared_ptr<window_t> connection_t::create_window(
   xcb_window_t window
 ) {
-  auto ptr = new window_t(weak_ref.lock(), window);
-  return std::shared_ptr<window_t>(ptr);
+  return std::make_shared<window_t>(weak_ref.lock(), window);
 }
 
 std::shared_ptr<window_t> connection_t::create_window(
@@ -128,8 +127,7 @@ std::shared_ptr<window_t> connection_t::create_window(
   );
 
   throw_bad_cookie("xcb_create_window", cookie);
-  auto ptr = new window_t(weak_ref.lock(), window);
-  return std::shared_ptr<window_t>(ptr);
+  return std::make_shared<window_t>(weak_ref.lock(), window);
 }
 
 std::shared_ptr<glx_window_t> connection_t::create_glx_window(
@@ -146,7 +144,7 @@ std::shared_ptr<glx_window_t> connection_t::create_glx_window(
 ) {
 
   // query framebuffer configs
-  GLXFBConfig *fb_configs = 0;
+  GLXFBConfig *fb_configs = nullptr;
   int num_fb_configs = 0;
 
   fb_configs = glXGetFBConfigs(
@@ -173,7 +171,7 @@ std::shared_ptr<glx_window_t> connection_t::create_glx_window(
     display,
     fb_config,
     GLX_RGBA_TYPE,
-    0,
+    nullptr,
     True
   );
 
@@ -190,7 +188,7 @@ std::shared_ptr<glx_window_t> connection_t::create_glx_window(
     XCB_COLORMAP_ALLOC_NONE,
     colormap,
     get_screen()->get_root(),
-    visual_id
+    static_cast<unsigned int>(visual_id)
   );
 
   throw_bad_cookie("xcb_create_colormap", cookie_color_map);
@@ -208,7 +206,7 @@ std::shared_ptr<glx_window_t> connection_t::create_glx_window(
     height,
     border_width,
     _class,
-    visual_id,
+    static_cast<unsigned int>(visual_id),
     value_mask,
     value_list
   );
@@ -220,12 +218,12 @@ std::shared_ptr<glx_window_t> connection_t::create_glx_window(
     display,
     fb_config,
     window,
-    0
+    nullptr
   );
 
   GLXDrawable glx_drawable = glx_window;
 
-  auto ptr = new glx_window_t(
+  auto res = std::make_shared<glx_window_t>(
     weak_ref.lock(),
     window,
     visual_id,
@@ -233,7 +231,6 @@ std::shared_ptr<glx_window_t> connection_t::create_glx_window(
     glx_window
   );
 
-  auto res = std::shared_ptr<glx_window_t>(ptr);
   res->show();
 
   // todo check if window is shown, if it is, then 

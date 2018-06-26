@@ -8,7 +8,7 @@ window_t::~window_t() {
 }
 
 void window_t::set_name(const std::string &name) {
-  replace_property(XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 8, name.size(), name.c_str());
+  replace_property(XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 8, static_cast<uint32_t>(name.size()), name.c_str());
 }
 
 xcb_connection_t *window_t::get_connection() {
@@ -16,12 +16,12 @@ xcb_connection_t *window_t::get_connection() {
 }
 
 std::shared_ptr<graphic_ctx_t> window_t::make_graphic_ctx(uint32_t value_mask, const uint32_t *value_list) {
-  return std::shared_ptr<graphic_ctx_t>(new graphic_ctx_t(
+  return std::make_shared<graphic_ctx_t>(
     connection,
     window,
     value_mask,
     value_list
-  ));
+  );
 }
 
 void window_t::show()  {
@@ -79,8 +79,8 @@ xcb_atom_t window_t::fetch_delete_cookie() {
   auto c = get_connection();
   auto proto_request = xcb_intern_atom(c, 0, 12, "WM_PROTOCOLS");
   auto delete_win_request = xcb_intern_atom(c, 0, 16, "WM_DELETE_WINDOW");
-  xcb_intern_atom_reply_t *proto_reply = xcb_intern_atom_reply(c, proto_request, 0);
-  xcb_intern_atom_reply_t *delete_win_reply = xcb_intern_atom_reply(c, delete_win_request, 0);
+  xcb_intern_atom_reply_t *proto_reply = xcb_intern_atom_reply(c, proto_request, nullptr);
+  xcb_intern_atom_reply_t *delete_win_reply = xcb_intern_atom_reply(c, delete_win_request, nullptr);
   if (!proto_reply || !delete_win_reply) {
     throw std::runtime_error("getting delete cookie failed");
   }

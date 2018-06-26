@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+#include <vector>
 #include <xcbxx/events/button-press-event.h>
 #include <xcbxx/events/button-release-event.h>
 #include <xcbxx/events/circulate-notify-event.h>

@@ -2,7 +2,7 @@
 
 namespace xcbxx {
 
-const std::map<uint8_t, std::string> event_t::event_types = {
+const std::map<unsigned char, std::string> event_t::event_types = {
   { XCB_KEY_PRESS, "XCB_KEY_PRESS" },
   { XCB_KEY_RELEASE, "XCB_KEY_RELEASE" },
   { XCB_BUTTON_PRESS, "XCB_BUTTON_PRESS" },
@@ -37,7 +37,7 @@ const std::map<uint8_t, std::string> event_t::event_types = {
   { XCB_MAPPING_NOTIFY, "XCB_MAPPING_NOTIFY" }
 };
 
-std::string event_t::get_event_name(unsigned int macro) {
+std::string event_t::get_event_name(unsigned char macro) {
   if (event_types.count(macro)) {
     return event_types.at(macro);
   }
@@ -45,6 +45,10 @@ std::string event_t::get_event_name(unsigned int macro) {
   std::stringstream ss;
   ss << "UNKNOWN " << macro;
   return ss.str();
+}
+
+event_t::~event_t() {
+  free(xevent);
 }
 
 }

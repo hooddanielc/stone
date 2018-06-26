@@ -10,17 +10,7 @@ class connection_t;
 
 class glx_window_t: public window_t {
 
-protected:
-
-  friend class connection_t;
-
-  int visual_id;
-
-  GLXContext glx_context;
-
-  GLXWindow glx_window;
-
-  GLXDrawable glx_drawable;
+public:
 
   glx_window_t(
     std::shared_ptr<connection_t> connection,
@@ -35,11 +25,21 @@ protected:
     glx_window(glx_window_),
     glx_drawable(glx_window_) {}
 
-public:
-
   void swap_buffers();
 
   ~glx_window_t();
+
+protected:
+
+  friend class connection_t;
+
+  int visual_id;
+
+  GLXContext glx_context;
+
+  GLXWindow glx_window;
+
+  GLXDrawable glx_drawable;
 
 };  // glx_window
 

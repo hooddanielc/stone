@@ -5,12 +5,12 @@
 using namespace std;
 using namespace xcbxx;
 
-bool run = true;
+static bool run = true;
 
-std::shared_ptr<connection_t> connection;
-std::shared_ptr<glx_window_t> window;
+static std::shared_ptr<connection_t> connection;
+static std::shared_ptr<glx_window_t> window;
 
-void event_loop() {
+inline void event_loop() {
   xcb_generic_event_t *e;
 
   do {
@@ -21,8 +21,8 @@ void event_loop() {
   } while (run);
 }
 
-void draw() {
-  glClearColor(0.2, 0.9, 0.9, 1.0);
+inline void draw() {
+  glClearColor(0.2f, 0.9f, 0.9f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
 }
 
@@ -46,8 +46,8 @@ int main(int, char*[]) {
     150,
     10,
     screen->get_root(),
-    screen->get_root_visual(),
-    XCB_COPY_FROM_PARENT,
+    static_cast<int>(screen->get_root_visual()),
+    XCB_NONE,
     XCB_WINDOW_CLASS_INPUT_OUTPUT,
     XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_KEY_PRESS
   );

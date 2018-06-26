@@ -4,6 +4,7 @@
 #include <xcb/xcb.h>
 #include <xcbxx/graphic-ctx.h>
 #include <xcbxx/screen.h>
+#include <xcbxx/events.h>
 
 namespace xcbxx {
 
@@ -18,6 +19,14 @@ public:
   friend class connection_t;
 
   friend class screen_t;
+
+  window_t(
+    std::shared_ptr<connection_t> connection_,
+    xcb_window_t window_
+  ) :
+    connection(connection_),
+    window(window_),
+    delete_cookie_reply(fetch_delete_cookie()) {}
 
   void show();
 
@@ -60,6 +69,8 @@ public:
 
 protected:
 
+  master_event_register_t events;
+
   std::shared_ptr<connection_t> connection;
 
   xcb_window_t window;
@@ -69,14 +80,6 @@ protected:
   xcb_atom_t fetch_delete_cookie();
 
   xcb_atom_t delete_cookie_reply;
-
-  window_t(
-    std::shared_ptr<connection_t> connection_,
-    xcb_window_t window_
-  ) :
-    connection(connection_),
-    window(window_),
-    delete_cookie_reply(fetch_delete_cookie()) {}
 
 };  // window_t
 

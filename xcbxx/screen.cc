@@ -3,7 +3,7 @@
 namespace xcbxx {
 
 std::shared_ptr<window_t> screen_t::get_root_window() {
-  return std::shared_ptr<window_t>(new window_t(connection, screen->root));
+  return std::make_shared<window_t>(connection, screen->root);
 }
 
 uint16_t screen_t::get_width_in_pixels() {

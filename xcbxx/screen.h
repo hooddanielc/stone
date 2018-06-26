@@ -12,6 +12,14 @@ public:
 
   friend connection_t;
 
+  screen_t(
+    std::shared_ptr<connection_t> connection_,
+    int *screen_num_
+  ) :
+    connection(connection_),
+    screen_num(screen_num_),
+    screen(construct_screen()) {}
+
   std::shared_ptr<window_t> get_root_window();
 
   uint32_t get_root();
@@ -57,14 +65,6 @@ private:
   xcb_screen_t *screen;
 
   xcb_screen_t *construct_screen();
-
-  screen_t(
-    std::shared_ptr<connection_t> connection_,
-    int *screen_num_
-  ) :
-    connection(connection_),
-    screen_num(screen_num_),
-    screen(construct_screen()) {}
 
 };  // screen_t
 
