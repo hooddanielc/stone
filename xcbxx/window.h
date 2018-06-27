@@ -5,6 +5,8 @@
 #include <xcbxx/graphic-ctx.h>
 #include <xcbxx/screen.h>
 #include <xcbxx/events.h>
+#include <iostream>
+#include <unordered_map>
 
 namespace xcbxx {
 
@@ -67,9 +69,19 @@ public:
 
   virtual ~window_t();
 
+  int get_window_id();
+
+  void on_key_press(const std::function<void(std::shared_ptr<key_press_event_t>)> &);
+
+  void on_focus_in(const std::function<void(std::shared_ptr<focus_in_event_t>)> &);
+
+  void on_expose(const std::function<void(std::shared_ptr<expose_event_t>)> &);
+
 protected:
 
-  master_event_register_t events;
+  // std::unordered_map<unsigned int, std::vector<std::shared_ptr<event_t>>> window_events;
+
+  // master_event_register_t events;
 
   std::shared_ptr<connection_t> connection;
 

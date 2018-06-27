@@ -6,6 +6,12 @@ namespace xcbxx {
 
 class key_press_event_t: public event_t {
 
+public:
+
+  xcb_window_t get_window() {
+    return event->root;
+  }
+
 protected:
 
   friend class event_t;

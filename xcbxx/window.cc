@@ -3,6 +3,10 @@
 
 namespace xcbxx {
 
+int window_t::get_window_id() {
+  return static_cast<int>(window);
+}
+
 window_t::~window_t() {
   xcb_destroy_window(get_connection(), window);
 }
@@ -86,6 +90,31 @@ xcb_atom_t window_t::fetch_delete_cookie() {
   }
   replace_property(proto_reply->atom, 4, 32, 1, &delete_win_reply->atom);
   return delete_win_reply->atom;
+}
+
+void window_t::on_key_press(const std::function<void(std::shared_ptr<key_press_event_t>)> &fn) {
+  connection->on<XCB_KEY_PRESS>([&](std::shared_ptr<key_press_event_t> e) {
+    if (e->get_window() == window) {
+      fn(e);
+    }
+  });
+}
+
+void window_t::on_focus_in(const std::function<void(std::shared_ptr<focus_in_event_t>)> &fn) {
+  connection->on<XCB_FOCUS_IN>([&](std::shared_ptr<focus_in_event_t> e) {
+    if (e->get_window() == window) {
+      fn(e);
+    }
+  });
+}
+
+void window_t::on_expose(const std::function<void(std::shared_ptr<expose_event_t>)> &fn) {
+  connection->on<XCB_EXPOSE>([&](std::shared_ptr<expose_event_t> e) {
+    std::cout << "THE WINDOW IS " << e->get_window() << std::endl;
+    if (e->get_window() == window) {
+      fn(e);
+    }
+  });
 }
 
 }

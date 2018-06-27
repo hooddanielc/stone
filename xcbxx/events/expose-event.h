@@ -6,6 +6,12 @@ namespace xcbxx {
 
 class expose_event_t: public event_t {
 
+public:
+
+  xcb_window_t get_window() {
+    return event->window;
+  }
+
 protected:
 
   friend class event_t;
