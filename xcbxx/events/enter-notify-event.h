@@ -6,6 +6,28 @@ namespace xcbxx {
 
 class enter_notify_event_t: public event_t {
 
+public:
+
+  xcb_window_t get_window() {
+    return event->event;
+  }
+
+  int16_t get_root_x() {
+    return event->root_x;
+  }
+
+  int16_t get_root_y() {
+    return event->root_y;
+  }
+
+  int16_t get_event_x() {
+    return event->event_x;
+  }
+
+  int16_t get_event_y() {
+    return event->event_y;
+  }
+
 protected:
 
   friend class event_t;

@@ -77,6 +77,10 @@ public:
 
   void on_expose(const std::function<void(std::shared_ptr<expose_event_t>)> &);
 
+  void on_enter_notify(const std::function<void(std::shared_ptr<enter_notify_event_t>)> &);
+
+  void on_motion_notify(const std::function<void(std::shared_ptr<motion_notify_event_t>)> &);
+
 protected:
 
   // std::unordered_map<unsigned int, std::vector<std::shared_ptr<event_t>>> window_events;

@@ -110,7 +110,22 @@ void window_t::on_focus_in(const std::function<void(std::shared_ptr<focus_in_eve
 
 void window_t::on_expose(const std::function<void(std::shared_ptr<expose_event_t>)> &fn) {
   connection->on<XCB_EXPOSE>([&](std::shared_ptr<expose_event_t> e) {
-    std::cout << "THE WINDOW IS " << e->get_window() << std::endl;
+    if (e->get_window() == window) {
+      fn(e);
+    }
+  });
+}
+
+void window_t::on_enter_notify(const std::function<void(std::shared_ptr<enter_notify_event_t>)> &fn) {
+  connection->on<XCB_ENTER_NOTIFY>([&](std::shared_ptr<enter_notify_event_t> e) {
+    if (e->get_window() == window) {
+      fn(e);
+    }
+  });
+}
+
+void window_t::on_motion_notify(const std::function<void(std::shared_ptr<motion_notify_event_t>)> &fn) {
+  connection->on<XCB_MOTION_NOTIFY>([&](std::shared_ptr<motion_notify_event_t> e) {
     if (e->get_window() == window) {
       fn(e);
     }

@@ -6,6 +6,12 @@ namespace xcbxx {
 
 class motion_notify_event_t: public event_t {
 
+public:
+
+  xcb_window_t get_window() {
+    return event->child;
+  }
+
 protected:
 
   friend class event_t;

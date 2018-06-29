@@ -5,10 +5,14 @@
 #include <memory>
 #include <vector>
 #include <functional>
+#include <cstdlib>
 #include <stdio.h>
 #include <unistd.h>
 #include <inttypes.h>
 #include <xcb/xcb.h>
+#include <xkbcommon/xkbcommon.h>
+#include <xkbcommon/xkbcommon-x11.h>
+#include <xcb/xinput.h>
 #include <X11/Xlib.h>
 #include <X11/Xlib-xcb.h>
 #include "screen.h"
@@ -42,7 +46,46 @@ public:
     connection(connection_),
     display(display_),
     display_name(display_name_),
-    screen_num(screen_num_) {}
+    screen_num(screen_num_),
+    xkb_ctx(nullptr),
+    xkb_km(nullptr),
+    xkb_st(nullptr) {
+
+    xkb_ctx = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+    if (!xkb_ctx) {
+      throw std::runtime_error("xkb context creation failed");
+    }
+    int32_t device_id = xkb_x11_get_core_keyboard_device_id(connection);
+    if (device_id == -1) {
+      throw std::runtime_error("xkb_x11_get_core_keyboard_device_id: error");
+    }
+    xkb_km = xkb_x11_keymap_new_from_device(
+      xkb_ctx,
+      connection,
+      device_id,
+      XKB_KEYMAP_COMPILE_NO_FLAGS
+    );
+    if (!xkb_km) {
+      throw std::runtime_error("xkb_x11_keymap_new_from_device: error");
+    }
+    xkb_st = xkb_x11_state_new_from_device(xkb_km, connection, device_id);
+    if (!xkb_st) {
+      throw std::runtime_error("xkb_x11_state_new_from_device: error");
+    }
+  }
+
+  xkb_keysym_t get_keysym(xkb_keycode_t keycode) {
+    return xkb_state_key_get_one_sym(xkb_st, keycode);
+  }
+
+  std::string get_keysym_str(xkb_keycode_t keycode) {
+    char keysym_name[64];
+    auto keysym = get_keysym(keycode);
+    xkb_keysym_get_name(keysym, keysym_name, sizeof(keysym_name));
+    return std::string(keysym_name);
+  }
+
+  void print_keyboard_mapping();
 
   using cb_event_t = std::function<void(std::shared_ptr<event_t>)>;
 
@@ -128,6 +171,12 @@ private:
   const char *display_name;
 
   int *screen_num;
+
+  xkb_context *xkb_ctx;
+
+  xkb_keymap *xkb_km;
+
+  xkb_state *xkb_st;
 
 };  // connection_t
 

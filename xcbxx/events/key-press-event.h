@@ -1,5 +1,9 @@
 #pragma once
 
+#include <string>
+#define XK_LATIN1
+#include <iostream>
+#include <X11/keysymdef.h>
 #include <xcbxx/events/event.h>
 
 namespace xcbxx {
@@ -9,8 +13,12 @@ class key_press_event_t: public event_t {
 public:
 
   xcb_window_t get_window() {
-    return event->root;
+    return event->event;
   }
+
+  xcb_keycode_t get_keycode();
+
+  std::string get_name();
 
 protected:
 

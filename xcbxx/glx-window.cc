@@ -13,4 +13,8 @@ glx_window_t::~glx_window_t() {
   glXDestroyContext(connection->display, glx_context);
 }
 
+bool glx_window_t::make_current() {
+  return glXMakeCurrent(connection->display, glx_drawable, glx_context);
+}
+
 }

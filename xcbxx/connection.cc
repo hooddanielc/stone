@@ -65,6 +65,25 @@ int connection_t::get_screen_count() {
   return xcb_setup_roots_length(xcb_get_setup(connection));
 }
 
+void connection_t::print_keyboard_mapping() {
+  const xcb_setup_t *setup      = xcb_get_setup(connection);
+  xcb_get_keyboard_mapping_reply_t *keyboard_mapping = xcb_get_keyboard_mapping_reply(connection, xcb_get_keyboard_mapping(connection, setup->min_keycode, setup->max_keycode - setup->min_keycode + 1), nullptr);
+  int nkeycodes = static_cast<int>(keyboard_mapping->length / keyboard_mapping->keysyms_per_keycode);
+  int nkeysyms = static_cast<int>(keyboard_mapping->length);
+  xcb_keysym_t *keysyms  = (xcb_keysym_t*)(keyboard_mapping + 1);  // `xcb_keycode_t` is just a `typedef u8`, and `xcb_keysym_t` is just a `typedef u32`
+  printf("nkeycodes %u  nkeysyms %u  keysyms_per_keycode %u\n\n", nkeycodes, nkeysyms, keyboard_mapping->keysyms_per_keycode);
+
+  for (int keycode_idx=0; keycode_idx < nkeycodes; ++keycode_idx){
+    printf("keycode %3u ", setup->min_keycode + keycode_idx);
+    for (int keysym_idx=0; keysym_idx < keyboard_mapping->keysyms_per_keycode; ++keysym_idx){
+      printf(" %8x", keysyms[keysym_idx + keycode_idx * keyboard_mapping->keysyms_per_keycode]);
+    }
+    putchar('\n');
+  }
+
+  free(keyboard_mapping);
+}
+
 connection_t::~connection_t() {
   XCloseDisplay(display);
 }

@@ -27,6 +27,8 @@ public:
 
   void swap_buffers();
 
+  bool make_current();
+
   ~glx_window_t();
 
 protected:
