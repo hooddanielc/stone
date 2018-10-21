@@ -1,4 +1,7 @@
-/token c a t d o g c a n a r y
+/token \
+  c a t d o g c \
+  a n a r y
+
 /top -> pets
 pets -> pets pet
 pets -> pet

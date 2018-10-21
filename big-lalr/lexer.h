@@ -219,7 +219,9 @@ private:
       arrow_end,
       identifier_start,
       identifier,
-      arrow_or_token
+      arrow_or_token,
+      escape_arrow_or_token,
+      escape_identifier_start
     } state = newline;
     bool go = true;
     do {
@@ -230,6 +232,24 @@ private:
       }
 
       switch (state) {
+        case escape_arrow_or_token: {
+          if (c == '\n') {
+            pop();
+            state = identifier_start;
+            break;
+          }
+          throw error_t(this, "bad character escape_arrow_or_token");
+          break;
+        }
+        case escape_identifier_start: {
+          if (c == '\n') {
+            pop();
+            state = identifier_start;
+            break;
+          }
+          throw error_t(this, "bad character escape_identifier_start");
+          break;
+        }
         case newline: {
           if (c == '/') {
             pop();
@@ -246,7 +266,7 @@ private:
             pop();
             break;
           }
-          throw error_t(this, "bad character");
+          throw error_t(this, "bad character newline");
         }
         case slash: {
           if (isalnum(c) || c == '_') {
@@ -255,7 +275,7 @@ private:
             state = slash_name;
             break;
           }
-          throw error_t(this, "bad character");
+          throw error_t(this, "bad character slash");
         }
         case slash_name: {
           if (isalnum(c)) {
@@ -269,9 +289,14 @@ private:
             state = arrow_or_token;
             break;
           }
-          throw error_t(this, "bad character");
+          throw error_t(this, "bad character slash_name");
         }
         case arrow_or_token: {
+          if (c == '\\') {
+            state = escape_identifier_start;
+            pop();
+            break;
+          }
           if (isspace(c) && c != '\n') {
             pop();
             break;
@@ -287,7 +312,7 @@ private:
             pop();
             break;
           }
-          throw error_t(this, "bad character");
+          throw error_t(this, "bad character arrow_or_token");
         }
         case arrow_start: {
           if (isspace(c) && c != '\n') {
@@ -299,7 +324,7 @@ private:
             state = arrow_end;
             break;
           }
-          throw error_t(this, "bad character");
+          throw error_t(this, "bad character arrow_start");
         }
         case arrow_end: {
           if (c == '>') {
@@ -308,7 +333,7 @@ private:
             state = identifier_start;
             break;
           }
-          throw error_t(this, "bad character");
+          throw error_t(this, "bad character arrow_end");
         }
         case reduction_name: {
           if (isalnum(c) || c == '_') {
@@ -322,9 +347,14 @@ private:
             pop();
             break;
           }
-          throw error_t(this, "bad character");
+          throw error_t(this, "bad character reduction_name");
         }
         case identifier_start: {
+          if (c == '\\') {
+            state = escape_identifier_start;
+            pop();
+            break;
+          }
           if (c == '\n') {
             lex_tokens.emplace_back(anchor_pos, g_tok_t::newline);
             state = newline;
@@ -341,7 +371,7 @@ private:
             state = identifier;
             break;
           }
-          throw error_t(this, "bad character");
+          throw error_t(this, "bad character identifier_start");
         }
         case identifier: {
           if (isalnum(c) || c == '_') {
@@ -360,7 +390,7 @@ private:
             pop();
             break;
           }
-          throw error_t(this, "bad character");
+          throw error_t(this, "bad character identifier");
         }
         default: {
           if (c == '\0') {
