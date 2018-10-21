@@ -250,23 +250,25 @@ public:
     if (child_pid == 0) {
       // child continues here
 
-      // redirect stdin
-      if (dup2(stdin_pipe[child_process_t::pipe_read], STDIN_FILENO) == -1) {
-        exit(errno);
-      }
+      if (!inherit) {
+        // redirect stdin
+        if (dup2(stdin_pipe[child_process_t::pipe_read], STDIN_FILENO) == -1) {
+          exit(errno);
+        }
 
-      // redirect stdout
-      if (dup2(stdout_pipe[child_process_t::pipe_write], STDOUT_FILENO) == -1) {
-        exit(errno);
-      }
+        // redirect stdout
+        if (dup2(stdout_pipe[child_process_t::pipe_write], STDOUT_FILENO) == -1) {
+          exit(errno);
+        }
 
-      // redirect stderr
-      if (dup2(stderr_pipe[child_process_t::pipe_write], STDERR_FILENO) == -1) {
-        exit(errno);
-      }
+        // redirect stderr
+        if (dup2(stderr_pipe[child_process_t::pipe_write], STDERR_FILENO) == -1) {
+          exit(errno);
+        }
 
-      // all these are for use by parent only
-      cleanup_pipes();
+        // all these are for use by parent only
+        cleanup_pipes();
+      }
 
       // run child process image
       // replace this with any exec* function find easier to use ("man exec")
@@ -434,6 +436,8 @@ private:
 
   bool running;
 
+  bool inherit;
+
   static const int pipe_read = 0;
 
   static const int pipe_write = 1;
@@ -446,11 +450,12 @@ private:
 
   std::vector<std::function<void(pid_t pid)>> on_start_cbs;
 
-  child_process_t(const std::string &cmd_, const std::vector<std::string> &args_):
+  child_process_t(const std::string &cmd_, const std::vector<std::string> &args_, bool inherit_ = true):
     buff_size(1),
     cmd(cmd_),
     args(args_),
-    running(false) {}
+    running(false),
+    inherit(inherit_) {}
 
   void emit_on_exit(int exit_code) const {
     for (const auto &cb: on_exit_cbs) {

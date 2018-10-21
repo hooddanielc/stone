@@ -72,22 +72,17 @@ std::vector<std::string> normalize_args(int argc, char *argv[]) {
 }
 
 auto gui = get_project_path("big-lalr/tools/dist/react-report.js");
+auto gui_node_modules = get_project_path("big-lalr/tools/node_modules");
 auto tools = get_project_path("big-lalr/tools");
 auto bootstrap = get_project_path("big-lalr/tools/bootstrap.sh");
 auto server = get_project_path("big-lalr/tools/view-grammar.sh");
 
 void build_gui_if_needed() {
-  if (!file_exists(gui) || !file_exists(server)) {
+  if (!file_exists(gui) || !file_exists(server) || !file_exists(gui_node_modules)) {
     // need to rebuild webpack project
     std::cout << "building webpack application for first time" << std::endl;
     std::cout << "this might take a while please be patient" << std::endl;
     auto bootstrap_process = child_process_t::make("/usr/bin/sh", { bootstrap });
-    bootstrap_process->on_stdout([&](auto str) {
-      std::cout << str;
-    });
-    bootstrap_process->on_stderr([&](auto str) {
-      std::cout << str;
-    });
     bootstrap_process->on_exit([&](auto code) {
       if (code != 0) {
         throw std::runtime_error("incorrect exit code");
@@ -197,12 +192,6 @@ void make_parser(
     auto exec_server = child_process_t::make(server, {
       "-d",
       out + ".html"
-    });
-    exec_server->on_stdout([&](auto str) {
-      std::cout << str;
-    });
-    exec_server->on_stderr([&](auto str) {
-      std::cout << str;
     });
     exec_server->on_exit([&](auto code) {
       if (code != 0) {
