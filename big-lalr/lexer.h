@@ -221,7 +221,8 @@ private:
       identifier,
       arrow_or_token,
       escape_arrow_or_token,
-      escape_identifier_start
+      escape_identifier_start,
+      comment_start
     } state = newline;
     bool go = true;
     do {
@@ -269,6 +270,11 @@ private:
           throw error_t(this, "bad character newline");
         }
         case slash: {
+          if (c == '/') {
+            pop();
+            state = comment_start;
+            break;          
+          }
           if (isalnum(c) || c == '_') {
             set_anchor();
             pop();
@@ -276,6 +282,13 @@ private:
             break;
           }
           throw error_t(this, "bad character slash");
+        }
+        case comment_start: {
+          if (c == '\n') {
+            state = newline;
+          }
+          pop();
+          break;
         }
         case slash_name: {
           if (isalnum(c)) {
